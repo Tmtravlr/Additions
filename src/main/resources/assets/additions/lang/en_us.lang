@@ -1,0 +1,11 @@
+item.spiral.chocolate.name=Chocolate
+item.spiral.telescope.name=Telescope
+
+item.simple.description=The most basic type of item. Good for crafting ingredients.
+item.food.description=An item you can eat! You can set effects when eaten as well.
+
+gui.title.newAddon=Create New Addon
+
+gui.loadingError.modNotFound=The addon %1$s requires any version of mod %2$s
+gui.loadingError.addonNotFound=The addon %1$s requires any version of addon %2$s
+gui.loadingError.dependancyCycle=A cycle in the addon depenencies was found. One of the addons in the cycle is %s. 

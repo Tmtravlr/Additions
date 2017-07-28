@@ -1,0 +1,16 @@
+[
+{
+  "modid": "additions",
+  "name": "Additions",
+  "description": "Lets you add items, blocks, recipes, and many more things to the game! Oh, also lucky blocks.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authors": ["Tmtravlr"],
+  "credits": "Made by Tmtravlr! Successor to Loot++. =)",
+  "logoFile": "assets/additions/textures/gui/additions_title_big",
+  "screenshots": [],
+  "dependencies": []
+}
+]
