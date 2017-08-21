@@ -20,6 +20,7 @@ import com.google.gson.JsonSyntaxException;
 import com.tmtravlr.additions.addon.blocks.IBlockAdded;
 import com.tmtravlr.additions.addon.creativetabs.CreativeTabAdded;
 import com.tmtravlr.additions.addon.items.IItemAdded;
+import com.tmtravlr.additions.util.OtherSerializers;
 
 public class AddonInfo {
 	
@@ -31,8 +32,9 @@ public class AddonInfo {
 	public String id;
 	public String name;
 	public String logoItem;
-	public List<String> addonsRequiredBefore = new ArrayList<>();
-	public List<String> addonsRequiredAfter = new ArrayList<>();
+	public String author;
+	public List<String> dependencies = new ArrayList<>();
+	public List<String> dependents = new ArrayList<>();
 	public List<String> requiredAddons = new ArrayList<>();
 	public List<String> requiredMods = new ArrayList<>();
 	
@@ -44,16 +46,20 @@ public class AddonInfo {
 		this.name = name;
 	}
 	
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+	
 	public void setLogoItem(String itemName) {
 		this.logoItem = itemName;
 	}
 	
-	public void setRequiredBefore(List<String> requiredBefore) {
-		this.addonsRequiredBefore = requiredBefore;
+	public void setDependencies(List<String> dependencies) {
+		this.dependencies = dependencies;
 	}
 	
-	public void setRequiredAfter(List<String> requiredAfter) {
-		this.addonsRequiredAfter = requiredAfter;
+	public void setDependents(List<String> dependents) {
+		this.dependents = dependents;
 	}
 	
 	public void setRequiredAddons(List<String> requiredAddons) {
@@ -83,6 +89,10 @@ public class AddonInfo {
 		return ItemStack.EMPTY;
 	}
 	
+	public String toString() {
+		return this.name + " (" + this.id + ")";
+	}
+	
 	public static class Serializer implements JsonDeserializer<AddonInfo>, JsonSerializer<AddonInfo> {
 
 		@Override
@@ -90,7 +100,25 @@ public class AddonInfo {
 			JsonObject json = new JsonObject();
 			json.addProperty("id", info.id);
 			json.addProperty("name", info.name);
+			json.addProperty("author", info.author);
 			json.addProperty("logo_item", info.logoItem);
+			
+			if (!info.dependencies.isEmpty()) {
+				json.add("depenencies", OtherSerializers.StringListSerializer.serialize(info.dependencies, context));
+			}
+			
+			if (!info.dependents.isEmpty()) {
+				json.add("dependents", OtherSerializers.StringListSerializer.serialize(info.dependents, context));
+			}
+			
+			if (!info.requiredMods.isEmpty()) {
+				json.add("requiredMods", OtherSerializers.StringListSerializer.serialize(info.requiredMods, context));
+			}
+			
+			if (!info.requiredAddons.isEmpty()) {
+				json.add("requiredAddons", OtherSerializers.StringListSerializer.serialize(info.requiredAddons, context));
+			}
+			
 			return json;
 		}
 
@@ -105,12 +133,30 @@ public class AddonInfo {
 				throw new JsonSyntaxException("Tried to load an addon with the id '" + addon.id + "', but an addon with that id already exists.");
 			}
 			
-			if (!addon.id.matches("^[\\w]+$")) {
-				throw new JsonSyntaxException("Id '" + addon.id + "' can only contain alphanumeric characters or underscores.");
+			if (!addon.id.matches("[a-z0-9\\_]+")) {
+				throw new JsonSyntaxException("Id '" + addon.id + "' can only contain lowercase letters, numbers, or underscores.");
 			}
 			
 			addon.setName(JsonUtils.getString(json, "name"));
+			addon.setAuthor(JsonUtils.getString(json, "author"));
 			addon.setLogoItem(JsonUtils.getString(json, "logo_item", ""));
+			
+			if (JsonUtils.hasField(json, "dependencies")) {
+				addon.setDependencies(OtherSerializers.StringListSerializer.deserialize(json.get("dependencies"), "dependencies", context));
+			}
+			
+			if (JsonUtils.hasField(json, "dependents")) {
+				addon.setDependents(OtherSerializers.StringListSerializer.deserialize(json.get("dependents"), "dependents", context));
+			}
+			
+			if (JsonUtils.hasField(json, "requiredMods")) {
+				addon.setRequiredMods(OtherSerializers.StringListSerializer.deserialize(json.get("requiredMods"), "requiredMods", context));
+			}
+			
+			if (JsonUtils.hasField(json, "requiredAddons")) {
+				addon.setRequiredAddons(OtherSerializers.StringListSerializer.deserialize(json.get("requiredAddons"), "requiredAddons", context));
+			}
+			
 			return addon;
 		}
 		

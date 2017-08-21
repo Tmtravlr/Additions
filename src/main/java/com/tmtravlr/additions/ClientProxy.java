@@ -25,10 +25,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.CustomModLoadingErrorDisplayException;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 public class ClientProxy extends CommonProxy {
 	
 	private List defaultResourcePacks = null;
+	private AddonLoadingException loadingException;
 	
 	@Override
 	public void registerBlockRenderWithDamage(Block block, int damage, String name) {
@@ -95,6 +97,20 @@ public class ClientProxy extends CommonProxy {
 		Minecraft.getMinecraft().refreshResources();
 	}
 	
+	@Override
+	public void throwAddonLoadingException(String messageKey, Object ... args) {
+		this.loadingException = new AddonLoadingException(I18n.format(messageKey, args));
+		ReflectionHelper.setPrivateValue(FMLClientHandler.class, FMLClientHandler.instance(), this.loadingException, "customError");
+	}
+	
+	@Override
+	public boolean checkForLoadingException() {
+		if (this.loadingException != null) {
+			return true;
+		}
+		return false;
+	}
+	
 	private void getDefaultResourcePacks() {
 		try {
 			this.defaultResourcePacks = (List) ObfuscationReflectionHelper.getPrivateValue(FMLClientHandler.class, FMLClientHandler.instance(), new String[]{"resourcePackList"});
@@ -108,24 +124,28 @@ public class ClientProxy extends CommonProxy {
 	private String getItemName(String unlocalizedName) {
 		return unlocalizedName.substring(unlocalizedName.indexOf(".")+1);
 	}
-	
-	@Override
-	public void throwAddonLoadingException(String messageKey, Object ... args) {
-		
-		final String message = I18n.format("gui.additions.loading.modNotFound", args);
-		
-		throw new CustomModLoadingErrorDisplayException() {
-			
-			@Override
-			public void initGui(GuiErrorScreen errorScreen, FontRenderer fontRenderer) {}
 
-			@Override
-			public void drawScreen(GuiErrorScreen errorScreen, FontRenderer fontRenderer, int mouseRelX, int mouseRelY, float tickTime) {
-				errorScreen.drawDefaultBackground();
-				errorScreen.drawCenteredString(fontRenderer, message, errorScreen.width / 2, errorScreen.height / 2, 0xffffff);
-			}
+	private class AddonLoadingException extends CustomModLoadingErrorDisplayException {
+		private String message;
+		
+		public AddonLoadingException(String message) {
+			this.message = message;
+		}
+		
+		@Override
+		public void initGui(GuiErrorScreen errorScreen, FontRenderer fontRenderer) {}
+
+		@Override
+		public void drawScreen(GuiErrorScreen errorScreen, FontRenderer fontRenderer, int mouseRelX, int mouseRelY, float tickTime) {
+			errorScreen.drawDefaultBackground();
 			
-		};
+			int middleX = errorScreen.width / 2;
+			int middleY = errorScreen.height / 2;
+			
+			errorScreen.drawCenteredString(fontRenderer, AdditionsMod.MOD_NAME, middleX, middleY - 10, 0xbbbbbb);
+			
+			int messageWidth = fontRenderer.getStringWidth(message);
+			fontRenderer.drawSplitString(message, (messageWidth > errorScreen.width - 80) ? 40 : middleX - messageWidth / 2, middleY + 10, errorScreen.width - 80, 0xffffff);
+		}
 	}
-
 }

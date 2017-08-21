@@ -51,5 +51,9 @@ public class CommonProxy {
 	public void throwAddonLoadingException(String messageKey, Object ... args) {
 		//Do nothing on the server!
 	}
+	
+	public boolean checkForLoadingException() {
+		return false;
+	}
 
 }

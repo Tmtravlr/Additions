@@ -31,13 +31,14 @@ import com.tmtravlr.additions.addon.items.ItemAddedManager;
 
 /**
  * Loads addons from folders in the folder addons/Additions.
+ * This should be the only class loading file from and printing to json.
  * 
  * @author Rebeca Rey
  * @Date July 2017 
  */
 public class AddonLoader {
 	
-    private static final Gson GSON = (new GsonBuilder())
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting()
     		.registerTypeAdapter(RandomValueRange.class, new RandomValueRange.Serializer())
     		.registerTypeAdapter(AddonInfo.class, new AddonInfo.Serializer())
     		.registerTypeAdapter(CreativeTabAdded.class, new CreativeTabAdded.Serializer())
@@ -53,7 +54,7 @@ public class AddonLoader {
 	public static Multimap<String, Item> oreDictsToRegister = HashMultimap.create();
 	public static List<Item> colorItemsToRegister = new ArrayList<>();
 	
-	public static void loadAddons() {
+	public static boolean loadAddons() {
 		
 		//Load the addon folder
 		try {
@@ -107,7 +108,8 @@ public class AddonLoader {
 				
 				for (String modID : addon.requiredMods) {
 					if (!Loader.isModLoaded(modID)) {
-						AdditionsMod.proxy.throwAddonLoadingException("gui.loadingError.modNotFound", addon.id, modID);
+						AdditionsMod.proxy.throwAddonLoadingException("gui.loadingError.modNotFound", addon, modID);
+						return false;
 					}
 				}
 			}
@@ -115,7 +117,8 @@ public class AddonLoader {
 			if (!addon.requiredAddons.isEmpty()) {	
 				for (String addonId : addon.requiredAddons) {
 					if (!ADDONS_NAMED.containsKey(addonId)) {
-						AdditionsMod.proxy.throwAddonLoadingException("gui.loadingError.addonNotFound", addon.id, addonId);
+						AdditionsMod.proxy.throwAddonLoadingException("gui.loadingError.addonNotFound", addon, addonId);
+						return false;
 					}
 				}
 			}
@@ -126,11 +129,14 @@ public class AddonLoader {
 		try {
 			addonsLoaded = sorter.sort();
 		} catch (ModSortingException e) {
-			AdditionsMod.proxy.throwAddonLoadingException("gui.loadingError.loop", ((AddonInfo)e.getExceptionData().getFirstBadNode()).id);
+			AdditionsMod.proxy.throwAddonLoadingException("gui.loadingError.dependancyCycle", (AddonInfo)e.getExceptionData().getFirstBadNode());
+			return false;
 		}
+		
+		return true;
 	}
 	
-	public void saveAddonInfo(AddonInfo addon) {
+	public static void saveAddonInfo(AddonInfo addon) {
 		File infoFile = new File(addon.addonFile, "addon_info.json");
 		
 		try {

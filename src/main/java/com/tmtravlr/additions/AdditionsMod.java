@@ -33,7 +33,10 @@ public class AdditionsMod {
     public void preInit(FMLPreInitializationEvent event) {
         logger = event.getModLog();
         
-        AddonLoader.loadAddons();
+        if (!AddonLoader.loadAddons()) {
+        	return;
+        }
+        
         proxy.refreshResources();
         
         AddonLoader.loadAddonItems();
@@ -43,6 +46,10 @@ public class AdditionsMod {
     
     @EventHandler
     public void init(FMLInitializationEvent event) {
+    	if (proxy.checkForLoadingException()) {
+    		return;
+    	}
+    	
         AddonLoader.loadAddonItemModels();
     }
 }

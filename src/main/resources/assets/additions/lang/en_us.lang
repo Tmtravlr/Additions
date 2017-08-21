@@ -1,11 +1,42 @@
-item.spiral.chocolate.name=Chocolate
-item.spiral.telescope.name=Telescope
-
 item.simple.description=The most basic type of item. Good for crafting ingredients.
 item.food.description=An item you can eat! You can set effects when eaten as well.
 
-gui.title.newAddon=Create New Addon
+gui.buttons.save=Save
+gui.buttons.back=Back
+gui.buttons.cancel=Cancel
+gui.buttons.close=Close
 
-gui.loadingError.modNotFound=The addon %1$s requires any version of mod %2$s
-gui.loadingError.addonNotFound=The addon %1$s requires any version of addon %2$s
-gui.loadingError.dependancyCycle=A cycle in the addon depenencies was found. One of the addons in the cycle is %s. 
+gui.createAddon.title=Create New Addon
+gui.createAddon.addonId.label=Addon Id
+gui.createAddon.addonId.info=The Id can only contain lower case letters, numbers, or underscores.
+gui.createAddon.addonName.label=Addon Name
+gui.createAddon.addonIcon.label=Addon Icon
+gui.createAddon.required.info=These are useful if you require items/recipes/etc. from other mods or addons. Also add addons to the 'Load Before' list as well, so they load before!
+gui.createAddon.required.warning=§cWARNING! The game will not start if these mods or addons are not found. So no touchie unless your addon needs these mods or addons!
+gui.createAddon.requiredMods.label=Required Mods
+gui.createAddon.requiredAddons.label=Required Addons
+gui.createAddon.loadOrder.info=These are useful if you need another addon to load before/after your addon (like if it loads items you need). The * means everything.
+gui.createAddon.dependencies.label=Load Before This
+gui.createAddon.dependents.label=Load After This
+gui.createAddon.problem.title=Problem Creating Addon
+gui.createAddon.problem.duplicate=An addon with Id '%s' already exists!
+gui.createAddon.problem.noAddonId=The Addon Id cannot be blank.
+gui.createAddon.problem.noAddonName=The Addon Name cannot be blank.
+gui.createAddon.problem.allBeforeAfter=Can't load * (everything) both before and after this addon!
+gui.createAddon.problem.bothBeforeAfter=Can't have the same addon '%s' in both Load Before and Load After lists!
+gui.createAddon.problem.beforeAll=Can't have an addon '%s' in Load After if * (everything) is in Load Before!
+gui.createAddon.problem.afterAll=Can't have an addon '%s' in Load Before if * (everything) is in Load After!
+
+gui.dropdown.nothingToShow=Nothing to Show
+
+gui.editObject.showAdvanced=Show Advanced
+
+gui.loadingError.modNotFound=The addon %1$s requires any version of mod '%2$s'
+gui.loadingError.addonNotFound=The addon %1$s requires any version of addon '%2$s'
+gui.loadingError.dependancyCycle=A cycle in the addon depenencies was found. The first addon in the cycle is %s. 
+
+gui.additions.main.byAuthor=By %1$s (%2$s)
+
+gui.warnDialogue.unsaved.title=Unsaved Changes
+gui.warnDialogue.unsaved.message=You have unsaved changes! Do you want to save them first?
+gui.warnDialogue.unsaved.continue=Don't Save

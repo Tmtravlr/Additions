@@ -22,7 +22,7 @@ import com.google.common.collect.Maps;
  * @date July 2017
  */
 public class AddonSorter {
-    private DirectedGraph<AddonInfo> modGraph;
+    private DirectedGraph<AddonInfo> addonGraph;
 
     private AddonInfo beforeAll = new AddonInfo();
     private AddonInfo afterAll = new AddonInfo();
@@ -36,77 +36,77 @@ public class AddonSorter {
     private void buildGraph() {
     	HashMap<String, AddonInfo> nameLookup = Maps.newHashMap(AddonLoader.ADDONS_NAMED);
     	
-        modGraph = new DirectedGraph<AddonInfo>();
-        modGraph.addNode(beforeAll);
-        modGraph.addNode(before);
-        modGraph.addNode(afterAll);
-        modGraph.addNode(after);
-        modGraph.addEdge(before, after);
-        modGraph.addEdge(beforeAll, before);
-        modGraph.addEdge(after, afterAll);
+        addonGraph = new DirectedGraph<AddonInfo>();
+        addonGraph.addNode(beforeAll);
+        addonGraph.addNode(before);
+        addonGraph.addNode(afterAll);
+        addonGraph.addNode(after);
+        addonGraph.addEdge(before, after);
+        addonGraph.addEdge(beforeAll, before);
+        addonGraph.addEdge(after, afterAll);
 
         for (AddonInfo addon : AddonLoader.addonsLoaded) {
-            modGraph.addNode(addon);
+            addonGraph.addNode(addon);
         }
 
         for (AddonInfo addon : AddonLoader.addonsLoaded) {
             boolean preDepAdded = false;
             boolean postDepAdded = false;
 
-            for (String addonId : addon.addonsRequiredBefore) {
+            for (String addonId : addon.dependencies) {
                 preDepAdded = true;
                 
                 if (addonId.equals("*"))
                 {
                     // We are "after" everything
-                    modGraph.addEdge(addon, afterAll);
-                    modGraph.addEdge(after, addon);
+                    addonGraph.addEdge(addon, afterAll);
+                    addonGraph.addEdge(after, addon);
                     postDepAdded = true;
                 }
                 else
                 {
-                    modGraph.addEdge(before, addon);
+                    addonGraph.addEdge(before, addon);
                     if (AddonLoader.ADDONS_NAMED.containsKey(addonId)) {
-                        modGraph.addEdge(AddonLoader.ADDONS_NAMED.get(addonId), addon);
+                        addonGraph.addEdge(AddonLoader.ADDONS_NAMED.get(addonId), addon);
                     }
                 }
             }
 
-            for (String addonId : addon.addonsRequiredAfter)
+            for (String addonId : addon.dependents)
             {
                 postDepAdded = true;
 
                 if (addonId.equals("*"))
                 {
                     // We are "before" everything
-                    modGraph.addEdge(beforeAll, addon);
-                    modGraph.addEdge(addon, before);
+                    addonGraph.addEdge(beforeAll, addon);
+                    addonGraph.addEdge(addon, before);
                     preDepAdded = true;
                 }
                 else
                 {
-                    modGraph.addEdge(addon, after);
+                    addonGraph.addEdge(addon, after);
                     if (AddonLoader.ADDONS_NAMED.containsKey(addonId)) {
-                        modGraph.addEdge(addon, AddonLoader.ADDONS_NAMED.get(addonId));
+                        addonGraph.addEdge(addon, AddonLoader.ADDONS_NAMED.get(addonId));
                     }
                 }
             }
 
             if (!preDepAdded)
             {
-                modGraph.addEdge(before, addon);
+                addonGraph.addEdge(before, addon);
             }
 
             if (!postDepAdded)
             {
-                modGraph.addEdge(addon, after);
+                addonGraph.addEdge(addon, after);
             }
         }
     }
 
     public List<AddonInfo> sort()
     {
-        List<AddonInfo> sortedList = TopologicalSort.topologicalSort(modGraph);
+        List<AddonInfo> sortedList = TopologicalSort.topologicalSort(addonGraph);
         sortedList.removeAll(Arrays.asList(new AddonInfo[] {beforeAll, before, after, afterAll}));
         return sortedList;
     }

@@ -2,6 +2,7 @@ package com.tmtravlr.additions.gui;
 
 import java.util.ArrayList;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
@@ -51,9 +52,10 @@ public class GuiScrollingAddonList extends GuiScrollingList {
 		top -= 2;
 		int left = this.left + 2;
 		boolean isHovering = mouseX >= left && mouseX <= right &&
-                mouseY >= top && mouseY <= top + this.slotHeight;
+                mouseY >= top && mouseY < top + this.slotHeight;
 		
         this.parent.mc.getTextureManager().bindTexture(GUI_TEXTURES);
+	    GlStateManager.color(255.0F, 255.0F, 255.0F, 255.0F);
         if (isHovering) {
         	this.parent.drawTexturedModalRect(left, top, 0, 32, 256, 32);
         } else {
@@ -63,13 +65,14 @@ public class GuiScrollingAddonList extends GuiScrollingList {
         AddonInfo addon = this.addons.get(index);
         
         if (addon == this.parent.createNew) {
-        	this.parent.drawTexturedModalRect(left + 5, top + 6, 0, 65, 21, 21);
-        	this.parent.drawString(this.parent.getFontRenderer(), I18n.format("gui.title.newAddon"), left + 42, top + 13, 0xFFFFFF);
+        	this.parent.drawTexturedModalRect(left + 5, top + 5, 0, 64, 21, 21);
+        	this.parent.drawString(this.parent.getFontRenderer(), I18n.format("gui.createAddon.title"), left + 42, top + 13, 0xFFFFFF);
         } else {
-            RenderHelper.enableGUIStandardItemLighting();
+        	RenderHelper.enableGUIStandardItemLighting();
         	this.parent.mc.getRenderItem().renderItemAndEffectIntoGUI((EntityLivingBase)null, addon.getLogoItem(), left + 7, top + 8);
-        	this.parent.drawString(this.parent.getFontRenderer(), addon.name, left + 42, top + 8, 0xFFFFFF);
-        	this.parent.drawString(this.parent.getFontRenderer(), "(" + addon.id + ")", left + 42, top + 20, 0xFFFFFF);
+            RenderHelper.disableStandardItemLighting();
+        	this.parent.drawString(this.parent.getFontRenderer(), addon.name, left + 42, top + 7, 0xFFFFFF);
+        	this.parent.drawString(this.parent.getFontRenderer(), I18n.format("gui.additions.main.byAuthor", addon.author, addon.id), left + 42, top + 19, 0xFFFFFF);
         }
 	}
 
