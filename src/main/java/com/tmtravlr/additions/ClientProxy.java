@@ -4,12 +4,26 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.items.IItemAdded;
+import com.tmtravlr.additions.addon.items.ItemAddedManager;
+import com.tmtravlr.additions.addon.items.ItemAddedSimple;
+import com.tmtravlr.additions.gui.GuiFactoryRegistration;
+import com.tmtravlr.additions.gui.type.button.GuiAdditionTypeButton;
+import com.tmtravlr.additions.gui.type.button.GuiAdditionTypeButtonCreativeTab;
+import com.tmtravlr.additions.gui.type.button.GuiAdditionTypeButtonItem;
+import com.tmtravlr.additions.gui.type.button.IAdditionTypeGuiFactory;
+import com.tmtravlr.additions.gui.view.GuiView;
+import com.tmtravlr.additions.gui.view.edit.GuiEdit;
+import com.tmtravlr.additions.gui.view.edit.item.GuiEditItemSimple;
+import com.tmtravlr.additions.gui.view.edit.item.IGuiEditItemFactory;
+import com.tmtravlr.additions.type.AdditionTypeManager;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiErrorScreen;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -17,11 +31,10 @@ import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.resources.FileResourcePack;
 import net.minecraft.client.resources.FolderResourcePack;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.CustomModLoadingErrorDisplayException;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -31,6 +44,17 @@ public class ClientProxy extends CommonProxy {
 	
 	private List defaultResourcePacks = null;
 	private AddonLoadingException loadingException;
+	
+	@Override
+	public void registerEventHandlers() {
+		MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
+		super.registerEventHandlers();
+	}
+	
+	@Override
+	public void registerGuiFactories() {
+		GuiFactoryRegistration.registerGuiFactories();
+	}
 	
 	@Override
 	public void registerBlockRenderWithDamage(Block block, int damage, String name) {
@@ -55,7 +79,8 @@ public class ClientProxy extends CommonProxy {
 	
 	@Override
 	public void registerItemRender(Item item) {
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, 0, new ModelResourceLocation(new ResourceLocation(AdditionsMod.MOD_ID, getItemName(item.getUnlocalizedName())), "inventory"));
+		String itemName = getItemName(item.getUnlocalizedName());
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, 0, new ModelResourceLocation(new ResourceLocation(AdditionsMod.MOD_ID, itemName), "inventory"));
 	}
 	
 	@Override
@@ -81,7 +106,6 @@ public class ClientProxy extends CommonProxy {
         }, items);
 	}
 	
-	//Attempts to register an "addon" as a resource pack
 	@Override
 	public void registerAsResourcePack(File addon) {
 		

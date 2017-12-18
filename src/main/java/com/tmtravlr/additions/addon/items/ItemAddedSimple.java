@@ -22,21 +22,31 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.tmtravlr.additions.AdditionsMod;
 
+/**
+ * Basic Item
+ * 
+ * @author Tmtravlr (Rebeca Rey)
+ * @since July 2017 
+ */
 public class ItemAddedSimple extends Item implements IItemAdded {
+	
+	public static final String DESCRIPTION = "item.simple.description";
+	public static final ResourceLocation TYPE = new ResourceLocation(AdditionsMod.MOD_ID, "simple");
 	
 	public String displayName;
 	public List<String> extraTooltip = new ArrayList<>();
+	public List<String> oreDictEntries = new ArrayList<>();
 	public boolean shines = false;
 	public Multimap<EntityEquipmentSlot, AttributeModifier> attributeModifiers = HashMultimap.create();
 	
 	@Override
-	public String getDescription() {
-		return "item.simple.description";
+	public void setTooltip(List<String> infoToAdd) {
+		this.extraTooltip = infoToAdd;
 	}
 	
 	@Override
-	public void setTooltip(List<String> infoToAdd) {
-		this.extraTooltip = infoToAdd;
+	public void setOreDict(List<String> oreDict) {
+		this.oreDictEntries = oreDict;
 	}
 	
 	@Override
@@ -57,6 +67,11 @@ public class ItemAddedSimple extends Item implements IItemAdded {
 	@Override
 	public List<String> getTooltip() {
 		return this.extraTooltip;
+	}
+
+	@Override
+	public List<String> getOreDict() {
+		return this.oreDictEntries;
 	}
 
 	@Override
@@ -116,7 +131,7 @@ public class ItemAddedSimple extends Item implements IItemAdded {
 	public static class Serializer extends IItemAdded.Serializer<ItemAddedSimple> {
 		
 		public Serializer() {
-			super(new ResourceLocation(AdditionsMod.MOD_ID, "simple"), ItemAddedSimple.class);
+			super(TYPE, ItemAddedSimple.class);
 		}
 		
 		@Override

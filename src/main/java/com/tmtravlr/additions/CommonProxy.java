@@ -5,14 +5,19 @@ import java.io.File;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 
 public class CommonProxy {
 	
-	public void registerBlockRender(Block block) {
+	public void registerEventHandlers() {
+		MinecraftForge.EVENT_BUS.register(new CommonEventHandler());
+	}
+	
+	public void registerGuiFactories() {
 		//Do nothing on the server!
 	}
 	
-	public void registerRenderers() {
+	public void registerBlockRender(Block block) {
 		//Do nothing on the server!
 	}
 

@@ -1,7 +1,11 @@
 package com.tmtravlr.additions.gui;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.List;
+
+import com.tmtravlr.additions.AdditionsMod;
+import com.tmtravlr.additions.gui.view.components.IGuiViewComponent;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -12,6 +16,12 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.ITextComponent;
 
+/**
+ * Shows a simple notification-type popup message.
+ * 
+ * @author Tmtravlr (Rebeca Rey)
+ * @since July 2017 
+ */
 public class GuiMessagePopup extends GuiScreen {
 	
 	protected static final int BUTTON_CANCEL = 0;
@@ -26,7 +36,7 @@ public class GuiMessagePopup extends GuiScreen {
 
     public GuiMessagePopup(GuiScreen parentScreen, String title, ITextComponent message, String buttonText) {
         this.parentScreen = parentScreen;
-        this.title = I18n.format(title);
+        this.title = title;
         this.message = message;
         this.buttonText = buttonText;
     }
@@ -36,14 +46,16 @@ public class GuiMessagePopup extends GuiScreen {
      * window resizes, the buttonList is cleared beforehand.
      */
     @Override
-    public void initGui() {        
-        int popupWidth = 250;
-    	int popupHeight = 90 + this.textHeight;
-    	int popupY = this.height / 2 - popupHeight / 2;
+    public void initGui() {  
+        int popupWidth = this.getPopupWidth();      
         
         this.multilineMessage = this.fontRenderer.listFormattedStringToWidth(this.message.getFormattedText(), popupWidth - 50);
         this.textHeight = this.multilineMessage.size() * this.fontRenderer.FONT_HEIGHT;
-        this.buttonList.add(new GuiButton(BUTTON_CANCEL, this.width / 2 - 100, popupY + popupHeight - 30, I18n.format(buttonText)));
+        
+    	int popupHeight = this.getPopupHeight();
+    	int popupY = this.height / 2 - popupHeight / 2;
+        
+        this.buttonList.add(new GuiButton(BUTTON_CANCEL, this.width / 2 - 100, popupY + popupHeight - 30, buttonText));
     }
 
     /**
@@ -62,8 +74,8 @@ public class GuiMessagePopup extends GuiScreen {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		
-    	int popupWidth = 250;
-    	int popupHeight = 90 + this.textHeight;
+    	int popupWidth = this.getPopupWidth();
+    	int popupHeight = this.getPopupHeight();
     	int popupX = this.width / 2 - popupWidth / 2;
     	int popupY = this.height / 2 - popupHeight / 2;
 
@@ -80,6 +92,32 @@ public class GuiMessagePopup extends GuiScreen {
         }
 
         super.drawScreen(mouseX, mouseY, partialTicks);
+    }
+    
+    @Override
+	public void keyTyped(char keyTyped, int keyCode) throws IOException {
+    	if (keyCode != 1) {
+    		super.keyTyped(keyTyped, keyCode);
+    	}
+	}
+    
+    public void openFolder(URI url) {
+        try {
+            Class<?> oclass = Class.forName("java.awt.Desktop");
+            Object object = oclass.getMethod("getDesktop").invoke((Object)null);
+            oclass.getMethod("browse", URI.class).invoke(object, url);
+        } catch (Throwable throwable1) {
+            Throwable throwable = throwable1.getCause();
+            AdditionsMod.logger.error("Couldn't open link: {}", (Object)(throwable == null ? "<UNKNOWN>" : throwable.getMessage()));
+        }
+    }
+    
+    protected int getPopupWidth() {
+    	return 250;
+    }
+    
+    protected int getPopupHeight() {
+    	return this.textHeight + 90;
     }
     
     private void drawPopupBackground(int popupX, int popupY, int popupWidth, int popupHeight) {

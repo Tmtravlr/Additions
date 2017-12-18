@@ -4,86 +4,79 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.loot.RandomValueRange;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.fml.common.toposort.ModSortingException;
-import net.minecraftforge.oredict.OreDictionary;
-
 import org.apache.commons.io.FileUtils;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.creativetabs.CreativeTabAdded;
-import com.tmtravlr.additions.addon.items.IItemAdded;
-import com.tmtravlr.additions.addon.items.ItemAddedManager;
+import com.tmtravlr.additions.type.AdditionTypeManager;
+
+import net.minecraft.item.Item;
+import net.minecraft.world.storage.loot.RandomValueRange;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.toposort.ModSortingException;
+import net.minecraftforge.oredict.OreDictionary;
 
 /**
  * Loads addons from folders in the folder addons/Additions.
- * This should be the only class loading file from and printing to json.
+ * Also calls the addition type manager to load each type of addition.
  * 
- * @author Rebeca Rey
- * @Date July 2017 
+ * @author Tmtravlr (Rebeca Rey)
+ * @since July 2017 
  */
 public class AddonLoader {
 	
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting()
-    		.registerTypeAdapter(RandomValueRange.class, new RandomValueRange.Serializer())
-    		.registerTypeAdapter(AddonInfo.class, new AddonInfo.Serializer())
-    		.registerTypeAdapter(CreativeTabAdded.class, new CreativeTabAdded.Serializer())
-    		.registerTypeHierarchyAdapter(IItemAdded.class, new ItemAddedManager.Serializer())
+    private static final Gson GSON = new GsonBuilder()
+    		.registerTypeAdapter(Addon.class, new Addon.Serializer())
+    		.setPrettyPrinting()
     		.create();
 	
 	public static final String ADDON_LOCATION = "/addons/Additions";
-	public static final Map<String, AddonInfo> ADDONS_NAMED = new TreeMap<>();
+	public static final Map<String, Addon> ADDONS_NAMED = new TreeMap<>();
 	
-	public static List<AddonInfo> addonsLoaded = new ArrayList<>();
-	public static File addonFolder;
-	
-	public static Multimap<String, Item> oreDictsToRegister = HashMultimap.create();
-	public static List<Item> colorItemsToRegister = new ArrayList<>();
+	public static List<Addon> addonsLoaded = new ArrayList<>();
+	public static File additionsFolder;
 	
 	public static boolean loadAddons() {
 		
 		//Load the addon folder
 		try {
-			addonFolder = new File(net.minecraft.client.Minecraft.getMinecraft().mcDataDir, ADDON_LOCATION);
+			additionsFolder = new File(net.minecraft.client.Minecraft.getMinecraft().mcDataDir, ADDON_LOCATION);
 		} catch (NoClassDefFoundError e) {
 			//Must be on a dedicated server
-			addonFolder = new File(new File("."), ADDON_LOCATION);
+			additionsFolder = new File(new File("."), ADDON_LOCATION);
 		}
 		
-		AdditionsMod.logger.info("Loading addon files from location " + addonFolder);
+		AdditionsMod.logger.info("Loading addon files from location " + additionsFolder);
 		
-		if (!addonFolder.exists()) {
-			addonFolder.mkdirs();
+		if (!additionsFolder.exists()) {
+			additionsFolder.mkdirs();
 		}
 
 		//Get the files in the folder
-		File[] addonFiles = addonFolder.listFiles();
+		File[] addonFiles = additionsFolder.listFiles();
 		AdditionsMod.logger.info("Found " + addonFiles.length + " addon(s) to load.");
 		
 		if (addonFiles != null && addonFiles.length > 0) {
 			
 			for (File addonFile : addonFiles) {
-				File infoFile = new File(addonFile, "addon_info.json");
+				File infoFile = new File(addonFile, "addon.json");
 				if (infoFile.exists()) {
 					try {
 						
 						String fileString = FileUtils.readFileToString(infoFile, StandardCharsets.UTF_8);
-						AddonInfo addon = GSON.fromJson(fileString, AddonInfo.class);
-						addon.setAddonFile(addonFile);
+						Addon addon = GSON.fromJson(fileString, Addon.class);
+						addon.setAddonFolder(addonFile);
 						
 						addonsLoaded.add(addon);
 						ADDONS_NAMED.put(addon.id, addon);
@@ -93,7 +86,7 @@ public class AddonLoader {
 					} catch (IOException e) {
 						AdditionsMod.logger.error("Error loading addon " + addonFile + ". The addon will not load.", e);
 					} catch (JsonSyntaxException e) {
-						AdditionsMod.logger.error("Error loading addon_info.json file in addon " + addonFile + ". The addon will not load.", e);
+						AdditionsMod.logger.error("Error loading addon.json file in addon " + addonFile + ". The addon will not load.", e);
 					}
 				} else {
 					AdditionsMod.logger.warn("Non-addon file or folder found in Additions addons: " + addonFile.getName());
@@ -102,7 +95,7 @@ public class AddonLoader {
 		}
 		
 		//Re-organize the addons if needed
-		for (AddonInfo addon : addonsLoaded) {
+		for (Addon addon : addonsLoaded) {
 			
 			if (!addon.requiredMods.isEmpty()) {
 				
@@ -129,15 +122,15 @@ public class AddonLoader {
 		try {
 			addonsLoaded = sorter.sort();
 		} catch (ModSortingException e) {
-			AdditionsMod.proxy.throwAddonLoadingException("gui.loadingError.dependancyCycle", (AddonInfo)e.getExceptionData().getFirstBadNode());
+			AdditionsMod.proxy.throwAddonLoadingException("gui.loadingError.dependancyCycle", (Addon)e.getExceptionData().getFirstBadNode());
 			return false;
 		}
 		
 		return true;
 	}
 	
-	public static void saveAddonInfo(AddonInfo addon) {
-		File infoFile = new File(addon.addonFile, "addon_info.json");
+	public static void saveAddon(Addon addon) {
+		File infoFile = new File(addon.addonFolder, "addon.json");
 		
 		try {
 			String fileContents = GSON.toJson(addon);
@@ -149,96 +142,50 @@ public class AddonLoader {
 		}
 	}
 	
-	public static void loadAddonItems() {
-		AdditionsMod.logger.info("Loading addon items.");
-		
-		for (AddonInfo addon : addonsLoaded) {
-			File itemFolder = new File(addon.addonFile, "items");
-			
-			if (itemFolder.isDirectory()) {
-				for (File file : itemFolder.listFiles()) {
-					try {
-						String fileString = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
-						IItemAdded itemAdded = GSON.fromJson(fileString, IItemAdded.class).getAsItem();
-						addon.itemsAdded.add(itemAdded);
-						Item itemAddedItem = itemAdded.getAsItem();
-						
-						String itemName = file.getName();
-						
-						if (itemName.endsWith(".json")) {
-							itemName = itemName.substring(0, itemName.length()-5);
-						}
-						
-						itemName = addon.id + "." + itemName;
-						ResourceLocation itemRegistryName = new ResourceLocation(AdditionsMod.MOD_ID, itemName);
-						
-						ForgeRegistries.ITEMS.register(itemAddedItem.setUnlocalizedName(itemName).setRegistryName(itemRegistryName));
-						
-						AdditionsMod.logger.info("Loaded item '" + itemRegistryName + "'");
-					} catch (IOException e) {
-						AdditionsMod.logger.error("Error loading item " + file + ". The item will not load.", e);
-					} catch (JsonSyntaxException e) {
-						AdditionsMod.logger.error("Error loading item " + file + ". The item will not load.", e);
-					}
-				}
-			}
-		}
-		
-		if (!oreDictsToRegister.isEmpty()) {
-			for (String oreName : oreDictsToRegister.keySet()) {
-				for (Item item : oreDictsToRegister.get(oreName)) {
-					OreDictionary.registerOre(oreName, item);
-				}
-			}
-			oreDictsToRegister.clear();
-		}
+	public static void setupNewAddon(Addon addon) {
+		addonsLoaded.add(addon);
+		ADDONS_NAMED.put(addon.id, addon);
+		AdditionTypeManager.setupNewAddon(addon);
+		saveResourcePackFile(addon);
 	}
 	
-	public static void loadAddonItemModels() {
-		AdditionsMod.logger.info("Loading addon item models.");
-		
-		for (AddonInfo addon : addonsLoaded) {
-			for (IItemAdded item : addon.itemsAdded) {
-				item.registerModels();
-				colorItemsToRegister.add(item.getAsItem());
-			}
-		}
-		
-		if(!colorItemsToRegister.isEmpty()) {
-			AdditionsMod.proxy.registerItemColors(colorItemsToRegister.toArray(new Item[0]));
-			colorItemsToRegister.clear();
-		}
+	public static void loadAdditionsPreInit(FMLPreInitializationEvent event) {
+		AdditionsMod.logger.info("Preinitializing addons.");
+		AdditionTypeManager.loadPreInit(addonsLoaded, event);
 	}
 	
-	public static void loadAddonCreativeTabs() {
-		AdditionsMod.logger.info("Loading addon creative tabs.");
+	public static void loadAdditionsInit(FMLInitializationEvent event) {
+		AdditionsMod.logger.info("Initializing addons.");
+		AdditionTypeManager.loadInit(addonsLoaded, event);
+	}
+	
+	public static void loadAdditionsPostInit(FMLPostInitializationEvent event) {
+		AdditionsMod.logger.info("Postinitializing addons.");
+		AdditionTypeManager.loadPostInit(addonsLoaded, event);
+	}
+	
+	public static void loadAdditionsServerStarting(FMLServerStartingEvent event) {
+		AdditionsMod.logger.info("Loading addons as server starts.");
+		AdditionTypeManager.loadServerStarting(addonsLoaded, event);
+	}
+	
+	private static void saveResourcePackFile(Addon addon) {
+		File packMeta = new File(addon.addonFolder, "pack.mcmeta");
 		
-		for (AddonInfo addon : addonsLoaded) {
-			File itemFolder = new File(addon.addonFile, "creative_tabs");
+		if (!packMeta.exists()) {
+			String packMetaString = "{\n" +
+									"  \"pack\": {\n" +
+									"    \"pack_format\": 3,\n" +
+									"    \"description\": \"Additions Addon: " + addon.id + "\"\n" +
+									"  }\n" +
+									"}";
 			
-			if (itemFolder.isDirectory()) {
-				for (File file : itemFolder.listFiles()) {
-					try {
-						String fileString = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
-						CreativeTabAdded tabAdded = GSON.fromJson(fileString, CreativeTabAdded.class);
-						
-						addon.creativeTabsAdded.add(tabAdded);
-						
-						AdditionsMod.logger.info("Loaded creative tab '" + tabAdded.getTabLabel() + "'");
-					} catch (IOException e) {
-						AdditionsMod.logger.error("Error loading creative tab " + file + ". The creative tab will not load.", e);
-					} catch (JsonSyntaxException e) {
-						AdditionsMod.logger.error("Error loading creative tab " + file + ". The creative tab will not load.", e);
-					}
-				}
-			}
-		}
-		
-		if (!oreDictsToRegister.isEmpty()) {
-			for (String oreName : oreDictsToRegister.keySet()) {
-				for (Item item : oreDictsToRegister.get(oreName)) {
-					OreDictionary.registerOre(oreName, item);
-				}
+			try {
+				FileUtils.write(packMeta, packMetaString, StandardCharsets.UTF_8);
+			} catch (IOException e) {
+				AdditionsMod.logger.warn("Error creating pack meta for " + addon.name, e);
+			} catch (IllegalArgumentException e) {
+				AdditionsMod.logger.error("Error creating pack meta for " + addon.name, e);
 			}
 		}
 	}

@@ -11,12 +11,20 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.GuiSlotModList;
 
-import com.tmtravlr.additions.addon.AddonInfo;
+import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.AddonLoader;
-import com.tmtravlr.additions.gui.addon.GuiCreateAddon;
+import com.tmtravlr.additions.gui.view.GuiViewAddon;
+import com.tmtravlr.additions.gui.view.edit.GuiEditAddon;
 
+/**
+ * Additions Main Menu
+ * 
+ * @author Tmtravlr (Rebeca Rey)
+ * @since July 2017 
+ */
 public class GuiAdditionsMainMenu extends GuiScreen {
 	
     private static final ResourceLocation TITLE_TEXTURE = new ResourceLocation("additions:textures/gui/additions_title_big.png");
@@ -25,8 +33,8 @@ public class GuiAdditionsMainMenu extends GuiScreen {
 	
 	private GuiScreen parentScreen;
 	
-	private ArrayList<AddonInfo> addonsToDisplay;
-	public AddonInfo createNew = new AddonInfo();
+	private ArrayList<Addon> addonsToDisplay;
+	public Addon createNew = new Addon();
 	
 	private GuiScrollingAddonList addonList;
 	
@@ -91,11 +99,11 @@ public class GuiAdditionsMainMenu extends GuiScreen {
         this.addonList.handleMouseInput(mouseX, mouseY);
     }
     
-    public void addonSelected(AddonInfo addon) {
+    public void addonSelected(Addon addon) {
     	if (addon == createNew) {
-    		this.mc.displayGuiScreen(new GuiCreateAddon(this, I18n.format("gui.createAddon.title")));
+    		this.mc.displayGuiScreen(new GuiEditAddon(this, I18n.format("gui.edit.addon.title")));
     	} else {
-    		//TODO: Edit the addon
+    		this.mc.displayGuiScreen(new GuiViewAddon(this, addon.name + TextFormatting.RESET +  " " + I18n.format("gui.additions.main.byAuthor", addon.author, addon.id), addon));
     	}
     }
     

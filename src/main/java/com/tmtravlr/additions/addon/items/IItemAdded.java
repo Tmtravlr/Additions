@@ -3,30 +3,33 @@ package com.tmtravlr.additions.addon.items;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.collect.Multimap;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSerializationContext;
+import com.tmtravlr.additions.AdditionsMod;
+import com.tmtravlr.additions.type.AdditionTypeItem;
+import com.tmtravlr.additions.util.OtherSerializers;
+
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
-import com.google.common.collect.Multimap;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSyntaxException;
-import com.tmtravlr.additions.AdditionsMod;
-import com.tmtravlr.additions.addon.AddonLoader;
-import com.tmtravlr.additions.util.OtherSerializers;
-
+/**
+ * Represents an added item
+ * 
+ * @author Tmtravlr (Rebeca Rey)
+ * @since July 2017 
+ */
 public interface IItemAdded {
 	
-	public String getDescription();
-	
 	public void setTooltip(List<String> infoToAdd);
+	
+	public void setOreDict(List<String> oreDict);
 	
 	public void setDisplayName(String name);
 	
@@ -35,6 +38,8 @@ public interface IItemAdded {
 	public void setAttributeModifiers(Multimap<EntityEquipmentSlot, AttributeModifier> attributeModiferList);
 	
 	public List<String> getTooltip();
+	
+	public List<String> getOreDict();
 	
 	public String getDisplayName();
 	
@@ -54,9 +59,20 @@ public interface IItemAdded {
 		AdditionsMod.proxy.registerItemRender(this.getAsItem());
 	}
 	
-	public default <T extends Item & IItemAdded> T getAsItem() {
-		return (T) this;
+	public default Item getAsItem() {
+		if (!(this instanceof Item)) {
+			throw new IllegalArgumentException("An IItemAdded must be an instance of Item.");
+		}
+		return (Item) this;
 	}
+	
+    public default String getId() {
+        String unlocalizedName = this.getAsItem().getUnlocalizedName();
+        if (unlocalizedName.startsWith("item.")) {
+        	return unlocalizedName.substring(5);
+        }
+        return unlocalizedName;
+    }
 
 	public abstract static class Serializer<T extends IItemAdded> {
 		
@@ -103,15 +119,8 @@ public interface IItemAdded {
 				json.add("attribute_modifiers", OtherSerializers.AttributeModifierListSerializer.serialize(itemAddedObj.getAttributeModifiers(), context));
 			}
 			
-			int[] oreIds = OreDictionary.getOreIDs(new ItemStack(itemAdded));
-			if (oreIds.length > 0) {
-				List<String> oreNames = new ArrayList<>();
-				
-				for(int oreId : oreIds) {
-					oreNames.add(OreDictionary.getOreName(oreId));
-				}
-				
-				json.add("ore_dict", OtherSerializers.StringListSerializer.serialize(oreNames, context));
+			if (!itemAddedObj.getOreDict().isEmpty()) {
+				json.add("ore_dict", OtherSerializers.StringListSerializer.serialize(itemAddedObj.getOreDict(), context));
 			}
 			
 			return json;
@@ -142,10 +151,7 @@ public interface IItemAdded {
         	}
         	
         	if (json.has("ore_dict")) {
-        		List<String> oreNames = OtherSerializers.StringListSerializer.deserialize(json.get("ore_dict"), "ore_dict", context);
-        		for(String oreName : oreNames) {
-        			AddonLoader.oreDictsToRegister.put(oreName, itemAdded);
-        		}
+        		itemAdded.setOreDict(OtherSerializers.StringListSerializer.deserialize(json.get("ore_dict"), "ore_dict", context));
         	}
         	
         	return itemAdded;

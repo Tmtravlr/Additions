@@ -19,8 +19,8 @@ import org.lwjgl.opengl.GL11;
  * Adapted from GuiScrollingList, but supports elements having any arbitrary height.
  * Also, it doesn't scroll if you click and drag except on the scroll bar.
  * 
- * @author Rebeca Rey (Tmtravlr)
- * @date August 2017
+ * @author Tmtravlr (Rebeca Rey)
+ * @since August 2017
  */
 public abstract class GuiScrollingListAnyHeight {
 
@@ -62,7 +62,8 @@ public abstract class GuiScrollingListAnyHeight {
     protected void setHeaderInfo(boolean hasHeader, int headerHeight) {
         this.hasHeader = hasHeader;
         this.headerHeight = headerHeight;
-        if (!hasHeader) this.headerHeight = 0;
+        if (!hasHeader) 
+        	this.headerHeight = 0;
     }
 
     protected abstract int getSize();
@@ -137,6 +138,21 @@ public abstract class GuiScrollingListAnyHeight {
         }
     }
 
+    public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+    	int entryRight = this.left + this.listWidth - 7;
+        int border = 4;
+    	int mouseListY = mouseY - this.top - this.headerHeight + (int)this.scrollDistance - border;
+        int slotIndex = this.getSlotIndex(mouseListY, entryRight);
+
+        if (mouseX >= this.left && mouseX <= entryRight && slotIndex >= 0 && mouseListY >= 0 && slotIndex < this.getSize())
+        {
+            this.elementClicked(slotIndex, slotIndex == this.selectedIndex && System.currentTimeMillis() - this.lastClickTime < 250L);
+            this.selectedIndex = slotIndex;
+            this.lastClickTime = System.currentTimeMillis();
+        } else if (mouseX >= this.left && mouseX <= entryRight && mouseListY < 0) {
+            this.clickHeader(mouseX - this.left, mouseY - this.top + (int)this.scrollDistance - border);
+        }
+    }
 
     public void handleMouseInput(int mouseX, int mouseY) throws IOException {
         boolean isHovering = mouseX >= this.left && mouseX <= this.left + this.listWidth &&
@@ -168,22 +184,8 @@ public abstract class GuiScrollingListAnyHeight {
         if (Mouse.isButtonDown(0)) {
             if (this.initialMouseClickY == -1.0F) {
                 if (isHovering) {
-                    int mouseListY = mouseY - this.top - this.headerHeight + (int)this.scrollDistance - border;
-                    int slotIndex = this.getSlotIndex(mouseListY, entryRight);
-
-                    if (mouseX >= entryLeft && mouseX <= entryRight && slotIndex >= 0 && mouseListY >= 0 && slotIndex < listLength)
-                    {
-                        this.elementClicked(slotIndex, slotIndex == this.selectedIndex && System.currentTimeMillis() - this.lastClickTime < 250L);
-                        this.selectedIndex = slotIndex;
-                        this.lastClickTime = System.currentTimeMillis();
-                    }
-                    else if (mouseX >= entryLeft && mouseX <= entryRight && mouseListY < 0)
-                    {
-                        this.clickHeader(mouseX - entryLeft, mouseY - this.top + (int)this.scrollDistance - border);
-                    }
-
-                    if (mouseX >= scrollBarLeft && mouseX <= scrollBarRight)
-                    {
+                	
+                    if (mouseX >= scrollBarLeft && mouseX <= scrollBarRight) {
                         this.scrollFactor = -1.0F;
                         int scrollHeight = this.getContentHeight(entryRight) - viewHeight - border;
                         if (scrollHeight < 1) scrollHeight = 1;
@@ -195,22 +197,19 @@ public abstract class GuiScrollingListAnyHeight {
                             var13 = viewHeight - border*2;
 
                         this.scrollFactor /= (float)(viewHeight - var13) / (float)scrollHeight;
-                    }
-                    else
-                    {
+                        this.initialMouseClickY = mouseY;
+                    } else {
                         this.scrollFactor = 1.0F;
                     }
-
-                    this.initialMouseClickY = mouseY;
-                }
-                else
-                {
+                } else {
                     this.initialMouseClickY = -2.0F;
                 }
+            } else if (this.initialMouseClickY >= 0.0F) {
+            	
+                this.scrollDistance -= ((float)mouseY - this.initialMouseClickY) * this.scrollFactor;
+                this.initialMouseClickY = (float)mouseY;
             }
-        }
-        else
-        {
+        } else {
             this.initialMouseClickY = -1.0F;
         }
 
@@ -240,10 +239,8 @@ public abstract class GuiScrollingListAnyHeight {
         	int slotHeight = this.getSlotHeight(slotId, entryRight);
             int slotBuffer = slotHeight - border;
 
-            if (slotTop <= this.bottom && slotTop + slotBuffer >= this.top)
-            {
-                if (this.highlightSelected && this.isSelected(slotId))
-                {
+            if (slotTop <= this.bottom && slotTop + slotBuffer >= this.top) {
+                if (this.highlightSelected && this.isSelected(slotId)) {
                     int min = this.left;
                     int max = entryRight;
                     GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -270,8 +267,7 @@ public abstract class GuiScrollingListAnyHeight {
         GlStateManager.disableDepth();
 
         int extraHeight = (this.getContentHeight(entryRight) + border) - viewHeight;
-        if (extraHeight > 0)
-        {
+        if (extraHeight > 0) {
             int height = (viewHeight * viewHeight) / this.getContentHeight(entryRight);
 
             if (height < 32) height = 32;
@@ -280,8 +276,7 @@ public abstract class GuiScrollingListAnyHeight {
                 height = viewHeight - border*2;
 
             int barTop = (int)this.scrollDistance * (viewHeight - height) / extraHeight + this.top;
-            if (barTop < this.top)
-            {
+            if (barTop < this.top) {
                 barTop = this.top;
             }
 
@@ -314,8 +309,7 @@ public abstract class GuiScrollingListAnyHeight {
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
     }
 
-    protected void drawGradientRect(int left, int top, int right, int bottom, int color1, int color2)
-    {
+    protected void drawGradientRect(int left, int top, int right, int bottom, int color1, int color2) {
         float a1 = (float)(color1 >> 24 & 255) / 255.0F;
         float r1 = (float)(color1 >> 16 & 255) / 255.0F;
         float g1 = (float)(color1 >>  8 & 255) / 255.0F;
@@ -347,12 +341,10 @@ public abstract class GuiScrollingListAnyHeight {
     	Tessellator tess = Tessellator.getInstance();
     	BufferBuilder worldr = tess.getBuffer();
     	
-    	if (this.client.world != null)
-        {
+    	if (this.client.world != null) {
             this.drawGradientRect(this.left, this.top, this.right, this.bottom, 0xC0101010, 0xD0101010);
-        }
-        else // Draw dark dirt background
-        {
+        } else {
+        	// Draw dark dirt background
             GlStateManager.disableLighting();
             GlStateManager.disableFog();
             this.client.renderEngine.bindTexture(Gui.OPTIONS_BACKGROUND);

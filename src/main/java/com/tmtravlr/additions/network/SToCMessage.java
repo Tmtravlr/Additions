@@ -11,6 +11,9 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
+/**
+ * @author Tmtravlr 
+ */
 public class SToCMessage implements IMessage{
 	private byte[] data;
 	

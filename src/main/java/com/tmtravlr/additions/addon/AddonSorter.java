@@ -18,25 +18,25 @@ import com.google.common.collect.Maps;
 /**
  * Sorts the addons based on dependencies. Most of the code adapted from ModSorter.
  * 
- * @author Rebeca Rey (Tmtravlr)
- * @date July 2017
+ * @author Tmtravlr (Rebeca Rey)
+ * @since July 2017
  */
 public class AddonSorter {
-    private DirectedGraph<AddonInfo> addonGraph;
+    private DirectedGraph<Addon> addonGraph;
 
-    private AddonInfo beforeAll = new AddonInfo();
-    private AddonInfo afterAll = new AddonInfo();
-    private AddonInfo before = new AddonInfo();
-    private AddonInfo after = new AddonInfo();
+    private Addon beforeAll = new Addon();
+    private Addon afterAll = new Addon();
+    private Addon before = new Addon();
+    private Addon after = new Addon();
 
     public AddonSorter() {
         buildGraph();
     }
 
     private void buildGraph() {
-    	HashMap<String, AddonInfo> nameLookup = Maps.newHashMap(AddonLoader.ADDONS_NAMED);
+    	HashMap<String, Addon> nameLookup = Maps.newHashMap(AddonLoader.ADDONS_NAMED);
     	
-        addonGraph = new DirectedGraph<AddonInfo>();
+        addonGraph = new DirectedGraph<Addon>();
         addonGraph.addNode(beforeAll);
         addonGraph.addNode(before);
         addonGraph.addNode(afterAll);
@@ -45,11 +45,11 @@ public class AddonSorter {
         addonGraph.addEdge(beforeAll, before);
         addonGraph.addEdge(after, afterAll);
 
-        for (AddonInfo addon : AddonLoader.addonsLoaded) {
+        for (Addon addon : AddonLoader.addonsLoaded) {
             addonGraph.addNode(addon);
         }
 
-        for (AddonInfo addon : AddonLoader.addonsLoaded) {
+        for (Addon addon : AddonLoader.addonsLoaded) {
             boolean preDepAdded = false;
             boolean postDepAdded = false;
 
@@ -104,10 +104,10 @@ public class AddonSorter {
         }
     }
 
-    public List<AddonInfo> sort()
+    public List<Addon> sort()
     {
-        List<AddonInfo> sortedList = TopologicalSort.topologicalSort(addonGraph);
-        sortedList.removeAll(Arrays.asList(new AddonInfo[] {beforeAll, before, after, afterAll}));
+        List<Addon> sortedList = TopologicalSort.topologicalSort(addonGraph);
+        sortedList.removeAll(Arrays.asList(new Addon[] {beforeAll, before, after, afterAll}));
         return sortedList;
     }
 }

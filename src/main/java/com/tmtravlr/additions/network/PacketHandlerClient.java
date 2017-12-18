@@ -6,6 +6,9 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
+/**
+ * @author Tmtravlr
+ */
 public class PacketHandlerClient implements IMessageHandler<SToCMessage, IMessage> {
 
 	//Types of packets

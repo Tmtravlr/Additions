@@ -1,42 +1,157 @@
-item.simple.description=The most basic type of item. Good for crafting ingredients.
+item.simple.description=Just a simple item. Good for crafting ingredients.
 item.food.description=An item you can eat! You can set effects when eaten as well.
 
-gui.buttons.save=Save
 gui.buttons.back=Back
 gui.buttons.cancel=Cancel
 gui.buttons.close=Close
-
-gui.createAddon.title=Create New Addon
-gui.createAddon.addonId.label=Addon Id
-gui.createAddon.addonId.info=The Id can only contain lower case letters, numbers, or underscores.
-gui.createAddon.addonName.label=Addon Name
-gui.createAddon.addonIcon.label=Addon Icon
-gui.createAddon.required.info=These are useful if you require items/recipes/etc. from other mods or addons. Also add addons to the 'Load Before' list as well, so they load before!
-gui.createAddon.required.warning=§cWARNING! The game will not start if these mods or addons are not found. So no touchie unless your addon needs these mods or addons!
-gui.createAddon.requiredMods.label=Required Mods
-gui.createAddon.requiredAddons.label=Required Addons
-gui.createAddon.loadOrder.info=These are useful if you need another addon to load before/after your addon (like if it loads items you need). The * means everything.
-gui.createAddon.dependencies.label=Load Before This
-gui.createAddon.dependents.label=Load After This
-gui.createAddon.problem.title=Problem Creating Addon
-gui.createAddon.problem.duplicate=An addon with Id '%s' already exists!
-gui.createAddon.problem.noAddonId=The Addon Id cannot be blank.
-gui.createAddon.problem.noAddonName=The Addon Name cannot be blank.
-gui.createAddon.problem.allBeforeAfter=Can't load * (everything) both before and after this addon!
-gui.createAddon.problem.bothBeforeAfter=Can't have the same addon '%s' in both Load Before and Load After lists!
-gui.createAddon.problem.beforeAll=Can't have an addon '%s' in Load After if * (everything) is in Load Before!
-gui.createAddon.problem.afterAll=Can't have an addon '%s' in Load Before if * (everything) is in Load After!
+gui.buttons.continue=Continue
+gui.buttons.create=Create
+gui.buttons.delete=Delete
+gui.buttons.duplicate=Duplicate
+gui.buttons.edit=Edit
+gui.buttons.save=Save
+gui.buttons.update=Update
 
 gui.dropdown.nothingToShow=Nothing to Show
-
-gui.editObject.showAdvanced=Show Advanced
 
 gui.loadingError.modNotFound=The addon %1$s requires any version of mod '%2$s'
 gui.loadingError.addonNotFound=The addon %1$s requires any version of addon '%2$s'
 gui.loadingError.dependancyCycle=A cycle in the addon depenencies was found. The first addon in the cycle is %s. 
 
-gui.additions.main.byAuthor=By %1$s (%2$s)
+gui.additions.main.byAuthor=(%2$s) By %1$s
 
+gui.warnDialogue.problem.title=Uh Oh!
 gui.warnDialogue.unsaved.title=Unsaved Changes
 gui.warnDialogue.unsaved.message=You have unsaved changes! Do you want to save them first?
 gui.warnDialogue.unsaved.continue=Don't Save
+gui.warnDialogue.delete.title=Confirm Delete
+gui.warnDialogue.delete.message=Are you sure you want to delete this? It cannot be undone.
+gui.warnDialogue.restart.created.title=Successfully Created!
+gui.warnDialogue.restart.created.message=Addition successfully created! You must restart the game for it to show up ingame and in some lists. Restart now? (Will close your game)
+gui.warnDialogue.restart.updated.title=Successfully Updated!
+gui.warnDialogue.restart.updated.message=Addition successfully updated! You may have to restart the game for some updates to show up. Restart now? (Will close your game)
+gui.warnDialogue.restart.continue=Restart Now
+gui.warnDialogue.restart.close=Restart Later
+gui.warnDialogue.noTypeGui.message=Couldn't find a screen registered for the type %s!
+
+gui.popup.texture.selectFile=Select File
+gui.popup.texture.customModel=Custom Model
+gui.popup.texture.goToFolder=Go To Folder
+gui.popup.texture.success.title=Texture Loaded
+gui.popup.texture.success.message=Successfully updated the texture!
+gui.popup.texture.problem.cantLoad.title=Couldn't Load Image
+gui.popup.texture.problem.cantLoad.message=Couldn't load the image '%s'. Are you sure it's a valid image?
+gui.popup.texture.problem.wrongDimensions.title=Wrong Image Dimensions
+gui.popup.texture.problem.wrongDimensions.notSidesx2.message=The png image must have sides as a power of 2. (like 8x8, 16x16, 32x32, 64x64, etc.)
+gui.popup.texture.problem.wrongDimensions.tooWide.message=The png image can't be wider than it is tall (it can be taller than it is wide, as an animation).
+gui.popup.texture.problem.wrongDimensions.badAnimation.message=Image isn't tall enough to be an animation but is too tall to be a regular image. It must either be square or a stack of squares.
+
+gui.popup.texture.item.title=Textureize your Item!
+gui.popup.texture.item.message=Select a texture for %s, which should be a png file. If you want a custom model, however, you will have to create that yourself!
+
+gui.popup.texture.animation.title=Set Up Animation
+gui.popup.texture.animation.message=Looks like your image is an animation. Would you like to select a .mcmeta file, or generate a default one?
+gui.popup.texture.animation.button.generate=Generate Default
+
+gui.popup.reloadResources.title=Reloading Resouces
+gui.popup.reloadResources.message=Reloading resources. Please wait.
+
+gui.popup.custom.item.title=Custom Model
+gui.popup.custom.item.message=You'll have to manually create and add your textures and item model! Call the item model %s and place it in this folder:
+
+gui.popup.itemstack.title=Edit Item Stack
+gui.popup.itemstack.item.label=Item
+gui.popup.itemstack.meta.label=Metadata
+gui.popup.itemstack.count.label=Count
+gui.popup.itemstack.items.label=Items
+gui.popup.itemstack.nbt.label=NBT Tag
+
+gui.popup.attributeModifier.title=Edit Attribute Modifier
+gui.popup.attributeModifier.attributeName.label=Attribute Name
+gui.popup.attributeModifier.amount.label=Amount
+gui.popup.attributeModifier.operation.label=Operation
+gui.popup.attributeModifier.operation.info=0 adds the modifier, 1 and 2 multiply it by (1 + amount) in slightly different ways. For more info, check out %s.
+gui.popup.attributeModifier.slot.label=Slot
+gui.popup.attributeModifier.uuid.label=UUID
+gui.popup.attributeModifier.uuid.info=Leave the UUID blank to generate a default one.
+gui.popup.attributeModifier.problem.slotRequired.title=Slot Needed
+gui.popup.attributeModifier.problem.slotRequired.message=You need to specify a slot!
+
+gui.view.showAdvanced=Show Advanced
+gui.view.additionType.type=§7Type:§r %s
+gui.view.additionType.id=§7Id:§r %s
+gui.view.additionType.name=§7Name:§r %s
+gui.view.additionType.count=§7Count:§r %s
+gui.view.additionType.items=§7Items:§r %s
+
+gui.view.addon.items.label=View Items Added (%s)
+gui.view.addon.items.title=Items for %s
+gui.view.addon.blocks.label=View Blocks Added (%s)
+gui.view.addon.blocks.title=Blocks for %s
+gui.view.addon.recipes.label=View Recipes Added (%s)
+gui.view.addon.recipes.title=Recipes for %s
+gui.view.addon.creativeTabs.label=View Creative Tabs Added (%s)
+gui.view.addon.creativeTabs.title=Creative Tabs for %s
+
+gui.edit.editing=Editing %s
+gui.edit.id.info=The Id can only contain lower case letters, numbers, or underscores.
+gui.edit.id.noEdit.info=The Id cannot change after being created.
+gui.edit.problem.noId=The Id cannot be blank.
+gui.edit.problem.noName=The Name cannot be blank.
+
+gui.edit.addon.title=Create New Addon
+gui.edit.addon.addonId.label=Addon Id
+gui.edit.addon.addonName.label=Addon Name
+gui.edit.addon.addonAuthor.label=Author
+gui.edit.addon.addonIcon.label=Addon Icon
+gui.edit.addon.required.info=These are useful if you require items/recipes/etc. from other mods or addons. Also add addons to the 'Load Before' list as well, so they load before!
+gui.edit.addon.required.warning=§cWARNING! The game will not start if these mods or addons are not found. So no touchie unless your addon needs these mods or addons!
+gui.edit.addon.requiredMods.label=Required Mods
+gui.edit.addon.requiredAddons.label=Required Addons
+gui.edit.addon.loadOrder.info=These are useful if you need another addon to load before/after your addon (like if it loads items you need). The * means everything.
+gui.edit.addon.dependencies.label=Load Before This
+gui.edit.addon.dependents.label=Load After This
+gui.edit.addon.problem.title=Problem Creating Addon
+gui.edit.addon.problem.duplicate=An Addon with Id '%s' already exists!
+gui.edit.addon.problem.noAddonId=The Addon Id cannot be blank.
+gui.edit.addon.problem.noAddonName=The Addon Name cannot be blank.
+gui.edit.addon.problem.allBeforeAfter=Can't load * (everything) both before and after this addon!
+gui.edit.addon.problem.bothBeforeAfter=Can't have the same addon '%s' in both Load Before and Load After lists!
+gui.edit.addon.problem.beforeAll=Can't have an addon '%s' in Load After if * (everything) is in Load Before!
+gui.edit.addon.problem.afterAll=Can't have an addon '%s' in Load Before if * (everything) is in Load After!
+
+gui.edit.selectType.label=Select Type
+gui.edit.selectType.descrpition.default=§7Select a Type above.
+gui.edit.selectType.descrpition.none=§7No description found for this type.
+
+gui.edit.item.title=Create New Item
+gui.edit.item.itemType.label=Item Type
+gui.edit.item.itemId.label=Item Id
+gui.edit.item.itemName.label=Item Name
+gui.edit.item.itemShines.label=Item Always Shines
+gui.edit.item.itemTooltip.label=Item Tooltip
+gui.edit.item.updateTexture.label=Update Item Texture
+gui.edit.item.itemContainer.label=Item Container
+gui.edit.item.maxStackSize.label=Max Stack Size
+gui.edit.item.oreDictEntries.label=Ore Dictionary Entries
+gui.edit.item.attributeModifiers.label=Item Attributes
+gui.edit.item.problem.title=Problem Creating Item
+gui.edit.item.problem.duplicate=An Item with Id '%s' already exists!
+gui.edit.item.problem.noId=The Item Id cannot be blank.
+gui.edit.item.problem.noName=The Item Name cannot be blank.
+
+gui.edit.item.simple.title=Create New Simple Item
+
+gui.edit.creativeTab.title=Create New Creative Tab
+gui.edit.creativeTab.id.label=Tab Id
+gui.edit.creativeTab.name.label=Tab Name
+gui.edit.creativeTab.hasSearchBar.label=Has Search Bar
+gui.edit.creativeTab.icon.label=Tab Icon
+gui.edit.creativeTab.items.label=Tab Items
+gui.edit.creativeTab.problem.title=Problem Creating Creative Tab
+gui.edit.creativeTab.problem.noItems=You must add items to your creative tab in Tab Items!
+gui.edit.creativeTab.problem.duplicate=A Creative Tab with Id '%s' already exists!
+gui.edit.creativeTab.success.title=Updated Creative Tab
+gui.edit.creativeTab.success.message=Successfully updated your creative tab.
+
+attribute.modifier.noEffect=No Effect

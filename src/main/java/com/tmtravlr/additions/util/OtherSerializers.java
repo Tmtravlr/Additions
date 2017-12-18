@@ -117,9 +117,11 @@ public class OtherSerializers {
 				UUID uuid;
 				if (JsonUtils.hasField(json, "uuid")) {
 					uuid = UUID.fromString(JsonUtils.getString(json, "uuid"));
-				} else if (slot == EntityEquipmentSlot.MAINHAND && name.equals("generic.attackSpeed")) {
+				} else if (name.equals("generic.attackDamage") && slot == EntityEquipmentSlot.MAINHAND) {
+					uuid = ATTACK_DAMAGE_MODIFIER;
+				} else if (name.equals("generic.attackSpeed") && slot == EntityEquipmentSlot.MAINHAND) {
 					uuid = ATTACK_SPEED_MODIFIER;
-				} else if (ARMOR_MODIFIERS.containsKey(slot)) {
+				} else if ((name.equals("generic.armor") || name.equals("generic.armorToughness")) && ARMOR_MODIFIERS.containsKey(slot)) {
 					uuid = ARMOR_MODIFIERS.get(slot);
 				} else {
 					uuid = UUID.randomUUID();

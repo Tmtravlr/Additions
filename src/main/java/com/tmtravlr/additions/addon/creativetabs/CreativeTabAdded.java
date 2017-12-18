@@ -23,14 +23,26 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * Represents an added creative tab
+ * 
+ * @author Tmtravlr (Rebeca Rey)
+ * @since July 2017 
+ */
 public class CreativeTabAdded extends CreativeTabs {
+	
+	public String id;
 	
 	public NonNullList<ItemStack> displayItems = NonNullList.create();
 	public ItemStack customTabItemStack = ItemStack.EMPTY;
-	public boolean hasSearchBar;
+	public boolean hasSearchBar = false;
 	
 	public CreativeTabAdded(String label) {
 		super(label);
+	}
+	
+	public void setId(String id) {
+		this.id = id;
 	}
 	
 	public void setCustomTabItemStack(ItemStack customIcon) {
@@ -73,12 +85,8 @@ public class CreativeTabAdded extends CreativeTabs {
      * only shows items which have tabToDisplayOn == this
      */
     @SideOnly(Side.CLIENT)
-    public void displayAllRelevantItems(NonNullList<ItemStack> p_78018_1_)
-    {
-        for (Item item : Item.REGISTRY)
-        {
-            item.getSubItems(this, p_78018_1_);
-        }
+    public void displayAllRelevantItems(NonNullList<ItemStack> itemsToDisplay) {
+        itemsToDisplay.addAll(this.displayItems);
     }
 
     /**
@@ -89,6 +97,14 @@ public class CreativeTabAdded extends CreativeTabs {
     @Override
     public boolean hasSearchBar() {
         return this.hasSearchBar;
+    }
+    
+    public int getItemCount() {
+    	return this.displayItems.size();
+    }
+    
+    public NonNullList<ItemStack> getDisplayItems() {
+    	return this.displayItems;
     }
 	
 	public static class Serializer implements JsonDeserializer<CreativeTabAdded>, JsonSerializer<CreativeTabAdded> {

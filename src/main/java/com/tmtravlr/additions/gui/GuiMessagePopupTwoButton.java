@@ -10,6 +10,12 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.ITextComponent;
 
+/**
+ * Adds a second button to the popup message.
+ * 
+ * @author Tmtravlr (Rebeca Rey)
+ * @since July 2017 
+ */
 public class GuiMessagePopupTwoButton extends GuiMessagePopup {
 	
 	protected static final int BUTTON_CONTINUE = 1;
@@ -32,7 +38,7 @@ public class GuiMessagePopupTwoButton extends GuiMessagePopup {
         super.initGui();
         GuiButton closeButton = buttonList.get(BUTTON_CANCEL);
         closeButton.width = 95;
-        this.buttonList.add(new GuiButton(BUTTON_CONTINUE, this.width / 2 + 5, closeButton.y, closeButton.width, closeButton.height, I18n.format(buttonContinueText)));
+        this.buttonList.add(new GuiButton(BUTTON_CONTINUE, this.width / 2 + 5, closeButton.y, closeButton.width, closeButton.height, buttonContinueText));
     }
 
     /**

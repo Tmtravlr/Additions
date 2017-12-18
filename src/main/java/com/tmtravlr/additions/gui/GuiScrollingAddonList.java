@@ -12,16 +12,22 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.GuiScrollingList;
 
-import com.tmtravlr.additions.addon.AddonInfo;
+import com.tmtravlr.additions.addon.Addon;
 
+/**
+ * Main list of addons.
+ * 
+ * @author Tmtravlr (Rebeca Rey)
+ * @since July 2017 
+ */
 public class GuiScrollingAddonList extends GuiScrollingList {
 	
     private static final ResourceLocation GUI_TEXTURES = new ResourceLocation("additions:textures/gui/additions_gui_textures.png");
 
 	private GuiAdditionsMainMenu parent;
-	private ArrayList<AddonInfo> addons;
+	private ArrayList<Addon> addons;
 	
-	public GuiScrollingAddonList(GuiAdditionsMainMenu parent, ArrayList<AddonInfo> addons, int listWidth, int listHeight, int minY, int slotHeight) {
+	public GuiScrollingAddonList(GuiAdditionsMainMenu parent, ArrayList<Addon> addons, int listWidth, int listHeight, int minY, int slotHeight) {
         super(parent.mc, listWidth, listHeight, minY, minY + listHeight, (parent.width - listWidth) / 2, slotHeight, parent.width, parent.height);
         this.parent = parent;
         this.addons = addons;
@@ -62,11 +68,11 @@ public class GuiScrollingAddonList extends GuiScrollingList {
         	this.parent.drawTexturedModalRect(left, top, 0, 0, 256, 32);
         }
         
-        AddonInfo addon = this.addons.get(index);
+        Addon addon = this.addons.get(index);
         
         if (addon == this.parent.createNew) {
         	this.parent.drawTexturedModalRect(left + 5, top + 5, 0, 64, 21, 21);
-        	this.parent.drawString(this.parent.getFontRenderer(), I18n.format("gui.createAddon.title"), left + 42, top + 13, 0xFFFFFF);
+        	this.parent.drawString(this.parent.getFontRenderer(), I18n.format("gui.edit.addon.title"), left + 42, top + 13, 0xFFFFFF);
         } else {
         	RenderHelper.enableGUIStandardItemLighting();
         	this.parent.mc.getRenderItem().renderItemAndEffectIntoGUI((EntityLivingBase)null, addon.getLogoItem(), left + 7, top + 8);

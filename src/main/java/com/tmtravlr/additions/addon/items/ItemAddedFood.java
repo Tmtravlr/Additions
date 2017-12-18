@@ -32,10 +32,20 @@ import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.effects.EffectInfo;
 import com.tmtravlr.additions.effects.EffectInfoPotion;
 
+/**
+ * Edible Item
+ * 
+ * @author Tmtravlr (Rebeca Rey)
+ * @since July 2017 
+ */
 public class ItemAddedFood extends ItemFood implements IItemAdded {
+	
+	public static final String DESCRIPTION = "item.food.description";
+	public static final ResourceLocation TYPE = new ResourceLocation(AdditionsMod.MOD_ID, "food");
 	
 	public String displayName = "";
 	public List<String> extraTooltip = new ArrayList<>();
+	public List<String> oreDictEntries = new ArrayList<>();
 	public boolean shines = false;
 	private boolean alwaysEdible = false;
 	public Multimap<EntityEquipmentSlot, AttributeModifier> attributeModifiers = HashMultimap.create();
@@ -51,13 +61,13 @@ public class ItemAddedFood extends ItemFood implements IItemAdded {
 	}
 	
 	@Override
-	public String getDescription() {
-		return "item.food.description";
+	public void setTooltip(List<String> infoToAdd) {
+		this.extraTooltip = infoToAdd;
 	}
 	
 	@Override
-	public void setTooltip(List<String> infoToAdd) {
-		this.extraTooltip = infoToAdd;
+	public void setOreDict(List<String> oreDict) {
+		this.oreDictEntries = oreDict;
 	}
 	
 	@Override
@@ -78,6 +88,11 @@ public class ItemAddedFood extends ItemFood implements IItemAdded {
 	@Override
 	public List<String> getTooltip() {
 		return this.extraTooltip;
+	}
+
+	@Override
+	public List<String> getOreDict() {
+		return this.oreDictEntries;
 	}
 
 	@Override
@@ -174,7 +189,7 @@ public class ItemAddedFood extends ItemFood implements IItemAdded {
 	public static class Serializer extends IItemAdded.Serializer<ItemAddedFood> {
 		
 		public Serializer() {
-			super(new ResourceLocation(AdditionsMod.MOD_ID, "food"), ItemAddedFood.class);
+			super(TYPE, ItemAddedFood.class);
 		}
 		
 		@Override

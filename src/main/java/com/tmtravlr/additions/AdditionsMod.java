@@ -3,18 +3,31 @@ package com.tmtravlr.additions;
 import org.apache.logging.log4j.Logger;
 
 import com.tmtravlr.additions.addon.AddonLoader;
+import com.tmtravlr.additions.type.AdditionTypeManager;
 
-import net.minecraft.init.Blocks;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
-@Mod(modid = AdditionsMod.MOD_ID, name = AdditionsMod.MOD_NAME, version = AdditionsMod.VERSION, 
-	guiFactory = "com.tmtravlr.additions.gui.AdditionsGuiFactory", dependencies = "after:*")
+/**
+ * Additions allows non-coders to add items, blocks, and many other things to the game through GUIs.
+ * 
+ * Main mod class.
+ * 
+ * @author Tmtravlr (Rebeca Rey)
+ * @since July 2017 
+ */
+@Mod(modid = AdditionsMod.MOD_ID, 
+     name = AdditionsMod.MOD_NAME, 
+     version = AdditionsMod.VERSION, 
+	 guiFactory = "com.tmtravlr.additions.gui.AdditionsGuiFactory", 
+	 dependencies = "after:*"
+)
 public class AdditionsMod {
 	
     public static final String MOD_ID = "additions";
@@ -32,6 +45,12 @@ public class AdditionsMod {
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         logger = event.getModLog();
+        ConfigLoader.loadConfigFile(event);
+        
+        proxy.registerEventHandlers();
+        
+        AdditionTypeManager.registerDefaultAdditionTypes();
+        proxy.registerGuiFactories();
         
         if (!AddonLoader.loadAddons()) {
         	return;
@@ -39,9 +58,7 @@ public class AdditionsMod {
         
         proxy.refreshResources();
         
-        AddonLoader.loadAddonItems();
-        
-        AddonLoader.loadAddonCreativeTabs();
+        AddonLoader.loadAdditionsPreInit(event);
     }
     
     @EventHandler
@@ -50,6 +67,24 @@ public class AdditionsMod {
     		return;
     	}
     	
-        AddonLoader.loadAddonItemModels();
+    	AddonLoader.loadAdditionsInit(event);
+    }
+    
+    @EventHandler
+    public void postInit(FMLPostInitializationEvent event) {
+    	if (proxy.checkForLoadingException()) {
+    		return;
+    	}
+    	
+    	AddonLoader.loadAdditionsPostInit(event);
+    }
+    
+    @EventHandler
+    public void serverStarting(FMLServerStartingEvent event) {
+    	if (proxy.checkForLoadingException()) {
+    		return;
+    	}
+    	
+    	AddonLoader.loadAdditionsServerStarting(event);
     }
 }
