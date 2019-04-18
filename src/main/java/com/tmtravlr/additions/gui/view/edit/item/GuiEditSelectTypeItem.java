@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.tmtravlr.additions.addon.Addon;
-import com.tmtravlr.additions.addon.items.*;
-import com.tmtravlr.additions.gui.GuiMessagePopup;
+import com.tmtravlr.additions.addon.items.ItemAddedManager;
+import com.tmtravlr.additions.gui.message.GuiMessageBox;
 import com.tmtravlr.additions.gui.view.edit.GuiEditSelectType;
 
 import net.minecraft.client.gui.GuiScreen;
@@ -14,38 +14,36 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
 
-public class GuiEditSelectTypeItem extends GuiEditSelectType<ResourceLocation> {
-
-	private Map<ResourceLocation, String> descriptions = new HashMap<>();
+/**
+ * Shows a list of items you can create.
+ * 
+ * @author Tmtravlr (Rebeca Rey)
+ * @since September 2017 
+ */
+public class GuiEditSelectTypeItem extends GuiEditSelectType<IGuiItemAddedFactory> {
 	
 	public GuiEditSelectTypeItem(GuiScreen parentScreen, String title, Addon addon) {
 		super(parentScreen, title, addon);
-		
-		this.descriptions.put(ItemAddedManager.getTypeFor(ItemAddedSimple.class), I18n.format(ItemAddedSimple.DESCRIPTION));
-		this.descriptions.put(ItemAddedManager.getTypeFor(ItemAddedFood.class), I18n.format(ItemAddedFood.DESCRIPTION));
 	}
 
 	@Override
-	public Collection<ResourceLocation> getTypes() {
-		return ItemAddedManager.getAllTypes();
+	public Collection<IGuiItemAddedFactory> getTypes() {
+		return ItemAddedManager.getAllGuiFactories().values();
 	}
 
 	@Override
-	public String getDescription(ResourceLocation type) {
-		return this.descriptions.get(type);
+	public String getDescription(IGuiItemAddedFactory editFactory) {
+		return editFactory.getDescription();
+	}
+	
+	@Override
+	public String getTitle(IGuiItemAddedFactory editFactory) {
+		return editFactory.getTitle();
 	}
 
 	@Override
 	public void createObject() {
-		ResourceLocation selected = this.getSelectedType();
-		
-		IGuiEditItemFactory editFactory = ItemAddedManager.getGuiFactoryFor(selected);
-		
-		if (editFactory != null) {
-			this.mc.displayGuiScreen(editFactory.getEditScreen(this.parentScreen, this.addon, null));
-		} else {
-			this.mc.displayGuiScreen(new GuiMessagePopup(this, I18n.format("gui.warnDialogue.problem.title"), new TextComponentTranslation("gui.warnDialogue.noTypeGui.message", selected), I18n.format("gui.buttons.close")));
-		}
+		this.mc.displayGuiScreen(this.getSelectedType().getEditScreen(this.parentScreen, this.addon, null));
 	}
 
 }

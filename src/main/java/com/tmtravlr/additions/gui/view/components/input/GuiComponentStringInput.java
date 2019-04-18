@@ -7,6 +7,7 @@ import com.google.common.base.Predicate;
 import com.tmtravlr.additions.gui.view.components.IGuiViewComponent;
 import com.tmtravlr.additions.gui.view.components.helpers.GuiColorSelect;
 import com.tmtravlr.additions.gui.view.edit.GuiEdit;
+import com.tmtravlr.additions.util.client.CommonGuiUtils;
 
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
@@ -23,8 +24,6 @@ import net.minecraftforge.fml.client.config.GuiUtils;
  */
 public class GuiComponentStringInput extends GuiTextField implements IGuiViewComponent {
 
-	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation("additions:textures/gui/additions_gui_textures.png");
-
 	private GuiEdit editScreen;
 	private Predicate<String> validator;
 	
@@ -34,6 +33,7 @@ public class GuiComponentStringInput extends GuiTextField implements IGuiViewCom
 	private boolean hasColorSelect = false;
 	private GuiColorSelect colorSelect;
 	private boolean required = false;
+	private boolean hidden = false;
 	
 	
 	public GuiComponentStringInput(String label, GuiEdit editScreen) {
@@ -41,6 +41,16 @@ public class GuiComponentStringInput extends GuiTextField implements IGuiViewCom
 		this.editScreen = editScreen;
 		this.label = label;
 		this.colorSelect = new GuiColorSelect(editScreen);
+	}
+
+	@Override
+	public boolean isHidden() {
+		return this.hidden;
+	}
+	
+	@Override
+	public void setHidden(boolean hidden) {
+		this.hidden = hidden;
 	}
 	
 	@Override
@@ -120,7 +130,7 @@ public class GuiComponentStringInput extends GuiTextField implements IGuiViewCom
 		
 		this.drawTextBox();
 		
-		this.editScreen.mc.getTextureManager().bindTexture(GUI_TEXTURES);
+		this.editScreen.mc.getTextureManager().bindTexture(CommonGuiUtils.GUI_TEXTURES);
         GlStateManager.color(255.0F, 255.0F, 255.0F, 255.0F);
 		
 		// Add info icon
@@ -131,8 +141,7 @@ public class GuiComponentStringInput extends GuiTextField implements IGuiViewCom
 			this.editScreen.drawTexturedModalRect(infoX, infoY, 21, 64, 13, 13);
 			
 			if (mouseX > infoX && mouseX < infoX + 13 && mouseY > infoY && mouseY < infoY + 13) {
-				GuiUtils.drawHoveringText(info, mouseX, mouseY, this.editScreen.width, this.editScreen.height, -1, this.editScreen.getFontRenderer());
-	            RenderHelper.disableStandardItemLighting();
+				this.editScreen.renderInfoTooltip(info, mouseX, mouseY);
 			}
 		}
 		

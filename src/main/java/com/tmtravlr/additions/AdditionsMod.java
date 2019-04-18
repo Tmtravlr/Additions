@@ -3,8 +3,28 @@ package com.tmtravlr.additions;
 import org.apache.logging.log4j.Logger;
 
 import com.tmtravlr.additions.addon.AddonLoader;
+import com.tmtravlr.additions.addon.advancements.AddonAdvancementManager;
+import com.tmtravlr.additions.addon.blocks.BlockAddedManager;
+import com.tmtravlr.additions.addon.blocks.mapcolors.BlockMapColorManager;
+import com.tmtravlr.additions.addon.blocks.materials.BlockMaterialManager;
+import com.tmtravlr.additions.addon.entities.EntityAddedProjectile;
+import com.tmtravlr.additions.addon.functions.AddonFunctionManager;
+import com.tmtravlr.additions.addon.items.ItemAddedManager;
+import com.tmtravlr.additions.addon.loottables.AddonLootTableManager;
+import com.tmtravlr.additions.addon.loottables.LootTablePresetManager;
+import com.tmtravlr.additions.addon.recipes.IngredientOreNBT;
+import com.tmtravlr.additions.addon.recipes.RecipeAddedManager;
+import com.tmtravlr.additions.addon.structures.AddonStructureManager;
+import com.tmtravlr.additions.network.CToSMessage;
+import com.tmtravlr.additions.network.PacketHandlerClient;
+import com.tmtravlr.additions.network.PacketHandlerServer;
+import com.tmtravlr.additions.network.SToCMessage;
 import com.tmtravlr.additions.type.AdditionTypeManager;
+import com.tmtravlr.additions.type.attribute.AttributeTypeManager;
 
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.common.crafting.IIngredientFactory;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -13,6 +33,11 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * Additions allows non-coders to add items, blocks, and many other things to the game through GUIs.
@@ -26,7 +51,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
      name = AdditionsMod.MOD_NAME, 
      version = AdditionsMod.VERSION, 
 	 guiFactory = "com.tmtravlr.additions.gui.AdditionsGuiFactory", 
-	 dependencies = "after:*"
+	 dependencies = "after:*;required:lootoverhaul@[1.1,)"
 )
 public class AdditionsMod {
 	
@@ -41,20 +66,34 @@ public class AdditionsMod {
 	public static CommonProxy proxy;
 	
 	public static Logger logger;
+	
+	public static SimpleNetworkWrapper networkWrapper;
     
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         logger = event.getModLog();
+		
+		networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel(MOD_ID);
+		networkWrapper.registerMessage(PacketHandlerServer.class, CToSMessage.class, 0, Side.SERVER);
+		networkWrapper.registerMessage(PacketHandlerClient.class, SToCMessage.class, 1, Side.CLIENT);
+		
         ConfigLoader.loadConfigFile(event);
+        if (event.getSide() == Side.CLIENT) {
+        	ClientConfigLoader.loadInternalConfigFile(event);
+        }
         
-        proxy.registerEventHandlers();
-        
+        BlockMaterialManager.registerDefaultBlockMaterials();
+        BlockMapColorManager.registerDefaultBlockMapColors();
+        BlockAddedManager.registerDefaultBlocks();
+        ItemAddedManager.registerDefaultItems();
+        RecipeAddedManager.registerDefaultRecipes();
+        LootTablePresetManager.registerDefaultLootTablePresets();
         AdditionTypeManager.registerDefaultAdditionTypes();
+        AttributeTypeManager.initVanillaAttributes();
+        SoundEventLoader.registerSoundEvents();
         proxy.registerGuiFactories();
         
-        if (!AddonLoader.loadAddons()) {
-        	return;
-        }
+        AddonLoader.loadAddons();
         
         proxy.refreshResources();
         
@@ -63,28 +102,38 @@ public class AdditionsMod {
     
     @EventHandler
     public void init(FMLInitializationEvent event) {
-    	if (proxy.checkForLoadingException()) {
-    		return;
-    	}
+    	EntityRegistry.registerModEntity(new ResourceLocation(MOD_ID, "projectile"), EntityAddedProjectile.class, MOD_ID + "_projectile", 0, this, 80, 5, true);
+    	proxy.registerEntityRenderers();
+        
+        CraftingHelper.register(IngredientOreNBT.TYPE, (IIngredientFactory) (context, json) -> IngredientOreNBT.Serializer.deserialize(json));
     	
     	AddonLoader.loadAdditionsInit(event);
     }
     
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-    	if (proxy.checkForLoadingException()) {
-    		return;
-    	}
-    	
     	AddonLoader.loadAdditionsPostInit(event);
     }
     
     @EventHandler
     public void serverStarting(FMLServerStartingEvent event) {
-    	if (proxy.checkForLoadingException()) {
-    		return;
-    	}
-    	
     	AddonLoader.loadAdditionsServerStarting(event);
+    	
+    	if (ConfigLoader.replaceManagers.getBoolean(true)) {
+    		AddonFunctionManager.replaceFunctionManager(event.getServer());
+    		AddonAdvancementManager.replaceAdvancementManager(event.getServer());
+    		AddonStructureManager.replaceStructureManager(event.getServer());
+    		AddonLootTableManager.replaceLootTableManager(event.getServer());
+    	}
+    }
+    
+    @EventHandler
+    public void serverStopped(FMLServerStoppedEvent event) {
+    	if (ConfigLoader.replaceManagers.getBoolean(true)) {
+    		AddonFunctionManager.deleteFunctionManager();
+    		AddonAdvancementManager.deleteAdvancementManager();
+    		AddonStructureManager.deleteStructureManager();
+    		AddonLootTableManager.deleteLootTableManger();
+    	}
     }
 }

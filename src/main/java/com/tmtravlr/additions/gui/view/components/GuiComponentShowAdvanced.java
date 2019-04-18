@@ -3,6 +3,7 @@ package com.tmtravlr.additions.gui.view.components;
 import java.io.IOException;
 
 import com.tmtravlr.additions.gui.view.GuiView;
+import com.tmtravlr.additions.util.client.CommonGuiUtils;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -15,15 +16,24 @@ import net.minecraft.util.ResourceLocation;
  * @since September 2017 
  */
 public class GuiComponentShowAdvanced implements IGuiViewComponent {
-
-	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation("additions:textures/gui/additions_gui_textures.png");
 	
 	private GuiView viewScreen;
 	private int toggleX;
 	private int toggleY;
+	private boolean hidden = false;
 	
 	public GuiComponentShowAdvanced(GuiView viewScreen) {
 		this.viewScreen = viewScreen;
+	}
+
+	@Override
+	public boolean isHidden() {
+		return this.hidden;
+	}
+	
+	@Override
+	public void setHidden(boolean hidden) {
+		this.hidden = hidden;
 	}
 
 	@Override
@@ -39,7 +49,7 @@ public class GuiComponentShowAdvanced implements IGuiViewComponent {
 		this.toggleX = x + (right - x) / 2 - (32 + 10 + textWidth) / 2;
 		this.toggleY = y + 8;
 		
-		this.viewScreen.mc.getTextureManager().bindTexture(GUI_TEXTURES);
+		this.viewScreen.mc.getTextureManager().bindTexture(CommonGuiUtils.GUI_TEXTURES);
         GlStateManager.color(255.0F, 255.0F, 255.0F, 255.0F);
         
         this.viewScreen.drawTexturedModalRect(this.toggleX, this.toggleY, 192, 64, 32, 16);
@@ -55,8 +65,8 @@ public class GuiComponentShowAdvanced implements IGuiViewComponent {
 
 	@Override
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-		if (mouseX >= this.toggleX && mouseX <= this.toggleX + 32 && mouseY >= this.toggleY && mouseY <= this.toggleY + 16) {
-			this.viewScreen.setShowAdvanced(!this.viewScreen.getShowAdvanced());
+		if (CommonGuiUtils.isMouseWithin(mouseX, mouseY, this.toggleX, this.toggleY, 32, 16)) {
+			this.viewScreen.toggleShowAdvanced();
 		}
 	}
 

@@ -1,5 +1,8 @@
 package com.tmtravlr.additions.gui;
 
+import com.tmtravlr.additions.ConfigLoader;
+import com.tmtravlr.additions.util.client.CommonGuiUtils;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -8,19 +11,17 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiAdditionsButton extends GuiButton {
 
-	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation("additions:textures/gui/additions_gui_textures.png");
-
 	private GuiScreen parentScreen;
 	
 	public GuiAdditionsButton(int buttonId, GuiScreen screen) {
-		super(buttonId, screen.width / 2 + 104, screen.height / 4 + 132, 20, 20, "");
+		super(buttonId, screen.width / 2 + ConfigLoader.additionsMainMenuButtonX.getInt(104), screen.height / 4 + ConfigLoader.additionsMainMenuButtonY.getInt(132), 20, 20, "");
 		this.parentScreen = screen;
 	}
 	
     public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
     	super.drawButton(mc, mouseX, mouseY, partialTicks);
     	
-    	this.parentScreen.mc.getTextureManager().bindTexture(GUI_TEXTURES);
+    	this.parentScreen.mc.getTextureManager().bindTexture(CommonGuiUtils.GUI_TEXTURES);
 	    GlStateManager.color(255.0F, 255.0F, 255.0F, 255.0F);
 	    GlStateManager.enableAlpha();
 	    

@@ -4,16 +4,14 @@ import java.util.List;
 
 import com.tmtravlr.additions.gui.view.components.IGuiViewComponent;
 import com.tmtravlr.additions.gui.view.edit.GuiEdit;
+import com.tmtravlr.additions.util.client.CommonGuiUtils;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTException;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.client.config.GuiUtils;
 
 /**
  * Input field specifically for nbt, that tells you if the nbt is not valid.
@@ -21,14 +19,12 @@ import net.minecraftforge.fml.client.config.GuiUtils;
  * @author Tmtravlr (Rebeca Rey)
  * @since August 2017
  */
-public class GuiComponentNBTInput extends Gui implements IGuiViewComponent {
-
-	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation("additions:textures/gui/additions_gui_textures.png");
-	
+public class GuiComponentNBTInput extends Gui implements IGuiViewComponent {	
 	private GuiEdit editScreen;
 	private GuiTextField nbtText;
 	private String label = "";
 	private boolean required = false;
+	private boolean hidden = false;
 	private NBTTagCompound tag = null;
 	private String prevNBT = "{}";
 	private String error = "";
@@ -63,6 +59,16 @@ public class GuiComponentNBTInput extends Gui implements IGuiViewComponent {
 	public String getTagText() {
 		return this.nbtText.getText();
 	}
+
+	@Override
+	public boolean isHidden() {
+		return this.hidden;
+	}
+	
+	@Override
+	public void setHidden(boolean hidden) {
+		this.hidden = hidden;
+	}
 	
 	@Override
 	public int getHeight(int left, int right) {
@@ -90,7 +96,7 @@ public class GuiComponentNBTInput extends Gui implements IGuiViewComponent {
 	
 		this.parseNBT(true);
 		
-		this.editScreen.mc.getTextureManager().bindTexture(GUI_TEXTURES);
+		this.editScreen.mc.getTextureManager().bindTexture(CommonGuiUtils.GUI_TEXTURES);
         GlStateManager.color(255.0F, 255.0F, 255.0F, 255.0F);
 		
 		int errorX = this.nbtText.x + this.nbtText.width + 4;
@@ -101,8 +107,7 @@ public class GuiComponentNBTInput extends Gui implements IGuiViewComponent {
 			
 			if (mouseX > errorX && mouseX < errorX + 13 && mouseY > errorY && mouseY < errorY + 13) {
 				List<String> errorSplit = this.editScreen.getFontRenderer().listFormattedStringToWidth(this.error, 200);
-				GuiUtils.drawHoveringText(errorSplit, mouseX, mouseY, this.editScreen.width, this.editScreen.height, -1, this.editScreen.getFontRenderer());
-	            RenderHelper.disableStandardItemLighting();
+				this.editScreen.renderInfoTooltip(errorSplit, mouseX, mouseY);
 			}
 		} else {
 			this.editScreen.drawTexturedModalRect(errorX, errorY, 99, 64, 13, 13);

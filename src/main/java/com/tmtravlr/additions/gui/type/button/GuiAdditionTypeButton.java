@@ -2,7 +2,8 @@ package com.tmtravlr.additions.gui.type.button;
 
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.gui.view.GuiView;
-import com.tmtravlr.additions.gui.view.components.GuiComponentAdditionTypeList;
+import com.tmtravlr.additions.gui.view.components.GuiComponentAdditionTypeButton;
+import com.tmtravlr.additions.util.client.CommonGuiUtils;
 
 /**
  * Button for an addition type which displays in the addon's view screen.
@@ -34,7 +35,16 @@ public abstract class GuiAdditionTypeButton {
 	 * @return True if the mouse is hovering over this button.
 	 */
 	public boolean isHovering(int mouseX, int mouseY) {
-		return mouseX >= this.x && mouseX < this.x + this.width && mouseY >= this.y && mouseY < this.y + this.getButtonHeight();
+		return CommonGuiUtils.isMouseWithin(mouseX, mouseY, this.x, this.y, this.width, this.getButtonHeight());
+	}
+	
+	/**
+	 * @return True if this button should be hidden by default and shown with the advanced buttons. 
+	 * Generally this should be true if the addition type is more complicated, and won't be used
+	 * by most addon makers.
+	 */
+	public boolean isAdvanced() {
+		return false;
 	}
 	
 	/**

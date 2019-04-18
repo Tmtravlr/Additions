@@ -24,17 +24,28 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @since August 2017
  */
 public class AdditionTypeManager {
-	
+
 	private static final Map<ResourceLocation, AdditionType> ADDITION_TYPES = new HashMap<>();
+	private static final List<AdditionType> ADDITION_TYPES_ORDERED = new ArrayList<>();
 	private static final List<IAdditionTypeGuiFactory> ADDITION_TYPE_GUI_FACTORIES = new ArrayList<>();
 	
 	public static void registerDefaultAdditionTypes() {
+		registerAdditionType(AdditionTypeSoundEvent.NAME, AdditionTypeSoundEvent.INSTANCE);
+		registerAdditionType(AdditionTypeBlock.NAME, AdditionTypeBlock.INSTANCE);
 		registerAdditionType(AdditionTypeItem.NAME, AdditionTypeItem.INSTANCE);
+		registerAdditionType(AdditionTypeItemMaterial.NAME, AdditionTypeItemMaterial.INSTANCE);
 		registerAdditionType(AdditionTypeCreativeTab.NAME, AdditionTypeCreativeTab.INSTANCE);
+		registerAdditionType(AdditionTypeLootTable.NAME, AdditionTypeLootTable.INSTANCE);
+		registerAdditionType(AdditionTypeRecipe.NAME, AdditionTypeRecipe.INSTANCE);
+		
+		registerAdditionType(AdditionTypeStructure.NAME, AdditionTypeStructure.INSTANCE);
+		registerAdditionType(AdditionTypeFunction.NAME, AdditionTypeFunction.INSTANCE);
+		registerAdditionType(AdditionTypeAdvancement.NAME, AdditionTypeAdvancement.INSTANCE);
 	}
 	
 	public static void registerAdditionType(ResourceLocation name, AdditionType toRegister) {
 		ADDITION_TYPES.put(name, toRegister);
+		ADDITION_TYPES_ORDERED.add(toRegister);
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -60,32 +71,22 @@ public class AdditionTypeManager {
 	}
 	
 	public static void loadPreInit(List<Addon> addons, FMLPreInitializationEvent event) {
-		for (AdditionType type : getAllAdditionTypes()) {
-			type.loadPreInit(addons, event);
-		}
+		ADDITION_TYPES_ORDERED.forEach(type -> type.loadPreInit(addons, event));
 	}
 	
 	public static void loadInit(List<Addon> addons, FMLInitializationEvent event) {
-		for (AdditionType type : getAllAdditionTypes()) {
-			type.loadInit(addons, event);
-		}
+		ADDITION_TYPES_ORDERED.forEach(type -> type.loadInit(addons, event));
 	}
 	
 	public static void loadPostInit(List<Addon> addons, FMLPostInitializationEvent event) {
-		for (AdditionType type : getAllAdditionTypes()) {
-			type.loadPostInit(addons, event);
-		}
+		ADDITION_TYPES_ORDERED.forEach(type -> type.loadPostInit(addons, event));
 	}
 	
 	public static void loadServerStarting(List<Addon> addons, FMLServerStartingEvent event) {
-		for (AdditionType type : getAllAdditionTypes()) {
-			type.loadServerStarting(addons, event);
-		}
+		ADDITION_TYPES_ORDERED.forEach(type -> type.loadServerStarting(addons, event));
 	}
 	
 	public static void setupNewAddon(Addon addon) {
-		for (AdditionType type : getAllAdditionTypes()) {
-			type.setupNewAddon(addon);
-		}
+		ADDITION_TYPES_ORDERED.forEach(type -> type.setupNewAddon(addon));
 	}
 }

@@ -1,8 +1,6 @@
 package com.tmtravlr.additions.addon.creativetabs;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
@@ -12,12 +10,16 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import com.tmtravlr.additions.addon.items.IItemAddedProjectile;
+import com.tmtravlr.additions.addon.items.ItemAddedFood;
 import com.tmtravlr.additions.util.OtherSerializers;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
+import net.minecraft.init.PotionTypes;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionType;
+import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
@@ -36,9 +38,17 @@ public class CreativeTabAdded extends CreativeTabs {
 	public NonNullList<ItemStack> displayItems = NonNullList.create();
 	public ItemStack customTabItemStack = ItemStack.EMPTY;
 	public boolean hasSearchBar = false;
+	public final String tabLabel;
 	
 	public CreativeTabAdded(String label) {
 		super(label);
+		this.tabLabel = label;
+		
+	}
+	
+	public CreativeTabAdded(int index, String label) {
+		super(index, label);
+		this.tabLabel = label;
 	}
 	
 	public void setId(String id) {
@@ -58,9 +68,6 @@ public class CreativeTabAdded extends CreativeTabs {
 		this.setBackgroundImageName("item_search.png");
 	}
 
-    /**
-     * Gets the translated Label.
-     */
     @SideOnly(Side.CLIENT)
     @Override
     public String getTranslatedTabLabel() {
@@ -71,29 +78,27 @@ public class CreativeTabAdded extends CreativeTabs {
     @Override
     public ItemStack getTabIconItem() {
     	if (!this.customTabItemStack.isEmpty()) {
-    		
     		return this.customTabItemStack;
     	} else if (!this.displayItems.isEmpty()) {
-    		
     		return this.displayItems.get(0);
     	} else {
     		return new ItemStack(Blocks.CRAFTING_TABLE);
     	}
     }
 
-    /**
-     * only shows items which have tabToDisplayOn == this
-     */
     @SideOnly(Side.CLIENT)
     public void displayAllRelevantItems(NonNullList<ItemStack> itemsToDisplay) {
-        itemsToDisplay.addAll(this.displayItems);
+    	for (ItemStack displayItem : this.displayItems) {
+    		if (displayItem.getItem() instanceof IItemAddedProjectile && ((IItemAddedProjectile)displayItem.getItem()).hasPotionEffects() && !displayItem.hasTagCompound()) {
+    			this.addPotions(displayItem, itemsToDisplay);
+    		} else if (displayItem.getItem() instanceof ItemAddedFood && ((ItemAddedFood)displayItem.getItem()).hasPotionEffects && !displayItem.hasTagCompound()) {
+    			this.addPotions(displayItem, itemsToDisplay);
+    		} else {
+    			itemsToDisplay.add(displayItem);
+    		}
+    	}
     }
 
-    /**
-     * Determines if the search bar should be shown for this tab.
-     *
-     * @return True to show the bar
-     */
     @Override
     public boolean hasSearchBar() {
         return this.hasSearchBar;
@@ -106,6 +111,14 @@ public class CreativeTabAdded extends CreativeTabs {
     public NonNullList<ItemStack> getDisplayItems() {
     	return this.displayItems;
     }
+    
+    private void addPotions(ItemStack stack, NonNullList<ItemStack> itemsToDisplay) {
+    	for (PotionType potionType : PotionType.REGISTRY) {
+            if (potionType != PotionTypes.EMPTY) {
+            	itemsToDisplay.add(PotionUtils.addPotionToItemStack(stack.copy(), potionType));
+            }
+        }
+    }
 	
 	public static class Serializer implements JsonDeserializer<CreativeTabAdded>, JsonSerializer<CreativeTabAdded> {
 
@@ -113,21 +126,21 @@ public class CreativeTabAdded extends CreativeTabs {
         public JsonElement serialize(CreativeTabAdded tabAdded, Type type, JsonSerializationContext context) {
             JsonObject json = new JsonObject();
             
-            json.addProperty("name", tabAdded.getTabLabel());
+            json.addProperty("name", tabAdded.tabLabel);
             
             if (tabAdded.hasSearchBar()) {
             	json.addProperty("has_search", true);
             }
             
             if (tabAdded.customTabItemStack != null) {
-            	json.add("tab_item", OtherSerializers.ItemStackSerializer.serialize(tabAdded.customTabItemStack, context));
+            	json.add("tab_item", OtherSerializers.ItemStackSerializer.serialize(tabAdded.customTabItemStack));
             }
             
             if (!tabAdded.displayItems.isEmpty()) {
             	JsonArray items = new JsonArray();
             	
             	for (ItemStack item : tabAdded.displayItems) {
-            		items.add(OtherSerializers.ItemStackSerializer.serialize(item, context));
+            		items.add(OtherSerializers.ItemStackSerializer.serialize(item));
             	}
             	
             	json.add("items", items);
@@ -149,14 +162,14 @@ public class CreativeTabAdded extends CreativeTabs {
             }
             
             if (json.has("tab_item") && json.get("tab_item").isJsonObject()) {
-            	tabAdded.setCustomTabItemStack(OtherSerializers.ItemStackSerializer.deserialize(JsonUtils.getJsonObject(json, "tab_item"), context));
+            	tabAdded.setCustomTabItemStack(OtherSerializers.ItemStackSerializer.deserialize(JsonUtils.getJsonObject(json, "tab_item")));
             }
             
             JsonArray itemArray = JsonUtils.getJsonArray(json, "items");
             NonNullList<ItemStack> items = NonNullList.create();
             
             for(int i = 0; i < itemArray.size(); i++) {
-            	items.add(OtherSerializers.ItemStackSerializer.deserialize(JsonUtils.getJsonObject(itemArray.get(i), "member of items"), context));
+            	items.add(OtherSerializers.ItemStackSerializer.deserialize(JsonUtils.getJsonObject(itemArray.get(i), "member of items")));
             }
             
             tabAdded.setDisplayItems(items);

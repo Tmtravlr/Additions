@@ -19,14 +19,13 @@ import net.minecraft.util.ResourceLocation;
  * @since September 2017 
  */
 public class GuiComponentAdditionList implements IGuiViewComponent {
-
-	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation("additions:textures/gui/additions_gui_textures.png");
 	
 	private GuiView viewScreen;
 	private final Addon addon;
 	private int x;
 	private int y;
 	private int width;
+	private boolean hidden = false;
 	private String lastFilter = "";
 	private List<GuiAdditionCard> additionCards = new ArrayList<>();
 	private List<GuiAdditionCard> filteredAdditionCards = new ArrayList<>();
@@ -41,6 +40,16 @@ public class GuiComponentAdditionList implements IGuiViewComponent {
 		if (card.filterApplies(lastFilter)) {
 			this.filteredAdditionCards.add(card);
 		}
+	}
+
+	@Override
+	public boolean isHidden() {
+		return this.hidden;
+	}
+	
+	@Override
+	public void setHidden(boolean hidden) {
+		this.hidden = hidden;
 	}
 	
 	@Override
@@ -82,6 +91,10 @@ public class GuiComponentAdditionList implements IGuiViewComponent {
 
 	@Override
 	public void onKeyTyped(char keyTyped, int keyCode) throws IOException {}
+	
+	public boolean isEmpty() {
+		return this.additionCards.size() == 0;
+	}
 	
 	public void filter(String newFilter) {
 		this.lastFilter = newFilter;

@@ -36,9 +36,22 @@ public class GuiScrollingView extends GuiScrollingListAnyHeight {
 	}
 
 	@Override
-	protected int getSlotHeight(int slotId, int entryRight) {
+	protected int getSlotHeight(int slotId, int right) {
 		IGuiViewComponent component = this.components.get(slotId);
-		return component == null ? 0 : component.getHeight(this.left, entryRight);
+		int drawLeft = this.left;
+		int drawRight = right;
+		
+		if (drawRight - drawLeft > GuiView.MAX_WIDTH) {
+			int drawMiddle = drawLeft + (drawRight - drawLeft)/2;
+			drawLeft = drawMiddle - GuiView.MAX_WIDTH/2;
+			drawRight = drawMiddle + GuiView.MAX_WIDTH/2;
+		}
+		
+		if (component.getLabel() != null && !component.getLabel().isEmpty()) {
+			drawLeft += GuiView.LABEL_OFFSET + 10;
+		}
+		
+		return (component == null || component.isHidden()) ? 0 : component.getHeight(drawLeft, drawRight);
 	}
 
 	@Override
@@ -52,21 +65,27 @@ public class GuiScrollingView extends GuiScrollingListAnyHeight {
 	@Override
 	protected void drawSlot(int slot, int right, int top, int buffer, Tessellator tess) {
 		IGuiViewComponent component = components.get(slot);
-		if (component != null) {
-			int leftStart = this.left;
-			int componentHeight = component.getHeight(this.left, right);
+		if (component != null && !component.isHidden()) {
+			int drawLeft = this.left;
+			int drawRight = right;
+			int componentHeight = component.getHeight(drawLeft, drawRight);
+			
+			if (drawRight - drawLeft > GuiView.MAX_WIDTH) {
+				int drawMiddle = drawLeft + (drawRight - drawLeft)/2;
+				drawLeft = drawMiddle - GuiView.MAX_WIDTH/2;
+				drawRight = drawMiddle + GuiView.MAX_WIDTH/2;
+			}
 			
 			if (component.getLabel() != null && !component.getLabel().isEmpty()) {
-				this.parent.drawString(this.parent.getFontRenderer(), I18n.format(component.getLabel()), this.left + 10, top + componentHeight / 2 - 5, 0xFFFFFF);
-				leftStart += GuiView.LABEL_OFFSET + 10;
+				this.parent.drawString(this.parent.getFontRenderer(), component.getLabel(), drawLeft + 10, top + componentHeight / 2 - 5, 0xFFFFFF);
+				drawLeft += GuiView.LABEL_OFFSET + 10;
 			}
 		
 			if (component.isRequired()) {
-				this.parent.drawString(this.parent.getFontRenderer(), "*", leftStart - 10, top + componentHeight / 2 - 5, 0xFFFFFF);
+				this.parent.drawString(this.parent.getFontRenderer(), "*", drawLeft - 10, top + componentHeight / 2 - 5, 0xFFFFFF);
 			}
 		
-		
-			component.drawInList(leftStart, top, right, this.mouseX, this.mouseY);
+			component.drawInList(drawLeft, top, drawRight, this.mouseX, this.mouseY);
 		}
 	}
 
@@ -80,13 +99,17 @@ public class GuiScrollingView extends GuiScrollingListAnyHeight {
 	
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
 		for (IGuiViewComponent component : components) {
-			component.onMouseClicked(mouseX, mouseY, mouseButton);
+			if (!component.isHidden()) {
+				component.onMouseClicked(mouseX, mouseY, mouseButton);
+			}
 		}
 	}
 	
 	public void onKeyTyped(char keyTyped, int keyCode) throws IOException {
 		for (IGuiViewComponent component : components) {
-			component.onKeyTyped(keyTyped, keyCode);
+			if (!component.isHidden()) {
+				component.onKeyTyped(keyTyped, keyCode);
+			}
 		}
 	}
 	
@@ -94,8 +117,10 @@ public class GuiScrollingView extends GuiScrollingListAnyHeight {
 	public void handleMouseInput(int mouseX, int mouseY) throws IOException {
 		boolean scrollEditArea = true;
 		for (IGuiViewComponent component : components) {
-			if (component.onHandleMouseInput(mouseX, mouseY)) {
-				scrollEditArea = false;
+			if (!component.isHidden()) {
+				if (component.onHandleMouseInput(mouseX, mouseY)) {
+					scrollEditArea = false;
+				}
 			}
 		}
 		if (scrollEditArea) {

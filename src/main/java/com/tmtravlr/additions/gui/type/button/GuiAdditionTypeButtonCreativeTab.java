@@ -6,6 +6,7 @@ import com.tmtravlr.additions.gui.view.GuiViewCreativeTabs;
 import com.tmtravlr.additions.type.AdditionType;
 import com.tmtravlr.additions.type.AdditionTypeCreativeTab;
 import com.tmtravlr.additions.type.AdditionTypeManager;
+import com.tmtravlr.additions.util.client.CommonGuiUtils;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.resources.I18n;
@@ -18,6 +19,10 @@ import net.minecraft.init.SoundEvents;
  * @since September 2017 
  */
 public class GuiAdditionTypeButtonCreativeTab extends GuiAdditionTypeButtonColored {
+	
+	public static final int BUTTON_COLOR_HOVER = 0xff161d69;
+	public static final int BUTTON_COLOR_LIGHT = 0xff3036a3;
+	public static final int BUTTON_COLOR_DARK = 0xff08082b;
 
 	public GuiAdditionTypeButtonCreativeTab(GuiView viewScreen, Addon addon) {
 		super(viewScreen, addon);
@@ -25,12 +30,12 @@ public class GuiAdditionTypeButtonCreativeTab extends GuiAdditionTypeButtonColor
 		int numAdded = AdditionTypeCreativeTab.INSTANCE.getAllAdditions(this.addon).size();
 		
 		this.setLabel(I18n.format("gui.view.addon.creativeTabs.label", numAdded));
-		this.setColors(0xff12124b, 0xff161d69, 0xff3036a3, 0xff08082b);
+		this.setColors(CommonGuiUtils.ADDITION_BUTTON_COLOR, BUTTON_COLOR_HOVER, BUTTON_COLOR_LIGHT, BUTTON_COLOR_DARK);
 	}
 
 	@Override
 	public void onClick() {
-		this.viewScreen.mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+		CommonGuiUtils.playClickSound();
 		this.viewScreen.mc.displayGuiScreen(new GuiViewCreativeTabs(this.viewScreen, I18n.format("gui.view.addon.creativeTabs.title", this.addon.name), this.addon));
 	}
 

@@ -2,19 +2,18 @@ package com.tmtravlr.additions.gui.view.components.helpers;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.tmtravlr.additions.gui.GuiScrollingListAnyHeight;
+import com.tmtravlr.additions.gui.view.components.IGuiViewComponent;
+import com.tmtravlr.additions.gui.view.components.input.GuiComponentListInput;
+import com.tmtravlr.additions.util.client.CommonGuiUtils;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
-
-import com.tmtravlr.additions.gui.GuiScrollingListAnyHeight;
-import com.tmtravlr.additions.gui.view.GuiView;
-import com.tmtravlr.additions.gui.view.components.IGuiViewComponent;
-import com.tmtravlr.additions.gui.view.components.input.GuiComponentListInput;
 
 /**
  * Shows a scrolling list of input components, which can be added or removed.
@@ -24,12 +23,11 @@ import com.tmtravlr.additions.gui.view.components.input.GuiComponentListInput;
  * @since August 2017 
  */
 public class GuiScrollingComponentList<T extends IGuiViewComponent> extends GuiScrollingListAnyHeight {
-	
-    private static final ResourceLocation GUI_TEXTURES = new ResourceLocation("additions:textures/gui/additions_gui_textures.png");
     private static final int REMOVE_COMPONENT_WIDTH = 20;
     
 	private GuiComponentListInput<T> parentInput;
 	public ArrayList<IGuiViewComponent> displayComponents = new ArrayList<>();
+	public ArrayList<IGuiViewComponent> visibleComponents = new ArrayList<>();
 	
 	public GuiScrollingComponentList(GuiComponentListInput parentInput, int x, int y, int width, int height) {
 		super(parentInput.editScreen.mc, width, height, y, x, parentInput.editScreen.width, parentInput.editScreen.height);
@@ -73,6 +71,7 @@ public class GuiScrollingComponentList<T extends IGuiViewComponent> extends GuiS
 	@Override
 	protected void drawSlot(int slot, int right, int top, int buffer, Tessellator tess) {
 		IGuiViewComponent component = this.displayComponents.get(slot);
+		this.visibleComponents.add(component);
 		int height = component.getHeight(this.left, right);
 		
 		if (component == this.parentInput.addNewComponent) {
@@ -83,7 +82,7 @@ public class GuiScrollingComponentList<T extends IGuiViewComponent> extends GuiS
 				this.parentInput.editScreen.drawRect(this.left + 5, top + 4, right - 5, top + height - 4, 0xFF2D5C60);
 			}
 			
-			this.parentInput.editScreen.mc.getTextureManager().bindTexture(GUI_TEXTURES);
+			this.parentInput.editScreen.mc.getTextureManager().bindTexture(CommonGuiUtils.GUI_TEXTURES);
 		    GlStateManager.color(255.0F, 255.0F, 255.0F, 255.0F);
 			GlStateManager.enableAlpha();
 		    
@@ -95,7 +94,7 @@ public class GuiScrollingComponentList<T extends IGuiViewComponent> extends GuiS
 				this.parentInput.editScreen.drawRect(this.left + 2, top + 1, right - 2, top + height - 1, 0xFF1C393C);
 				this.parentInput.editScreen.drawRect(this.left + 3, top + 2, right - 3, top + height - 2, 0xFF2D5C60);
 				
-				this.parentInput.editScreen.mc.getTextureManager().bindTexture(GUI_TEXTURES);
+				this.parentInput.editScreen.mc.getTextureManager().bindTexture(CommonGuiUtils.GUI_TEXTURES);
 			    GlStateManager.color(255.0F, 255.0F, 255.0F, 255.0F);
 				GlStateManager.enableAlpha();
 			    
@@ -113,7 +112,7 @@ public class GuiScrollingComponentList<T extends IGuiViewComponent> extends GuiS
 			}
 			
 			
-			this.parentInput.editScreen.mc.getTextureManager().bindTexture(GUI_TEXTURES);
+			this.parentInput.editScreen.mc.getTextureManager().bindTexture(CommonGuiUtils.GUI_TEXTURES);
 		    GlStateManager.color(255.0F, 255.0F, 255.0F, 255.0F);
 			GlStateManager.enableAlpha();
 		    
@@ -124,7 +123,7 @@ public class GuiScrollingComponentList<T extends IGuiViewComponent> extends GuiS
 	@Override 
 	public void handleMouseInput(int mouseX, int mouseY) throws IOException {
 		boolean scrollList = true;
-		for (IGuiViewComponent component : this.displayComponents) {
+		for (IGuiViewComponent component : this.visibleComponents) {
 			if (component.onHandleMouseInput(mouseX, mouseY)) {
 				scrollList = false;
 			}
@@ -136,21 +135,24 @@ public class GuiScrollingComponentList<T extends IGuiViewComponent> extends GuiS
 	
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		
 		Gui.drawRect(this.left - 1, this.top - 1, this.left + this.listWidth + 1, this.top + this.listHeight + 1, 0xFFA0A0A0);
+		this.visibleComponents.clear();
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
 	
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-		for (IGuiViewComponent component : this.displayComponents) {
-			component.onMouseClicked(mouseX, mouseY, mouseButton);
+		if (mouseX >= this.left && mouseX <= this.left + this.listWidth && mouseY >= this.top && mouseY <= this.top + this.listHeight) {
+			for (IGuiViewComponent component : this.visibleComponents) {
+				component.onMouseClicked(mouseX, mouseY, mouseButton);
+			}
 		}
+		
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 	
 	public void onKeyTyped(char keyTyped, int keyCode) throws IOException {
-		for (IGuiViewComponent component : this.displayComponents) {
+		for (IGuiViewComponent component : this.visibleComponents) {
 			component.onKeyTyped(keyTyped, keyCode);
 		}
 	}

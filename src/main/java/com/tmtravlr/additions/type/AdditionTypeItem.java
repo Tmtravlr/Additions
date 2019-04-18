@@ -6,26 +6,30 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import javax.annotation.Nullable;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.io.FileUtils;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.Addon;
+import com.tmtravlr.additions.addon.AddonLoader;
 import com.tmtravlr.additions.addon.items.IItemAdded;
 import com.tmtravlr.additions.addon.items.ItemAddedManager;
 
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
 /**
@@ -35,66 +39,63 @@ import net.minecraftforge.oredict.OreDictionary;
  * @since September 2017 
  */
 public class AdditionTypeItem extends AdditionType<IItemAdded> {
-	
+
 	public static final ResourceLocation NAME = new ResourceLocation(AdditionsMod.MOD_ID, "item");
+	public static final String FOLDER_NAME = "data" + File.separator + "items";
+	public static final String FILE_POSTFIX = ".json";
 	public static final AdditionTypeItem INSTANCE = new AdditionTypeItem();
 	
-	private static final String DEFAULT_ITEM_MODEL = "{\n"
-			+ "  \"parent\": \"item/generated\",\n"
-			+ "  \"textures\": {\n"
-			+ "    \"layer0\": \"additions:items/%s\"\n"
-			+ "  }\n"
-			+ "}";
-	private static final String DEFAULT_ANIMATION = "{\n"
-			+ "  \"animation\": {\n"
-			+ "    \"frametime\": 1\n"
-			+ "  }\n"
-			+ "}";
-	private static final Gson GSON = new GsonBuilder()
+	public static final Gson GSON = new GsonBuilder()
 			.registerTypeHierarchyAdapter(IItemAdded.class, new ItemAddedManager.Serializer())
 			.setPrettyPrinting()
 			.create();
 	
-	private HashMap<String, List<IItemAdded>> loadedItems = new HashMap<>();
+	private Multimap<Addon, IItemAdded> loadedItems = HashMultimap.create();
+	
+	// Can't load things like lists of ammo right away, since the items they need may not have loaded yet
+	private Map<IItemAdded, JsonObject> itemsToPostDeserialize = new HashMap<>();
 
 	@Override
 	public void loadPreInit(List<Addon> addons, FMLPreInitializationEvent event) {
 		AdditionsMod.logger.info("Loading addon items.");
 		
 		for (Addon addon : addons) {
-			this.loadedItems.put(addon.id, new ArrayList<>());
+			List<String> filePaths = new ArrayList<>();
 			
-			File itemFolder = new File(addon.addonFolder, "items");
+			try {
+				filePaths = AddonLoader.getAddonFilePaths(addon.addonFolder, FOLDER_NAME);
+			} catch (IOException e) {
+				AdditionsMod.logger.error("Error loading item files for addon " + addon.id + ". The items will not load.", e);
+			}
 			
-			if (itemFolder.isDirectory()) {
-				for (File file : itemFolder.listFiles()) {
-					try {
-						String fileString = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
-						IItemAdded itemAdded = GSON.fromJson(fileString, IItemAdded.class);
-						
-						Item item = itemAdded.getAsItem();
-						
-						String itemName = file.getName();
-						
-						if (itemName.endsWith(".json")) {
-							itemName = itemName.substring(0, itemName.length()-5);
-						
-							ResourceLocation itemRegistryName = new ResourceLocation(AdditionsMod.MOD_ID, itemName);
-							
-							this.loadedItems.get(addon.id).add(itemAdded);
-							ForgeRegistries.ITEMS.register(item.setUnlocalizedName(itemName).setRegistryName(itemRegistryName));
-							
-							for (String oreName : itemAdded.getOreDict()) {
-								OreDictionary.registerOre(oreName, item);
-							}
-							
-							AdditionsMod.logger.info("Loaded item '" + itemRegistryName + "'");
-						}
-					} catch (IOException e) {
-						AdditionsMod.logger.error("Error loading item " + file + ". The item will not load.", e);
-					} catch (JsonSyntaxException e) {
-						AdditionsMod.logger.error("Error loading item " + file + ". The item will not load.", e);
+			for (String filePath : filePaths) {
+				try {
+					String fileString = AddonLoader.readAddonFile(addon.addonFolder, filePath);
+					JsonObject itemJson = GSON.fromJson(fileString, JsonObject.class);
+					IItemAdded itemAdded = GSON.fromJson(itemJson, IItemAdded.class);
+					itemsToPostDeserialize.put(itemAdded, itemJson);
+					
+					Item item = itemAdded.getAsItem();
+					
+					String itemName = filePath;
+					if (itemName.contains(File.separator)) {
+						itemName = itemName.substring(itemName.lastIndexOf(File.separator) + 1);
 					}
+					
+					if (itemName.endsWith(FILE_POSTFIX)) {
+						itemName = itemName.substring(0, itemName.length() - FILE_POSTFIX.length());
+					
+						ResourceLocation itemRegistryName = new ResourceLocation(AdditionsMod.MOD_ID, itemName);
+						
+						this.loadedItems.put(addon, itemAdded);
+						ForgeRegistries.ITEMS.register(item.setUnlocalizedName(itemName).setRegistryName(itemRegistryName));
+						
+						for (String oreName : itemAdded.getOreDict()) {
+							OreDictionary.registerOre(oreName, item);
+						}
+					}
+				} catch (IOException | JsonParseException e) {
+					AdditionsMod.logger.error("Error loading item " + filePath + " for addon " + addon.id + ". The item will not load.", e);
 				}
 			}
 		}
@@ -105,8 +106,20 @@ public class AdditionTypeItem extends AdditionType<IItemAdded> {
 		AdditionsMod.logger.info("Registering item models.");
 		List<Item> colorItemsToRegister = new ArrayList<>();
 		
+		AdditionsMod.logger.info("Initializing addon items.");
+		for (Entry<IItemAdded, JsonObject> itemEntry : this.itemsToPostDeserialize.entrySet()) {
+			try {
+				ItemAddedManager.Serializer.postDeserialize(itemEntry.getValue(), itemEntry.getKey());
+			} catch (JsonParseException e) {
+				AdditionsMod.logger.error("There was a problem initializing item " + itemEntry.getKey().getId()  + ". If things continue, the game will probably majorly break, so it should stop loading here.");
+				throw e; 
+			}
+		}
+		
+		this.itemsToPostDeserialize.clear();
+		
 		for (Addon addon : addons) {
-			for (IItemAdded item : loadedItems.get(addon.id)) {
+			for (IItemAdded item : this.loadedItems.get(addon)) {
 				item.registerModels();
 				colorItemsToRegister.add(item.getAsItem());
 			}
@@ -117,105 +130,52 @@ public class AdditionTypeItem extends AdditionType<IItemAdded> {
 			colorItemsToRegister.clear();
 		}
 	}
-
-	@Override
-	public void loadPostInit(List<Addon> addons, FMLPostInitializationEvent event) {}
-
-	@Override
-	public void loadServerStarting(List<Addon> addons, FMLServerStartingEvent event) {}
-
-	@Override
-	public void setupNewAddon(Addon addon) {
-		this.loadedItems.put(addon.id, new ArrayList<>());
-	}
 	
 	@Override
 	public List<IItemAdded> getAllAdditions(Addon addon) {
-		return this.loadedItems.get(addon.id);
+		return new ArrayList<>(this.loadedItems.get(addon));
+	}
+	
+	public List<IItemAdded> getAllAdditions() {
+		return new ArrayList<>(this.loadedItems.values());
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void saveAddition(Addon addon, IItemAdded addition) {
-		if (!this.loadedItems.get(addon.id).contains(addition)) {
-			this.loadedItems.get(addon.id).add(addition);
+		if (!this.loadedItems.containsEntry(addon, addition)) {
+			this.loadedItems.put(addon, addition);
 		}
 		
-		File itemFolder = new File(addon.addonFolder, "items");
+		File itemFolder = new File(addon.addonFolder, FOLDER_NAME);
 		
 		if (!itemFolder.isDirectory()) {
 			itemFolder.mkdir();
 		}
 		
-		File additionFile = new File(itemFolder, addition.getId() + ".json");
+		File additionFile = new File(itemFolder, addition.getId() + FILE_POSTFIX);
 		
 		try {
 			String fileContents = GSON.toJson(addition);
 			FileUtils.write(additionFile, fileContents, StandardCharsets.UTF_8);
-		} catch (IOException e) {
-			AdditionsMod.logger.warn("Error saving addon " + addon.name, e);
-		} catch (IllegalArgumentException e) {
+		} catch (IOException | IllegalArgumentException e) {
 			AdditionsMod.logger.error("Error saving addon " + addon.name, e);
 		}
 	}
 	
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void deleteAddition(Addon addon, IItemAdded addition) {
-		if (this.loadedItems.get(addon.id).contains(addition)) {
-			this.loadedItems.get(addon.id).remove(addition);
+		if (this.loadedItems.containsEntry(addon, addition)) {
+			this.loadedItems.remove(addon, addition);
 		}
 		
-		File itemFolder = new File(addon.addonFolder, "items");
+		File itemFolder = new File(addon.addonFolder, FOLDER_NAME);
 
-		File additionFile = new File(itemFolder, addition.getId() + ".json");
+		File additionFile = new File(itemFolder, addition.getId() + FILE_POSTFIX);
 		
 		if (additionFile.exists()) {
 			additionFile.delete();
 		}
 	}
-	
-	public void saveAddonTexture(Addon addon, IItemAdded item, File texture) throws IOException {
-		File modelFolder = this.getItemModelFolder(addon);
-		File textureFolder = new File(addon.addonFolder, "assets/additions/textures/items");
-		
-		if (!modelFolder.isDirectory()) {
-			modelFolder.mkdirs();
-		}
-		if (!textureFolder.isDirectory()) {
-			textureFolder.mkdirs();
-		}
-		
-		File modelFile = new File(modelFolder, this.getItemModelName(item));
-		String modelFileContents = String.format(DEFAULT_ITEM_MODEL, item.getId());
-		
-		File textureFile = new File(textureFolder, item.getId()+".png");
-		
-		FileUtils.writeStringToFile(modelFile, modelFileContents, StandardCharsets.UTF_8);
-		FileUtils.copyFile(texture, textureFile);
-	}
-	
-	public void saveTextureAnimation(Addon addon, IItemAdded item, @Nullable File textureAnimation) throws IOException {
-		File textureFolder = new File(addon.addonFolder, "assets/additions/textures/items");
-		
-		if (!textureFolder.isDirectory()) {
-			textureFolder.mkdirs();
-		}
-		
-		File animationFile = new File(textureFolder, item.getId()+".png.mcmeta");
-
-		if (textureAnimation != null) {
-			FileUtils.copyFile(textureAnimation, animationFile);
-		} else {			
-			FileUtils.writeStringToFile(animationFile, DEFAULT_ANIMATION, StandardCharsets.UTF_8);
-		}
-		
-	}
-	
-	public String getItemModelName(IItemAdded item) {
-		return item.getId() + ".json";
-	}
-	
-	public File getItemModelFolder(Addon addon) {
-		return new File(addon.addonFolder, "assets/additions/models/item");
-	}
-
 }

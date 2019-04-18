@@ -9,6 +9,7 @@ import com.google.common.base.Predicate;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.gui.view.components.IGuiViewComponent;
 import com.tmtravlr.additions.gui.view.edit.GuiEdit;
+import com.tmtravlr.additions.util.client.CommonGuiUtils;
 
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
@@ -26,8 +27,6 @@ import net.minecraftforge.fml.client.config.GuiUtils;
  */
 public class GuiComponentFloatInput extends GuiTextField implements IGuiViewComponent {
 
-	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation("additions:textures/gui/additions_gui_textures.png");
-
 	public GuiEdit editScreen;
 	public Predicate<String> validator;
 	
@@ -37,6 +36,7 @@ public class GuiComponentFloatInput extends GuiTextField implements IGuiViewComp
 	private float minimum = -9999999f;
 	private float maximum = 9999999f;
 	private boolean required = false;
+	private boolean hidden = false;
 	private int clickUpTime;
 	private int clickDownTime;
 	
@@ -60,6 +60,16 @@ public class GuiComponentFloatInput extends GuiTextField implements IGuiViewComp
 		});
 		
 		this.setFloat(Math.max(0f, this.minimum));
+	}
+
+	@Override
+	public boolean isHidden() {
+		return this.hidden;
+	}
+	
+	@Override
+	public void setHidden(boolean hidden) {
+		this.hidden = hidden;
 	}
 	
 	@Override
@@ -134,7 +144,7 @@ public class GuiComponentFloatInput extends GuiTextField implements IGuiViewComp
 			this.clickDownTime = 0;
 		}
 		
-		this.editScreen.mc.getTextureManager().bindTexture(GUI_TEXTURES);
+		this.editScreen.mc.getTextureManager().bindTexture(CommonGuiUtils.GUI_TEXTURES);
 	    GlStateManager.color(255.0F, 255.0F, 255.0F, 255.0F);
 	    
 	    this.editScreen.drawTexturedModalRect(this.x + this.width, this.y - 1, 163, 64, 11, 22);
@@ -159,8 +169,7 @@ public class GuiComponentFloatInput extends GuiTextField implements IGuiViewComp
 			this.editScreen.drawTexturedModalRect(infoX, infoY, 21, 64, 13, 13);
 			
 			if (mouseX > infoX && mouseX < infoX + 13 && mouseY > infoY && mouseY < infoY + 13) {
-				GuiUtils.drawHoveringText(info, mouseX, mouseY, this.editScreen.width, this.editScreen.height, -1, this.editScreen.getFontRenderer());
-	            RenderHelper.disableStandardItemLighting();
+				this.editScreen.renderInfoTooltip(info, mouseX, mouseY);
 			}
 		}
 	}
@@ -207,7 +216,11 @@ public class GuiComponentFloatInput extends GuiTextField implements IGuiViewComp
 		}
 	}
 	
-	public void setFloat(float toSet) {
+	public void setDefaultFloat(float toSet) {
+		this.setFloat(toSet);
+	}
+	
+	private void setFloat(float toSet) {
 		this.setText("" + toSet);
 		this.setCursorPositionZero();
 	}

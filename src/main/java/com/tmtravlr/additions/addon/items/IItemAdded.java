@@ -35,7 +35,9 @@ public interface IItemAdded {
 	
 	public void setAlwaysShines(boolean alwaysShines);
 	
-	public void setAttributeModifiers(Multimap<EntityEquipmentSlot, AttributeModifier> attributeModiferList);
+	public void setBurnTime(int burnTime);
+	
+	public void setAttributeModifiers(Multimap<EntityEquipmentSlot, AttributeModifier> attributeModifierList);
 	
 	public List<String> getTooltip();
 	
@@ -44,6 +46,8 @@ public interface IItemAdded {
 	public String getDisplayName();
 	
 	public boolean getAlwaysShines();
+	
+	public int getBurnTime();
 	
 	public Multimap<EntityEquipmentSlot, AttributeModifier> getAttributeModifiers();
 
@@ -103,8 +107,12 @@ public interface IItemAdded {
 				json.addProperty("shines", true);
 			}
 			
+			if(itemAddedObj.getBurnTime() != -1) {
+				json.addProperty("burn_time", itemAddedObj.getBurnTime());
+			}
+			
 			if (!itemAddedObj.getTooltip().isEmpty()) {
-				json.add("tooltip", OtherSerializers.StringListSerializer.serialize(itemAddedObj.getTooltip(), context));
+				json.add("tooltip", OtherSerializers.StringListSerializer.serialize(itemAddedObj.getTooltip()));
 			}
 			
 			if(itemAdded.getContainerItem() != null) {
@@ -116,11 +124,11 @@ public interface IItemAdded {
 			}
 			
 			if (!itemAddedObj.getAttributeModifiers().isEmpty()) {
-				json.add("attribute_modifiers", OtherSerializers.AttributeModifierListSerializer.serialize(itemAddedObj.getAttributeModifiers(), context));
+				json.add("attribute_modifiers", OtherSerializers.AttributeModifierListSerializer.serialize(itemAddedObj.getAttributeModifiers()));
 			}
 			
 			if (!itemAddedObj.getOreDict().isEmpty()) {
-				json.add("ore_dict", OtherSerializers.StringListSerializer.serialize(itemAddedObj.getOreDict(), context));
+				json.add("ore_dict", OtherSerializers.StringListSerializer.serialize(itemAddedObj.getOreDict()));
 			}
 			
 			return json;
@@ -131,15 +139,11 @@ public interface IItemAdded {
 		public <V extends Item & IItemAdded> V deserializeDefaults(JsonObject json, JsonDeserializationContext context, V itemAdded) {
 			
         	itemAdded.setDisplayName(JsonUtils.getString(json, "name"));
-        	
         	itemAdded.setAlwaysShines(JsonUtils.getBoolean(json, "shines", false));
+        	itemAdded.setBurnTime(JsonUtils.getInt(json, "burn_time", -1));
         	
         	if (json.has("tooltip")) {
-        		itemAdded.setTooltip(OtherSerializers.StringListSerializer.deserialize(json.get("tooltip"), "tooltip", context));
-        	}
-        	
-        	if (json.has("container")) {
-        		itemAdded.setContainerItem(Item.REGISTRY.getObject(new ResourceLocation(JsonUtils.getString(json, "container"))));
+        		itemAdded.setTooltip(OtherSerializers.StringListSerializer.deserialize(json.get("tooltip"), "tooltip"));
         	}
         	
         	if (json.has("max_stack")) {
@@ -147,14 +151,33 @@ public interface IItemAdded {
         	}
         	
         	if (json.has("attribute_modifiers")) {
-        		itemAdded.setAttributeModifiers(OtherSerializers.AttributeModifierListSerializer.deserialize(json.get("attribute_modifiers").getAsJsonArray(), context));
+        		itemAdded.setAttributeModifiers(OtherSerializers.AttributeModifierListSerializer.deserialize(json.get("attribute_modifiers").getAsJsonArray()));
         	}
         	
         	if (json.has("ore_dict")) {
-        		itemAdded.setOreDict(OtherSerializers.StringListSerializer.deserialize(json.get("ore_dict"), "ore_dict", context));
+        		itemAdded.setOreDict(OtherSerializers.StringListSerializer.deserialize(json.get("ore_dict"), "ore_dict"));
         	}
         	
         	return itemAdded;
+        }
+		
+		public void postDeserializeItemAdded(JsonObject json, IItemAdded itemAddedObj) {
+			if (itemAddedObj.getClass() != this.itemAddedClass) {
+				throw new IllegalArgumentException("Tried to call post serialize for an object of the wrong type! Expected: " + this.itemAddedClass + ", Actual: " + itemAddedObj.getClass());
+			}
+			
+			postDeserialize(json, (T) itemAddedObj);
+		}
+		
+		public void postDeserialize(JsonObject json, T itemAdded) {
+			postDeserializeDefaults(json, itemAdded);
+		}
+		
+		public void postDeserializeDefaults(JsonObject json, T itemAdded) {
+        	
+        	if (json.has("container")) {
+        		itemAdded.getAsItem().setContainerItem(Item.REGISTRY.getObject(new ResourceLocation(JsonUtils.getString(json, "container"))));
+        	}
         }
     }
 	

@@ -1,30 +1,23 @@
 package com.tmtravlr.additions.gui.type.card;
 
-import java.util.Collections;
-
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.creativetabs.CreativeTabAdded;
-import com.tmtravlr.additions.addon.items.IItemAdded;
-import com.tmtravlr.additions.addon.items.ItemAddedManager;
-import com.tmtravlr.additions.gui.GuiMessagePopup;
+import com.tmtravlr.additions.gui.type.button.GuiAdditionTypeButtonCreativeTab;
 import com.tmtravlr.additions.gui.view.GuiView;
 import com.tmtravlr.additions.gui.view.edit.GuiEditCreativeTab;
-import com.tmtravlr.additions.gui.view.edit.item.IGuiEditItemFactory;
 import com.tmtravlr.additions.type.AdditionTypeCreativeTab;
-import com.tmtravlr.additions.type.AdditionTypeItem;
+import com.tmtravlr.additions.util.client.CommonGuiUtils;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.fml.client.config.GuiUtils;
+import net.minecraft.util.text.TextFormatting;
 
 /**
- * Displays info about an added item.
+ * Displays info about an added creative tab.
  * 
  * @author Tmtravlr (Rebeca Rey)
  * @since September 2017 
@@ -32,9 +25,9 @@ import net.minecraftforge.fml.client.config.GuiUtils;
 public class GuiAdditionCardCreativeTab extends GuiAdditionCardColored {
 
 	private CreativeTabAdded addition;
-	private String countString;
-	private String idString;
-	private String nameString;
+	private String textCount;
+	private String textId;
+	private String textName;
 	private String filterId;
 	private String filterName;
 	
@@ -43,14 +36,14 @@ public class GuiAdditionCardCreativeTab extends GuiAdditionCardColored {
 		
 		this.addition = addition;
 		
-		this.countString = I18n.format("gui.view.additionType.items", this.addition.getItemCount());
-		this.idString = I18n.format("gui.view.additionType.id", this.addition.id);
-		this.nameString = I18n.format("gui.view.additionType.name", this.addition.getTabLabel());
+		this.textCount = TextFormatting.GRAY + I18n.format("gui.view.additionType.items", TextFormatting.RESET + String.valueOf(this.addition.getItemCount()) + TextFormatting.GRAY);
+		this.textId = TextFormatting.GRAY + I18n.format("gui.view.additionType.id", TextFormatting.RESET + this.addition.id + TextFormatting.GRAY);
+		this.textName = TextFormatting.GRAY + I18n.format("gui.view.additionType.name", TextFormatting.RESET + this.addition.getTabLabel() + TextFormatting.GRAY);
 		
 		this.filterId = this.addition.id.toLowerCase();
 		this.filterName = this.addition.getTabLabel().toLowerCase();
 		
-		this.setColors(0xff08082b, 0xff161d69);
+		this.setColors(GuiAdditionTypeButtonCreativeTab.BUTTON_COLOR_DARK, GuiAdditionTypeButtonCreativeTab.BUTTON_COLOR_HOVER);
 	}
 	
 	@Override
@@ -71,22 +64,17 @@ public class GuiAdditionCardCreativeTab extends GuiAdditionCardColored {
 		Gui.drawRect(this.x + 9, itemDisplayTop - 1, this.x + 31, itemDisplayTop + 21, 0xFFA0A0A0);
 		Gui.drawRect(this.x + 10, itemDisplayTop, this.x + 30, itemDisplayTop + 20, 0xFF000000);
 
-    	this.viewScreen.drawString(this.viewScreen.getFontRenderer(), trimWithDots(this.nameString, columnWidth*2 - 60), this.x + 45, this.y + 8, 0xFFFFFF);
+		CommonGuiUtils.drawStringWithDots(this.viewScreen.getFontRenderer(), this.textName, columnWidth*2 - 60, this.x + 45, this.y + 8, 0xFFFFFF);
     	
     	if (this.needs3Lines()) {
-    		this.viewScreen.drawString(this.viewScreen.getFontRenderer(), trimWithDots(this.idString, columnWidth*2 - 10), this.x + 45, this.y + 25, 0xFFFFFF);
-    		this.viewScreen.drawString(this.viewScreen.getFontRenderer(), trimWithDots(this.countString, columnWidth*2 - 10), this.x + 45, this.y + 42, 0xFFFFFF);
+    		CommonGuiUtils.drawStringWithDots(this.viewScreen.getFontRenderer(), this.textId, columnWidth*2 - 10, this.x + 45, this.y + 25, 0xFFFFFF);
+    		CommonGuiUtils.drawStringWithDots(this.viewScreen.getFontRenderer(), this.textCount, columnWidth*2 - 5, this.x + 45, this.y + 42, 0xFFFFFF);
     	} else {
-    		this.viewScreen.drawString(this.viewScreen.getFontRenderer(), trimWithDots(this.idString, columnWidth - 10), this.x + 45, this.y + 25, 0xFFFFFF);
-    		this.viewScreen.drawString(this.viewScreen.getFontRenderer(), trimWithDots(this.countString, columnWidth - 10), this.x + 45 + columnWidth, this.y + 25, 0xFFFFFF);
+    		CommonGuiUtils.drawStringWithDots(this.viewScreen.getFontRenderer(), this.textId, columnWidth - 5, this.x + 45, this.y + 25, 0xFFFFFF);
+    		CommonGuiUtils.drawStringWithDots(this.viewScreen.getFontRenderer(), this.textCount, columnWidth - 5, this.x + 45 + columnWidth, this.y + 25, 0xFFFFFF);
     	}
-		
-		RenderHelper.enableStandardItemLighting();
-    	this.viewScreen.mc.getRenderItem().renderItemAndEffectIntoGUI((EntityLivingBase)null, itemStack, this.x + 12, itemDisplayTop + 2);
-    	if (mouseX >= this.x + 12 && mouseX < this.x + 28 && mouseY >= itemDisplayTop + 2 && mouseY < itemDisplayTop + 18) {
-    		this.viewScreen.renderItemStackTooltip(itemStack, mouseX, mouseY);
-    	}
-		RenderHelper.disableStandardItemLighting();
+
+		this.viewScreen.renderItemStack(itemStack, this.x + 12, itemDisplayTop + 2, mouseX, mouseY, true);
 	}
 
 	@Override
@@ -112,19 +100,11 @@ public class GuiAdditionCardCreativeTab extends GuiAdditionCardColored {
 	}
 	
 	private boolean needs3Lines() {
-		return this.viewScreen.getFontRenderer().getStringWidth(this.idString) > this.getColumnWidth() || this.width < 240;
+		return this.viewScreen.getFontRenderer().getStringWidth(this.textId) > this.getColumnWidth() || this.viewScreen.getFontRenderer().getStringWidth(this.textCount) > this.getColumnWidth() || this.width < 240;
 	}
 	
 	private int getColumnWidth() {
 		return (this.width - 45) / 2; 
-	}
-	
-	private String trimWithDots(String toTrim, int width) {
-		if (this.viewScreen.getFontRenderer().getStringWidth(toTrim) < width) {
-			return toTrim;
-		}
-		
-		return this.viewScreen.getFontRenderer().trimStringToWidth(toTrim, width) + "...";
 	}
 
 }

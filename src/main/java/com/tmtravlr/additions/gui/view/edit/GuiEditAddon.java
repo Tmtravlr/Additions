@@ -6,19 +6,21 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import com.google.common.base.Predicate;
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.AddonLoader;
-import com.tmtravlr.additions.gui.GuiMessagePopup;
+import com.tmtravlr.additions.addon.functions.FunctionAdded;
+import com.tmtravlr.additions.gui.message.GuiMessageBox;
 import com.tmtravlr.additions.gui.view.GuiView;
 import com.tmtravlr.additions.gui.view.components.GuiComponentDisplayText;
-import com.tmtravlr.additions.gui.view.components.input.GuiComponentDropdownInput;
-import com.tmtravlr.additions.gui.view.components.input.GuiComponentDropdownInputItem;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentItemStackInput;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentListInput;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentStringInput;
-import com.tmtravlr.additions.type.AdditionTypeManager;
+import com.tmtravlr.additions.gui.view.components.input.dropdown.GuiComponentDropdownInput;
+import com.tmtravlr.additions.gui.view.components.input.suggestion.GuiComponentSuggestionInput;
+import com.tmtravlr.additions.type.AdditionTypeFunction;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -26,6 +28,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.Loader;
@@ -54,8 +57,9 @@ public class GuiEditAddon extends GuiEdit {
 	private GuiComponentListInput<GuiComponentDropdownInput<String>> dependents;
 	private GuiComponentDisplayText requiredInfo;
 	private GuiComponentDisplayText requiredWarning;
-	private GuiComponentListInput<GuiComponentDropdownInput<String>> requiredMods;
-	private GuiComponentListInput<GuiComponentDropdownInput<String>> requiredAddons;
+	private GuiComponentListInput<GuiComponentSuggestionInput> requiredMods;
+	private GuiComponentListInput<GuiComponentSuggestionInput> requiredAddons;
+	private GuiComponentSuggestionInput addonLoopFunction;
 
 	public GuiEditAddon(GuiScreen parentScreen, String title) {
 		this(parentScreen, title, null);
@@ -76,18 +80,11 @@ public class GuiEditAddon extends GuiEdit {
 	public void initComponents() {
 		final String addonId = this.addon.id;
 		
-		this.addonIdInput = new GuiComponentStringInput("gui.edit.addon.addonId.label", this);
+		this.addonIdInput = new GuiComponentStringInput(I18n.format("gui.edit.addon.addonId.label"), this);
 		if (this.isNew) {
 			this.addonIdInput.setRequired();
 			this.addonIdInput.setInfo(new TextComponentTranslation("gui.edit.id.info"));
-			this.addonIdInput.setValidator(new Predicate<String>() {
-	
-				@Override
-				public boolean apply(String input) {
-					return input.matches("[a-z0-9\\_]*");
-				}
-				
-			});
+			this.addonIdInput.setValidator(input -> input.matches("[a-z0-9\\_]*"));
 		} else {
 			this.addonIdInput.setEnabled(false);
 			this.addonIdInput.setInfo(new TextComponentTranslation("gui.edit.id.noEdit.info"));
@@ -96,29 +93,29 @@ public class GuiEditAddon extends GuiEdit {
 		this.addonIdInput.setDefaultText(this.addon.id);
 		
 		
-		this.addonNameInput = new GuiComponentStringInput("gui.edit.addon.addonName.label", this);
+		this.addonNameInput = new GuiComponentStringInput(I18n.format("gui.edit.addon.addonName.label"), this);
 		this.addonNameInput.setRequired();
 		this.addonNameInput.setMaxStringLength(64);
 		this.addonNameInput.setHasColorSelect();
 		this.addonNameInput.setDefaultText(this.addon.name);
 		
 		if (!this.isNew) {
-			this.addonAuthorInput = new GuiComponentStringInput("gui.edit.addon.addonAuthor.label", this);
+			this.addonAuthorInput = new GuiComponentStringInput(I18n.format("gui.edit.addon.addonAuthor.label"), this);
 			this.addonAuthorInput.setMaxStringLength(32);
 			this.addonAuthorInput.setDefaultText(this.addon.author);
 		}
 		
-		this.addonItemIcon = new GuiComponentItemStackInput("gui.edit.addon.addonIcon.label", this);
+		this.addonItemIcon = new GuiComponentItemStackInput(I18n.format("gui.edit.addon.addonIcon.label"), this);
 		this.addonItemIcon.disableCount();
 		this.addonItemIcon.disableMetadata();
-		this.addonItemIcon.disableNBT();
+		this.addonItemIcon.disableTag();
 		if (!this.addon.logoItem.isEmpty()) {
 			this.addonItemIcon.setDefaultItemStack(new ItemStack(Item.REGISTRY.getObject(new ResourceLocation(this.addon.logoItem))));
 		}
 		
 		this.loadOrderInfo = new GuiComponentDisplayText(this, new TextComponentTranslation("gui.edit.addon.loadOrder.info"));
 
-		this.dependencies = new GuiComponentListInput<GuiComponentDropdownInput<String>>("gui.edit.addon.dependencies.label", this) {
+		this.dependencies = new GuiComponentListInput<GuiComponentDropdownInput<String>>(I18n.format("gui.edit.addon.dependencies.label"), this) {
 
 			@Override
 			public GuiComponentDropdownInput<String> createBlankComponent() {
@@ -134,12 +131,12 @@ public class GuiEditAddon extends GuiEdit {
 			
 		};
 		this.addon.dependencies.forEach(selected->{
-			GuiComponentDropdownInput<String> input = new GuiComponentDropdownInput<String>("", this);
+			GuiComponentDropdownInput<String> input = this.dependencies.createBlankComponent();
 			input.setDefaultSelected(selected);
-			this.dependencies.addComponent(input);
+			this.dependencies.addDefaultComponent(input);
 		});
 
-		this.dependents = new GuiComponentListInput<GuiComponentDropdownInput<String>>("gui.edit.addon.dependents.label", this) {
+		this.dependents = new GuiComponentListInput<GuiComponentDropdownInput<String>>(I18n.format("gui.edit.addon.dependents.label"), this) {
 
 			@Override
 			public GuiComponentDropdownInput<String> createBlankComponent() {
@@ -155,58 +152,56 @@ public class GuiEditAddon extends GuiEdit {
 			
 		};
 		this.addon.dependents.forEach(selected->{
-			GuiComponentDropdownInput<String> input = new GuiComponentDropdownInput<String>("", this);
+			GuiComponentDropdownInput<String> input = this.dependents.createBlankComponent();
 			input.setDefaultSelected(selected);
-			this.dependents.addComponent(input);
+			this.dependents.addDefaultComponent(input);
 		});
 		
 		this.requiredInfo = new GuiComponentDisplayText(this, new TextComponentTranslation("gui.edit.addon.required.info"));
-		this.requiredWarning = new GuiComponentDisplayText(this, new TextComponentTranslation("gui.edit.addon.required.warning"));
+		this.requiredWarning = new GuiComponentDisplayText(this, new TextComponentTranslation("gui.edit.addon.required.warning").setStyle(new Style().setColor(TextFormatting.RED)));
 
-		this.requiredMods = new GuiComponentListInput<GuiComponentDropdownInput<String>>("gui.edit.addon.requiredMods.label", this) {
+		this.requiredMods = new GuiComponentListInput<GuiComponentSuggestionInput>(I18n.format("gui.edit.addon.requiredMods.label"), this) {
 
 			@Override
-			public GuiComponentDropdownInput createBlankComponent() {
-				GuiComponentDropdownInput<String> dropdown = new GuiComponentDropdownInput<>("", this.editScreen);
+			public GuiComponentSuggestionInput createBlankComponent() {
+				GuiComponentSuggestionInput input = new GuiComponentSuggestionInput("", this.editScreen);
 				for (ModContainer mod : Loader.instance().getActiveModList()) {
-					String modId = mod.getModId();
-					if (!(modId.equals("minecraft")
-							|| modId.equals("mcp")
-							|| modId.equals("FML")
-							|| modId.equals("forge")
-							|| modId.equals("additions"))) {
-						dropdown.addSelection(modId);
-					}
+					input.addSuggestion(mod.getModId());
 				}
-				return dropdown;
+				return input;
 			}
 			
 		};
 		this.addon.requiredMods.forEach(selected->{
-			GuiComponentDropdownInput<String> input = new GuiComponentDropdownInput<String>("", this);
-			input.setDefaultSelected(selected);
-			this.requiredMods.addComponent(input);
+			GuiComponentSuggestionInput input = this.requiredMods.createBlankComponent();
+			input.setDefaultText(selected);
+			this.requiredMods.addDefaultComponent(input);
 		});
 
-		this.requiredAddons = new GuiComponentListInput<GuiComponentDropdownInput<String>>("gui.edit.addon.requiredAddons.label", this) {
+		this.requiredAddons = new GuiComponentListInput<GuiComponentSuggestionInput>(I18n.format("gui.edit.addon.requiredAddons.label"), this) {
 
 			@Override
-			public GuiComponentDropdownInput<String> createBlankComponent() {
-				GuiComponentDropdownInput<String> dropdown = new GuiComponentDropdownInput<>("", this.editScreen);
+			public GuiComponentSuggestionInput createBlankComponent() {
+				GuiComponentSuggestionInput input = new GuiComponentSuggestionInput("", this.editScreen);
 				for (Addon addon : AddonLoader.addonsLoaded) {
 					if (!addon.id.equals(addonId)) {
-						dropdown.addSelection(addon.id);
+						input.addSuggestion(addon.id);
 					}
 				}
-				return dropdown;
+				return input;
 			}
 			
 		};
 		this.addon.requiredAddons.forEach(selected->{
-			GuiComponentDropdownInput<String> input = new GuiComponentDropdownInput<String>("", this);
-			input.setDefaultSelected(selected);
-			this.requiredAddons.addComponent(input);
+			GuiComponentSuggestionInput input = this.requiredAddons.createBlankComponent();
+			input.setDefaultText(selected);
+			this.requiredAddons.addDefaultComponent(input);
 		});
+		
+		this.addonLoopFunction = new GuiComponentSuggestionInput(I18n.format("gui.edit.addon.loopFunction.label"), this);
+		this.addonLoopFunction.setInfo(new TextComponentTranslation("gui.edit.addon.loopFunction.info"));
+		this.addonLoopFunction.setSuggestions(AdditionTypeFunction.INSTANCE.getAllAdditions(this.addon).stream().map(functionAdded -> functionAdded.id.toString()).collect(Collectors.toList()));
+		this.addonLoopFunction.setDefaultText(this.addon.loopFunction == null ? "" : this.addon.loopFunction.toString());
 		
 		this.components.add(this.addonIdInput);
 		this.components.add(this.addonNameInput);
@@ -215,6 +210,7 @@ public class GuiEditAddon extends GuiEdit {
 		}
 		this.components.add(this.addonItemIcon);
 		
+		this.advancedComponents.add(this.addonLoopFunction);
 		this.advancedComponents.add(this.loadOrderInfo);
 		this.advancedComponents.add(this.dependencies);
 		this.advancedComponents.add(this.dependents);
@@ -225,23 +221,28 @@ public class GuiEditAddon extends GuiEdit {
 	}
 	
 	@Override
+	public void refreshView() {
+		this.addonLoopFunction.setSuggestions(AdditionTypeFunction.INSTANCE.getAllAdditions(this.addon).stream().map(functionAdded -> functionAdded.id.toString()).collect(Collectors.toList()));
+	}
+	
+	@Override
 	public void saveObject() {
 		
 		String addonId = this.addonIdInput.getText();
 		String addonName = this.addonNameInput.getText();
 		
 		if (addonId.isEmpty()) {
-			this.mc.displayGuiScreen(new GuiMessagePopup(this, I18n.format("gui.edit.addon.problem.title"), new TextComponentTranslation("gui.edit.addon.problem.noAddonId", addonId), I18n.format("gui.buttons.back")));
+			this.mc.displayGuiScreen(new GuiMessageBox(this, I18n.format("gui.edit.addon.problem.title"), new TextComponentTranslation("gui.edit.addon.problem.noAddonId", addonId), I18n.format("gui.buttons.back")));
 			return;
 		}
 		
 		if (addonName.isEmpty()) {
-			this.mc.displayGuiScreen(new GuiMessagePopup(this, I18n.format("gui.edit.addon.problem.title"), new TextComponentTranslation("gui.edit.addon.problem.noAddonName", addonId), I18n.format("gui.buttons.back")));
+			this.mc.displayGuiScreen(new GuiMessageBox(this, I18n.format("gui.edit.addon.problem.title"), new TextComponentTranslation("gui.edit.addon.problem.noAddonName", addonId), I18n.format("gui.buttons.back")));
 			return;
 		}
 		
 		if (this.isNew && AddonLoader.ADDONS_NAMED.containsKey(addonId)) {
-			this.mc.displayGuiScreen(new GuiMessagePopup(this, I18n.format("gui.edit.addon.problem.title"), new TextComponentTranslation("gui.edit.addon.problem.duplicate", addonId), I18n.format("gui.buttons.back")));
+			this.mc.displayGuiScreen(new GuiMessageBox(this, I18n.format("gui.edit.addon.problem.title"), new TextComponentTranslation("gui.edit.addon.problem.duplicate", addonId), I18n.format("gui.buttons.back")));
 			return;
 		}
 		
@@ -282,20 +283,20 @@ public class GuiEditAddon extends GuiEdit {
 			if (selected != null) {
 				if (beforeAll) {
 					if (selected.equals("*")) {
-						this.mc.displayGuiScreen(new GuiMessagePopup(this, I18n.format("gui.edit.addon.problem.title"), new TextComponentTranslation("gui.edit.addon.problem.allBeforeAfter"), I18n.format("gui.buttons.back")));
+						this.mc.displayGuiScreen(new GuiMessageBox(this, I18n.format("gui.edit.addon.problem.title"), new TextComponentTranslation("gui.edit.addon.problem.allBeforeAfter"), I18n.format("gui.buttons.back")));
 						return;
 					}
-					this.mc.displayGuiScreen(new GuiMessagePopup(this, I18n.format("gui.edit.addon.problem.title"), new TextComponentTranslation("gui.edit.addon.problem.beforeAll", selected), I18n.format("gui.buttons.back")));
+					this.mc.displayGuiScreen(new GuiMessageBox(this, I18n.format("gui.edit.addon.problem.title"), new TextComponentTranslation("gui.edit.addon.problem.beforeAll", selected), I18n.format("gui.buttons.back")));
 					return;
 				}
 				
 				if (dependenciesList.contains(selected)) {
-					this.mc.displayGuiScreen(new GuiMessagePopup(this, I18n.format("gui.edit.addon.problem.title"), new TextComponentTranslation("gui.edit.addon.problem.bothBeforeAfter", selected), I18n.format("gui.buttons.back")));
+					this.mc.displayGuiScreen(new GuiMessageBox(this, I18n.format("gui.edit.addon.problem.title"), new TextComponentTranslation("gui.edit.addon.problem.bothBeforeAfter", selected), I18n.format("gui.buttons.back")));
 					return;
 				}
 				
 				if (selected.equals("*") && !dependenciesList.isEmpty()) {
-					this.mc.displayGuiScreen(new GuiMessagePopup(this, I18n.format("gui.edit.addon.problem.title"), new TextComponentTranslation("gui.edit.addon.problem.afterAll", dependenciesList.get(0)), I18n.format("gui.buttons.back")));
+					this.mc.displayGuiScreen(new GuiMessageBox(this, I18n.format("gui.edit.addon.problem.title"), new TextComponentTranslation("gui.edit.addon.problem.afterAll", dependenciesList.get(0)), I18n.format("gui.buttons.back")));
 					return;
 				}
 				
@@ -307,8 +308,8 @@ public class GuiEditAddon extends GuiEdit {
 		
 		List<String> requiredModsList = new ArrayList<String>();
 		Set<String> requiredModsSet = new TreeSet<String>();
-		for (GuiComponentDropdownInput<String> dropdown : this.requiredMods.getComponents()) {
-			String selected = dropdown.getSelected();
+		for (GuiComponentSuggestionInput input : this.requiredMods.getComponents()) {
+			String selected = input.getText();
 			if (selected != null) {
 				requiredModsSet.add(selected);
 			}
@@ -318,8 +319,8 @@ public class GuiEditAddon extends GuiEdit {
 		
 		List<String> requiredAddonsList = new ArrayList<String>();
 		Set<String> requiredAddonsSet = new TreeSet<String>();
-		for (GuiComponentDropdownInput<String> dropdown : this.requiredAddons.getComponents()) {
-			String selected = dropdown.getSelected();
+		for (GuiComponentSuggestionInput input : this.requiredAddons.getComponents()) {
+			String selected = input.getText();
 			if (selected != null) {
 				requiredAddonsSet.add(selected);
 			}
@@ -331,6 +332,10 @@ public class GuiEditAddon extends GuiEdit {
 			File addonFile = new File(AddonLoader.additionsFolder, getAddonDirName(addonName));
 			addonFile.mkdirs();
 			this.addon.setAddonFolder(addonFile);
+		}
+		
+		if (!this.addonLoopFunction.getText().isEmpty()) {
+			this.addon.setLoopFunction(new ResourceLocation(this.addonLoopFunction.getText()));
 		}
 		
 		AddonLoader.saveAddon(this.addon);

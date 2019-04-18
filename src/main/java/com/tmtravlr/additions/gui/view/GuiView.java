@@ -10,16 +10,20 @@ import org.lwjgl.input.Mouse;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.gui.view.components.GuiComponentShowAdvanced;
 import com.tmtravlr.additions.gui.view.components.IGuiViewComponent;
+import com.tmtravlr.additions.util.client.CommonGuiUtils;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.client.config.GuiUtils;
 
 /**
  * Screen with an embedded list of components to display, meant for viewing objects.
@@ -30,12 +34,13 @@ import net.minecraft.item.ItemStack;
 public abstract class GuiView extends GuiScreen {
 	
 	public static final int LABEL_OFFSET = 140;
+	public static final int MAX_WIDTH = 700;
 	
 	private static final int TITLE_HEIGHT = 30;
 	private static final int BUTTON_FOOTER_HEIGHT = 40;
 			
 	protected int buttonCount = 0;
-	protected final int BACK_BUTTON = buttonCount++;
+	protected final int BUTTON_BACK = buttonCount++;
 	
 	protected GuiScreen parentScreen;
 	protected String title;
@@ -45,7 +50,9 @@ public abstract class GuiView extends GuiScreen {
 	protected boolean initializedComponents = false;
 	
 	private boolean showAdvanced = false;
+	private boolean toggleShowAdvanced = false;
 	private GuiComponentShowAdvanced showAdvancedElement;
+	private List<Runnable> postRender = new ArrayList<>();
 	
 	public GuiView(GuiScreen parentScreen, String title) {
 		this.parentScreen = parentScreen;
@@ -56,11 +63,11 @@ public abstract class GuiView extends GuiScreen {
 	@Override
 	public void initGui() {
 		if (!this.initializedComponents) {
-			this.initComponents();
+			this.recreateComponents();
 			this.initializedComponents = true;
 		}
 		
-		this.buttonList.add(new GuiButton(BACK_BUTTON, this.width - 70, this.height - 30, 60, 20, I18n.format("gui.buttons.back")));
+		this.addButtons();
 		
 		float scrollDistance = 0.0f;
 		if (this.editArea != null) {
@@ -69,32 +76,41 @@ public abstract class GuiView extends GuiScreen {
 		
 		this.editArea = new GuiScrollingView(this);
 		this.editArea.setScrollDistance(scrollDistance);
+		
 		for (IGuiViewComponent component : this.components) {
 			this.editArea.addComponent(component);
 			component.onInitGui();
-		}
-		
-		if (!this.advancedComponents.isEmpty()) {
-			this.editArea.addComponent(this.showAdvancedElement);
-			
-			if (this.showAdvanced) {
-				for (IGuiViewComponent component : this.advancedComponents) {
-					this.editArea.addComponent(component);
-					component.onInitGui();
-				}
-			}
 		}
 	}
 	
     @Override
     protected void actionPerformed(GuiButton button) {
-    	if (button.id == BACK_BUTTON) {
+    	if (button.id == BUTTON_BACK) {
+			if (this.parentScreen instanceof GuiView) {
+				((GuiView)this.parentScreen).refreshView();
+			}
     		this.mc.displayGuiScreen(this.parentScreen);
     	}
     }
 	
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		if (this.toggleShowAdvanced) {
+			if (this.showAdvanced) {
+				for (IGuiViewComponent component : this.advancedComponents) {
+					component.setHidden(true);
+				}
+			} else if (!this.showAdvanced) {
+				for (IGuiViewComponent component : this.advancedComponents) {
+					component.setHidden(false);
+				}
+			}
+			
+			this.showAdvanced = !this.showAdvanced;
+			this.toggleShowAdvanced = false;
+			this.onToggleShowAdvanced(this.showAdvanced);
+		}
+		
         this.editArea.drawScreen(mouseX, mouseY, partialTicks);
 		
 		this.drawBackground();
@@ -103,6 +119,21 @@ public abstract class GuiView extends GuiScreen {
 		this.fontRenderer.drawString(this.title, titleX, 11, 0xFFFFFF);
         
 		super.drawScreen(mouseX, mouseY, partialTicks);
+		
+		this.drawPostRender();
+	}
+	
+	protected void addButtons() {
+		this.buttonList.add(new GuiButton(BUTTON_BACK, this.width - 70, this.height - 30, 60, 20, I18n.format("gui.buttons.back")));
+	}
+	
+	protected void addPostRender(Runnable runnable) {
+		this.postRender.add(runnable);
+	}
+	
+	public void drawPostRender() {
+		this.postRender.forEach(runnable -> runnable.run());
+		this.postRender.clear();
 	}
 	
     public void drawBackground() {
@@ -132,21 +163,7 @@ public abstract class GuiView extends GuiScreen {
 	@Override
 	public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
 		if (mouseY > TITLE_HEIGHT && mouseY < this.height - BUTTON_FOOTER_HEIGHT) {
-			for (IGuiViewComponent component : components) {
-				component.onMouseClicked(mouseX, mouseY, mouseButton);
-			}
-			
-			if (!this.advancedComponents.isEmpty()) {
-				
-				if (this.showAdvanced) {
-					for (IGuiViewComponent component : advancedComponents) {
-						component.onMouseClicked(mouseX, mouseY, mouseButton);
-					}
-				}
-				
-				this.showAdvancedElement.onMouseClicked(mouseX, mouseY, mouseButton);
-	
-			}
+			this.editArea.onMouseClicked(mouseX, mouseY, mouseButton);
 		}
 		
 		this.editArea.mouseClicked(mouseX, mouseY, mouseButton);
@@ -155,15 +172,7 @@ public abstract class GuiView extends GuiScreen {
 	
 	@Override
 	public void keyTyped(char keyTyped, int keyCode) throws IOException {
-		for (IGuiViewComponent component : components) {
-			component.onKeyTyped(keyTyped, keyCode);
-		}
-		
-		if (this.showAdvanced) {
-			for (IGuiViewComponent component : advancedComponents) {
-				component.onKeyTyped(keyTyped, keyCode);
-			}
-		}
+		this.editArea.onKeyTyped(keyTyped, keyCode);
 
     	if (keyCode != 1) {
     		super.keyTyped(keyTyped, keyCode);
@@ -177,25 +186,7 @@ public abstract class GuiView extends GuiScreen {
         int mouseX = Mouse.getEventX() * this.width / this.mc.displayWidth;
         int mouseY = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
         
-        boolean scrollEditArea = true;
-        
-        for (IGuiViewComponent component : components) {
-			if (component.onHandleMouseInput(mouseX, mouseY)) {
-				scrollEditArea = false;
-			}
-		}
-		
-		if (this.showAdvanced) {
-			for (IGuiViewComponent component : advancedComponents) {
-				if (component.onHandleMouseInput(mouseX, mouseY)) {
-					scrollEditArea = false;
-				}
-			}
-		}
-        
-        if (scrollEditArea) {
-        	this.editArea.handleMouseInput(mouseX, mouseY);
-        }
+    	this.editArea.handleMouseInput(mouseX, mouseY);
     }
     
     public FontRenderer getFontRenderer() {
@@ -206,27 +197,60 @@ public abstract class GuiView extends GuiScreen {
     	this.actionPerformed(button);
     }
     
+    public void renderItemStack(ItemStack stack, int x, int y) {
+        this.renderItemStack(stack, x, y, 0, 0, false);
+    }
+    
+    public void renderItemStack(ItemStack stack, int x, int y, int mouseX, int mouseY, boolean showTooltip) {
+    	this.renderItemStack(stack, x, y, mouseX, mouseY, showTooltip, false);
+    }
+    
+    public void renderItemStack(ItemStack stack, int x, int y, int mouseX, int mouseY, boolean showTooltip, boolean showOverlay) {
+        RenderHelper.enableGUIStandardItemLighting();
+        GlStateManager.enableLighting();
+        GlStateManager.enableDepth();
+        GlStateManager.enableRescaleNormal();
+    	this.mc.getRenderItem().renderItemAndEffectIntoGUI((EntityLivingBase)null, stack, x, y);
+    	if (showOverlay) {
+            this.mc.getRenderItem().renderItemOverlays(this.fontRenderer, stack, x, y);
+    	}
+    	if (showTooltip && CommonGuiUtils.isMouseWithin(mouseX, mouseY, x, y, 16, 16)) {
+    		this.renderItemStackTooltip(stack, mouseX, mouseY);
+    	}
+		RenderHelper.disableStandardItemLighting();
+        GlStateManager.disableRescaleNormal();
+        GlStateManager.disableLighting();
+        GlStateManager.disableDepth();
+    }
+    
     public void renderItemStackTooltip(ItemStack stack, int x, int y) {
-    	this.renderToolTip(stack, x, y);
+    	this.addPostRender(() -> {
+    		try {
+	    		this.renderToolTip(stack, x, y);
+	        	GlStateManager.disableRescaleNormal();
+	            RenderHelper.disableStandardItemLighting();
+	            GlStateManager.disableLighting();
+	            GlStateManager.disableDepth();
+    		} catch (Exception e) {
+    			// Null pointer exceptions are thrown if the advanced tooltips are shown and the item isn't registered yet...
+    			// I could check for that, but there's no guarantee mods won't add info with a similar problem, so swallowing.
+    		}
+		});
+    }
+    
+    public void renderInfoTooltip(List<String> info, int x, int y) {
+    	this.addPostRender(() -> {
+	    	GuiUtils.drawHoveringText(info, x, y, this.width, this.height, -1, this.fontRenderer);
+	        RenderHelper.disableStandardItemLighting();
+    	});
+    }
+    
+    public void toggleShowAdvanced() {
+    	this.toggleShowAdvanced = true;
     }
 	
-	public void setShowAdvanced(boolean show) {
-		
-		if (this.showAdvanced && !show) {
-			for (IGuiViewComponent component : this.advancedComponents) {
-				this.editArea.removeComponent(component);
-			}
-		} else if (!this.showAdvanced && show) {
-			for (IGuiViewComponent component : this.advancedComponents) {
-				this.editArea.addComponent(component);
-			}
-		}
-		
-		this.showAdvanced = show;
-	}
-	
 	public boolean getShowAdvanced() {
-		return this.showAdvanced;
+		return this.toggleShowAdvanced ? !this.showAdvanced : this.showAdvanced;
 	}
 	
 	public GuiScreen getParentScreen() {
@@ -235,9 +259,25 @@ public abstract class GuiView extends GuiScreen {
 	
 	public void refreshView() {
 		float scrollDistance = this.editArea.getScrollDistance();
-		this.components.clear();
-		this.initComponents();
+		this.recreateComponents();
 		this.editArea.setScrollDistance(scrollDistance);
+	}
+	
+	protected void onToggleShowAdvanced(boolean showAdvanced) {}
+	
+	protected void recreateComponents() {
+		this.components.clear();
+		this.advancedComponents.clear();
+		this.initComponents();
+		
+		if (!this.advancedComponents.isEmpty()) {
+			this.components.add(this.showAdvancedElement);
+			this.components.addAll(this.advancedComponents);
+			
+			if (!this.showAdvanced) {
+				this.advancedComponents.forEach(component -> component.setHidden(true));
+			}
+		}
 	}
 	
 	public abstract void initComponents();

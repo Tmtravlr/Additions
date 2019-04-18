@@ -3,12 +3,18 @@ package com.tmtravlr.additions.gui.view.components.input;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
-import com.tmtravlr.additions.gui.GuiMessagePopup;
-import com.tmtravlr.additions.gui.GuiMessagePopupTwoButton;
+import com.tmtravlr.additions.gui.message.GuiMessageBox;
+import com.tmtravlr.additions.gui.message.GuiMessageBoxTwoButton;
+import com.tmtravlr.additions.gui.view.GuiView;
 import com.tmtravlr.additions.gui.view.components.IGuiViewComponent;
+import com.tmtravlr.additions.gui.view.components.input.dropdown.GuiComponentDropdownInput;
+import com.tmtravlr.additions.gui.view.components.input.suggestion.GuiComponentSuggestionInput;
 import com.tmtravlr.additions.gui.view.edit.GuiEdit;
+import com.tmtravlr.additions.type.attribute.AttributeTypeManager;
 import com.tmtravlr.additions.util.OtherSerializers;
+import com.tmtravlr.additions.util.client.CommonGuiUtils;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -26,14 +32,13 @@ import net.minecraft.util.text.TextFormatting;
 
 public class GuiComponentAttributeModifierInput implements IGuiViewComponent {
 
-	private static final ResourceLocation GUI_TEXTURES = new ResourceLocation("additions:textures/gui/additions_gui_textures.png");
-
 	public GuiEdit editScreen;
 	public GuiTextField selectedText;
 	
 	private int x;
 	private int y;
 	private int width;
+	private boolean hidden = false;
 	private String label = "";
 	private boolean required = false;
 	private AttributeModifier modifier = null;
@@ -48,6 +53,16 @@ public class GuiComponentAttributeModifierInput implements IGuiViewComponent {
 		this.selectedText = new GuiTextField(0, this.editScreen.getFontRenderer(), 0, 0, 0, 20);
 		this.selectedText.setMaxStringLength(1024);
 		this.selectedText.setEnabled(false);
+	}
+
+	@Override
+	public boolean isHidden() {
+		return this.hidden;
+	}
+	
+	@Override
+	public void setHidden(boolean hidden) {
+		this.hidden = hidden;
 	}
 
 	@Override
@@ -73,7 +88,7 @@ public class GuiComponentAttributeModifierInput implements IGuiViewComponent {
 		this.selectedText.drawTextBox();
 		
 		if (!this.selectedText.getText().isEmpty()) {
-			this.editScreen.mc.getTextureManager().bindTexture(GUI_TEXTURES);
+			this.editScreen.mc.getTextureManager().bindTexture(CommonGuiUtils.GUI_TEXTURES);
 		    GlStateManager.color(255.0F, 255.0F, 255.0F, 255.0F);
 			
 		    int deleteX = this.selectedText.x + this.selectedText.width - 15;
@@ -94,8 +109,8 @@ public class GuiComponentAttributeModifierInput implements IGuiViewComponent {
 			}
 		}
 		
-		if (mouseX >= this.selectedText.x - 30 && mouseX < deleteX && mouseY >= this.selectedText.y && mouseY < this.selectedText.y + this.selectedText.height) {
-			this.editScreen.mc.displayGuiScreen(new GuiPopupEditItemStack(this.editScreen.mc.currentScreen, this));
+		if (mouseX >= this.selectedText.x && mouseX < deleteX && mouseY >= this.selectedText.y && mouseY < this.selectedText.y + this.selectedText.height) {
+			this.editScreen.mc.displayGuiScreen(new GuiMessageBoxEditAttributeModifier(this.editScreen.mc.currentScreen, this));
 		}
 	}
 
@@ -157,43 +172,44 @@ public class GuiComponentAttributeModifierInput implements IGuiViewComponent {
 		return display;
 	}
 	
-	class GuiPopupEditItemStack extends GuiMessagePopupTwoButton {
+	protected class GuiMessageBoxEditAttributeModifier extends GuiMessageBoxTwoButton {
 		
 		private GuiScreen parentScreen;
 		private GuiComponentAttributeModifierInput parent;
 		
-		private GuiComponentStringInput attributeNameInput;
+		private GuiComponentSuggestionInput attributeNameInput;
 		private GuiComponentFloatInput amountInput;
-		private GuiComponentIntInput operationInput;
+		private GuiComponentIntegerInput operationInput;
 		private GuiComponentDropdownInput<EntityEquipmentSlot> slotInput;
 		private GuiComponentStringInput uuidInput;
 		
 		private ArrayList<IGuiViewComponent> components = new ArrayList<>();
 
-		public GuiPopupEditItemStack(GuiScreen parentScreen, GuiComponentAttributeModifierInput parent) {
+		public GuiMessageBoxEditAttributeModifier(GuiScreen parentScreen, GuiComponentAttributeModifierInput parent) {
 			super(parentScreen, parentScreen, I18n.format("gui.popup.attributeModifier.title"), new TextComponentString(""), I18n.format("gui.buttons.back"), I18n.format("gui.buttons.update"));
 			this.parentScreen = parentScreen;
 			this.parent = parent;
 			
-			this.attributeNameInput = new GuiComponentStringInput(I18n.format("gui.popup.attributeModifier.attributeName.label"), this.parent.editScreen);
+			this.attributeNameInput = new GuiComponentSuggestionInput(I18n.format("gui.popup.attributeModifier.attributeName.label"), this.parent.editScreen);
+			this.attributeNameInput.setSuggestions(AttributeTypeManager.knownAttributes.stream().map(attribute -> attribute.getName()).collect(Collectors.toList()));
 			if (parent.modifier != null) {
 				this.attributeNameInput.setDefaultText(parent.modifier.getName());
 			}
 			
 			this.amountInput = new GuiComponentFloatInput(I18n.format("gui.popup.attributeModifier.amount.label"), this.parent.editScreen, true);
 			if (parent.modifier != null) {
-				this.amountInput.setFloat((float) parent.modifier.getAmount());
+				this.amountInput.setDefaultFloat((float) parent.modifier.getAmount());
 			} else {
-				this.amountInput.setFloat(0f);
+				this.amountInput.setDefaultFloat(0f);
 			}
 			
-			this.operationInput = new GuiComponentIntInput(I18n.format("gui.popup.attributeModifier.operation.label"), this.parent.editScreen, false);
+			this.operationInput = new GuiComponentIntegerInput(I18n.format("gui.popup.attributeModifier.operation.label"), this.parent.editScreen, false);
 			this.operationInput.setInfo(new TextComponentTranslation("gui.popup.attributeModifier.operation.info", new TextComponentString("https://minecraft.gamepedia.com/Attribute#Operations").setStyle(new Style().setColor(TextFormatting.AQUA).setUnderlined(true))));
 			this.operationInput.setMaximum(2);
 			if (parent.modifier != null) {
-				this.operationInput.setInteger(parent.modifier.getOperation());
+				this.operationInput.setDefaultInteger(parent.modifier.getOperation());
 			} else {
-				this.operationInput.setInteger(0);
+				this.operationInput.setDefaultInteger(0);
 			}
 			
 			this.slotInput = new GuiComponentDropdownInput<EntityEquipmentSlot>(I18n.format("gui.popup.attributeModifier.slot.label"), this.parent.editScreen) {
@@ -228,32 +244,15 @@ public class GuiComponentAttributeModifierInput implements IGuiViewComponent {
 
 		@Override
 	    protected void actionPerformed(GuiButton button) throws IOException {
-	        if (button.id == BUTTON_CONTINUE) {
+	        if (button.id == SECOND_BUTTON) {
 	        	if (this.attributeNameInput.getText().isEmpty()) {
 	        		this.parent.clearAttributeModifier();
 	        	} else {
 	        		if (this.slotInput.getSelected() == null) {
-	        			this.mc.displayGuiScreen(new GuiMessagePopup(this, I18n.format("gui.popup.attributeModifier.problem.slotRequired.title"), new TextComponentTranslation("gui.popup.attributeModifier.problem.slotRequired.message"), I18n.format("gui.buttons.back")));
+	        			this.mc.displayGuiScreen(new GuiMessageBox(this, I18n.format("gui.popup.attributeModifier.problem.slotRequired.title"), new TextComponentTranslation("gui.popup.attributeModifier.problem.slotRequired.message"), I18n.format("gui.buttons.back")));
 	        			return;
 	        		}
-	        		UUID uuid;
-					if (!this.uuidInput.getText().isEmpty()) {
-						try {
-							uuid = UUID.fromString(this.uuidInput.getText());
-						} catch (IllegalArgumentException e) {
-							//Not a valid UUID, but attempt to generate a uuid from the string's hash code.
-							int stringHash = this.uuidInput.getText().hashCode();
-							uuid = new UUID(0L, stringHash);
-						}
-					} else if (this.attributeNameInput.getText().equals("generic.attackDamage") && slot == EntityEquipmentSlot.MAINHAND) {
-						uuid = OtherSerializers.ATTACK_DAMAGE_MODIFIER;
-					} else if (this.attributeNameInput.getText().equals("generic.attackSpeed") && slot == EntityEquipmentSlot.MAINHAND) {
-						uuid = OtherSerializers.ATTACK_SPEED_MODIFIER;
-					} else if ((this.attributeNameInput.getText().equals("generic.armor") || this.attributeNameInput.getText().equals("generic.armorToughness")) && OtherSerializers.ARMOR_MODIFIERS.containsKey(slot)) {
-						uuid = OtherSerializers.ARMOR_MODIFIERS.get(slot);
-					} else {
-						uuid = UUID.randomUUID();
-					}
+	        		UUID uuid = AttributeTypeManager.getUUIDfromString(this.uuidInput.getText(), this.attributeNameInput.getText(), this.slotInput.getSelected());
 					
 	        		this.parent.modifier = new AttributeModifier(uuid, this.attributeNameInput.getText(), this.amountInput.getFloat(), this.operationInput.getInteger());
 	        		this.parent.slot = this.slotInput.getSelected();
@@ -272,12 +271,12 @@ public class GuiComponentAttributeModifierInput implements IGuiViewComponent {
 		
 	    @Override
 	    protected int getPopupHeight() {
-	    	return this.getComponentsHeight() + 90;
+	    	return this.getComponentsHeight() + 60;
 	    }
 
 	    @Override
-	    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-			super.drawScreen(mouseX, mouseY, partialTicks);
+	    public void drawScreenOverlay(int mouseX, int mouseY, float partialTicks) {
+			super.drawScreenOverlay(mouseX, mouseY, partialTicks);
 			
 			int popupWidth = this.getPopupWidth();
 	    	int popupHeight = this.getPopupHeight();
@@ -296,6 +295,8 @@ public class GuiComponentAttributeModifierInput implements IGuiViewComponent {
 				component.drawInList(popupX + labelOffset + 10, componentY, popupRight, mouseX, mouseY);
 				componentY += component.getHeight(popupX, popupRight);
 			}
+			
+			this.drawPostRender();
 	    }
 	    
 	    @Override

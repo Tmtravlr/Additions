@@ -10,9 +10,12 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StringUtils;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.GuiScrollingList;
 
 import com.tmtravlr.additions.addon.Addon;
+import com.tmtravlr.additions.util.client.CommonGuiUtils;
 
 /**
  * Main list of addons.
@@ -21,8 +24,6 @@ import com.tmtravlr.additions.addon.Addon;
  * @since July 2017 
  */
 public class GuiScrollingAddonList extends GuiScrollingList {
-	
-    private static final ResourceLocation GUI_TEXTURES = new ResourceLocation("additions:textures/gui/additions_gui_textures.png");
 
 	private GuiAdditionsMainMenu parent;
 	private ArrayList<Addon> addons;
@@ -60,7 +61,7 @@ public class GuiScrollingAddonList extends GuiScrollingList {
 		boolean isHovering = mouseX >= left && mouseX <= right &&
                 mouseY >= top && mouseY < top + this.slotHeight;
 		
-        this.parent.mc.getTextureManager().bindTexture(GUI_TEXTURES);
+        this.parent.mc.getTextureManager().bindTexture(CommonGuiUtils.GUI_TEXTURES);
 	    GlStateManager.color(255.0F, 255.0F, 255.0F, 255.0F);
         if (isHovering) {
         	this.parent.drawTexturedModalRect(left, top, 0, 32, 256, 32);
@@ -75,10 +76,31 @@ public class GuiScrollingAddonList extends GuiScrollingList {
         	this.parent.drawString(this.parent.getFontRenderer(), I18n.format("gui.edit.addon.title"), left + 42, top + 13, 0xFFFFFF);
         } else {
         	RenderHelper.enableGUIStandardItemLighting();
+            GlStateManager.enableRescaleNormal();
+            GlStateManager.enableLighting();
+            GlStateManager.enableDepth();
         	this.parent.mc.getRenderItem().renderItemAndEffectIntoGUI((EntityLivingBase)null, addon.getLogoItem(), left + 7, top + 8);
+            this.parent.mc.getRenderItem().renderItemOverlayIntoGUI(this.parent.getFontRenderer(), addon.getLogoItem(), left + 7, top + 8, null);
             RenderHelper.disableStandardItemLighting();
-        	this.parent.drawString(this.parent.getFontRenderer(), addon.name, left + 42, top + 7, 0xFFFFFF);
-        	this.parent.drawString(this.parent.getFontRenderer(), I18n.format("gui.additions.main.byAuthor", addon.author, addon.id), left + 42, top + 19, 0xFFFFFF);
+            GlStateManager.disableRescaleNormal();
+            GlStateManager.disableLighting();
+            GlStateManager.disableDepth();
+            
+            if (!addon.locked) {
+            	this.parent.mc.getTextureManager().bindTexture(CommonGuiUtils.GUI_TEXTURES);
+                GlStateManager.color(255.0F, 255.0F, 255.0F, 255.0F);
+                
+                this.parent.drawTexturedModalRect(left + 22, top + 19, 154, 64, 7, 10);
+            }
+            
+            String addonName = addon.name;
+            
+            if (addon.locked && !StringUtils.isNullOrEmpty(addon.version)) {
+            	addonName += TextFormatting.RESET + " v" + addon.version;
+            }
+            
+        	this.parent.drawString(this.parent.getFontRenderer(), CommonGuiUtils.trimWithDots(this.parent.getFontRenderer(), addonName, 210), left + 42, top + 7, 0xFFFFFF);
+        	this.parent.drawString(this.parent.getFontRenderer(), CommonGuiUtils.trimWithDots(this.parent.getFontRenderer(), I18n.format("gui.additions.main.byAuthor", addon.author, addon.id), 210), left + 42, top + 19, 0xFFFFFF);
         }
 	}
 

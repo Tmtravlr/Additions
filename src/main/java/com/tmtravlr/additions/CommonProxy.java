@@ -9,11 +9,11 @@ import net.minecraftforge.common.MinecraftForge;
 
 public class CommonProxy {
 	
-	public void registerEventHandlers() {
-		MinecraftForge.EVENT_BUS.register(new CommonEventHandler());
+	public void registerGuiFactories() {
+		//Do nothing on the server!
 	}
 	
-	public void registerGuiFactories() {
+	public void registerEntityRenderers() {
 		//Do nothing on the server!
 	}
 	
@@ -48,17 +48,17 @@ public class CommonProxy {
 	public void registerAsResourcePack(File addon) {
 		//Do nothing on the server!
 	}
+
+	public void unRegisterResourcePack(File addon) {
+		//Do nothing on the server!
+	}
 	
 	public void refreshResources() {
 		//Do nothing on the server!
 	}
-
-	public void throwAddonLoadingException(String messageKey, Object ... args) {
-		//Do nothing on the server!
-	}
 	
-	public boolean checkForLoadingException() {
-		return false;
+	public void checkForShieldBash() {
+		//Do nothing on the server!
 	}
 
 }

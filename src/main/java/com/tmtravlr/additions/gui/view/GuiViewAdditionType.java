@@ -4,16 +4,16 @@ import java.io.IOException;
 
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.gui.view.components.GuiComponentAdditionList;
-import com.tmtravlr.additions.gui.view.components.GuiComponentAdditionTypeList;
+import com.tmtravlr.additions.gui.view.components.GuiComponentDisplayText;
 import com.tmtravlr.additions.gui.view.components.IGuiViewComponent;
-import com.tmtravlr.additions.gui.view.edit.GuiEditAddon;
+import com.tmtravlr.additions.util.client.CommonGuiUtils;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 
 /**
  * Shows you info about an addition type (like items, or creative tabs).
@@ -22,38 +22,55 @@ import net.minecraft.util.ResourceLocation;
  * @since September 2017 
  */
 public abstract class GuiViewAdditionType extends GuiView {
-	
-    private static final ResourceLocation GUI_TEXTURES = new ResourceLocation("additions:textures/gui/additions_gui_textures.png");
     private static final int ADD_ADDITION_HEIGHT = 40;
 	
 	protected final Addon addon;
-	protected String newAdditionText;
-	protected final GuiComponentAddAddition addAddition = new GuiComponentAddAddition(this);
+	protected final String newAdditionText;
+	protected final ITextComponent hasNoneText;
+	protected final GuiComponentAddAddition addAddition;
 	protected GuiComponentAdditionFilter filter;
 	protected GuiComponentAdditionList additions;
+	protected GuiComponentDisplayText hasNoneMessage;
 
-	public GuiViewAdditionType(GuiScreen parentScreen, String title, Addon addon, String newAdditionText) {
+	public GuiViewAdditionType(GuiScreen parentScreen, String title, Addon addon, String newAdditionText, ITextComponent hasNoneText) {
 		super(parentScreen, title);
 		this.addon = addon;
 		this.newAdditionText = newAdditionText;
+		this.hasNoneText = hasNoneText;
+		this.addAddition = new GuiComponentAddAddition(this, this.newAdditionText);
 	}
 
 	@Override
 	public void initComponents() {
 		this.filter = new GuiComponentAdditionFilter(this);
-		this.additions = new GuiComponentAdditionList(this, this.addon);
 		
-		this.components.add(this.addAddition);
-		this.components.add(this.filter);
-		this.components.add(this.additions);
+		this.additions = new GuiComponentAdditionList(this, this.addon);
+		this.addAdditions();
+		
+		this.hasNoneMessage = new GuiComponentDisplayText(this, this.hasNoneText);
+		this.hasNoneMessage.setIgnoreLabel(true);
+		this.hasNoneMessage.setCentered(true);
+		
+		if (!this.addon.locked) {
+			this.components.add(this.addAddition);
+		}
+		
+		if (this.addon.locked && this.additions.isEmpty()) {
+			this.components.add(this.hasNoneMessage);
+		} else {
+			this.components.add(this.filter);
+			this.components.add(this.additions);
+		}
 	}
 	
 	@Override
     protected void actionPerformed(GuiButton button) {
-    	if (button.id == BACK_BUTTON) {
+    	if (button.id == BUTTON_BACK) {
 			super.actionPerformed(button);
     	}
 	}
+	
+	protected abstract void addAdditions();
 	
 	protected abstract GuiScreen getNewAdditionScreen();
 	
@@ -61,15 +78,28 @@ public abstract class GuiViewAdditionType extends GuiView {
 		this.additions.filter(this.filter.getText());
 	}
 	
-	private class GuiComponentAddAddition implements IGuiViewComponent {
+	protected class GuiComponentAddAddition implements IGuiViewComponent {
 		
-		private GuiViewAdditionType viewScreen;
-		private int x;
-		private int y;
-		private int width;
+		protected GuiViewAdditionType viewScreen;
+		protected int x;
+		protected int y;
+		protected int width;
+		protected boolean hidden;
+		protected String newAdditionText;
 		
-		public GuiComponentAddAddition(GuiViewAdditionType parentView) {
+		public GuiComponentAddAddition(GuiViewAdditionType parentView, String newAdditionText) {
 			this.viewScreen = parentView;
+			this.newAdditionText = newAdditionText;
+		}
+
+		@Override
+		public boolean isHidden() {
+			return this.hidden;
+		}
+		
+		@Override
+		public void setHidden(boolean hidden) {
+			this.hidden = hidden;
 		}
 
 		@Override
@@ -87,12 +117,12 @@ public abstract class GuiViewAdditionType extends GuiView {
 			
 			if (this.width < 100) {
 				this.width = 100;
-				this.x = (right - x) / 2 - 50;
+				this.x = x + (right - x) / 2 - 50;
 			}
 			
 			if (this.width > 500) {
 				this.width = 500;
-				this.x = (right - x) / 2 - 250;
+				this.x = x + (right - x) / 2 - 250;
 			}
 			
 			if (mouseX >= this.x && mouseX <= this.x + this.width && mouseY >= this.y && mouseY < this.y + height ) {
@@ -101,13 +131,13 @@ public abstract class GuiViewAdditionType extends GuiView {
 				this.viewScreen.drawRect(this.x + 5, this.y + 4, this.x + this.width - 5, this.y + height - 4, 0xFF2D5C60);
 			}
 			
-			int newAdditionTextWidth = this.viewScreen.fontRenderer.getStringWidth(this.viewScreen.newAdditionText);
+			int newAdditionTextWidth = this.viewScreen.fontRenderer.getStringWidth(this.newAdditionText);
 			int midX = this.x + this.width/2;
 			int midY = this.y + height/2;
 			
-			this.viewScreen.drawString(this.viewScreen.fontRenderer, this.viewScreen.newAdditionText, midX - newAdditionTextWidth/2, midY - 4, 0xFFFFFF);
+			this.viewScreen.drawString(this.viewScreen.fontRenderer, this.newAdditionText, midX - newAdditionTextWidth/2, midY - 4, 0xFFFFFF);
 			
-			this.viewScreen.mc.getTextureManager().bindTexture(GUI_TEXTURES);
+			this.viewScreen.mc.getTextureManager().bindTexture(CommonGuiUtils.GUI_TEXTURES);
 		    GlStateManager.color(255.0F, 255.0F, 255.0F, 255.0F);
 		    GlStateManager.enableAlpha();
 		    
@@ -136,10 +166,21 @@ public abstract class GuiViewAdditionType extends GuiView {
 	private class GuiComponentAdditionFilter extends GuiTextField implements IGuiViewComponent {
 
 		private GuiViewAdditionType viewScreen;
+		private boolean hidden = false;
 		
 		public GuiComponentAdditionFilter(GuiViewAdditionType viewScreen) {
 			super(0, viewScreen.getFontRenderer(), 0, 0, 0, 20);
 			this.viewScreen = viewScreen;
+		}
+
+		@Override
+		public boolean isHidden() {
+			return this.hidden;
+		}
+		
+		@Override
+		public void setHidden(boolean hidden) {
+			this.hidden = hidden;
 		}
 
 		@Override
@@ -157,17 +198,17 @@ public abstract class GuiViewAdditionType extends GuiView {
 			
 			if (this.width < 100) {
 				this.width = 100;
-				this.x = (right - x) / 2 - 50;
+				this.x = x + (right - x) / 2 - 50;
 			}
 			
 			if (this.width > 400) {
 				this.width = 400;
-				this.x = (right - x) / 2 - 200;
+				this.x = x + (right - x) / 2 - 200;
 			}
 			
 			this.drawTextBox();
 			
-			this.viewScreen.mc.getTextureManager().bindTexture(GUI_TEXTURES);
+			this.viewScreen.mc.getTextureManager().bindTexture(CommonGuiUtils.GUI_TEXTURES);
 	        GlStateManager.color(255.0F, 255.0F, 255.0F, 255.0F);
 			
 			// Add search icon

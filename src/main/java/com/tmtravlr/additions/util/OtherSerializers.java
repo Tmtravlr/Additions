@@ -1,11 +1,24 @@
 package com.tmtravlr.additions.util;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSyntaxException;
+import com.tmtravlr.additions.addon.blocks.mapcolors.BlockMapColorManager;
+import com.tmtravlr.additions.addon.blocks.materials.BlockMaterialManager;
+import com.tmtravlr.additions.type.attribute.AttributeTypeManager;
+
+import net.minecraft.block.material.MapColor;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
@@ -16,35 +29,15 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.oredict.OreDictionary;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSyntaxException;
-
 public class OtherSerializers {
-
-	public static final Map<EntityEquipmentSlot, UUID> ARMOR_MODIFIERS = new HashMap<>();
-	static {
-		ARMOR_MODIFIERS.put(EntityEquipmentSlot.FEET, UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"));
-		ARMOR_MODIFIERS.put(EntityEquipmentSlot.LEGS, UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"));
-		ARMOR_MODIFIERS.put(EntityEquipmentSlot.CHEST, UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"));
-		ARMOR_MODIFIERS.put(EntityEquipmentSlot.HEAD, UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150"));
-		ARMOR_MODIFIERS.put(EntityEquipmentSlot.MAINHAND, UUID.fromString("3FCB55D3-564C-F348-4A79-B5C9A33C13DF"));
-		ARMOR_MODIFIERS.put(EntityEquipmentSlot.OFFHAND, UUID.fromString("AC233E1C-4180-4865-B01B-BCFE9785ACA3"));
-	}
-    public static final UUID ATTACK_DAMAGE_MODIFIER = UUID.fromString("CB3F55D3-645C-4F38-A497-9C13A33DB5CF");
-    public static final UUID ATTACK_SPEED_MODIFIER = UUID.fromString("FA233E1C-4180-4865-B01B-BCCE9785ACA3");
     
 	public static class PotionEffectSerializer {
 		
-		public static JsonElement serialize(PotionEffect effect, JsonSerializationContext context) {
+		public static JsonElement serialize(PotionEffect effect) {
         	JsonObject json = new JsonObject();
 			
         	String name = Potion.REGISTRY.getNameForObject(effect.getPotion()).toString();
@@ -57,7 +50,7 @@ public class OtherSerializers {
         	return json;
         }
 		
-		public static PotionEffect deserialize(JsonObject json, JsonDeserializationContext context) {
+		public static PotionEffect deserialize(JsonObject json) {
         	String name = JsonUtils.getString(json, "name");
         	Potion potion = Potion.getPotionFromResourceLocation(name);
         	
@@ -76,36 +69,38 @@ public class OtherSerializers {
 
 	public static class AttributeModifierListSerializer {
 		
-		public static JsonElement serialize(Multimap<EntityEquipmentSlot, AttributeModifier> modifiers, JsonSerializationContext context) {
+		public static JsonElement serialize(Multimap<EntityEquipmentSlot, AttributeModifier> modifiers) {
         	JsonArray jsonArray = new JsonArray();
         	
         	for (EntityEquipmentSlot slot : modifiers.keySet()) {
         		for (AttributeModifier modifier : modifiers.get(slot)) {
-					JsonObject json = new JsonObject();
-					
-		        	json.addProperty("attribute_name", modifier.getName());
-		        	json.addProperty("amount", modifier.getAmount());
-		        	if (modifier.getOperation() != 0) {
-		        		json.addProperty("operation", modifier.getOperation());
-		        	}
-		        	json.addProperty("slot", slot.getName());
-		        	json.addProperty("uuid", modifier.getID().toString());
-	        		
-		        	jsonArray.add(json);
+        			if (modifier != null) {
+						JsonObject json = new JsonObject();
+						
+			        	json.addProperty("attribute_name", modifier.getName());
+			        	json.addProperty("amount", modifier.getAmount());
+			        	if (modifier.getOperation() != 0) {
+			        		json.addProperty("operation", modifier.getOperation());
+			        	}
+			        	json.addProperty("slot", slot.getName());
+			        	json.addProperty("uuid", modifier.getID().toString());
+		        		
+			        	jsonArray.add(json);
+        			}
         		}
         	}
         	
         	return jsonArray;
         }
 		
-		public static Multimap<EntityEquipmentSlot, AttributeModifier> deserialize(JsonArray jsonArray, JsonDeserializationContext context) {
+		public static Multimap<EntityEquipmentSlot, AttributeModifier> deserialize(JsonArray jsonArray) {
 			Multimap<EntityEquipmentSlot, AttributeModifier> multimap = HashMultimap.create();
         	
 			for (int i = 0; i < jsonArray.size(); i++) {
 				JsonObject json = JsonUtils.getJsonObject(jsonArray.get(i), "member of attribute modifier array");
 				
 				String name = JsonUtils.getString(json, "attribute_name");
-				int amount = JsonUtils.getInt(json, "amount");
+				float amount = JsonUtils.getFloat(json, "amount");
 				int operation = JsonUtils.getInt(json, "operation", 0);
 				String slotName = JsonUtils.getString(json, "slot");
 				EntityEquipmentSlot slot = EntityEquipmentSlot.fromString(slotName);
@@ -114,18 +109,9 @@ public class OtherSerializers {
 					throw new JsonSyntaxException("Unknown equipment slot '" + slotName + "'");
 				}
 				
-				UUID uuid;
-				if (JsonUtils.hasField(json, "uuid")) {
-					uuid = UUID.fromString(JsonUtils.getString(json, "uuid"));
-				} else if (name.equals("generic.attackDamage") && slot == EntityEquipmentSlot.MAINHAND) {
-					uuid = ATTACK_DAMAGE_MODIFIER;
-				} else if (name.equals("generic.attackSpeed") && slot == EntityEquipmentSlot.MAINHAND) {
-					uuid = ATTACK_SPEED_MODIFIER;
-				} else if ((name.equals("generic.armor") || name.equals("generic.armorToughness")) && ARMOR_MODIFIERS.containsKey(slot)) {
-					uuid = ARMOR_MODIFIERS.get(slot);
-				} else {
-					uuid = UUID.randomUUID();
-				}
+				String uuidString = JsonUtils.getString(json, "uuid", "");
+				
+				UUID uuid = AttributeTypeManager.getUUIDfromString(uuidString, name, slot);
 				
 				multimap.put(slot, new AttributeModifier(uuid, name, amount, operation));
 			}
@@ -136,29 +122,33 @@ public class OtherSerializers {
 
 	public static class StringListSerializer {
 		
-		public static JsonElement serialize(List<String> list, JsonSerializationContext context) {
-        	if(list.size() == 1) {
-        		return new JsonPrimitive(list.get(0));
+		public static JsonElement serialize(String[] list) {
+			return serialize(Arrays.asList(list));
+		}
+		
+		public static JsonElement serialize(Collection<String> list) {
+        	if (list.size() == 1) {
+        		return new JsonPrimitive(list.iterator().next());
         	}
         	
-        	JsonArray json = new JsonArray();
+        	JsonArray jsonArray = new JsonArray();
         	
-        	for(String string : list) {
-        		json.add(string);
+        	for (String string : list) {
+        		jsonArray.add(string);
         	}
         	
-        	return json;
+        	return jsonArray;
         }
 		
-		public static List<String> deserialize(JsonElement json, String elementName, JsonDeserializationContext context) {
+		public static List<String> deserialize(JsonElement jsonElement, String elementName) {
 			List<String> stringList = new ArrayList<>();
 			
-			if (JsonUtils.isString(json)) {
-				stringList.add(json.getAsString());
-        	} else if (json.isJsonArray()) {
-        		JsonArray jsonArray = json.getAsJsonArray();
-        		for (int i = 0; i < jsonArray.size(); i++) {
-    				stringList.add(JsonUtils.getString(jsonArray.get(i), "member of " + elementName + " array"));
+			if (JsonUtils.isString(jsonElement)) {
+				stringList.add(JsonUtils.getString(jsonElement, elementName));
+        	} else if (jsonElement.isJsonArray()) {
+        		JsonArray jsonArray = jsonElement.getAsJsonArray();
+        		for (JsonElement jsonArrayElement : jsonArray) {
+    				stringList.add(JsonUtils.getString(jsonArrayElement, "member of " + elementName + " array"));
         		}
         	} else {
         		throw new JsonSyntaxException("Expected '" + elementName + "' to be a string or a list of strings.");
@@ -167,10 +157,54 @@ public class OtherSerializers {
 			return stringList;
         }
 	}
+	
+	public static class ItemListSerializer {
+		
+		public static JsonElement serialize(Collection<Item> list) {
+			if (list.size() == 1) {
+				Item item = list.iterator().next();
+				ResourceLocation itemName = Item.REGISTRY.getNameForObject(item);
+				
+				if (itemName == null) {
+					throw new IllegalArgumentException("Can't serialize unknown item " + item);
+				}
+				
+				return new JsonPrimitive(itemName.toString());
+			}
+			
+			JsonArray jsonArray = new JsonArray();
+			
+			for (Item item : list) {
+				ResourceLocation itemName = Item.REGISTRY.getNameForObject(item);
+				
+				if (itemName == null) {
+					throw new IllegalArgumentException("Can't serialize unknown item " + item);
+				}
+				
+				jsonArray.add(Item.REGISTRY.getNameForObject(item).toString());
+			}
+			
+			return jsonArray;
+		}
+		
+		public static List<Item> deserialize(JsonElement jsonElement, String elementName) {
+			List<Item> itemList = new ArrayList<>();
+			
+			if (JsonUtils.isString(jsonElement)) {
+				itemList.add(JsonUtils.getItem(jsonElement, elementName));
+			} else {
+				for (JsonElement jsonArrayElement : JsonUtils.getJsonArray(jsonElement, elementName)) {
+					itemList.add(JsonUtils.getItem(jsonArrayElement, "member of " + elementName + " array"));
+				}
+			}
+			
+			return itemList;
+        }
+	}
 
 	public static class ItemStackSerializer {
 		
-		public static JsonObject serialize(ItemStack itemStack, JsonSerializationContext context) {
+		public static JsonObject serialize(ItemStack itemStack) {
         	JsonObject json = new JsonObject();
         	
         	ResourceLocation itemName = Item.REGISTRY.getNameForObject(itemStack.getItem());	
@@ -200,7 +234,7 @@ public class OtherSerializers {
         	return json;
         }
 		
-		public static ItemStack deserialize(JsonObject json, JsonDeserializationContext context) {
+		public static ItemStack deserialize(JsonObject json) {
 			Item item = JsonUtils.getItem(json, "item");
 			int count = JsonUtils.getInt(json, "count", 1);
 			
@@ -215,7 +249,7 @@ public class OtherSerializers {
 			
 			if (JsonUtils.isString(json, "tag")) {
 				try {
-				itemStack.setTagCompound(JsonToNBT.getTagFromJson(JsonUtils.getString(json, "tag")));
+					itemStack.setTagCompound(JsonToNBT.getTagFromJson(JsonUtils.getString(json, "tag")));
                 } catch (NBTException nbtexception) {
                     throw new JsonSyntaxException(nbtexception);
                 }
@@ -223,6 +257,116 @@ public class OtherSerializers {
 			
 			return itemStack;
         }
+	}
+	
+	/**
+	 * The CraftingHelper has it's own way of deserializing item stacks, so 
+	 * here's a complement to serialize them in the same way.
+	 */
+	public static class CraftingHelperItemStackSerializer {
+		public static JsonObject serialize(ItemStack itemStack) {
+        	JsonObject json = new JsonObject();
+        	
+        	ResourceLocation itemName = ForgeRegistries.ITEMS.getKey(itemStack.getItem());	
+        	
+        	if (itemName == null) {
+        		throw new IllegalArgumentException("Can't serialize unknown item " + itemStack);
+        	}
+        	
+        	json.addProperty("item", itemName.toString());
+        	
+        	if (itemStack.getCount() != 1) {
+        		json.addProperty("count", itemStack.getCount());
+        	}
+        	
+        	if (itemStack.getItemDamage() != 0 || itemStack.getItem().getHasSubtypes()) {
+    			json.addProperty("data", itemStack.getItemDamage());
+        	}
+        	
+        	if (itemStack.hasTagCompound()) {
+        		json.addProperty("nbt", itemStack.getTagCompound().toString());
+        	}
+        	
+        	return json;
+        }
+	}
+	
+	public static class SoundEventSerializer {
+		
+		public static JsonElement serialize(SoundEvent soundEvent) {
+			return new JsonPrimitive(soundEvent.getRegistryName().toString());
+		}
+		
+		public static SoundEvent deserialize(JsonObject json, String elementName) {
+			if (json.has(elementName)) {
+	            return deserialize(json.get(elementName), elementName);
+	        } else {
+	            throw new JsonSyntaxException("Missing " + elementName + ", expected to find a sound event");
+	        }
+		}
+		
+		public static SoundEvent deserialize(JsonElement jsonElement, String elementName) {
+			String soundName = JsonUtils.getString(jsonElement, elementName);
+			SoundEvent soundEvent = SoundEvent.REGISTRY.getObject(new ResourceLocation(soundName));
+			
+			if (soundEvent == null) {
+				throw new JsonSyntaxException("Expected '" + elementName + "' to be a sound event, was unknown string '" + soundName + "'");
+			}
+			
+			return soundEvent;
+		}
+	}
+	
+	public static class BlockMaterialSerializer {
+		
+		public static JsonElement serialize(Material blockMaterial) {
+			return new JsonPrimitive(BlockMaterialManager.getBlockMaterialName(blockMaterial).toString());
+		}
+		
+		public static Material deserialize(JsonObject json, String elementName) {
+			if (json.has(elementName)) {
+	            return deserialize(json.get(elementName), elementName);
+	        } else {
+	            throw new JsonSyntaxException("Missing " + elementName + ", expected to find a block material");
+	        }
+		}
+		
+		public static Material deserialize(JsonElement jsonElement, String elementName) {
+			String blockMaterialName = JsonUtils.getString(jsonElement, elementName);
+			Material blockMaterial = BlockMaterialManager.getBlockMaterial(new ResourceLocation(blockMaterialName));
+			
+			if (blockMaterial == null) {
+				throw new JsonSyntaxException("Expected '" + elementName + "' to be a block material, was unknown string '" + blockMaterialName + "'");
+			}
+			
+			return blockMaterial;
+		}
+	}
+	
+	public static class BlockMapColorSerializer {
+		
+		public static JsonElement serialize(MapColor blockMapColor) {
+			return new JsonPrimitive(BlockMapColorManager.getBlockMapColorName(blockMapColor).toString());
+		}
+		
+		public static MapColor deserialize(JsonObject json, String elementName) {
+			if (json.has(elementName)) {
+	            return deserialize(json.get(elementName), elementName);
+	        } else {
+	            throw new JsonSyntaxException("Missing " + elementName + ", expected to find a block map color");
+	        }
+		}
+		
+		public static MapColor deserialize(JsonElement jsonElement, String elementName) {
+			String blockMapColorName = JsonUtils.getString(jsonElement, elementName);
+			MapColor blockMapColor = BlockMapColorManager.getBlockMaterial(new ResourceLocation(blockMapColorName));
+			
+			if (blockMapColor == null) {
+				throw new JsonSyntaxException("Expected '" + elementName + "' to be a block map color, was unknown string '" + blockMapColorName + "'");
+			}
+			
+			return blockMapColor;
+		}
 	}
 	
 }

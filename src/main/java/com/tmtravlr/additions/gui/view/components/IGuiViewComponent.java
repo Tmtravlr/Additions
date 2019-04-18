@@ -71,4 +71,14 @@ public interface IGuiViewComponent {
 	 */
 	public default void onInitGui() {}
 	
+	/**
+	 * @return True if this component is hidden from view, and should not be interacted with.
+	 */
+	public boolean isHidden();
+	
+	/**
+	 * @param hidden True if the component should be hidden.
+	 */
+	public void setHidden(boolean hidden);
+	
 }

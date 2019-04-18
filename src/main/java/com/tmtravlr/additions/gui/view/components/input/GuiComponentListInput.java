@@ -27,15 +27,26 @@ public abstract class GuiComponentListInput<T extends IGuiViewComponent> impleme
 	private ArrayList<T> components = new ArrayList<>();
 	private GuiScrollingComponentList<T> componentList;
 	private String label;
-	private boolean required = false;
 	private int x;
 	private int y;
 	private int width;
+	private boolean hidden = false;
+	private boolean required = false;
 	
 	public GuiComponentListInput(String label, GuiEdit editScreen) {
 		this.editScreen = editScreen;
 		this.label = label;
 		this.recreateComponentList();
+	}
+
+	@Override
+	public boolean isHidden() {
+		return this.hidden;
+	}
+	
+	@Override
+	public void setHidden(boolean hidden) {
+		this.hidden = hidden;
 	}
 	
 	public void setRequired() {
@@ -113,14 +124,20 @@ public abstract class GuiComponentListInput<T extends IGuiViewComponent> impleme
 	}
 	
 	public void addNewComponent() {
-		this.components.add(this.createBlankComponent());
+		T blankComponent = this.createBlankComponent();
+		this.components.add(blankComponent);
 		this.recreateComponentList();
+		this.componentList.setScrollDistance(this.componentList.getScrollDistance() + blankComponent.getHeight(this.x, this.x + this.width));
+		this.editScreen.notifyHasChanges();
 	}
 	
 	public void insertNewComponent(int index) {
 		if (index >= 0 && index < this.components.size()) {
-			this.components.add(index, this.createBlankComponent());
+			T blankComponent = this.createBlankComponent();
+			this.components.add(index, blankComponent);
 			this.recreateComponentList();
+			this.componentList.setScrollDistance(this.componentList.getScrollDistance() + blankComponent.getHeight(this.x, this.x + this.width));
+			this.editScreen.notifyHasChanges();
 		}
 	}
 	
@@ -128,24 +145,26 @@ public abstract class GuiComponentListInput<T extends IGuiViewComponent> impleme
 		if (index >= 0 && index < this.components.size()) {
 			this.components.remove(index);
 			this.recreateComponentList();
+			this.editScreen.notifyHasChanges();
 		}
 	}
 	
 	public void removeAllComponents() {
 		this.components.clear();
 		this.recreateComponentList();
+		this.editScreen.notifyHasChanges();
 	}
 	
 	public List<T> getComponents() {
 		return this.components;
 	}
 	
-	public void setComponents(Collection<T> toAdd) {
+	public void setDefaultComponents(Collection<T> toAdd) {
 		this.components = new ArrayList<>(toAdd);
 		this.recreateComponentList();
 	}
 	
-	public void addComponent(T toAdd) {
+	public void addDefaultComponent(T toAdd) {
 		this.components.add(toAdd);
 		this.recreateComponentList();
 	}
@@ -153,6 +172,14 @@ public abstract class GuiComponentListInput<T extends IGuiViewComponent> impleme
 	public abstract T createBlankComponent();
 	
 	protected class GuiComponentAddSymbol implements IGuiViewComponent {
+		
+		private boolean hidden = false;
+
+		@Override
+		public boolean isHidden() {return this.hidden;}
+		
+		@Override
+		public void setHidden(boolean hidden) {this.hidden = hidden;}
 		
 		@Override
 		public int getHeight(int left, int right) {return ADD_COMPONENT_HEIGHT;}
@@ -171,6 +198,14 @@ public abstract class GuiComponentListInput<T extends IGuiViewComponent> impleme
 	}
 	
 	protected class GuiComponentInsertSymbol implements IGuiViewComponent {
+		
+		private boolean hidden = false;
+
+		@Override
+		public boolean isHidden() {return this.hidden;}
+		
+		@Override
+		public void setHidden(boolean hidden) {this.hidden = hidden;}
 		
 		@Override
 		public int getHeight(int left, int right) {return INSERT_COMPONENT_HEIGHT;}

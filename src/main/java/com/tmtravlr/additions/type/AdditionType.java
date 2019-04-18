@@ -4,12 +4,12 @@ import java.util.List;
 
 import com.tmtravlr.additions.addon.Addon;
 
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Represents something that can be added (like items, or creative tabs).
@@ -23,27 +23,27 @@ public abstract class AdditionType<T> {
 	/**
 	 * Do the loading (from json files and such) during the pre init event.
 	 */
-	public abstract void loadPreInit(List<Addon> addons, FMLPreInitializationEvent event);
+	public void loadPreInit(List<Addon> addons, FMLPreInitializationEvent event) {};
 	
 	/**
 	 * Do the loading (from json files and such) during the init event.
 	 */
-	public abstract void loadInit(List<Addon> addons, FMLInitializationEvent event);
+	public void loadInit(List<Addon> addons, FMLInitializationEvent event) {};
 	
 	/**
 	 * Do the loading (from json files and such) during the post init event.
 	 */
-	public abstract void loadPostInit(List<Addon> addons, FMLPostInitializationEvent event);
+	public void loadPostInit(List<Addon> addons, FMLPostInitializationEvent event) {};
 	
 	/**
 	 * Do the loading (from json files and such) during the server starting event.
 	 */
-	public abstract void loadServerStarting(List<Addon> addons, FMLServerStartingEvent event);
+	public void loadServerStarting(List<Addon> addons, FMLServerStartingEvent event) {};
 	
 	/**
 	 * Do any necessary setup for a new addon being created.
 	 */
-	public abstract void setupNewAddon(Addon addon);
+	public void setupNewAddon(Addon addon) {};
 
 	/**
 	 * Returns everything of this type added for the addon.
@@ -53,11 +53,13 @@ public abstract class AdditionType<T> {
 	/**
 	 * Saves the addition of this type for the addon to a json file.
 	 */
+	@SideOnly(Side.CLIENT)
 	public abstract void saveAddition(Addon addon, T addition);
 	
 	/**
 	 * Deletes the json file for this addition and removes it from the addon.
 	 */
+	@SideOnly(Side.CLIENT)
 	public abstract void deleteAddition(Addon addon, T addition);
 	
 }

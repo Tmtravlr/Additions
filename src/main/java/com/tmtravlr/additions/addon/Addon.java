@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -33,6 +34,7 @@ public class Addon {
 	public File addonFolder;
 	
 	public String id = "";
+	public String version = "";
 	public String name = "";
 	public String logoItem = "";
 	public String author = "";
@@ -40,9 +42,15 @@ public class Addon {
 	public List<String> dependents = new ArrayList<>();
 	public List<String> requiredAddons = new ArrayList<>();
 	public List<String> requiredMods = new ArrayList<>();
+	public ResourceLocation loopFunction;
+	public boolean locked;
 	
 	public void setId(String id) {
 		this.id = id;
+	}
+	
+	public void setVersion(String version) {
+		this.version = version;
 	}
 	
 	public void setName(String name) {
@@ -55,6 +63,10 @@ public class Addon {
 	
 	public void setLogoItem(String itemName) {
 		this.logoItem = itemName;
+	}
+	
+	public void setLocked(boolean locked) {
+		this.locked = locked;
 	}
 	
 	public void setDependencies(List<String> dependencies) {
@@ -77,6 +89,10 @@ public class Addon {
 		this.addonFolder = addonFile;
 	}
 	
+	public void setLoopFunction(ResourceLocation loopFunction) {
+		this.loopFunction = loopFunction;
+	}
+	
 	public ItemStack getLogoItem() {
 		if (this.logoItem != null) {
 			Item item = Item.REGISTRY.getObject(new ResourceLocation(this.logoItem));
@@ -89,7 +105,7 @@ public class Addon {
 	}
 	
 	public String toString() {
-		return this.name + " (" + this.id + ")";
+		return this.name + TextFormatting.RESET + " (" + this.id + (this.locked ? (" v" + this.version) : "") + ")";
 	}
 	
 	public static class Serializer implements JsonDeserializer<Addon>, JsonSerializer<Addon> {
@@ -102,20 +118,28 @@ public class Addon {
 			json.addProperty("author", info.author);
 			json.addProperty("logo_item", info.logoItem);
 			
+			if (!info.version.isEmpty()) {
+				json.addProperty("version", info.version);
+			}
+			
 			if (!info.dependencies.isEmpty()) {
-				json.add("dependencies", OtherSerializers.StringListSerializer.serialize(info.dependencies, context));
+				json.add("dependencies", OtherSerializers.StringListSerializer.serialize(info.dependencies));
 			}
 			
 			if (!info.dependents.isEmpty()) {
-				json.add("dependents", OtherSerializers.StringListSerializer.serialize(info.dependents, context));
+				json.add("dependents", OtherSerializers.StringListSerializer.serialize(info.dependents));
 			}
 			
 			if (!info.requiredMods.isEmpty()) {
-				json.add("requiredMods", OtherSerializers.StringListSerializer.serialize(info.requiredMods, context));
+				json.add("required_mods", OtherSerializers.StringListSerializer.serialize(info.requiredMods));
 			}
 			
 			if (!info.requiredAddons.isEmpty()) {
-				json.add("requiredAddons", OtherSerializers.StringListSerializer.serialize(info.requiredAddons, context));
+				json.add("required_addons", OtherSerializers.StringListSerializer.serialize(info.requiredAddons));
+			}
+			
+			if (info.loopFunction != null) {
+				json.addProperty("loop_function", info.loopFunction.toString());
 			}
 			
 			return json;
@@ -136,24 +160,29 @@ public class Addon {
 				throw new JsonSyntaxException("Id '" + addon.id + "' can only contain lowercase letters, numbers, or underscores.");
 			}
 			
-			addon.setName(JsonUtils.getString(json, "name"));
-			addon.setAuthor(JsonUtils.getString(json, "author"));
+			addon.setVersion(JsonUtils.getString(json, "version", ""));
+			addon.setName(JsonUtils.getString(json, "name", ""));
+			addon.setAuthor(JsonUtils.getString(json, "author", ""));
 			addon.setLogoItem(JsonUtils.getString(json, "logo_item", ""));
 			
 			if (JsonUtils.hasField(json, "dependencies")) {
-				addon.setDependencies(OtherSerializers.StringListSerializer.deserialize(json.get("dependencies"), "dependencies", context));
+				addon.setDependencies(OtherSerializers.StringListSerializer.deserialize(json.get("dependencies"), "dependencies"));
 			}
 			
 			if (JsonUtils.hasField(json, "dependents")) {
-				addon.setDependents(OtherSerializers.StringListSerializer.deserialize(json.get("dependents"), "dependents", context));
+				addon.setDependents(OtherSerializers.StringListSerializer.deserialize(json.get("dependents"), "dependents"));
 			}
 			
-			if (JsonUtils.hasField(json, "requiredMods")) {
-				addon.setRequiredMods(OtherSerializers.StringListSerializer.deserialize(json.get("requiredMods"), "requiredMods", context));
+			if (JsonUtils.hasField(json, "required_mods")) {
+				addon.setRequiredMods(OtherSerializers.StringListSerializer.deserialize(json.get("required_mods"), "required_mods"));
 			}
 			
-			if (JsonUtils.hasField(json, "requiredAddons")) {
-				addon.setRequiredAddons(OtherSerializers.StringListSerializer.deserialize(json.get("requiredAddons"), "requiredAddons", context));
+			if (JsonUtils.hasField(json, "required_addons")) {
+				addon.setRequiredAddons(OtherSerializers.StringListSerializer.deserialize(json.get("required_addons"), "required_addons"));
+			}
+			
+			if (JsonUtils.hasField(json, "loop_function")) {
+				addon.setLoopFunction(new ResourceLocation(JsonUtils.getString(json, "loop_function")));
 			}
 			
 			return addon;

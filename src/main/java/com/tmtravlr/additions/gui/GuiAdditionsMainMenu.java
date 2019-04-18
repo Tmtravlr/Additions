@@ -75,6 +75,7 @@ public class GuiAdditionsMainMenu extends GuiScreen {
         this.addonList.drawScreen(mouseX, mouseY, partialTicks);
         
         this.mc.getTextureManager().bindTexture(TITLE_TEXTURE);
+        GlStateManager.enableBlend();
         this.drawModalRectWithCustomSizedTexture(midX - 160, 10, 0, 0, 320, 80, 320, 80);
         
         
@@ -103,7 +104,7 @@ public class GuiAdditionsMainMenu extends GuiScreen {
     	if (addon == createNew) {
     		this.mc.displayGuiScreen(new GuiEditAddon(this, I18n.format("gui.edit.addon.title")));
     	} else {
-    		this.mc.displayGuiScreen(new GuiViewAddon(this, addon.name + TextFormatting.RESET +  " " + I18n.format("gui.additions.main.byAuthor", addon.author, addon.id), addon));
+    		this.mc.displayGuiScreen(new GuiViewAddon(this, addon));
     	}
     }
     

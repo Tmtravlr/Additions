@@ -5,7 +5,14 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonObject;
+import com.tmtravlr.additions.AdditionsMod;
+
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
@@ -16,12 +23,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonObject;
-import com.tmtravlr.additions.AdditionsMod;
-
 /**
  * Basic Item
  * 
@@ -30,14 +31,19 @@ import com.tmtravlr.additions.AdditionsMod;
  */
 public class ItemAddedSimple extends Item implements IItemAdded {
 	
-	public static final String DESCRIPTION = "item.simple.description";
 	public static final ResourceLocation TYPE = new ResourceLocation(AdditionsMod.MOD_ID, "simple");
 	
 	public String displayName;
 	public List<String> extraTooltip = new ArrayList<>();
 	public List<String> oreDictEntries = new ArrayList<>();
 	public boolean shines = false;
+	public int burnTime = -1;
 	public Multimap<EntityEquipmentSlot, AttributeModifier> attributeModifiers = HashMultimap.create();
+	
+	public ItemAddedSimple() {
+		super();
+		this.setCreativeTab(CreativeTabs.MISC);
+	}
 	
 	@Override
 	public void setTooltip(List<String> infoToAdd) {
@@ -55,13 +61,18 @@ public class ItemAddedSimple extends Item implements IItemAdded {
 	}
 	
 	@Override
+	public void setBurnTime(int burnTime) {
+		this.burnTime = burnTime;
+	}
+	
+	@Override
 	public void setDisplayName(String name) {
 		this.displayName = name;
 	}
 
 	@Override
-	public void setAttributeModifiers(Multimap<EntityEquipmentSlot, AttributeModifier> attributeModiferList) {
-		this.attributeModifiers = attributeModiferList;
+	public void setAttributeModifiers(Multimap<EntityEquipmentSlot, AttributeModifier> attributeModifierList) {
+		this.attributeModifiers = attributeModifierList;
 	}
 
 	@Override
@@ -83,6 +94,11 @@ public class ItemAddedSimple extends Item implements IItemAdded {
 	public boolean getAlwaysShines() {
 		return this.shines;
 	}
+	
+	@Override
+	public int getBurnTime() {
+		return this.burnTime;
+	}
 
 	@Override
 	public Multimap<EntityEquipmentSlot, AttributeModifier> getAttributeModifiers() {
@@ -94,6 +110,11 @@ public class ItemAddedSimple extends Item implements IItemAdded {
     public boolean hasEffect(ItemStack stack) {
         return shines ? true : super.hasEffect(stack);
     }
+	
+	@Override
+	public int getItemBurnTime(ItemStack stack) {
+		return this.burnTime;
+	}
 
 	@Override
     @SideOnly(Side.CLIENT)
@@ -121,6 +142,7 @@ public class ItemAddedSimple extends Item implements IItemAdded {
 		
 		if(this.attributeModifiers.containsKey(slot)) {
 			for(AttributeModifier modifier : this.attributeModifiers.get(slot)) {
+				boolean isWeaponModifier = modifier.getID() == ATTACK_DAMAGE_MODIFIER;
 				modifiersForSlot.put(modifier.getName(), modifier);
 			}
 		}

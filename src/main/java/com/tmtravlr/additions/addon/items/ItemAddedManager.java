@@ -1,10 +1,13 @@
 package com.tmtravlr.additions.addon.items;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
-import com.google.common.collect.Maps;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -13,23 +16,47 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.JsonSyntaxException;
-import com.tmtravlr.additions.AdditionsMod;
-import com.tmtravlr.additions.gui.view.edit.item.IGuiEditItemFactory;
+import com.tmtravlr.additions.addon.items.blocks.ItemAddedBlockSimple;
+import com.tmtravlr.additions.gui.view.edit.item.IGuiItemAddedFactory;
 
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * Types of effects. Set up so more can be added easily.
+ * Manages added items.
  * 
  * @author Tmtravlr (Rebeca Rey)
  * @since July 2017
  */
 public class ItemAddedManager {
-	private static final Map<ResourceLocation, IItemAdded.Serializer<?>> NAME_TO_SERIALIZER_MAP = Maps.<ResourceLocation, IItemAdded.Serializer<?>> newHashMap();
-	private static final Map<Class<? extends IItemAdded>, IItemAdded.Serializer<?>> CLASS_TO_SERIALIZER_MAP = Maps.<Class <? extends IItemAdded> , IItemAdded.Serializer<?>>newHashMap();
-	private static final Map<Class<? extends IItemAdded>, ResourceLocation> CLASS_TO_NAME_MAP = Maps.<Class <? extends IItemAdded> , ResourceLocation>newHashMap();
-	private static final Map<ResourceLocation, IGuiEditItemFactory> NAME_TO_GUI_MAP = Maps.<ResourceLocation, IGuiEditItemFactory> newHashMap();
+	private static final Map<ResourceLocation, IItemAdded.Serializer<?>> NAME_TO_SERIALIZER_MAP = new HashMap<>();
+	private static final Map<Class<? extends IItemAdded>, IItemAdded.Serializer<?>> CLASS_TO_SERIALIZER_MAP = new HashMap<>();
+	private static final Map<Class<? extends IItemAdded>, ResourceLocation> CLASS_TO_NAME_MAP = new HashMap<>();
+	private static final LinkedHashMap<ResourceLocation, IGuiItemAddedFactory> NAME_TO_GUI_MAP = new LinkedHashMap<>();
+	
+	public static void registerDefaultItems() {
+	    registerItemType(new ItemAddedSimple.Serializer());
+	    registerItemType(new ItemAddedFood.Serializer());
+	    registerItemType(new ItemAddedRecord.Serializer());
+	    registerItemType(new ItemAddedArmor.Serializer());
+	    registerItemType(new ItemAddedHat.Serializer());
+	    registerItemType(new ItemAddedSword.Serializer());
+	    registerItemType(new ItemAddedClub.Serializer());
+	    registerItemType(new ItemAddedPickaxe.Serializer());
+	    registerItemType(new ItemAddedAxe.Serializer());
+	    registerItemType(new ItemAddedShovel.Serializer());
+	    registerItemType(new ItemAddedHoe.Serializer());
+	    registerItemType(new ItemAddedShears.Serializer());
+	    registerItemType(new ItemAddedFirestarter.Serializer());
+	    registerItemType(new ItemAddedMultiTool.Serializer());
+	    registerItemType(new ItemAddedShield.Serializer());
+	    registerItemType(new ItemAddedBow.Serializer());
+	    registerItemType(new ItemAddedGun.Serializer());
+	    registerItemType(new ItemAddedThrowable.Serializer());
+	    registerItemType(new ItemAddedArrow.Serializer());
+	    registerItemType(new ItemAddedProjectile.Serializer());
+	    registerItemType(new ItemAddedBlockSimple.Serializer());
+	}
 	
 	public static void registerItemType(IItemAdded.Serializer <? extends IItemAdded > itemSerializer) {
 	    ResourceLocation resourcelocation = itemSerializer.getItemAddedType();
@@ -46,7 +73,7 @@ public class ItemAddedManager {
 	    }
 	}
 	
-	public static void registerGuiFactory(ResourceLocation type, IGuiEditItemFactory factory) {
+	public static void registerGuiFactory(ResourceLocation type, IGuiItemAddedFactory factory) {
 		NAME_TO_GUI_MAP.put(type, factory);
 	}
 	
@@ -79,16 +106,17 @@ public class ItemAddedManager {
 	}
 	
 	public static Collection<ResourceLocation> getAllTypes() {
-		return NAME_TO_SERIALIZER_MAP.keySet();
+		List<ResourceLocation> itemTypes = new ArrayList(NAME_TO_SERIALIZER_MAP.keySet());
+		itemTypes.sort(null);
+		return itemTypes;
 	}
 	
-	public static IGuiEditItemFactory getGuiFactoryFor(ResourceLocation type) {
+	public static LinkedHashMap<ResourceLocation, IGuiItemAddedFactory> getAllGuiFactories() {
+		return NAME_TO_GUI_MAP;
+	}
+	
+	public static IGuiItemAddedFactory getGuiFactoryFor(ResourceLocation type) {
 		return NAME_TO_GUI_MAP.get(type);
-	}
-	
-	static {
-	    registerItemType(new ItemAddedSimple.Serializer());
-	    registerItemType(new ItemAddedFood.Serializer());
 	}
 	
 	public static class Serializer implements JsonDeserializer<IItemAdded>, JsonSerializer<IItemAdded> {
@@ -111,6 +139,19 @@ public class ItemAddedManager {
             JsonObject json = serializer.serialize(itemAdded, context);
             json.addProperty("type", serializer.getItemAddedType().toString());
             return json;
+        }
+
+        public static void postDeserialize(JsonObject json, IItemAdded itemAdded) throws JsonParseException {
+            ResourceLocation resourcelocation = new ResourceLocation(JsonUtils.getString(json, "type"));
+            IItemAdded.Serializer<?> serializer;
+
+            try {
+                serializer = ItemAddedManager.getSerializerFor(resourcelocation);
+            } catch (IllegalArgumentException e) {
+                throw new JsonSyntaxException("Unknown item added type '" + resourcelocation + "'");
+            }
+
+            serializer.postDeserializeItemAdded(json, itemAdded);
         }
     }
 }

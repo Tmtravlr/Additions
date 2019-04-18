@@ -1,0 +1,32 @@
+{
+  "block.cauldron.wash": {
+    "sounds": [
+	  {
+		"name": "minecraft:item.bucket.fill",
+		"type": "event",
+		"pitch": 0.7
+	  }
+    ],
+    "subtitle": "subtitles.block.cauldron.wash"
+  },
+  "item.shield.bash": {
+    "sounds": [
+	  {
+		"name": "minecraft:item.shield.block",
+		"type": "event",
+		"pitch": 1.3
+	  }
+    ],
+    "subtitle": "subtitles.item.shield.bash"
+  },
+  "item.shield.swing": {
+    "sounds": [
+	  {
+		"name": "minecraft:item.armor.equip_iron",
+		"type": "event",
+		"pitch": 0.9
+	  }
+    ],
+    "subtitle": "subtitles.item.shield.swing"
+  }
+}

@@ -8,20 +8,23 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
+@Mod.EventBusSubscriber(modid = AdditionsMod.MOD_ID, value = Side.CLIENT)
 public class ClientEventHandler {
 	
 	private static final int ADDITIONS_BUTTON = 29384;
 	
-	private final Minecraft mc = Minecraft.getMinecraft();
-	private List<GuiButton> cachedMainMenuButtons;
-	private GuiAdditionsButton cachedAdditionsButton;
+	private static final Minecraft mc = Minecraft.getMinecraft();
+	private static List<GuiButton> cachedMainMenuButtons;
+	private static GuiAdditionsButton cachedAdditionsButton;
 	
 	@SubscribeEvent
-	public void onClientTick(ClientTickEvent event) {
+	public static void onClientTick(ClientTickEvent event) {
 		if (ConfigLoader.renderAdditionsButtonInMainMenu.getBoolean()) {
 			if (mc.currentScreen instanceof GuiMainMenu) {
 				if (cachedMainMenuButtons == null) {

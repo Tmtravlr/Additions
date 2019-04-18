@@ -5,13 +5,15 @@ import java.util.Collection;
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.gui.view.components.GuiComponentButton;
 import com.tmtravlr.additions.gui.view.components.GuiComponentDisplayText;
-import com.tmtravlr.additions.gui.view.components.input.GuiComponentDropdownInput;
+import com.tmtravlr.additions.gui.view.components.input.dropdown.GuiComponentDropdownInput;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 
 /**
  * Shows a list of types you can select.
@@ -38,7 +40,7 @@ public abstract class GuiEditSelectType<T> extends GuiEdit {
 	public void initGui() {
 		super.initGui();
 		
-		this.buttonList.removeIf(button -> button.id == SAVE_BUTTON);
+		this.buttonList.removeIf(button -> button.id == BUTTON_SAVE);
 	}
 	
 	@Override
@@ -49,14 +51,14 @@ public abstract class GuiEditSelectType<T> extends GuiEdit {
 	@Override
 	public void notifyHasChanges() {
 		if (this.componentTypeList.getSelected() == null) {
-			this.componentDescription.setDisplayText(new TextComponentTranslation("gui.edit.selectType.descrpition.default"));
+			this.componentDescription.setDisplayText(new TextComponentTranslation("gui.edit.selectType.descrpition.default").setStyle(new Style().setColor(TextFormatting.GRAY)));
 			this.componentcreateButton.visible = false;
 		} else {
 			String description = this.getDescription(this.componentTypeList.getSelected());
 			this.componentcreateButton.visible = true;
 			
 			if (description == null || description.isEmpty()) {
-				this.componentDescription.setDisplayText(new TextComponentTranslation("gui.edit.selectType.descrpition.none"));
+				this.componentDescription.setDisplayText(new TextComponentTranslation("gui.edit.selectType.descrpition.none").setStyle(new Style().setColor(TextFormatting.GRAY)));
 			} else {
 				this.componentDescription.setDisplayText(new TextComponentString(description));
 			}
@@ -65,7 +67,12 @@ public abstract class GuiEditSelectType<T> extends GuiEdit {
 
 	@Override
 	public void initComponents() {
-		this.componentTypeList = new GuiComponentDropdownInput<>(I18n.format("gui.edit.selectType.label"), this);
+		this.componentTypeList = new GuiComponentDropdownInput<T>(I18n.format("gui.edit.selectType.label"), this) {
+			@Override
+			public String getSelectionName(T selected) {
+				return GuiEditSelectType.this.getTitle(selected);
+			}
+		};
 		this.componentTypeList.setSelections(this.getTypes());
 		
 		this.componentDescription = new GuiComponentDisplayText(this, new TextComponentTranslation("gui.edit.selectType.descrpition.default"));
@@ -90,10 +97,14 @@ public abstract class GuiEditSelectType<T> extends GuiEdit {
     protected T getSelectedType() {
     	return this.componentTypeList.getSelected();
     }
+    
+    protected String getTitle(T type) {
+    	return type.toString();
+    }
 	
-	public abstract Collection<T> getTypes();
+	protected abstract Collection<T> getTypes();
 	
-	public abstract String getDescription(T type);
+	protected abstract String getDescription(T type);
 	
-	public abstract void createObject();
+	protected abstract void createObject();
 }

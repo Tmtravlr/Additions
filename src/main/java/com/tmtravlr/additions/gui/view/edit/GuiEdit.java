@@ -1,6 +1,7 @@
 package com.tmtravlr.additions.gui.view.edit;
 
-import com.tmtravlr.additions.gui.GuiMessagePopupTwoButton;
+import com.tmtravlr.additions.gui.message.GuiMessageBoxThreeButton;
+import com.tmtravlr.additions.gui.message.GuiMessageBoxTwoButton;
 import com.tmtravlr.additions.gui.view.GuiView;
 
 import net.minecraft.client.gui.GuiButton;
@@ -16,7 +17,7 @@ import net.minecraft.util.text.TextComponentTranslation;
  */
 public abstract class GuiEdit extends GuiView {
 	
-	protected final int SAVE_BUTTON = buttonCount++;
+	protected final int BUTTON_SAVE = this.buttonCount++;
 	
 	protected boolean unsavedChanges = false;
 
@@ -25,20 +26,22 @@ public abstract class GuiEdit extends GuiView {
 	}
 	
 	@Override
-	public void initGui() {
-		super.initGui();
-		
-		this.buttonList.add(new GuiButton(SAVE_BUTTON, this.width - 140, this.height - 30, 60, 20, I18n.format("gui.buttons.save")));
+	public void addButtons() {
+		this.buttonList.add(new GuiButton(BUTTON_SAVE, this.width - 70, this.height - 30, 60, 20, I18n.format("gui.buttons.save")));
+		this.buttonList.add(new GuiButton(BUTTON_BACK, this.width - 140, this.height - 30, 60, 20, I18n.format("gui.buttons.back")));
 	}
 	
     @Override
     protected void actionPerformed(GuiButton button) {
-    	if (button.id == SAVE_BUTTON) {
+    	if (button.id == BUTTON_SAVE) {
     		saveObject();
-    	} else if (button.id == BACK_BUTTON) {
+    	} else if (button.id == BUTTON_BACK) {
     		cancelEdit();
     	}
     }
+    
+    @Override
+	public void refreshView() {}
 	
 	public void notifyHasChanges() {
 		this.unsavedChanges = true;
@@ -49,9 +52,18 @@ public abstract class GuiEdit extends GuiView {
 	public void cancelEdit() {
 		if (this.unsavedChanges) {
 			final GuiView editObject = this;
-			this.mc.displayGuiScreen(new GuiMessagePopupTwoButton(this, parentScreen, I18n.format("gui.warnDialogue.unsaved.title"), new TextComponentTranslation("gui.warnDialogue.unsaved.message"), I18n.format("gui.buttons.cancel"), I18n.format("gui.warnDialogue.unsaved.continue")));
+			this.mc.displayGuiScreen(new GuiMessageBoxThreeButton(this, this.parentScreen, I18n.format("gui.warnDialogue.unsaved.title"), new TextComponentTranslation("gui.warnDialogue.unsaved.message"), I18n.format("gui.buttons.cancel"), I18n.format("gui.warnDialogue.unsaved.continue"), I18n.format("gui.buttons.save")) {
+				
+				@Override
+				public void onThirdButtonClicked() {
+					saveObject();
+				}
+			});
 		} else {
-			this.mc.displayGuiScreen(parentScreen);
+			if (this.parentScreen instanceof GuiView) {
+				((GuiView)this.parentScreen).refreshView();
+			}
+			this.mc.displayGuiScreen(this.parentScreen);
 		}
 	}
     

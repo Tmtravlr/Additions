@@ -5,32 +5,30 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSerializationContext;
+import com.tmtravlr.additions.AdditionsMod;
+
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
-import com.tmtravlr.additions.AdditionsMod;
-import com.tmtravlr.additions.effects.EffectInfo;
-import com.tmtravlr.additions.effects.EffectInfoPotion;
 
 /**
  * Edible Item
@@ -40,23 +38,58 @@ import com.tmtravlr.additions.effects.EffectInfoPotion;
  */
 public class ItemAddedFood extends ItemFood implements IItemAdded {
 	
-	public static final String DESCRIPTION = "item.food.description";
 	public static final ResourceLocation TYPE = new ResourceLocation(AdditionsMod.MOD_ID, "food");
 	
 	public String displayName = "";
 	public List<String> extraTooltip = new ArrayList<>();
 	public List<String> oreDictEntries = new ArrayList<>();
 	public boolean shines = false;
-	private boolean alwaysEdible = false;
+	public int burnTime = -1;
 	public Multimap<EntityEquipmentSlot, AttributeModifier> attributeModifiers = HashMultimap.create();
-	public int eatTime = 32;
 	
-	public ItemAddedFood(int hunger, float saturation, boolean wolvesEat, boolean alwaysEdible, int eatTime) {
+	public int eatTime = 32;
+	public boolean isDrink = false;
+	public boolean hasPotionEffects = false;
+	private int hunger = 0;
+	private float saturation = 0;
+	private boolean wolvesEat = false;
+	private boolean canAlwaysEat = false;
+	
+	public ItemAddedFood() {
+		this(0, 0, false, false);
+	}
+	
+	public ItemAddedFood(int hunger, float saturation, boolean wolvesEat, boolean alwaysEdible) {
 		super(hunger, saturation, wolvesEat);
-		this.eatTime = eatTime;
+		this.hunger = hunger;
+		this.saturation = saturation;
+		this.wolvesEat = wolvesEat;
+		this.canAlwaysEat = alwaysEdible;
 		if(alwaysEdible) {
-			this.alwaysEdible = true;
 			this.setAlwaysEdible();
+		}
+	}
+	
+	public void setFoodStats(int hunger, float saturation, boolean wolvesEat, boolean alwaysEdible) {
+		if (hunger != this.hunger) {
+			this.hunger = hunger;
+			ObfuscationReflectionHelper.setPrivateValue(ItemFood.class, this, hunger, "field_77853_b", "healAmount");
+		}
+		if (saturation != this.saturation) {
+			this.saturation = saturation;
+			ObfuscationReflectionHelper.setPrivateValue(ItemFood.class, this, saturation, "field_77854_c", "saturationModifier");
+		}
+		if (wolvesEat != this.wolvesEat) {
+			this.wolvesEat = wolvesEat;
+			ObfuscationReflectionHelper.setPrivateValue(ItemFood.class, this, wolvesEat, "field_77856_bY", "isWolfsFavoriteMeat");
+		}
+		if (alwaysEdible != this.canAlwaysEat) {
+			this.canAlwaysEat = alwaysEdible;
+			if (alwaysEdible) {
+				this.setAlwaysEdible();
+			} else {
+				ObfuscationReflectionHelper.setPrivateValue(ItemFood.class, this, wolvesEat, "field_77852_bZ", "alwaysEdible");
+			}
 		}
 	}
 	
@@ -76,13 +109,18 @@ public class ItemAddedFood extends ItemFood implements IItemAdded {
 	}
 	
 	@Override
+	public void setBurnTime(int burnTime) {
+		this.burnTime = burnTime;
+	}
+	
+	@Override
 	public void setDisplayName(String name) {
 		this.displayName = name;
 	}
 
 	@Override
-	public void setAttributeModifiers(Multimap<EntityEquipmentSlot, AttributeModifier> attributeModiferList) {
-		this.attributeModifiers = attributeModiferList;
+	public void setAttributeModifiers(Multimap<EntityEquipmentSlot, AttributeModifier> attributeModifierList) {
+		this.attributeModifiers = attributeModifierList;
 	}
 
 	@Override
@@ -104,6 +142,11 @@ public class ItemAddedFood extends ItemFood implements IItemAdded {
 	public boolean getAlwaysShines() {
 		return this.shines;
 	}
+	
+	@Override
+	public int getBurnTime() {
+		return this.burnTime;
+	}
 
 	@Override
 	public Multimap<EntityEquipmentSlot, AttributeModifier> getAttributeModifiers() {
@@ -111,14 +154,28 @@ public class ItemAddedFood extends ItemFood implements IItemAdded {
 	}
 	
 	@Override
+	public EnumAction getItemUseAction(ItemStack stack) {
+        return this.isDrink ? EnumAction.DRINK : super.getItemUseAction(stack);
+    }
+	
+	@Override
 	@SideOnly(Side.CLIENT)
     public boolean hasEffect(ItemStack stack) {
         return shines ? true : super.hasEffect(stack);
     }
+	
+	@Override
+	public int getItemBurnTime(ItemStack stack) {
+		return this.burnTime;
+	}
 
 	@Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag) {
+		if (this.hasPotionEffects) {
+	        PotionUtils.addPotionTooltip(stack, tooltip, 1.0F);
+		}
+		
     	for (String line : extraTooltip) {
     		if(I18n.canTranslate(line)) {
     			line = I18n.translateToLocal(line);
@@ -150,14 +207,10 @@ public class ItemAddedFood extends ItemFood implements IItemAdded {
 	}
 	
 	@Override
-	protected void onFoodEaten(ItemStack stack, World world, EntityPlayer player) {
-		//TODO Apply effects
-    }
+	public int getColor(ItemStack stack) {
+		return this.hasPotionEffects ? PotionUtils.getColor(stack) : IItemAdded.super.getColor(stack);
+	}
 
-    /**
-     * Called when the player finishes using this Item (E.g. finishes eating.). Not called when the player stops using
-     * the Item before the action is complete.
-     */
 	@Override
     public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving) {
 		ItemStack finishedStack = super.onItemUseFinish(stack, worldIn, entityLiving);
@@ -178,13 +231,42 @@ public class ItemAddedFood extends ItemFood implements IItemAdded {
 		return finishedStack;
     }
 	
-	/**
-     * How long it takes to use or consume an item
-     */
+	@Override
+	protected void onFoodEaten(ItemStack stack, World world, EntityPlayer player) {
+		if (this.hasPotionEffects) {
+        	for (PotionEffect effect : PotionUtils.getEffectsFromStack(stack)) {
+        		player.addPotionEffect(new PotionEffect(effect.getPotion(), effect.getDuration(), effect.getAmplifier(), effect.getIsAmbient(), effect.doesShowParticles()));
+        	}
+		}
+		//TODO Apply effects
+    }
+	
 	@Override
     public int getMaxItemUseDuration(ItemStack stack) {
         return eatTime;
     }
+	
+	@Override
+	public ItemFood setAlwaysEdible() {
+		this.canAlwaysEat = true;
+		return super.setAlwaysEdible();
+	}
+	
+	public int getHungerRestored() {
+		return this.hunger;
+	}
+	
+	public float getSaturationRestored() {
+		return this.saturation;
+	}
+	
+	public boolean doWolvesEat() {
+		return this.wolvesEat;
+	}
+	
+	public boolean isAlwaysEdible() {
+		return this.canAlwaysEat;
+	}
 	
 	public static class Serializer extends IItemAdded.Serializer<ItemAddedFood> {
 		
@@ -198,14 +280,25 @@ public class ItemAddedFood extends ItemFood implements IItemAdded {
 			
 			json.addProperty("hunger", itemAdded.getHealAmount(new ItemStack(itemAdded)));
 			json.addProperty("saturation", itemAdded.getSaturationModifier(new ItemStack(itemAdded)));
+			
 			if (itemAdded.isWolfsFavoriteMeat()) {
 				json.addProperty("wolves_eat", true);
 			}
-			if (itemAdded.alwaysEdible) {
+			
+			if (itemAdded.canAlwaysEat) {
 				json.addProperty("always_edible", true);
 			}
+			
 			if (itemAdded.eatTime != 32) {
 				json.addProperty("eat_time", itemAdded.eatTime);
+			}
+			
+			if (itemAdded.isDrink) {
+				json.addProperty("is_drink", true);
+			}
+			
+			if (itemAdded.hasPotionEffects) {
+				json.addProperty("has_potion_effects", true);
 			}
 			
 			return json;
@@ -218,9 +311,12 @@ public class ItemAddedFood extends ItemFood implements IItemAdded {
 			float saturation = JsonUtils.getFloat(json, "saturation");
 			boolean wolvesEat = JsonUtils.getBoolean(json, "wolves_eat", false);
 			boolean alwaysEdible = JsonUtils.getBoolean(json, "always_edible", false);
-			int eatTime = JsonUtils.getInt(json, "eat_time", 32);
 			
-			ItemAddedFood itemAdded = new ItemAddedFood(hunger, saturation, wolvesEat, alwaysEdible, eatTime);
+			ItemAddedFood itemAdded = new ItemAddedFood(hunger, saturation, wolvesEat, alwaysEdible);
+			itemAdded.eatTime =JsonUtils.getInt(json, "eat_time", 32);
+			itemAdded.isDrink = JsonUtils.getBoolean(json, "is_drink", false);
+			itemAdded.hasPotionEffects = JsonUtils.getBoolean(json, "has_potion_effects", false);
+			
 			super.deserializeDefaults(json, context, itemAdded);
 			return itemAdded;
 		}
