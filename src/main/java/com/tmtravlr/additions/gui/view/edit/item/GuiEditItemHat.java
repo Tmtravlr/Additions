@@ -116,14 +116,7 @@ public class GuiEditItemHat extends GuiEditItem<ItemAddedHat> {
 	}
     
 	@Override
-	protected void openTextureDialogue() {
-    	GuiScreen nextScreen;
-    	if (this.isNew) {
-    		 nextScreen = getItemCreatedPopup();
-    	} else {
-    		nextScreen = this;
-    	}
-    	
+	protected void openTextureDialogue(GuiScreen nextScreen) {
     	if (this.item.hasScreenOverlay) {
 	    	this.mc.displayGuiScreen(this.getHatOverlayTextureScreen(nextScreen));
     	} else {

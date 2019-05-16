@@ -12,6 +12,7 @@ subtitles.item.shield.bash=Shield bashes
 subtitles.item.shield.swing=Shield swings
 
 item.shield.info.bashDamage=%s Bash Attack Damage
+item.shield.info.bashSpeed=%s Bash Speed
 item.projectile.info.damage=%s Projectile Damage
 item.bow.info.drawTime=%s Draw Speed
 item.gun.info.reloadTime=%s Reload Speed
@@ -124,8 +125,11 @@ type.recipe.brewing.description=A recipe for brewing a potion in a brewing stand
 type.recipe.brewing.complete.title=Brewing - Complete Set of Recipes
 type.recipe.brewing.complete.description=A vanilla-like set of brewing recipes to brew regular, splash, and lingering potions, with redstone and glowstone. Saves creating up to 24 other recipes!
 
-type.effect.held.title=Item Is Held
-type.effect.held.description=Runs the effect when an item is in your mainhand, offhand, or either.
+type.effectCause.held.title=Item Is Held
+type.effectCause.held.description=Runs the effect when an item is in your mainhand, offhand, or either.
+
+type.effect.potion.title=Apply Potion Effect
+type.effect.potion.description=Applies a potion effect to the living entity, if there is one.
 
 attribute.modifier.noEffect=No Effect
 
@@ -222,6 +226,17 @@ gui.popup.attributeModifier.uuid.info=Leave the UUID blank to generate a default
 gui.popup.attributeModifier.problem.slotRequired.title=Slot Needed
 gui.popup.attributeModifier.problem.slotRequired.message=You need to specify a slot!
 
+gui.popup.potionEffect.title=Edit Potion Effect
+gui.popup.potionEffect.potion.label=Potion
+gui.popup.potionEffect.duration.label=Duration
+gui.popup.potionEffect.duration.info=The potion effect's duration in ticks, with 20 ticks per second.
+gui.popup.potionEffect.amplifier.label=Amplifier
+gui.popup.potionEffect.amplifier.info=The potion effect's amplifier. An amplifier of 0 is potion level 1, 1 is level 2, etc.
+gui.popup.potionEffect.particle.label=Particle Type
+gui.popup.potionEffect.particle.normal.label=Normal
+gui.popup.potionEffect.particle.faded.label=Faded
+gui.popup.potionEffect.particle.none.label=None
+
 gui.popup.itemMaterial.armor.delete.message=Are you sure you want to delete this? Any items with this material will have their material set to leather. This cannot be undone.
 gui.popup.itemMaterial.tool.delete.message=Are you sure you want to delete this? Any items with this material will have their material set to wood. This cannot be undone.
 
@@ -288,6 +303,9 @@ gui.view.additionType.material=Material: %s
 gui.view.additionType.commands=Commands: %s
 gui.view.additionType.sounds=Sounds: %s
 gui.view.additionType.preset=Preset: %s
+gui.view.additionType.cause=When %s
+gui.view.additionType.effects.singular=Then run %s effect
+gui.view.additionType.effects.plural=Then run %s effects
 
 gui.view.addon.items.label=View Items Added (%s)
 gui.view.addon.items.title=Items for %s
@@ -304,6 +322,9 @@ gui.view.addon.creativeTabs.none.message=There are no creative tabs for %s
 gui.view.addon.recipes.label=View Recipes Added (%s)
 gui.view.addon.recipes.title=Recipes for %s
 gui.view.addon.recipes.none.message=There are no recipes for %s
+gui.view.addon.effects.label=View Effects Added (%s)
+gui.view.addon.effects.title=Effects for %s
+gui.view.addon.effects.none.message=There are no effects for %s
 gui.view.addon.functions.label=View Functions Added (%s)
 gui.view.addon.functions.title=Functions for %s
 gui.view.addon.functions.none.message=There are no functions for %s
@@ -375,8 +396,10 @@ gui.edit.item.enchantability.label=Enchantability
 gui.edit.item.enchantability.info=How good this material's natural enchantments are. 0 means not enchantable. Stone is 5, diamond is 10, gold is 22.
 gui.edit.item.durability.label=Durability
 gui.edit.item.hasPotionEffects.label=Has Potion Effects
+gui.edit.item.hasPotionEffect.info=If true, the item can have different potion effects like a potion, or tipped arrow. The potion's color will apply to the item's color layer.
+gui.edit.item.useEfficiency.label=Use Efficiency
+gui.edit.item.useEfficiency.info=Can this item use the efficiency enchantment to improve its speed? 0.5 means at efficiency 5, it will be twice as fast. 1.0 means at efficiency 5 it will be instant.
 gui.edit.item.efficiencyMultiplier.label=Efficiency Multiplier
-gui.edit.item.efficiencyMultiplier.info=How much efficiency affects this item's speed. 0.5 means at efficiency 5, it will be twice as fast. 1.0 means disabled.
 gui.edit.item.problem.title=Problem Creating Item
 gui.edit.item.problem.duplicate=An item with id '%s' already exists!
 gui.edit.item.problem.noId=The Item Id cannot be blank.
@@ -394,6 +417,7 @@ gui.edit.item.food.eatTime.info=Time it takes to eat the food, in ticks (20 tick
 gui.edit.item.food.alwaysEdible.label=Always Edible
 gui.edit.item.food.wolvesEat.label=Wolves Eat
 gui.edit.item.food.isDrink.label=Is Drink
+gui.edit.item.food.eatenEffects.label=Effects When Eaten
 
 gui.edit.item.record.title=Create New Record
 gui.edit.item.record.music.label=Music Track
@@ -516,6 +540,7 @@ gui.edit.block.blockType.label=Block Type
 gui.edit.block.blockId.label=Block Id
 gui.edit.block.blockName.label=Block Name
 gui.edit.block.blockMaterial.label=Block Material
+gui.edit.block.updateTexture.label=Update Block Texture
 gui.edit.block.mapColor.label=Map Color
 gui.edit.block.hardness.label=Hardness
 gui.edit.block.hardness.info=How long it takes to break this block. -1 means unbreakable. For example, dirt is 0.5, wood is 2.0, stone is 1.5, ores are 3.0, obsidian is 50.0, and bedrock is -1.0.
@@ -568,22 +593,6 @@ gui.edit.block.problem.noName=The Block Name cannot be blank.
 gui.edit.block.problem.noMaterial=The Block Material cannot be blank.
 
 gui.edit.block.simple.title=Create New Simple Block
-
-gui.edit.blockDrop.title=Edit Block Drop
-gui.edit.blockDrop.type.label=Drop Type
-gui.edit.blockDrop.type.nothing=Nothing
-gui.edit.blockDrop.type.itself=Itself
-gui.edit.blockDrop.type.item=Resource Item
-gui.edit.blockDrop.type.lootTable=Loot Table
-gui.edit.blockDrop.type.custom=Custom
-gui.edit.blockDrop.nothing.message=The block will drop nothing
-gui.edit.blockDrop.itself.message=The block will drop itself
-gui.edit.blockDrop.custom.message=The block has a custom drop right now. There's no simple way to edit it here, but you can change it to one of the types above.
-gui.edit.blockDrop.item.resourceItem.label=Item Dropped
-gui.edit.blockDrop.item.min.label=Min Dropped
-gui.edit.blockDrop.item.max.label=Max Dropped
-gui.edit.blockDrop.item.fortune.label=Use Fortune
-gui.edit.blockDrop.item.silkTouch.label=Use Silk Touch
 
 gui.edit.creativeTab.title=Create New Creative Tab
 gui.edit.creativeTab.id.label=Tab Id
@@ -683,6 +692,50 @@ gui.edit.recipe.brewing.complete.allowLingering.label=Allow Lingering
 gui.edit.recipe.brewing.complete.problem.noInputTag.message=You must have an input tag!
 gui.edit.recipe.brewing.complete.problem.noOutputTag.message=You must have an output tag!
 
+gui.edit.effectList.title=Create New Effect
+gui.edit.effectList.when.message=When...
+gui.edit.effectList.then.message=Then...
+gui.edit.effectList.id.label=Effect Id
+gui.edit.effectList.cause.label=Cause
+gui.edit.effectList.effects.label=Effects
+gui.edit.effectList.problem.title=Problem Creating Effect
+gui.edit.effectList.problem.duplicate.message=An effect with id '%s' already exists!
+gui.edit.effectList.problem.noCause.message=You must have a cause!
+gui.edit.effectList.problem.noEffects.message=You must have effects!
+gui.edit.effectList.success.title=Updated Effect
+gui.edit.effectList.success.message=Successfully updated your effect.
+
+gui.edit.effectCause.title=Edit Cause
+gui.edit.effectCause.type.label=Cause Type
+gui.edit.effectCause.noGui.message=Couldn't find a GUI to edit this type of cause! Select a different type above.
+gui.edit.effectCause.problem.title=Problem Creating Cause
+gui.edit.effectCause.problem.noGui.message=There is no GUI for this cause, so there is no way to save it!
+
+gui.edit.effectCause.held.itemStack.label=Held Item
+gui.edit.effectCause.held.hand.label=Hand
+gui.edit.effectCause.held.hand.mainhand.label=Mainhand
+gui.edit.effectCause.held.hand.offhand.label=Offhand
+gui.edit.effectCause.held.hand.both.label=Either Hand
+gui.edit.effectCause.held.problem.noItem.message=You must have a held item!
+gui.edit.effectCause.held.problem.noHand.message=You must select a hand type!
+
+gui.edit.effect.title=Edit Effect
+gui.edit.effect.type.label=Effect Type
+gui.edit.effect.chance.label=Effect Chance
+gui.edit.effect.chance.info=The chance this effect will happen, with 0.0 being no chance and 1.0 being all the time.
+gui.edit.effect.noGui.message=Couldn't find a GUI to edit this type of effect! Select a different type above.
+gui.edit.effect.problem.title=Problem Creating Effect
+gui.edit.effect.problem.noGui.message=There is no GUI for this effect, so there is no way to save it!
+
+gui.edit.effect.potion.type.label=Type of Potion
+gui.edit.effect.potion.type.preset.label=Potion Preset
+gui.edit.effect.potion.type.custom.label=Customized Potion
+gui.edit.effect.potion.delay.label=Application Delay
+gui.edit.effect.potion.delay.info=Delay in ticks until this potion applies again. Important for potions like regeneration, which give an effect over time, when you are applying the potion constantly (like when wearing a piece of armor).
+gui.edit.effect.potion.problem.noType.message=You must select a type of potion!
+gui.edit.effect.potion.problem.noPreset.message=You must select a potion preset!
+gui.edit.effect.potion.problem.noCustom.message=You must create a customized potion!
+
 gui.edit.function.title=Create New Function
 gui.edit.function.id.label=Function Id
 gui.edit.function.commands.label=Commands
@@ -746,6 +799,29 @@ gui.edit.itemStackGroup.title=Edit Item Stack Group
 gui.edit.itemStackGroup.message.oreOrGroup=You can use an ore dictionary entry or a list of items. (Or both, if you really want)
 gui.edit.itemStackGroup.oreDict=Ore Dict Entry
 gui.edit.itemStackGroup.itemGroup=Item List
+
+gui.edit.blockDrop.title=Edit Block Drop
+gui.edit.blockDrop.type.label=Drop Type
+gui.edit.blockDrop.type.nothing=Nothing
+gui.edit.blockDrop.type.itself=Itself
+gui.edit.blockDrop.type.item=Resource Item
+gui.edit.blockDrop.type.lootTable=Loot Table
+gui.edit.blockDrop.type.custom=Custom
+gui.edit.blockDrop.nothing.message=The block will drop nothing
+gui.edit.blockDrop.itself.message=The block will drop itself
+gui.edit.blockDrop.custom.message=The block has a custom drop right now. There's no simple way to edit it here, but you can still change it to one of the types above.
+gui.edit.blockDrop.xp.min.label=XP Min
+gui.edit.blockDrop.xp.min.info=The minimum xp dropped when the block is broken and drops something other than itself. For instance, with coal ore this is 0, with quartz ore this is 2, and with diamond ore this is 3.
+gui.edit.blockDrop.xp.max.label=XP Max
+gui.edit.blockDrop.xp.max.info=The maximum xp dropped when the block is broken and drops something other than itself. For instance, with coal ore this is 2, with quartz ore this is 5, and with diamond ore this is 7.
+
+gui.edit.blockDrop.popup.title=Customize Your Block Drop!
+gui.edit.blockDrop.popup.message=Customize the drop for your block, or just leave it as the default drop for now.
+gui.edit.blockDrop.popup.customize=Customize Drop
+gui.edit.blockDrop.popup.useDefault=Use Default
+
+gui.edit.blockDrop.cancel.title=Cancel Adding Block Drop
+gui.edit.blockDrop.cancel.message=Cancel adding custom block drop and use the default one?
 
 gui.edit.texture.addTexturesLater=Add Later
 gui.edit.texture.customModel=Custom Model

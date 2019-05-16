@@ -2,14 +2,14 @@ package com.tmtravlr.additions.addon.blocks;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.annotation.Nullable;
+import java.util.Random;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.blocks.materials.BlockMaterialManager;
 import com.tmtravlr.additions.addon.items.blocks.IItemAddedBlock;
+import com.tmtravlr.lootoverhaul.loot.LootContextExtendedBuilder;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.EnumPushReaction;
@@ -17,16 +17,26 @@ import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Enchantments;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.storage.loot.LootTable;
+import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -514,6 +524,64 @@ public class BlockAddedSimple extends Block implements IBlockAdded {
     	}
         return new AxisAlignedBB(this.boundingBoxMinX, this.boundingBoxMinY, this.boundingBoxMinZ, this.boundingBoxMaxX, this.boundingBoxMaxY, this.boundingBoxMaxZ);
     }
+    
+    @Override
+    public int getExpDrop(IBlockState state, IBlockAccess world, BlockPos pos, int fortune) {
+    	int xpDropped = 0;
+    	
+    	if (this.xpDroppedMax > 0) {
+    		Random rand = world instanceof World ? ((World)world).rand : new Random();
+    		xpDropped = MathHelper.getInt(rand, this.xpDroppedMin, this.xpDroppedMax);
+    	}
+    	
+        return xpDropped;
+    }
+    
+	@Override
+	public void getDrops(NonNullList<ItemStack> drops, IBlockAccess blockAccess, BlockPos pos, IBlockState state, int fortune) {
+		boolean doNormalDrops = true;
+		
+		if (blockAccess instanceof WorldServer) {
+			WorldServer world = (WorldServer) blockAccess;
+			ResourceLocation lootTableName = new ResourceLocation(this.getRegistryName().getResourceDomain(), "blocks/" + this.getRegistryName().getResourcePath());
+			
+			LootTable dropLootTable = world.getLootTableManager().getLootTableFromLocation(lootTableName);
+			
+			if (dropLootTable != LootTable.EMPTY_LOOT_TABLE) {
+				doNormalDrops = false;
+				EntityPlayer player = this.harvesters.get();
+				TileEntity tileEntity = world.getTileEntity(pos);
+				
+				LootContextExtendedBuilder contextBuilder = new LootContextExtendedBuilder((WorldServer) world);
+				contextBuilder.withPosition(pos).withBrokenState(state).withFortune(fortune);
+				if (tileEntity != null) {
+					contextBuilder.withBrokenTileEntity(tileEntity);
+				}
+				if (player != null) {
+					boolean silkTouch = EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, player.getHeldItemMainhand()) > 0;
+					contextBuilder.withLooter(player).withSilkTouch(silkTouch).withLuck(player.getLuck());
+				}
+				
+				NonNullList<ItemStack> separatedDrops = NonNullList.create();
+				for (ItemStack stack : dropLootTable.generateLootForPools(world.rand, contextBuilder.build())) {
+					if (stack != null) {
+						ItemStack singleStack = stack.copy();
+						singleStack.setCount(1);
+						
+						for (int i = 0; i < stack.getCount(); i++) {
+							separatedDrops.add(singleStack);
+						}
+					}
+				}
+				
+				drops.addAll(separatedDrops);
+			}
+		}
+		
+		if (doNormalDrops) {
+			super.getDrops(drops, blockAccess, pos, state, fortune);
+		}
+	}
 	
 	public static class Serializer extends IBlockAdded.Serializer<BlockAddedSimple> {
 		

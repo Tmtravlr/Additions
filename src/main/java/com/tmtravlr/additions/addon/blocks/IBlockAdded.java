@@ -168,10 +168,18 @@ public interface IBlockAdded {
 	}
 	
     public default String getId() {
+    	ResourceLocation registryName = this.getAsBlock().getRegistryName();
+    	
+    	if (registryName != null) {
+    		return registryName.getResourcePath();
+    	}
+    	
         String unlocalizedName = this.getAsBlock().getUnlocalizedName();
+        
         if (unlocalizedName.startsWith("tile.")) {
         	return unlocalizedName.substring(5);
         }
+        
         return unlocalizedName;
     }
 
@@ -268,6 +276,14 @@ public interface IBlockAdded {
 			
 			if (!blockAddedObj.canPistonsPush()) {
 				json.addProperty("can_pistons_push", false);
+			}
+			
+			if (blockAddedObj.getXpDroppedMin() != 0) {
+				json.addProperty("xp_dropped_min", blockAddedObj.getXpDroppedMin());
+			}
+			
+			if (blockAddedObj.getXpDroppedMax() != 0) {
+				json.addProperty("xp_dropped_max", blockAddedObj.getXpDroppedMax());
 			}
 			
 			if (!blockAddedObj.hasCollisionBox()) {
@@ -378,6 +394,8 @@ public interface IBlockAdded {
 			blockAdded.setIsSlime(JsonUtils.getBoolean(json, "is_slime", false));
 			blockAdded.setIsBeaconBase(JsonUtils.getBoolean(json, "is_beacon_base", false));
 			blockAdded.setCanPistonsPush(JsonUtils.getBoolean(json, "can_pistons_push", true));
+			blockAdded.setXpDroppedMin(JsonUtils.getInt(json, "xp_dropped_min", 0));
+			blockAdded.setXpDroppedMax(JsonUtils.getInt(json, "xp_dropped_max", 0));
 			blockAdded.setHasCollisionBox(JsonUtils.getBoolean(json, "has_collision_box", true));
 			blockAdded.setHasSameCollisionBoundingBox(JsonUtils.getBoolean(json, "same_collision_bounding_box", true));
 			blockAdded.setBoundingBoxMinX(JsonUtils.getFloat(json, "bounding_box_min_x", 0));

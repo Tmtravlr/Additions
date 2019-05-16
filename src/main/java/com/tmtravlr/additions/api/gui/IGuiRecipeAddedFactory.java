@@ -1,8 +1,7 @@
-package com.tmtravlr.additions.gui.view.edit.recipe;
+package com.tmtravlr.additions.api.gui;
 
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.recipes.IRecipeAdded;
-import com.tmtravlr.additions.gui.type.card.recipe.IGuiRecipeCardDisplay;
 import com.tmtravlr.additions.gui.view.GuiView;
 import com.tmtravlr.additions.gui.view.edit.GuiEdit;
 

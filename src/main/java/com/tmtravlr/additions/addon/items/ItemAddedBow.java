@@ -74,7 +74,7 @@ public class ItemAddedBow extends ItemBow implements IItemAdded {
 	public boolean firesVanillaArrows = true;
 	public boolean alwaysInfinite = false;
 	public boolean consumesOneAmmo = false;
-	public float efficiencyMultiplier = 1.0f;
+	public float efficiencyMultiplier = 0;
 	public SoundEvent shotSound = SoundEvents.ENTITY_ARROW_SHOOT;
 	public List<Item> ammoItems = new ArrayList<>();
 	
@@ -261,8 +261,6 @@ public class ItemAddedBow extends ItemBow implements IItemAdded {
 	                        		}
 	                        		
 	                        		world.spawnEntity(projectile);
-	
-	                        		bowStack.damageItem(1, player);
 	                        		bowFired = true;
 	                        	}
 	                        }
@@ -280,6 +278,8 @@ public class ItemAddedBow extends ItemBow implements IItemAdded {
             }
             
             if (bowFired) {
+        		bowStack.damageItem(1, player);
+        		
                 player.addStat(StatList.getObjectUseStats(this));
                 if (this.shotSound != null) {
                 	world.playSound(null, player.posX, player.posY, player.posZ, this.shotSound, SoundCategory.PLAYERS, 1f, 1f / (itemRand.nextFloat() * 0.4f + 1.2f) + projectileVelocity * 0.5F);
@@ -309,7 +309,7 @@ public class ItemAddedBow extends ItemBow implements IItemAdded {
     
 	@Override
 	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-		if (this.efficiencyMultiplier < 1.0f && enchantment == Enchantments.EFFICIENCY) {
+		if (this.efficiencyMultiplier > 0 && enchantment == Enchantments.EFFICIENCY) {
 			return true;
 		}
 		
@@ -402,8 +402,8 @@ public class ItemAddedBow extends ItemBow implements IItemAdded {
     	int efficiencyEnch = MathHelper.clamp(EnchantmentHelper.getEnchantmentLevel(Enchantments.EFFICIENCY, bowStack), 0, 5);
     	
     	float reloadMultiplier = 1.0f;
-    	if (this.efficiencyMultiplier < 1.0f && efficiencyEnch > 0) {
-    		reloadMultiplier = 1 - (1 - this.efficiencyMultiplier) * efficiencyEnch / 5;
+    	if (this.efficiencyMultiplier > 0 && efficiencyEnch > 0) {
+    		reloadMultiplier = 1 - this.efficiencyMultiplier * efficiencyEnch / 5;
     	}
     	
     	return MathHelper.floor(this.drawTime * reloadMultiplier);
@@ -538,7 +538,7 @@ public class ItemAddedBow extends ItemBow implements IItemAdded {
 				json.addProperty("consumes_one_ammo", true);
 			}
 			
-			if (itemAdded.efficiencyMultiplier < 1.0f) {
+			if (itemAdded.efficiencyMultiplier > 0) {
 				json.addProperty("efficiency_multiplier", itemAdded.efficiencyMultiplier);
 			}
 			
@@ -578,7 +578,7 @@ public class ItemAddedBow extends ItemBow implements IItemAdded {
 			itemAdded.firesVanillaArrows = JsonUtils.getBoolean(json, "fires_vanilla_arrows", true);
 			itemAdded.alwaysInfinite = JsonUtils.getBoolean(json, "always_infinite", false);
 			itemAdded.consumesOneAmmo = JsonUtils.getBoolean(json, "consumes_one_ammo", false);
-			itemAdded.efficiencyMultiplier = JsonUtils.getFloat(json, "efficiency_multiplier", 1.0f);
+			itemAdded.efficiencyMultiplier = JsonUtils.getFloat(json, "efficiency_multiplier", 0);
 			
 			if (JsonUtils.hasField(json, "shot_sound")) {
 				itemAdded.shotSound = OtherSerializers.SoundEventSerializer.deserialize(json, "shot_sound");

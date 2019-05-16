@@ -1,13 +1,11 @@
 package com.tmtravlr.additions.gui.view;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.input.Mouse;
 
-import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.gui.view.components.GuiComponentShowAdvanced;
 import com.tmtravlr.additions.gui.view.components.IGuiViewComponent;
 import com.tmtravlr.additions.util.client.CommonGuiUtils;
@@ -111,7 +109,7 @@ public abstract class GuiView extends GuiScreen {
 			this.onToggleShowAdvanced(this.showAdvanced);
 		}
 		
-        this.editArea.drawScreen(mouseX, mouseY, partialTicks);
+		this.editArea.drawScreen(mouseX, mouseY, partialTicks);
 		
 		this.drawBackground();
 		

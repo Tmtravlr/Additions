@@ -41,6 +41,7 @@ public class GuiComponentDropdownInput<T> extends Gui implements IGuiViewCompone
 	private String label = "";
 	private boolean required = false;
 	private boolean hidden = false;
+	private boolean allowDelete = true;
 	private T selected;
 	
 	public GuiComponentDropdownInput(String label, GuiEdit editScreen) {
@@ -67,6 +68,10 @@ public class GuiComponentDropdownInput<T> extends Gui implements IGuiViewCompone
 	
 	public void setRequired() {
 		this.required = true;
+	}
+	
+	public void disallowDelete() {
+		this.allowDelete = false;
 	}
 	
 	public void setDefaultSelected(T selected) {
@@ -127,7 +132,7 @@ public class GuiComponentDropdownInput<T> extends Gui implements IGuiViewCompone
 		
 		this.selectedText.drawTextBox();
 		
-		if (!this.selectedText.getText().isEmpty()) {
+		if (this.allowDelete && !this.selectedText.getText().isEmpty()) {
 			this.editScreen.mc.getTextureManager().bindTexture(CommonGuiUtils.GUI_TEXTURES);
 		    GlStateManager.color(255.0F, 255.0F, 255.0F, 255.0F);
 			
@@ -147,9 +152,9 @@ public class GuiComponentDropdownInput<T> extends Gui implements IGuiViewCompone
 	    int deleteX = this.selectedText.x + this.selectedText.width - 15;
 		int deleteY = this.selectedText.y + (this.selectedText.height / 2 - 6);
 		
-		if (!this.selectedText.getText().isEmpty()) {
+		if (this.allowDelete && !this.selectedText.getText().isEmpty()) {
 			
-			if(mouseX >= deleteX && mouseX < this.selectedText.x + this.selectedText.width && mouseY >= deleteY && mouseY < deleteY + 13) {
+			if (mouseX >= deleteX && mouseX < this.selectedText.x + this.selectedText.width && mouseY >= deleteY && mouseY < deleteY + 13) {
 				this.setSelected(null);
 			}
 		}

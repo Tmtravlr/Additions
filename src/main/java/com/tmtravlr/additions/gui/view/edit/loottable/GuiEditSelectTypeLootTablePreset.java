@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.loottables.LootTablePresetManager;
+import com.tmtravlr.additions.api.gui.IGuiLootTablePresetFactory;
 import com.tmtravlr.additions.gui.view.edit.GuiEditSelectType;
 
 import net.minecraft.client.gui.GuiScreen;

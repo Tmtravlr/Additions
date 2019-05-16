@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.recipes.RecipeAddedManager;
+import com.tmtravlr.additions.api.gui.IGuiRecipeAddedFactory;
 import com.tmtravlr.additions.gui.view.edit.GuiEditSelectType;
 
 import net.minecraft.client.gui.GuiScreen;

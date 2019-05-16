@@ -34,7 +34,12 @@ public class GuiViewLootTables extends GuiViewAdditionType {
 	public void addAdditions() {
 		List<LootTableAdded> additions = AdditionTypeLootTable.INSTANCE.getAllAdditions(this.addon);
 		
-		additions.sort(null);
+		additions.sort((first, second) -> {
+			if (first == null || first.location == null || second == null || second.location == null) {
+				return 0;
+			}
+			return first.location.compareTo(second.location);
+		});
 		
 		for (LootTableAdded addition : additions) {
 			this.additions.addAdditionCard(new GuiAdditionCardLootTable(this, this.addon, addition));

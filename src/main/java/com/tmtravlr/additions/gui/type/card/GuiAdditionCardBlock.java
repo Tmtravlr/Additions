@@ -3,10 +3,10 @@ package com.tmtravlr.additions.gui.type.card;
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.blocks.BlockAddedManager;
 import com.tmtravlr.additions.addon.blocks.IBlockAdded;
+import com.tmtravlr.additions.api.gui.IGuiBlockAddedFactory;
 import com.tmtravlr.additions.gui.message.GuiMessageBox;
 import com.tmtravlr.additions.gui.type.button.GuiAdditionTypeButtonBlock;
 import com.tmtravlr.additions.gui.view.GuiView;
-import com.tmtravlr.additions.gui.view.edit.block.IGuiBlockAddedFactory;
 import com.tmtravlr.additions.type.AdditionTypeBlock;
 import com.tmtravlr.additions.util.client.CommonGuiUtils;
 

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.items.ItemAddedManager;
+import com.tmtravlr.additions.api.gui.IGuiItemAddedFactory;
 import com.tmtravlr.additions.gui.message.GuiMessageBox;
 import com.tmtravlr.additions.gui.view.edit.GuiEditSelectType;
 

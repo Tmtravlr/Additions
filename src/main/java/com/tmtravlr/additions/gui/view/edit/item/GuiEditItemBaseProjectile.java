@@ -76,6 +76,7 @@ public abstract class GuiEditItemBaseProjectile<T extends IItemAdded & IItemAdde
 		}
 		
 		this.itemHasPotionEffectsInput = new GuiComponentBooleanInput(I18n.format("gui.edit.item.hasPotionEffects.label"), this);
+		this.itemHasPotionEffectsInput.setInfo(new TextComponentTranslation("gui.edit.item.hasPotionEffect.info"));
 		if (!this.isNew) {
 			this.itemHasPotionEffectsInput.setDefaultBoolean(this.item.hasPotionEffects());
 		}

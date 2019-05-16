@@ -24,6 +24,10 @@ public class GuiComponentSuggestionInputLootTable extends GuiComponentSuggestion
 		Set<ResourceLocation> suggestions = new HashSet<>(LootTableList.getAll());
 		suggestions.addAll(AdditionTypeLootTable.INSTANCE.getAllLootTablesAdded());
 
-		this.setSuggestions(suggestions.stream().map(Object::toString).collect(Collectors.toSet()));
+		this.setSuggestions(suggestions.stream().map(Object::toString).sorted().collect(Collectors.toList()));
+	}
+	
+	public void removeSuggestion(String suggestion) {
+		this.suggestions.remove(suggestion);
 	}
 }

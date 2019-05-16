@@ -32,16 +32,11 @@ public class GuiViewCreativeTabs extends GuiViewAdditionType {
 	public void addAdditions() {
 		List<CreativeTabAdded> additions = AdditionTypeCreativeTab.INSTANCE.getAllAdditions(this.addon);
 		
-		additions.sort(new Comparator<CreativeTabAdded>(){
-
-			@Override
-			public int compare(CreativeTabAdded first, CreativeTabAdded second) {
-				if (first == null || first.getTabLabel() == null || second == null || second.getTabLabel() == null) {
-					return 0;
-				}
-				return first.getTabLabel().compareTo(second.getTabLabel());
+		additions.sort((first, second) -> {
+			if (first == null || first.getTabLabel() == null || second == null || second.getTabLabel() == null) {
+				return 0;
 			}
-			
+			return first.getTabLabel().compareTo(second.getTabLabel());
 		});
 		
 		for (CreativeTabAdded addition : additions) {

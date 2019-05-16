@@ -3,11 +3,12 @@ package com.tmtravlr.additions.gui.type.card.recipe;
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.recipes.IRecipeAdded;
 import com.tmtravlr.additions.addon.recipes.RecipeAddedManager;
+import com.tmtravlr.additions.api.gui.IGuiRecipeAddedFactory;
+import com.tmtravlr.additions.api.gui.IGuiRecipeCardDisplay;
 import com.tmtravlr.additions.gui.message.GuiMessageBox;
 import com.tmtravlr.additions.gui.type.button.GuiAdditionTypeButtonRecipe;
 import com.tmtravlr.additions.gui.type.card.GuiAdditionCardColored;
 import com.tmtravlr.additions.gui.view.GuiView;
-import com.tmtravlr.additions.gui.view.edit.recipe.IGuiRecipeAddedFactory;
 import com.tmtravlr.additions.type.AdditionTypeRecipe;
 import com.tmtravlr.additions.util.client.CommonGuiUtils;
 

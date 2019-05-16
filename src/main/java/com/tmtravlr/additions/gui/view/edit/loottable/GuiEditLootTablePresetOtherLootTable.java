@@ -16,7 +16,7 @@ import net.minecraft.util.text.TextComponentTranslation;
  * @author Tmtravlr (Rebeca Rey)
  * @since Febuary 2019
  */
-public class GuiEditLootTablePresetOtherLootTable extends GuiEditLootTablePreset<LootTablePresetOtherLootTable> {
+public class GuiEditLootTablePresetOtherLootTable extends GuiEditLootTableWithPreset<LootTablePresetOtherLootTable> {
 	
 	private GuiComponentSuggestionInputLootTable lootTableOtherLootTableInput;
     
@@ -26,9 +26,9 @@ public class GuiEditLootTablePresetOtherLootTable extends GuiEditLootTablePreset
 		this.isNew = preset == null;
 		
 		if (this.isNew) {
-			this.preset = new LootTablePresetOtherLootTable();
+			this.lootTable = new LootTablePresetOtherLootTable();
 		} else {
-			this.preset = preset;
+			this.lootTable = preset;
 		}
 	}
 
@@ -39,7 +39,7 @@ public class GuiEditLootTablePresetOtherLootTable extends GuiEditLootTablePreset
 		this.lootTableOtherLootTableInput = new GuiComponentSuggestionInputLootTable(I18n.format("gui.edit.lootTable.preset.otherLootTable.lootTable.label"), this);
 		this.lootTableOtherLootTableInput.setRequired();
 		if (!this.isNew) {
-			this.lootTableOtherLootTableInput.setDefaultText(this.preset.otherLootTable.toString());
+			this.lootTableOtherLootTableInput.setDefaultText(this.lootTable.otherLootTable.toString());
 		}
 		
 		if (this.copyFrom != null) {
@@ -57,7 +57,7 @@ public class GuiEditLootTablePresetOtherLootTable extends GuiEditLootTablePreset
 			return;
 		}
 		
-        this.preset.otherLootTable = new ResourceLocation(this.lootTableOtherLootTableInput.getText());
+        this.lootTable.otherLootTable = new ResourceLocation(this.lootTableOtherLootTableInput.getText());
 		
 		super.saveObject();
 	}

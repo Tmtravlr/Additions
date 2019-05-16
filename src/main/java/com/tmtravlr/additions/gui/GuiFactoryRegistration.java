@@ -1,8 +1,14 @@
 package com.tmtravlr.additions.gui;
 
+import java.util.Collections;
+
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.blocks.BlockAddedManager;
 import com.tmtravlr.additions.addon.blocks.BlockAddedSimple;
+import com.tmtravlr.additions.addon.effects.EffectManager;
+import com.tmtravlr.additions.addon.effects.EffectPotion;
+import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemInHand;
+import com.tmtravlr.additions.addon.effects.cause.EffectCauseManager;
 import com.tmtravlr.additions.addon.items.ItemAddedArmor;
 import com.tmtravlr.additions.addon.items.ItemAddedArrow;
 import com.tmtravlr.additions.addon.items.ItemAddedAxe;
@@ -39,9 +45,19 @@ import com.tmtravlr.additions.addon.recipes.RecipeAddedCraftingShaped;
 import com.tmtravlr.additions.addon.recipes.RecipeAddedCraftingShapeless;
 import com.tmtravlr.additions.addon.recipes.RecipeAddedManager;
 import com.tmtravlr.additions.addon.recipes.RecipeAddedSmelting;
+import com.tmtravlr.additions.api.gui.IGuiBlockAddedFactory;
+import com.tmtravlr.additions.api.gui.IGuiEffectCauseEditHandler;
+import com.tmtravlr.additions.api.gui.IGuiEffectCauseFactory;
+import com.tmtravlr.additions.api.gui.IGuiEffectEditHandler;
+import com.tmtravlr.additions.api.gui.IGuiEffectFactory;
+import com.tmtravlr.additions.api.gui.IGuiItemAddedFactory;
+import com.tmtravlr.additions.api.gui.IGuiLootTablePresetFactory;
+import com.tmtravlr.additions.api.gui.IGuiRecipeAddedFactory;
+import com.tmtravlr.additions.api.gui.IGuiRecipeCardDisplay;
 import com.tmtravlr.additions.gui.type.button.GuiAdditionTypeButtonAdvancement;
 import com.tmtravlr.additions.gui.type.button.GuiAdditionTypeButtonBlock;
 import com.tmtravlr.additions.gui.type.button.GuiAdditionTypeButtonCreativeTab;
+import com.tmtravlr.additions.gui.type.button.GuiAdditionTypeButtonEffect;
 import com.tmtravlr.additions.gui.type.button.GuiAdditionTypeButtonFunction;
 import com.tmtravlr.additions.gui.type.button.GuiAdditionTypeButtonItem;
 import com.tmtravlr.additions.gui.type.button.GuiAdditionTypeButtonItemMaterial;
@@ -58,10 +74,8 @@ import com.tmtravlr.additions.gui.type.card.recipe.GuiRecipeCardDisplayCraftingP
 import com.tmtravlr.additions.gui.type.card.recipe.GuiRecipeCardDisplayCraftingShaped;
 import com.tmtravlr.additions.gui.type.card.recipe.GuiRecipeCardDisplayCraftingShapeless;
 import com.tmtravlr.additions.gui.type.card.recipe.GuiRecipeCardDisplaySmelting;
-import com.tmtravlr.additions.gui.type.card.recipe.IGuiRecipeCardDisplay;
 import com.tmtravlr.additions.gui.view.edit.GuiEdit;
 import com.tmtravlr.additions.gui.view.edit.block.GuiEditBlockSimple;
-import com.tmtravlr.additions.gui.view.edit.block.IGuiBlockAddedFactory;
 import com.tmtravlr.additions.gui.view.edit.item.GuiEditItemArmor;
 import com.tmtravlr.additions.gui.view.edit.item.GuiEditItemArrow;
 import com.tmtravlr.additions.gui.view.edit.item.GuiEditItemAxe;
@@ -82,12 +96,10 @@ import com.tmtravlr.additions.gui.view.edit.item.GuiEditItemShovel;
 import com.tmtravlr.additions.gui.view.edit.item.GuiEditItemSimple;
 import com.tmtravlr.additions.gui.view.edit.item.GuiEditItemSword;
 import com.tmtravlr.additions.gui.view.edit.item.GuiEditItemThrowable;
-import com.tmtravlr.additions.gui.view.edit.item.IGuiItemAddedFactory;
 import com.tmtravlr.additions.gui.view.edit.loottable.GuiEditLootTablePresetBlockItem;
 import com.tmtravlr.additions.gui.view.edit.loottable.GuiEditLootTablePresetBlockItself;
 import com.tmtravlr.additions.gui.view.edit.loottable.GuiEditLootTablePresetEmpty;
 import com.tmtravlr.additions.gui.view.edit.loottable.GuiEditLootTablePresetOtherLootTable;
-import com.tmtravlr.additions.gui.view.edit.loottable.IGuiLootTablePresetFactory;
 import com.tmtravlr.additions.gui.view.edit.recipe.GuiEditRecipeBrewing;
 import com.tmtravlr.additions.gui.view.edit.recipe.GuiEditRecipeBrewingComplete;
 import com.tmtravlr.additions.gui.view.edit.recipe.GuiEditRecipeCraftingDyeItem;
@@ -97,25 +109,31 @@ import com.tmtravlr.additions.gui.view.edit.recipe.GuiEditRecipeCraftingPotionTi
 import com.tmtravlr.additions.gui.view.edit.recipe.GuiEditRecipeCraftingShaped;
 import com.tmtravlr.additions.gui.view.edit.recipe.GuiEditRecipeCraftingShapeless;
 import com.tmtravlr.additions.gui.view.edit.recipe.GuiEditRecipeSmelting;
-import com.tmtravlr.additions.gui.view.edit.recipe.IGuiRecipeAddedFactory;
+import com.tmtravlr.additions.gui.view.edit.update.effect.GuiEditHandlerEffectCauseItemInHand;
+import com.tmtravlr.additions.gui.view.edit.update.effect.GuiEditHandlerEffectPotion;
 import com.tmtravlr.additions.type.AdditionTypeManager;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.potion.PotionUtils;
 
 public class GuiFactoryRegistration {
 
 	public static void registerGuiFactories() {
 		AdditionTypeManager.registerAdditionTypeGuiFactory((parent, addon) -> new GuiAdditionTypeButtonBlock(parent, addon));
 		AdditionTypeManager.registerAdditionTypeGuiFactory((parent, addon) -> new GuiAdditionTypeButtonItem(parent, addon));
-		AdditionTypeManager.registerAdditionTypeGuiFactory((parent, addon) -> new GuiAdditionTypeButtonItemMaterial(parent, addon));
 		AdditionTypeManager.registerAdditionTypeGuiFactory((parent, addon) -> new GuiAdditionTypeButtonCreativeTab(parent, addon));
+		AdditionTypeManager.registerAdditionTypeGuiFactory((parent, addon) -> new GuiAdditionTypeButtonRecipe(parent, addon));
+		AdditionTypeManager.registerAdditionTypeGuiFactory((parent, addon) -> new GuiAdditionTypeButtonItemMaterial(parent, addon));
+		AdditionTypeManager.registerAdditionTypeGuiFactory((parent, addon) -> new GuiAdditionTypeButtonEffect(parent, addon));
 		AdditionTypeManager.registerAdditionTypeGuiFactory((parent, addon) -> new GuiAdditionTypeButtonAdvancement(parent, addon));
 		AdditionTypeManager.registerAdditionTypeGuiFactory((parent, addon) -> new GuiAdditionTypeButtonFunction(parent, addon));
 		AdditionTypeManager.registerAdditionTypeGuiFactory((parent, addon) -> new GuiAdditionTypeButtonLootTable(parent, addon));
 		AdditionTypeManager.registerAdditionTypeGuiFactory((parent, addon) -> new GuiAdditionTypeButtonStructure(parent, addon));
 		AdditionTypeManager.registerAdditionTypeGuiFactory((parent, addon) -> new GuiAdditionTypeButtonSoundEvent(parent, addon));
-		AdditionTypeManager.registerAdditionTypeGuiFactory((parent, addon) -> new GuiAdditionTypeButtonRecipe(parent, addon));
 		
 		ItemAddedManager.registerGuiFactory(ItemAddedSimple.TYPE, new IGuiItemAddedFactory<ItemAddedSimple>() {
 			@Override
@@ -976,6 +994,57 @@ public class GuiFactoryRegistration {
 				editScreen.copyFrom(recipe);
 				return editScreen;
 			}
+		});
+		
+		EffectCauseManager.registerGuiFactory(EffectCauseItemInHand.TYPE, new IGuiEffectCauseFactory<EffectCauseItemInHand>() {
+
+			@Override
+			public String getTitle() {
+				return I18n.format("type.effectCause.held.title");
+			}
+
+			@Override
+			public ItemStack getDisplayStack(EffectCauseItemInHand cause) {
+				return cause.itemStack;
+			}
+
+			@Override
+			public IGuiEffectCauseEditHandler getEditHandler() {
+				return new GuiEditHandlerEffectCauseItemInHand();
+			}
+			
+		});
+		
+		EffectManager.registerGuiFactory(EffectPotion.TYPE, new IGuiEffectFactory<EffectPotion>() {
+
+			@Override
+			public String getTitle() {
+				return I18n.format("type.effect.potion.title");
+			}
+
+			@Override
+			public ItemStack getDisplayStack(EffectPotion effect) {
+				ItemStack displayStack = new ItemStack(Items.POTIONITEM);
+				
+				if (effect.potionType != null) {
+					PotionUtils.addPotionToItemStack(displayStack, effect.potionType);
+				}
+				
+				if (effect.potion != null) {
+					PotionUtils.appendEffects(displayStack, Collections.singleton(effect.potion));
+					PotionEffect effectWithParticles = new PotionEffect(effect.potion.getPotion(), effect.potion.getDuration(), effect.potion.getAmplifier());
+					displayStack.getTagCompound().setInteger("CustomPotionColor", PotionUtils.getPotionColorFromEffectList(Collections.singleton(effectWithParticles)));
+				}
+				
+				return displayStack;
+			}
+
+			@Override
+			public IGuiEffectEditHandler getEditHandler() {
+				
+				return new GuiEditHandlerEffectPotion();
+			}
+			
 		});
 	}
 	

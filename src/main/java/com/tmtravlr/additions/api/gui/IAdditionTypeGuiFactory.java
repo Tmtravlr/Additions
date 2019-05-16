@@ -1,6 +1,7 @@
-package com.tmtravlr.additions.gui.type.button;
+package com.tmtravlr.additions.api.gui;
 
 import com.tmtravlr.additions.addon.Addon;
+import com.tmtravlr.additions.gui.type.button.GuiAdditionTypeButton;
 import com.tmtravlr.additions.gui.view.GuiView;
 
 /**

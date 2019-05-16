@@ -23,6 +23,10 @@ public abstract class GuiScreenOverlay extends GuiScreen {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
     	try {
+    		if (this.parentScreen.mc == null) {
+            	this.parentScreen.setWorldAndResolution(this.mc, this.width, this.height);
+            }
+    		
     		this.parentScreen.drawScreen(-1, -1, partialTicks);
     	} catch (Exception e) {
     		AdditionsMod.logger.warn("Unable to draw parent screen.", e);

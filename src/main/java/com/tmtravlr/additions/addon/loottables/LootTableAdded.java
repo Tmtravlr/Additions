@@ -17,6 +17,10 @@ public class LootTableAdded {
 	@Nullable
 	public LootTablePreset preset;
 	
+	public LootTableAdded() {
+		
+	}
+	
 	public LootTableAdded(ResourceLocation location) {
 		this(location, null);
 	}

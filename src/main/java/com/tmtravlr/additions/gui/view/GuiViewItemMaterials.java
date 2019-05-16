@@ -51,16 +51,11 @@ public class GuiViewItemMaterials extends GuiViewAdditionType {
 	public void addAdditions() {
 		List<ItemMaterialAdded> additions = AdditionTypeItemMaterial.INSTANCE.getAllAdditions(this.addon);
 		
-		additions.sort(new Comparator<ItemMaterialAdded>(){
-
-			@Override
-			public int compare(ItemMaterialAdded first, ItemMaterialAdded second) {
-				if (first == null || first.getId() == null || second == null || second.getId() == null) {
-					return 0;
-				}
-				return first.getId().compareTo(second.getId());
+		additions.sort((first, second) -> {
+			if (first == null || first.getId() == null || second == null || second.getId() == null) {
+				return 0;
 			}
-			
+			return first.getId().compareTo(second.getId());
 		});
 		
 		for (ItemMaterialAdded addition : additions) {

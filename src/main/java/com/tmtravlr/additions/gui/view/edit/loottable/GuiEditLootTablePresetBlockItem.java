@@ -20,7 +20,7 @@ import net.minecraft.util.text.TextComponentTranslation;
  * @author Tmtravlr (Rebeca Rey)
  * @since Febuary 2019
  */
-public class GuiEditLootTablePresetBlockItem extends GuiEditLootTablePreset<LootTablePresetBlockItemDrop> {
+public class GuiEditLootTablePresetBlockItem extends GuiEditLootTableWithPreset<LootTablePresetBlockItemDrop> {
 	
 	private GuiComponentDropdownInputBlock lootTableBlockInput;
 	private GuiComponentItemStackInput lootTableItemInput;
@@ -35,9 +35,9 @@ public class GuiEditLootTablePresetBlockItem extends GuiEditLootTablePreset<Loot
 		this.isNew = preset == null;
 		
 		if (this.isNew) {
-			this.preset = new LootTablePresetBlockItemDrop();
+			this.lootTable = new LootTablePresetBlockItemDrop();
 		} else {
-			this.preset = preset;
+			this.lootTable = preset;
 		}
 	}
 
@@ -48,14 +48,14 @@ public class GuiEditLootTablePresetBlockItem extends GuiEditLootTablePreset<Loot
 		this.lootTableBlockInput = new GuiComponentDropdownInputBlock(I18n.format("gui.edit.lootTable.preset.blockItem.block.label"), this);
 		this.lootTableBlockInput.setRequired();
 		if (!this.isNew) {
-			this.lootTableBlockInput.setDefaultSelected(this.preset.block);
+			this.lootTableBlockInput.setDefaultSelected(this.lootTable.block);
 		}
 		
 		this.lootTableItemInput = new GuiComponentItemStackInput(I18n.format("gui.edit.lootTable.preset.blockItem.item.label"), this);
 		this.lootTableItemInput.setRequired();
 		this.lootTableItemInput.disableCount();
 		if (!this.isNew) {
-			this.lootTableItemInput.setDefaultItemStack(this.preset.dropStack);
+			this.lootTableItemInput.setDefaultItemStack(this.lootTable.dropStack);
 		}
 		
 		this.lootTableItemMinInput = new GuiComponentIntegerInput(I18n.format("gui.edit.lootTable.preset.blockItem.itemMin.label"), this, true) {
@@ -69,7 +69,7 @@ public class GuiEditLootTablePresetBlockItem extends GuiEditLootTablePreset<Loot
 			}
 			
 		};
-		this.lootTableItemMinInput.setDefaultInteger(this.preset.itemMin);
+		this.lootTableItemMinInput.setDefaultInteger(this.lootTable.itemMin);
 		
 		this.lootTableItemMaxInput = new GuiComponentIntegerInput(I18n.format("gui.edit.lootTable.preset.blockItem.itemMax.label"), this, false) {
 			
@@ -83,15 +83,15 @@ public class GuiEditLootTablePresetBlockItem extends GuiEditLootTablePreset<Loot
 			
 		};
 		this.lootTableItemMaxInput.setMinimum(0);
-		this.lootTableItemMaxInput.setDefaultInteger(this.preset.itemMax);
+		this.lootTableItemMaxInput.setDefaultInteger(this.lootTable.itemMax);
 		
 		this.lootTableFortunableInput = new GuiComponentBooleanInput(I18n.format("gui.edit.lootTable.preset.blockItem.fortunable.label"), this);
-		if (this.preset.fortunable) {
+		if (this.lootTable.fortunable) {
 			this.lootTableFortunableInput.setDefaultBoolean(true);
 		}
 		
 		this.lootTableSilkTouchableInput = new GuiComponentBooleanInput(I18n.format("gui.edit.lootTable.preset.blockItem.silkTouchable.label"), this);
-		if (this.preset.silkTouchable) {
+		if (this.lootTable.silkTouchable) {
 			this.lootTableSilkTouchableInput.setDefaultBoolean(true);
 		}
 		
@@ -120,12 +120,12 @@ public class GuiEditLootTablePresetBlockItem extends GuiEditLootTablePreset<Loot
 			return;
 		}
 		
-        this.preset.block = this.lootTableBlockInput.getSelected();
-        this.preset.dropStack = this.lootTableItemInput.getItemStack();
-        this.preset.itemMin = this.lootTableItemMinInput.getInteger();
-        this.preset.itemMax = this.lootTableItemMaxInput.getInteger();
-        this.preset.fortunable = this.lootTableFortunableInput.getBoolean();
-        this.preset.silkTouchable = this.lootTableSilkTouchableInput.getBoolean();
+        this.lootTable.block = this.lootTableBlockInput.getSelected();
+        this.lootTable.dropStack = this.lootTableItemInput.getItemStack();
+        this.lootTable.itemMin = this.lootTableItemMinInput.getInteger();
+        this.lootTable.itemMax = this.lootTableItemMaxInput.getInteger();
+        this.lootTable.fortunable = this.lootTableFortunableInput.getBoolean();
+        this.lootTable.silkTouchable = this.lootTableSilkTouchableInput.getBoolean();
 		
 		super.saveObject();
 	}

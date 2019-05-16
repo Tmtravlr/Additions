@@ -8,11 +8,11 @@ import com.tmtravlr.additions.addon.loottables.LootTablePreset;
 import com.tmtravlr.additions.addon.loottables.LootTablePresetManager;
 import com.tmtravlr.additions.addon.recipes.IRecipeAdded;
 import com.tmtravlr.additions.addon.recipes.RecipeAddedManager;
-import com.tmtravlr.additions.gui.type.button.IAdditionTypeGuiFactory;
-import com.tmtravlr.additions.gui.view.edit.block.IGuiBlockAddedFactory;
-import com.tmtravlr.additions.gui.view.edit.item.IGuiItemAddedFactory;
-import com.tmtravlr.additions.gui.view.edit.loottable.IGuiLootTablePresetFactory;
-import com.tmtravlr.additions.gui.view.edit.recipe.IGuiRecipeAddedFactory;
+import com.tmtravlr.additions.api.gui.IAdditionTypeGuiFactory;
+import com.tmtravlr.additions.api.gui.IGuiBlockAddedFactory;
+import com.tmtravlr.additions.api.gui.IGuiItemAddedFactory;
+import com.tmtravlr.additions.api.gui.IGuiLootTablePresetFactory;
+import com.tmtravlr.additions.api.gui.IGuiRecipeAddedFactory;
 import com.tmtravlr.additions.type.AdditionType;
 import com.tmtravlr.additions.type.AdditionTypeManager;
 

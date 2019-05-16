@@ -124,7 +124,7 @@ public class GuiComponentIngredientOreNBTInput implements IGuiViewComponent {
 		if (!this.selectedText.getText().isEmpty()) {
 			
 			if(mouseX >= deleteX && mouseX < this.selectedText.x + this.selectedText.width && mouseY >= deleteY && mouseY < deleteY + 13) {
-				this.setItemStackGroup(null);
+				this.setIngredient(null);
 			}
 		}
 		
@@ -154,7 +154,7 @@ public class GuiComponentIngredientOreNBTInput implements IGuiViewComponent {
 		this.cachedDisplayItems = this.ingredient.getAllStacks();
 	}
 	
-	public void setItemStackGroup(IngredientOreNBT group) {
+	public void setIngredient(IngredientOreNBT group) {
 		this.setDefaultIngredient(group);
 		this.editScreen.notifyHasChanges();
 	}

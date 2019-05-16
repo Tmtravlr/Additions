@@ -16,7 +16,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.JsonSyntaxException;
-import com.tmtravlr.additions.gui.view.edit.block.IGuiBlockAddedFactory;
+import com.tmtravlr.additions.api.gui.IGuiBlockAddedFactory;
 
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;

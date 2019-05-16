@@ -13,7 +13,7 @@ import net.minecraft.client.gui.GuiScreen;
  * @author Tmtravlr (Rebeca Rey)
  * @since Febuary 2019
  */
-public class GuiEditLootTablePresetEmpty extends GuiEditLootTablePreset<LootTablePresetEmpty> {
+public class GuiEditLootTablePresetEmpty extends GuiEditLootTableWithPreset<LootTablePresetEmpty> {
     
 	public GuiEditLootTablePresetEmpty(GuiScreen parentScreen, String title, Addon addon, LootTablePresetEmpty preset) {
 		super(parentScreen, title, addon);
@@ -21,9 +21,9 @@ public class GuiEditLootTablePresetEmpty extends GuiEditLootTablePreset<LootTabl
 		this.isNew = preset == null;
 		
 		if (this.isNew) {
-			this.preset = new LootTablePresetEmpty();
+			this.lootTable = new LootTablePresetEmpty();
 		} else {
-			this.preset = preset;
+			this.lootTable = preset;
 		}
 	}
 

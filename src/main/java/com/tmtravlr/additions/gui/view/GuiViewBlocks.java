@@ -29,16 +29,11 @@ public class GuiViewBlocks extends GuiViewAdditionType {
 	public void addAdditions() {
 		List<IBlockAdded> additions = AdditionTypeBlock.INSTANCE.getAllAdditions(this.addon);
 		
-		additions.sort(new Comparator<IBlockAdded>(){
-
-			@Override
-			public int compare(IBlockAdded first, IBlockAdded second) {
-				if (first == null || first.getId() == null || second == null || second.getId() == null) {
-					return 0;
-				}
-				return first.getId().compareTo(second.getId());
+		additions.sort((first, second) -> {
+			if (first == null || first.getId() == null || second == null || second.getId() == null) {
+				return 0;
 			}
-			
+			return first.getId().compareTo(second.getId());
 		});
 		
 		for (IBlockAdded addition : additions) {

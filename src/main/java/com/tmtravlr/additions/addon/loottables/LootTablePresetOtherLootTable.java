@@ -43,7 +43,7 @@ public class LootTablePresetOtherLootTable extends LootTablePreset {
 			
 			json.add("pools", JsonGenerator.createJsonObjectArray(
 					JsonGenerator.createJsonObject(
-							new JsonElementPair("name", "other_table"),
+							new JsonElementPair("name", "other_table_pool"),
 							new JsonElementPair("rolls", 1),
 							new JsonElementPair("entries", JsonGenerator.createJsonObjectArray(
 									JsonGenerator.createJsonObject(

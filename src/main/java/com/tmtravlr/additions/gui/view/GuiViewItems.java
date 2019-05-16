@@ -30,16 +30,11 @@ public class GuiViewItems extends GuiViewAdditionType {
 	public void addAdditions() {		
 		List<IItemAdded> additions = AdditionTypeManager.getAdditionType(AdditionTypeItem.NAME).getAllAdditions(this.addon);
 		
-		additions.sort(new Comparator<IItemAdded>(){
-
-			@Override
-			public int compare(IItemAdded first, IItemAdded second) {
-				if (first == null || first.getId() == null || second == null || second.getId() == null) {
-					return 0;
-				}
-				return first.getId().compareTo(second.getId());
+		additions.sort((first, second) -> {
+			if (first == null || first.getId() == null || second == null || second.getId() == null) {
+				return 0;
 			}
-			
+			return first.getId().compareTo(second.getId());
 		});
 		
 		for (IItemAdded addition : additions) {

@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.tmtravlr.additions.addon.Addon;
+import com.tmtravlr.additions.api.gui.IAdditionTypeGuiFactory;
 import com.tmtravlr.additions.gui.type.button.GuiAdditionTypeButton;
-import com.tmtravlr.additions.gui.type.button.IAdditionTypeGuiFactory;
 import com.tmtravlr.additions.gui.view.GuiView;
 import com.tmtravlr.additions.type.AdditionTypeManager;
 

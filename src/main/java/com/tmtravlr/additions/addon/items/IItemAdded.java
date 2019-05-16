@@ -1,6 +1,5 @@
 package com.tmtravlr.additions.addon.items;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.collect.Multimap;
@@ -8,7 +7,6 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.tmtravlr.additions.AdditionsMod;
-import com.tmtravlr.additions.type.AdditionTypeItem;
 import com.tmtravlr.additions.util.OtherSerializers;
 
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -17,7 +15,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.oredict.OreDictionary;
 
 /**
  * Represents an added item
@@ -71,10 +68,18 @@ public interface IItemAdded {
 	}
 	
     public default String getId() {
+    	ResourceLocation registryName = this.getAsItem().getRegistryName();
+    	
+    	if (registryName != null) {
+    		return registryName.getResourcePath();
+    	}
+    	
         String unlocalizedName = this.getAsItem().getUnlocalizedName();
+        
         if (unlocalizedName.startsWith("item.")) {
         	return unlocalizedName.substring(5);
         }
+        
         return unlocalizedName;
     }
 

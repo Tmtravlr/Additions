@@ -77,14 +77,7 @@ public abstract class GuiEditItemTool<T extends IItemAdded & IItemAddedTool> ext
 	}
     
 	@Override
-	protected void openTextureDialogue() {
-    	GuiScreen nextScreen;
-    	if (this.isNew) {
-    		 nextScreen = getItemCreatedPopup();
-    	} else {
-    		nextScreen = this;
-    	}
-    	
+	protected void openTextureDialogue(GuiScreen nextScreen) {
     	this.mc.displayGuiScreen(new GuiEditItemTexture(nextScreen, this.addon, this.item, this.isNew, ItemModelManager.ItemModelType.TOOL));
     }
 }

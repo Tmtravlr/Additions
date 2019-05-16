@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.tmtravlr.additions.addon.Addon;
-import com.tmtravlr.additions.gui.type.button.IAdditionTypeGuiFactory;
+import com.tmtravlr.additions.api.gui.IAdditionTypeGuiFactory;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -37,10 +37,10 @@ public class AdditionTypeManager {
 		registerAdditionType(AdditionTypeCreativeTab.NAME, AdditionTypeCreativeTab.INSTANCE);
 		registerAdditionType(AdditionTypeLootTable.NAME, AdditionTypeLootTable.INSTANCE);
 		registerAdditionType(AdditionTypeRecipe.NAME, AdditionTypeRecipe.INSTANCE);
-		
 		registerAdditionType(AdditionTypeStructure.NAME, AdditionTypeStructure.INSTANCE);
 		registerAdditionType(AdditionTypeFunction.NAME, AdditionTypeFunction.INSTANCE);
 		registerAdditionType(AdditionTypeAdvancement.NAME, AdditionTypeAdvancement.INSTANCE);
+		registerAdditionType(AdditionTypeEffect.NAME, AdditionTypeEffect.INSTANCE);
 	}
 	
 	public static void registerAdditionType(ResourceLocation name, AdditionType toRegister) {

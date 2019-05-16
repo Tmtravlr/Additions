@@ -1,4 +1,4 @@
-package com.tmtravlr.additions.gui.view.edit.loottable;
+package com.tmtravlr.additions.api.gui;
 
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.items.IItemAdded;

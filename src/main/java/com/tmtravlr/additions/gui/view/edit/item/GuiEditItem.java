@@ -218,7 +218,7 @@ public abstract class GuiEditItem<T extends IItemAdded> extends GuiEdit {
 		}
 		
 		if (this.isNew) {
-    		this.openTextureDialogue();
+    		this.openTextureDialogue(this.getItemCreatedPopup());
 		} else {
 			this.mc.displayGuiScreen(new GuiMessageBoxNeedsRestart(this.parentScreen, I18n.format("gui.warnDialogue.restart.updated.title"), new TextComponentTranslation("gui.warnDialogue.restart.updated.message")));
 		}
@@ -274,20 +274,13 @@ public abstract class GuiEditItem<T extends IItemAdded> extends GuiEdit {
     @Override
     protected void actionPerformed(GuiButton button) {
     	if (button.id == BUTTON_TEXTURE) {
-    		this.openTextureDialogue();
+    		this.openTextureDialogue(this);
     	} else {
     		super.actionPerformed(button);
     	}
     }
     
-    protected void openTextureDialogue() {
-    	GuiScreen nextScreen;
-    	if (this.isNew) {
-    		 nextScreen = getItemCreatedPopup();
-    	} else {
-    		nextScreen = this;
-    	}
-    	
+    protected void openTextureDialogue(GuiScreen nextScreen) {
     	this.mc.displayGuiScreen(new GuiEditItemTexture(nextScreen, this.addon, this.item, this.isNew));
     }
     

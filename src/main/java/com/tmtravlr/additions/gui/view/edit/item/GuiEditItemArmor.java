@@ -141,14 +141,7 @@ public class GuiEditItemArmor extends GuiEditItem<ItemAddedArmor> {
 	}
     
 	@Override
-    protected void openTextureDialogue() {
-    	GuiScreen nextScreen;
-    	if (this.isNew) {
-    		 nextScreen = getItemCreatedPopup();
-    	} else {
-    		nextScreen = this;
-    	}
-    	
+    protected void openTextureDialogue(GuiScreen nextScreen) {
     	this.mc.displayGuiScreen(new GuiEditItemArmorTexture(nextScreen, this.addon, this.item, this.isNew, this.itemColoredInput.getBoolean()));
     }
 }

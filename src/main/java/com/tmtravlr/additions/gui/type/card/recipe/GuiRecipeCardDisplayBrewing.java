@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import com.tmtravlr.additions.addon.recipes.IngredientOreNBT;
 import com.tmtravlr.additions.addon.recipes.RecipeAddedBrewing;
+import com.tmtravlr.additions.api.gui.IGuiRecipeCardDisplay;
 import com.tmtravlr.additions.gui.type.card.recipe.GuiRecipeCardDisplayCrafting.DisplayStack;
 import com.tmtravlr.additions.gui.view.GuiView;
 import com.tmtravlr.additions.util.client.CommonGuiUtils;

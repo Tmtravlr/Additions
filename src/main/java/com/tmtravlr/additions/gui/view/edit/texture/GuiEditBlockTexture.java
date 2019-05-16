@@ -145,7 +145,14 @@ public class GuiEditBlockTexture extends GuiEdit {
 				this.saveFiles();
 				
 				//Success
-				this.mc.displayGuiScreen(new GuiMessageBoxRefreshingResources(new GuiMessageBox(this.parentScreen, I18n.format("gui.edit.texture.success.title"), new TextComponentTranslation("gui.edit.texture.success.message"), I18n.format("gui.buttons.continue"))));
+				this.mc.displayGuiScreen(new GuiMessageBoxRefreshingResources(new GuiMessageBox(this, I18n.format("gui.edit.texture.success.title"), new TextComponentTranslation("gui.edit.texture.success.message"), I18n.format("gui.buttons.continue")) {
+					
+					@Override
+					public void onFirstButtonClicked() {
+						this.mc.displayGuiScreen(GuiEditBlockTexture.this.parentScreen);
+					}
+					
+				}));
 			} catch (IOException e) {
 				//Unable to load images
 				AdditionsMod.logger.error("Error loading texture: ", e);

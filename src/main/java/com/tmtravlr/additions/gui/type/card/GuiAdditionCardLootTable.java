@@ -4,11 +4,11 @@ import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.items.ItemAddedManager;
 import com.tmtravlr.additions.addon.loottables.LootTableAdded;
 import com.tmtravlr.additions.addon.loottables.LootTablePresetManager;
+import com.tmtravlr.additions.api.gui.IGuiItemAddedFactory;
+import com.tmtravlr.additions.api.gui.IGuiLootTablePresetFactory;
 import com.tmtravlr.additions.gui.message.GuiMessageBox;
 import com.tmtravlr.additions.gui.type.button.GuiAdditionTypeButtonLootTable;
 import com.tmtravlr.additions.gui.view.GuiView;
-import com.tmtravlr.additions.gui.view.edit.item.IGuiItemAddedFactory;
-import com.tmtravlr.additions.gui.view.edit.loottable.IGuiLootTablePresetFactory;
 import com.tmtravlr.additions.type.AdditionTypeLootTable;
 import com.tmtravlr.additions.util.client.CommonGuiUtils;
 

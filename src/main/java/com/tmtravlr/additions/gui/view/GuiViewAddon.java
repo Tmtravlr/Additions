@@ -1,10 +1,10 @@
 package com.tmtravlr.additions.gui.view;
 
 import com.tmtravlr.additions.addon.Addon;
+import com.tmtravlr.additions.api.gui.IAdditionTypeGuiFactory;
 import com.tmtravlr.additions.gui.message.GuiMessageBoxSetAddonVersionAndLock;
 import com.tmtravlr.additions.gui.message.GuiMessageBoxTwoButton;
 import com.tmtravlr.additions.gui.message.GuiMessageBoxUnlockingAddon;
-import com.tmtravlr.additions.gui.type.button.IAdditionTypeGuiFactory;
 import com.tmtravlr.additions.gui.view.components.GuiComponentAdditionTypeButton;
 import com.tmtravlr.additions.gui.view.components.GuiComponentDisplayText;
 import com.tmtravlr.additions.gui.view.edit.GuiEditAddon;

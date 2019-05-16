@@ -1,9 +1,16 @@
 package com.tmtravlr.additions;
 
+import java.util.List;
+import java.util.Map.Entry;
+
+import com.tmtravlr.additions.addon.effects.Effect;
+import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemInHand;
 import com.tmtravlr.additions.addon.entities.ai.RangedAttackReplacer;
-import com.tmtravlr.additions.addon.recipes.RecipeAddedCraftingDyeItem;
 import com.tmtravlr.additions.addon.structures.AddonStructureManager;
+import com.tmtravlr.additions.type.AdditionTypeEffect;
+import com.tmtravlr.additions.type.AdditionTypeLootTable;
 import com.tmtravlr.additions.type.AdditionTypeRecipe;
+import com.tmtravlr.lootoverhaul.loot.ExtraLootManager.LoadLootTableExtrasEvent;
 
 import net.minecraft.block.BlockCauldron;
 import net.minecraft.block.state.IBlockState;
@@ -11,11 +18,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.stats.StatList;
-import net.minecraft.tileentity.TileEntityBanner;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
@@ -42,6 +45,14 @@ public class CommonEventHandler {
 	public static void onLivingUpdate(LivingUpdateEvent event) {
 		if (!event.getEntityLiving().world.isRemote && event.getEntityLiving().ticksExisted % 11 == 0 && event.getEntityLiving() instanceof IRangedAttackMob && event.getEntityLiving() instanceof EntityLiving && !event.getEntityLiving().isDead) {
 			RangedAttackReplacer.checkIfAINeedsReplacing((EntityLiving & IRangedAttackMob) event.getEntityLiving(), event.getEntityLiving().getHeldItem(EnumHand.MAIN_HAND));
+		}
+		
+		if (!AdditionTypeEffect.INSTANCE.getInHandEffects().isEmpty()) {
+			for (Entry<EffectCauseItemInHand, List<Effect>> entry : AdditionTypeEffect.INSTANCE.getInHandEffects().entrySet()) {
+				if (entry.getKey().applies(event.getEntityLiving())) {
+					entry.getValue().forEach(effect -> effect.applyEffect(event.getEntityLiving()));
+				}
+			}
 		}
 	}
 	
@@ -84,5 +95,10 @@ public class CommonEventHandler {
 				}
 			});
 		}
+	}
+	
+	@SubscribeEvent
+	public static void onLootTableExtrasLoad(LoadLootTableExtrasEvent event) {
+		AdditionTypeLootTable.INSTANCE.getLootTableExtras(event.getLootTableLocation(), event.getLootTableManager()).forEach(event::addExtraLootTable);
 	}
 }

@@ -22,7 +22,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
  * @author Tmtravlr (Rebeca Rey)
  * @since Febuary 2019
  */
-public class GuiEditLootTablePresetBlockItself extends GuiEditLootTablePreset<LootTablePresetBlockItself> {
+public class GuiEditLootTablePresetBlockItself extends GuiEditLootTableWithPreset<LootTablePresetBlockItself> {
 	
 	private GuiComponentDropdownInputBlock lootTableBlockInput;
     
@@ -32,9 +32,9 @@ public class GuiEditLootTablePresetBlockItself extends GuiEditLootTablePreset<Lo
 		this.isNew = preset == null;
 		
 		if (this.isNew) {
-			this.preset = new LootTablePresetBlockItself();
+			this.lootTable = new LootTablePresetBlockItself();
 		} else {
-			this.preset = preset;
+			this.lootTable = preset;
 		}
 	}
 
@@ -45,7 +45,7 @@ public class GuiEditLootTablePresetBlockItself extends GuiEditLootTablePreset<Lo
 		this.lootTableBlockInput = new GuiComponentDropdownInputBlock(I18n.format("gui.edit.lootTable.preset.blockItself.block.label"), this);
 		this.lootTableBlockInput.setRequired();
 		if (!this.isNew) {
-			this.lootTableBlockInput.setDefaultSelected(this.preset.block);
+			this.lootTableBlockInput.setDefaultSelected(this.lootTable.block);
 		}
 		
 		if (this.copyFrom != null) {
@@ -64,7 +64,7 @@ public class GuiEditLootTablePresetBlockItself extends GuiEditLootTablePreset<Lo
 			return;
 		}
 		
-        this.preset.block = this.lootTableBlockInput.getSelected();
+        this.lootTable.block = this.lootTableBlockInput.getSelected();
 		
 		super.saveObject();
 	}

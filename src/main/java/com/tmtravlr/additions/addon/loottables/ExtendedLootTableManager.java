@@ -47,6 +47,8 @@ public class ExtendedLootTableManager extends LootTableManager {
     }
 
     public void reloadLootTables() {
+    	AdditionTypeLootTable.INSTANCE.reloadAllLootTables(AddonLoader.addonsLoaded);
+    	
     	if (this.baseFolder != null) {
 	        this.registeredLootTables.invalidateAll();
 	

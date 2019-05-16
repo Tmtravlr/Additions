@@ -1,19 +1,16 @@
 package com.tmtravlr.additions.addon.loottables;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSyntaxException;
 import com.tmtravlr.additions.AdditionsMod;
+import com.tmtravlr.additions.addon.blocks.IBlockAdded;
 import com.tmtravlr.additions.util.JsonGenerator;
 import com.tmtravlr.additions.util.JsonGenerator.JsonElementPair;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTException;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
 
@@ -29,6 +26,16 @@ public class LootTablePresetBlockItself extends LootTablePreset {
 	
 	public Block block;
 	
+	private String getItemNameFromBlock() {
+		String itemName = Item.getItemFromBlock(this.block).getRegistryName().toString();
+		
+		if (this.block instanceof IBlockAdded && ((IBlockAdded)this.block).getItemBlock() != null) {
+			itemName = ((IBlockAdded)this.block).getItemBlock().getAsItem().getRegistryName().toString();
+		}
+		
+		return itemName;
+	}
+	
 	public static class Serializer extends LootTablePreset.Serializer<LootTablePresetBlockItself> {
 		
 		public Serializer() {
@@ -43,12 +50,12 @@ public class LootTablePresetBlockItself extends LootTablePreset {
 			
 			json.add("pools", JsonGenerator.createJsonObjectArray(
 					JsonGenerator.createJsonObject(
-							new JsonElementPair("name", "other_table"),
+							new JsonElementPair("name", "block_itself_pool"),
 							new JsonElementPair("rolls", 1),
 							new JsonElementPair("entries", JsonGenerator.createJsonObjectArray(
 									JsonGenerator.createJsonObject(
 											new JsonElementPair("type", "item"),
-											new JsonElementPair("name", Item.getItemFromBlock(preset.block).getRegistryName().toString())
+											new JsonElementPair("name", preset.getItemNameFromBlock())
 									)
 							))
 					)

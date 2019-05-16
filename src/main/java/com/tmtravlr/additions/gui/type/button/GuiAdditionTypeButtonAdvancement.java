@@ -18,9 +18,9 @@ import net.minecraft.init.SoundEvents;
  */
 public class GuiAdditionTypeButtonAdvancement extends GuiAdditionTypeButtonColored {
 	
-	public static final int BUTTON_COLOR_HOVER = 0xff525916;
-	public static final int BUTTON_COLOR_LIGHT = 0xff849230;
-	public static final int BUTTON_COLOR_DARK = 0xff1D2508;
+	public static final int BUTTON_COLOR_HOVER = 0xff5F5516;
+	public static final int BUTTON_COLOR_LIGHT = 0xff9E9330;
+	public static final int BUTTON_COLOR_DARK = 0xff281E08;
 
 	public GuiAdditionTypeButtonAdvancement(GuiView viewScreen, Addon addon) {
 		super(viewScreen, addon);

@@ -2,6 +2,7 @@ package com.tmtravlr.additions.gui.view.edit.item;
 
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.items.ItemAddedShield;
+import com.tmtravlr.additions.gui.view.components.input.GuiComponentBooleanInput;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentFloatInput;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentIntegerInput;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentIngredientOreNBTInput;
@@ -27,6 +28,7 @@ public class GuiEditItemShield extends GuiEditItem<ItemAddedShield> {
 	private GuiComponentIngredientOreNBTInput itemRepairStacksInput;
 	private GuiComponentFloatInput itemBashDamageInput;
 	private GuiComponentIntegerInput itemBashCooldownInput;
+	private GuiComponentBooleanInput itemUseEfficiencyInput;
 	private GuiComponentFloatInput itemEfficiencyMultiplierInput;
     private GuiComponentDropdownInputSoundEvent itemBashSwingSoundInput;
     private GuiComponentDropdownInputSoundEvent itemBashHitSoundInput;
@@ -82,14 +84,26 @@ public class GuiEditItemShield extends GuiEditItem<ItemAddedShield> {
 		}
 		
 		this.itemEfficiencyMultiplierInput = new GuiComponentFloatInput(I18n.format("gui.edit.item.efficiencyMultiplier.label"), this, false);
-		this.itemEfficiencyMultiplierInput.setInfo(new TextComponentTranslation("gui.edit.item.efficiencyMultiplier.info"));
+		this.itemEfficiencyMultiplierInput.setHidden(true);
 		this.itemEfficiencyMultiplierInput.setMaximum(1);
 		this.itemEfficiencyMultiplierInput.setMinimum(0);
 		if (!this.isNew) {
-			this.itemEfficiencyMultiplierInput.setDefaultFloat(this.item.efficiencyMultiplier);
+			this.itemEfficiencyMultiplierInput.setDefaultFloat(this.item.efficiencyMultiplier == 0 ? 0.5f : this.item.efficiencyMultiplier);
 		} else {
 			this.itemEfficiencyMultiplierInput.setDefaultFloat(0.5f);
 		}
+		
+		this.itemUseEfficiencyInput = new GuiComponentBooleanInput(I18n.format("gui.edit.item.useEfficiency.label"), this) {
+			
+			@Override
+			public void setDefaultBoolean(boolean input) {
+				GuiEditItemShield.this.itemEfficiencyMultiplierInput.setHidden(!input);
+				super.setDefaultBoolean(input);
+			}
+			
+		};
+		this.itemUseEfficiencyInput.setInfo(new TextComponentTranslation("gui.edit.item.useEfficiency.info"));
+		this.itemUseEfficiencyInput.setDefaultBoolean(this.item.efficiencyMultiplier != 0);
 
 		this.itemBashSwingSoundInput = new GuiComponentDropdownInputSoundEvent(I18n.format("gui.edit.item.shield.bashSwingSound.label"), this, this.addon);
 		if (!this.isNew) {
@@ -121,6 +135,7 @@ public class GuiEditItemShield extends GuiEditItem<ItemAddedShield> {
 		}
 		
 		this.advancedComponents.add(this.itemBashCooldownInput);
+		this.advancedComponents.add(this.itemUseEfficiencyInput);
 		this.advancedComponents.add(this.itemEfficiencyMultiplierInput);
 		this.advancedComponents.add(this.itemBashSwingSoundInput);
 		this.advancedComponents.add(this.itemBashHitSoundInput);
@@ -139,7 +154,7 @@ public class GuiEditItemShield extends GuiEditItem<ItemAddedShield> {
 		this.item.repairStacks = this.itemRepairStacksInput.getIngredient();
 		this.item.bashDamage = this.itemBashDamageInput.getFloat();
 		this.item.bashCooldown = this.itemBashCooldownInput.getInteger();
-		this.item.efficiencyMultiplier = this.itemEfficiencyMultiplierInput.getFloat();
+		this.item.efficiencyMultiplier = this.itemUseEfficiencyInput.getBoolean() ? this.itemEfficiencyMultiplierInput.getFloat() : 0;
 		this.item.bashSwingSound = this.itemBashSwingSoundInput.getSelected();
 		this.item.bashHitSound = this.itemBashHitSoundInput.getSelected();
 		
@@ -153,7 +168,8 @@ public class GuiEditItemShield extends GuiEditItem<ItemAddedShield> {
 		this.itemRepairStacksInput.setDefaultIngredient(this.copyFrom.repairStacks);
 		this.itemBashDamageInput.setDefaultFloat(this.copyFrom.bashDamage);
 		this.itemBashCooldownInput.setDefaultInteger(this.copyFrom.bashCooldown);
-		this.itemEfficiencyMultiplierInput.setDefaultFloat(this.copyFrom.efficiencyMultiplier);
+		this.itemUseEfficiencyInput.setDefaultBoolean(this.copyFrom.efficiencyMultiplier == 0);
+		this.itemEfficiencyMultiplierInput.setDefaultFloat(this.copyFrom.efficiencyMultiplier == 0 ? 0.5f : this.copyFrom.efficiencyMultiplier);
 		this.itemBashSwingSoundInput.setDefaultSelected(this.copyFrom.bashSwingSound);
 		this.itemBashHitSoundInput.setDefaultSelected(this.copyFrom.bashHitSound);
 		
@@ -161,14 +177,14 @@ public class GuiEditItemShield extends GuiEditItem<ItemAddedShield> {
 	}
     
 	@Override
-	protected void openTextureDialogue() {
-    	GuiScreen nextScreen;
-    	if (this.isNew) {
-    		 nextScreen = getItemCreatedPopup();
-    	} else {
-    		nextScreen = this;
-    	}
-    	
+	protected void openTextureDialogue(GuiScreen nextScreen) {
     	this.mc.displayGuiScreen(new GuiEditItemTexture(nextScreen, this.addon, this.item, this.isNew, ItemModelManager.ItemModelType.SHIELD));
     }
+	
+	@Override
+	protected void onToggleShowAdvanced(boolean showAdvanced) {
+		if (showAdvanced) {
+			this.itemUseEfficiencyInput.setDefaultBoolean(this.itemUseEfficiencyInput.getBoolean());
+		}
+	}
 }

@@ -32,16 +32,11 @@ public class GuiViewRecipes extends GuiViewAdditionType {
 	public void addAdditions() {
 		List<IRecipeAdded> additions = AdditionTypeRecipe.INSTANCE.getAllAdditions(this.addon);
 		
-		additions.sort(new Comparator<IRecipeAdded>(){
-
-			@Override
-			public int compare(IRecipeAdded first, IRecipeAdded second) {
-				if (first == null || first.getId() == null || second == null || second.getId() == null) {
-					return 0;
-				}
-				return first.getId().compareTo(second.getId());
+		additions.sort((first, second) -> {
+			if (first == null || first.getId() == null || second == null || second.getId() == null) {
+				return 0;
 			}
-			
+			return first.getId().compareTo(second.getId());
 		});
 		
 		for (IRecipeAdded addition : additions) {

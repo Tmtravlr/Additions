@@ -40,6 +40,7 @@ public class GuiEditItemGun extends GuiEditItem<ItemAddedGun> {
 	private GuiComponentBooleanInput itemFiresVanillaArrowsInput;
 	private GuiComponentBooleanInput itemAlwaysInfiniteInput;
 	private GuiComponentBooleanInput itemConsumesOneAmmoInput;
+	private GuiComponentBooleanInput itemUseEfficiencyInput;
 	private GuiComponentFloatInput itemEfficiencyMultiplierInput;
 	private GuiComponentDropdownInputSoundEvent itemShotSoundInput;
 	private GuiComponentListInput<GuiComponentDropdownInputItem> itemAmmoItemsInput;
@@ -131,14 +132,26 @@ public class GuiEditItemGun extends GuiEditItem<ItemAddedGun> {
 		}
 		
 		this.itemEfficiencyMultiplierInput = new GuiComponentFloatInput(I18n.format("gui.edit.item.efficiencyMultiplier.label"), this, false);
-		this.itemEfficiencyMultiplierInput.setInfo(new TextComponentTranslation("gui.edit.item.efficiencyMultiplier.info"));
+		this.itemEfficiencyMultiplierInput.setHidden(true);
 		this.itemEfficiencyMultiplierInput.setMaximum(1);
 		this.itemEfficiencyMultiplierInput.setMinimum(0);
 		if (!this.isNew) {
-			this.itemEfficiencyMultiplierInput.setDefaultFloat(this.item.efficiencyMultiplier);
+			this.itemEfficiencyMultiplierInput.setDefaultFloat(this.item.efficiencyMultiplier == 0 ? 0.5f : this.item.efficiencyMultiplier);
 		} else {
 			this.itemEfficiencyMultiplierInput.setDefaultFloat(0.5f);
 		}
+		
+		this.itemUseEfficiencyInput = new GuiComponentBooleanInput(I18n.format("gui.edit.item.useEfficiency.label"), this) {
+			
+			@Override
+			public void setDefaultBoolean(boolean input) {
+				GuiEditItemGun.this.itemEfficiencyMultiplierInput.setHidden(!input);
+				super.setDefaultBoolean(input);
+			}
+			
+		};
+		this.itemUseEfficiencyInput.setInfo(new TextComponentTranslation("gui.edit.item.useEfficiency.info"));
+		this.itemUseEfficiencyInput.setDefaultBoolean(this.item.efficiencyMultiplier != 0);
 		
 		this.itemShotSoundInput = new GuiComponentDropdownInputSoundEvent(I18n.format("gui.edit.item.shooter.shotSound.label"), this, this.addon);
 		if (!this.isNew) {
@@ -188,6 +201,7 @@ public class GuiEditItemGun extends GuiEditItem<ItemAddedGun> {
 		this.advancedComponents.add(this.itemConsumesOneAmmoInput);
 		this.advancedComponents.add(this.itemAmmoItemsInput);
 		this.advancedComponents.add(this.itemScatteringInput);
+		this.advancedComponents.add(this.itemUseEfficiencyInput);
 		this.advancedComponents.add(this.itemEfficiencyMultiplierInput);
 		this.advancedComponents.add(this.itemShotSoundInput);
 		this.advancedComponents.add(this.itemTooltipInput);
@@ -211,7 +225,7 @@ public class GuiEditItemGun extends GuiEditItem<ItemAddedGun> {
 		this.item.firesVanillaArrows = this.itemFiresVanillaArrowsInput.getBoolean();
 		this.item.alwaysInfinite = this.itemAlwaysInfiniteInput.getBoolean();
 		this.item.consumesOneAmmo = this.itemConsumesOneAmmoInput.getBoolean();
-		this.item.efficiencyMultiplier = this.itemEfficiencyMultiplierInput.getFloat();
+		this.item.efficiencyMultiplier = this.itemUseEfficiencyInput.getBoolean() ? this.itemEfficiencyMultiplierInput.getFloat() : 0;
 		this.item.shotSound = this.itemShotSoundInput.getSelected();
 		this.item.ammoItems = this.itemAmmoItemsInput.getComponents().stream().map(GuiComponentDropdownInputItem::getSelected).collect(Collectors.toList());
 		
@@ -231,7 +245,8 @@ public class GuiEditItemGun extends GuiEditItem<ItemAddedGun> {
 		this.itemFiresVanillaArrowsInput.setDefaultBoolean(this.copyFrom.firesVanillaArrows);
 		this.itemAlwaysInfiniteInput.setDefaultBoolean(this.copyFrom.alwaysInfinite);
 		this.itemConsumesOneAmmoInput.setDefaultBoolean(this.copyFrom.consumesOneAmmo);
-		this.itemEfficiencyMultiplierInput.setDefaultFloat(this.copyFrom.efficiencyMultiplier);
+		this.itemUseEfficiencyInput.setDefaultBoolean(this.copyFrom.efficiencyMultiplier == 0);
+		this.itemEfficiencyMultiplierInput.setDefaultFloat(this.copyFrom.efficiencyMultiplier == 0 ? 0.5f : this.copyFrom.efficiencyMultiplier);
 		this.itemShotSoundInput.setDefaultSelected(this.copyFrom.shotSound);
 		
 		List<GuiComponentDropdownInputItem> ammoItemInputs = this.copyFrom.ammoItems.stream().map(ammoItem -> {
@@ -246,14 +261,14 @@ public class GuiEditItemGun extends GuiEditItem<ItemAddedGun> {
 	}
     
 	@Override
-	protected void openTextureDialogue() {
-    	GuiScreen nextScreen;
-    	if (this.isNew) {
-    		 nextScreen = getItemCreatedPopup();
-    	} else {
-    		nextScreen = this;
-    	}
-    	
+	protected void openTextureDialogue(GuiScreen nextScreen) {
     	this.mc.displayGuiScreen(new GuiEditItemTexture(nextScreen, this.addon, this.item, this.isNew, ItemModelManager.ItemModelType.GUN));
     }
+	
+	@Override
+	protected void onToggleShowAdvanced(boolean showAdvanced) {
+		if (showAdvanced) {
+			this.itemUseEfficiencyInput.setDefaultBoolean(this.itemUseEfficiencyInput.getBoolean());
+		}
+	}
 }

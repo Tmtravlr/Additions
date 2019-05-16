@@ -35,16 +35,11 @@ public class GuiViewAdvancements extends GuiViewAdditionType {
 	public void addAdditions() {
 		List<AdvancementAdded> additions = AdditionTypeAdvancement.INSTANCE.getAllAdditions(this.addon);
 		
-		additions.sort(new Comparator<AdvancementAdded>(){
-
-			@Override
-			public int compare(AdvancementAdded first, AdvancementAdded second) {
-				if (first == null || first.id == null || second == null || second.id == null) {
-					return 0;
-				}
-				return first.id.compareTo(second.id);
+		additions.sort((first, second) -> {
+			if (first == null || first.id == null || second == null || second.id == null) {
+				return 0;
 			}
-			
+			return first.id.compareTo(second.id);
 		});
 		
 		for (AdvancementAdded addition : additions) {

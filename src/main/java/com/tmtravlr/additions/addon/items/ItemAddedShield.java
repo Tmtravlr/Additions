@@ -70,7 +70,7 @@ public class ItemAddedShield extends ItemShield implements IItemAdded {
 	public IngredientOreNBT repairStacks = IngredientOreNBT.EMPTY;
 	public float bashDamage = 0;
 	public int bashCooldown = 60;
-	public float efficiencyMultiplier = 0.5f;
+	public float efficiencyMultiplier = 0;
 	public SoundEvent bashSwingSound = SoundEventLoader.ITEM_SHIELD_SWING;
 	public SoundEvent bashHitSound = SoundEventLoader.ITEM_SHIELD_BASH;
 	
@@ -150,10 +150,11 @@ public class ItemAddedShield extends ItemShield implements IItemAdded {
     public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag) {
 		if (this.bashDamage > 0) {
 			tooltip.add(TextFormatting.GRAY + I18n.translateToLocalFormatted("item.shield.info.bashDamage", ItemStack.DECIMALFORMAT.format(this.getTotalBashDamage(stack))));
+			tooltip.add(TextFormatting.GRAY + I18n.translateToLocalFormatted("item.shield.info.bashSpeed", ItemStack.DECIMALFORMAT.format(this.getTotalBashSpeed(stack) / 20f)));
 		}
 		
     	for (String line : extraTooltip) {
-    		if(I18n.canTranslate(line)) {
+    		if (I18n.canTranslate(line)) {
     			line = I18n.translateToLocal(line);
     		}
     		tooltip.add(line);
@@ -200,7 +201,7 @@ public class ItemAddedShield extends ItemShield implements IItemAdded {
 	@Override
 	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
 		if (this.canBashAttack()) {
-			if (enchantment == Enchantments.KNOCKBACK || enchantment == Enchantments.FIRE_ASPECT || (this.efficiencyMultiplier < 1.0f && enchantment == Enchantments.EFFICIENCY)) {
+			if (enchantment == Enchantments.KNOCKBACK || enchantment == Enchantments.FIRE_ASPECT || (this.efficiencyMultiplier > 0 && enchantment == Enchantments.EFFICIENCY)) {
 				return true;
 			}
 		}
@@ -219,6 +220,11 @@ public class ItemAddedShield extends ItemShield implements IItemAdded {
 	
 	public float getTotalBashDamage(ItemStack stack) {
 		return this.bashDamage;
+	}
+	
+	public float getTotalBashSpeed(ItemStack stack) {
+		int efficiency = Math.min(EnchantmentHelper.getEnchantmentLevel(Enchantments.EFFICIENCY, stack), 5);
+		return ((float)this.bashCooldown - ((float)(efficiency*this.bashCooldown)*this.efficiencyMultiplier / 5f));
 	}
 	
 	public static boolean canEntityBashAttack(EntityLivingBase attacker) {
@@ -260,9 +266,7 @@ public class ItemAddedShield extends ItemShield implements IItemAdded {
 		}
 		
 		if (attacker instanceof EntityPlayer) {
-			int bashCooldown = ((ItemAddedShield)activeStack.getItem()).bashCooldown;
-			int efficiency = Math.min(EnchantmentHelper.getEnchantmentLevel(Enchantments.EFFICIENCY, activeStack), 5);
-			((EntityPlayer)attacker).getCooldownTracker().setCooldown(activeStack.getItem(), bashCooldown - efficiency*bashCooldown / 10);
+			((EntityPlayer)attacker).getCooldownTracker().setCooldown(activeStack.getItem(), MathHelper.floor(itemShield.getTotalBashSpeed(activeStack)));
             attacker.resetActiveHand();
 		}
 		
@@ -403,7 +407,7 @@ public class ItemAddedShield extends ItemShield implements IItemAdded {
 				json.addProperty("bash_cooldown", itemAdded.bashCooldown);
 			}
 			
-			if (itemAdded.efficiencyMultiplier != 0.5f) {
+			if (itemAdded.efficiencyMultiplier > 0) {
 				json.addProperty("efficiency_multiplier", itemAdded.efficiencyMultiplier);
 			}
 			
@@ -424,9 +428,9 @@ public class ItemAddedShield extends ItemShield implements IItemAdded {
 			
 			itemAdded.setMaxDamage(JsonUtils.getInt(json, "durability"));
 			itemAdded.enchantability = JsonUtils.getInt(json, "enchantability");
-			itemAdded.bashDamage = JsonUtils.getFloat(json, "bash_damage", 0f);
+			itemAdded.bashDamage = JsonUtils.getFloat(json, "bash_damage", 0);
 			itemAdded.bashCooldown = JsonUtils.getInt(json, "bash_cooldown", 60);
-			itemAdded.efficiencyMultiplier = JsonUtils.getFloat(json, "efficiency_multiplier", 0.5f);
+			itemAdded.efficiencyMultiplier = JsonUtils.getFloat(json, "efficiency_multiplier", 0);
 			
 			if (json.has("bash_swing_sound")) {
 				itemAdded.bashSwingSound = OtherSerializers.SoundEventSerializer.deserialize(json, "bash_swing_sound");

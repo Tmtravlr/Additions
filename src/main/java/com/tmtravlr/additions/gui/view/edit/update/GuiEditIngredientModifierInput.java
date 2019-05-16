@@ -47,7 +47,7 @@ public class GuiEditIngredientModifierInput extends GuiEditIngredientOreNBT {
 	
 	@Override
 	protected void handleIngredientSaved(IngredientOreNBT group) {
-        this.parent.setItemStackGroup(group);
+        this.parent.setIngredient(group);
 	}
 
 }

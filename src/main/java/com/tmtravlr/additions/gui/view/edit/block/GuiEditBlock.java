@@ -1,23 +1,25 @@
 package com.tmtravlr.additions.gui.view.edit.block;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.google.common.base.Predicate;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.blocks.IBlockAdded;
 import com.tmtravlr.additions.addon.items.blocks.IItemAddedBlock;
+import com.tmtravlr.additions.addon.loottables.LootTableAdded;
+import com.tmtravlr.additions.addon.loottables.LootTablePreset;
+import com.tmtravlr.additions.addon.loottables.LootTablePresetBlockItself;
 import com.tmtravlr.additions.gui.message.GuiMessageBox;
 import com.tmtravlr.additions.gui.message.GuiMessageBoxNeedsRestart;
 import com.tmtravlr.additions.gui.message.GuiMessageBoxTwoButton;
 import com.tmtravlr.additions.gui.view.GuiView;
 import com.tmtravlr.additions.gui.view.components.GuiComponentButton;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentAttributeModifierInput;
+import com.tmtravlr.additions.gui.view.components.input.GuiComponentBlockDropInput;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentBooleanInput;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentColorInput;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentFloatInput;
@@ -31,8 +33,9 @@ import com.tmtravlr.additions.gui.view.components.input.suggestion.GuiComponentS
 import com.tmtravlr.additions.gui.view.components.input.suggestion.GuiComponentSuggestionInputToolType;
 import com.tmtravlr.additions.gui.view.edit.GuiEdit;
 import com.tmtravlr.additions.gui.view.edit.texture.GuiEditBlockTexture;
-import com.tmtravlr.additions.gui.view.edit.texture.GuiEditItemTexture;
+import com.tmtravlr.additions.gui.view.edit.update.GuiEditBlockDropInitial;
 import com.tmtravlr.additions.type.AdditionTypeBlock;
+import com.tmtravlr.additions.type.AdditionTypeLootTable;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -92,6 +95,7 @@ public abstract class GuiEditBlock<T extends IBlockAdded> extends GuiEdit {
 	protected GuiComponentFloatInput blockCollisionBoxMaxXInput;
 	protected GuiComponentFloatInput blockCollisionBoxMaxYInput;
 	protected GuiComponentFloatInput blockCollisionBoxMaxZInput;
+	protected GuiComponentBlockDropInput blockDropInput;
 	protected GuiComponentButton blockTextureButton;
 	
     protected GuiComponentIntegerInput itemBlockStackSizeInput;
@@ -130,8 +134,10 @@ public abstract class GuiEditBlock<T extends IBlockAdded> extends GuiEdit {
 		this.blockNameInput.setDefaultText(this.block.getDisplayName());
 		
 		if (!this.isNew) {
-			this.blockTextureButton = new GuiComponentButton(this, BUTTON_TEXTURE, I18n.format("gui.edit.item.updateTexture.label"));
+			this.blockTextureButton = new GuiComponentButton(this, BUTTON_TEXTURE, I18n.format("gui.edit.block.updateTexture.label"));
 			this.blockTextureButton.visible = true;
+			
+			this.blockDropInput = new GuiComponentBlockDropInput(I18n.format("gui.edit.block.drop.label"), this.addon, this.block, this.createDefaultLootTable(), this);
 		}
 		
 	    this.blockMaterialInput = new GuiComponentDropdownInputBlockMaterial(I18n.format("gui.edit.block.blockMaterial.label"), this);
@@ -486,6 +492,10 @@ public abstract class GuiEditBlock<T extends IBlockAdded> extends GuiEdit {
 		if (this.isNew) {
 			this.block.getAsBlock().setUnlocalizedName(name);
 			this.block.getAsBlock().setRegistryName(registryName);
+		} else {
+			if (this.blockDropInput.hasChanges()) {
+				AdditionTypeLootTable.INSTANCE.saveAddition(this.addon, this.blockDropInput.getBlockDropTable());
+			}
 		}
 		
 		AdditionTypeBlock.INSTANCE.saveAddition(this.addon, this.block);
@@ -495,7 +505,7 @@ public abstract class GuiEditBlock<T extends IBlockAdded> extends GuiEdit {
 		}
 		
 		if (this.isNew) {
-    		this.openTextureDialogue();
+    		this.mc.displayGuiScreen(this.getBlockDropDialogue());
 		} else {
 			this.mc.displayGuiScreen(new GuiMessageBoxNeedsRestart(this.parentScreen, I18n.format("gui.warnDialogue.restart.updated.title"), new TextComponentTranslation("gui.warnDialogue.restart.updated.message")));
 		}
@@ -591,25 +601,45 @@ public abstract class GuiEditBlock<T extends IBlockAdded> extends GuiEdit {
     @Override
     protected void actionPerformed(GuiButton button) {
     	if (button.id == BUTTON_TEXTURE) {
-    		this.openTextureDialogue();
+    		this.mc.displayGuiScreen(this.getTextureDialogue(this));
     	} else {
     		super.actionPerformed(button);
     	}
     }
     
-    protected void openTextureDialogue() {
-    	GuiScreen nextScreen;
-    	if (this.isNew) {
-    		 nextScreen = getBlockCreatedPopup();
-    	} else {
-    		nextScreen = this;
-    	}
-    	
-    	this.mc.displayGuiScreen(new GuiEditBlockTexture(nextScreen, this.addon, this.block, this.isNew));
+    protected GuiScreen getTextureDialogue(GuiScreen nextScreen) {
+    	return new GuiEditBlockTexture(nextScreen, this.addon, this.block, this.isNew);
+    }
+    
+    protected GuiScreen getBlockDropDialogue() {
+    	GuiScreen textureScreen = this.getTextureDialogue(this.getBlockCreatedPopup());
+    	LootTableAdded defaultLootTable = this.createDefaultLootTable();
+    	return new GuiMessageBoxTwoButton(this, new GuiEditBlockDropInitial(this, textureScreen, defaultLootTable, this.block, this.addon), I18n.format("gui.edit.blockDrop.popup.title"), new TextComponentTranslation("gui.edit.blockDrop.popup.message"), I18n.format("gui.edit.blockDrop.popup.useDefault"), I18n.format("gui.edit.blockDrop.popup.customize")) {
+    		
+    		@Override
+    		public void onFirstButtonClicked() {
+    			AdditionTypeLootTable.INSTANCE.saveAddition(GuiEditBlock.this.addon, defaultLootTable);
+    			this.mc.displayGuiScreen(textureScreen);
+    		}
+    	};
     }
     
     protected GuiScreen getBlockCreatedPopup() {
     	return new GuiMessageBoxNeedsRestart(this.parentScreen, I18n.format("gui.warnDialogue.restart.created.title"), new TextComponentTranslation("gui.warnDialogue.restart.created.message"));
+    }
+    
+    protected ResourceLocation getBlockDropLocation() {
+    	return new ResourceLocation(AdditionsMod.MOD_ID, "blocks/" + this.block.getId());
+    }
+    
+    protected LootTableAdded createDefaultLootTable() {
+    	ResourceLocation blockDropLocation = this.getBlockDropLocation();
+    	
+    	LootTablePresetBlockItself blockDropPreset = new LootTablePresetBlockItself();
+    	blockDropPreset.id = blockDropLocation;
+    	blockDropPreset.block = this.block.getAsBlock();
+    	
+    	return new LootTableAdded(blockDropLocation, blockDropPreset);
     }
 
 }

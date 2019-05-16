@@ -188,5 +188,12 @@ public class AdditionTypeBlock extends AdditionType<IBlockAdded> {
 		if (additionFile.exists()) {
 			additionFile.delete();
 		}
+		
+		if (addition.getAsBlock().getRegistryName() != null) {
+			ResourceLocation lootTableLocation = new ResourceLocation(addition.getAsBlock().getRegistryName().getResourceDomain(), "blocks/" + addition.getAsBlock().getRegistryName().getResourcePath());
+			if (AdditionTypeLootTable.INSTANCE.doesLootTableExistForAddon(addon, lootTableLocation)) {
+				AdditionTypeLootTable.INSTANCE.deleteAddition(addon, AdditionTypeLootTable.INSTANCE.getLootTableForLocation(addon, lootTableLocation).get());
+			}
+		}
 	}
 }

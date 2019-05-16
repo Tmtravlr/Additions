@@ -104,7 +104,7 @@ public abstract class GuiComponentFileInput implements IGuiViewComponent {
 		
 		if (!this.selectedText.getText().isEmpty()) {
 			
-			if(mouseX >= deleteX && mouseX < this.selectedText.x + this.selectedText.width && mouseY >= deleteY && mouseY < deleteY + 13) {
+			if (mouseX >= deleteX && mouseX < this.selectedText.x + this.selectedText.width && mouseY >= deleteY && mouseY < deleteY + 13) {
 				this.setFile(null);
 			}
 		}

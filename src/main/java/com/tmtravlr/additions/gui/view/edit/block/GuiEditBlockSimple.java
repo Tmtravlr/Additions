@@ -51,6 +51,7 @@ public class GuiEditBlockSimple extends GuiEditBlock<BlockAddedSimple> {
 		this.components.add(this.blockHarvestLevelInput);
 		this.components.add(this.blockHarvestToolInput);
 		if (!this.isNew) {
+			this.components.add(this.blockDropInput);
 			this.components.add(this.blockTextureButton);
 		}
 		

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.google.common.base.Predicate;
 import com.tmtravlr.additions.AdditionsMod;
@@ -23,6 +24,7 @@ import com.tmtravlr.additions.gui.view.components.input.GuiComponentIntegerInput
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentListInput;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentStringInput;
 import com.tmtravlr.additions.gui.view.components.input.dropdown.GuiComponentDropdownInputItem;
+import com.tmtravlr.additions.gui.view.components.input.effect.GuiComponentEffectInput;
 import com.tmtravlr.additions.gui.view.components.input.suggestion.GuiComponentSuggestionInput;
 import com.tmtravlr.additions.gui.view.edit.GuiEdit;
 import com.tmtravlr.additions.gui.view.edit.texture.GuiEditItemTexture;
@@ -56,6 +58,7 @@ public class GuiEditItemFood extends GuiEditItem<ItemAddedFood> {
 	private GuiComponentBooleanInput itemWolvesEatInput;
 	private GuiComponentBooleanInput itemIsDrinkInput;
 	private GuiComponentBooleanInput itemHasPotionEffectsInput;
+	private GuiComponentListInput<GuiComponentEffectInput> itemEatenEffectsInput;
     
 	public GuiEditItemFood(GuiScreen parentScreen, String title, Addon addon, ItemAddedFood item) {
 		super(parentScreen, title, addon);
@@ -117,8 +120,25 @@ public class GuiEditItemFood extends GuiEditItem<ItemAddedFood> {
 		}
 		
 		this.itemHasPotionEffectsInput = new GuiComponentBooleanInput(I18n.format("gui.edit.item.hasPotionEffects.label"), this);
+		this.itemHasPotionEffectsInput.setInfo(new TextComponentTranslation("gui.edit.item.hasPotionEffect.info"));
 		if (!this.isNew) {
 			this.itemHasPotionEffectsInput.setDefaultBoolean(this.item.hasPotionEffects);
+		}
+		
+		this.itemEatenEffectsInput = new GuiComponentListInput<GuiComponentEffectInput>(I18n.format("gui.edit.item.food.eatenEffects.label"), this) {
+
+			@Override
+			public GuiComponentEffectInput createBlankComponent() {
+				return new GuiComponentEffectInput("", GuiEditItemFood.this.addon, this.editScreen);
+			}
+			
+		};
+		if (!this.isNew) {
+			this.item.eatenEffects.forEach(toAdd -> {
+				GuiComponentEffectInput input = this.itemEatenEffectsInput.createBlankComponent();
+				input.setDefaultEffect(toAdd);
+				this.itemEatenEffectsInput.addDefaultComponent(input);
+			});
 		}
 		
 		if (this.copyFrom != null) {
@@ -139,6 +159,7 @@ public class GuiEditItemFood extends GuiEditItem<ItemAddedFood> {
 		}
 		
 		this.advancedComponents.add(this.itemWolvesEatInput);
+		this.advancedComponents.add(this.itemEatenEffectsInput);
 		this.advancedComponents.add(this.itemHasPotionEffectsInput);
 		this.advancedComponents.add(this.itemTooltipInput);
 		this.advancedComponents.add(this.itemOreDictInput);
@@ -160,6 +181,10 @@ public class GuiEditItemFood extends GuiEditItem<ItemAddedFood> {
 		this.item.isDrink = this.itemIsDrinkInput.getBoolean();
 		this.item.hasPotionEffects = this.itemHasPotionEffectsInput.getBoolean();
 		
+		if (!this.itemEatenEffectsInput.getComponents().isEmpty()) {
+			this.item.eatenEffects = this.itemEatenEffectsInput.getComponents().stream().filter(input -> input.getEffect() != null).map(GuiComponentEffectInput::getEffect).collect(Collectors.toList());
+		}
+		
 		super.saveObject();
 	}
 	
@@ -172,6 +197,12 @@ public class GuiEditItemFood extends GuiEditItem<ItemAddedFood> {
 		this.itemEatTimeInput.setDefaultInteger(this.copyFrom.eatTime);
 		this.itemIsDrinkInput.setDefaultBoolean(this.copyFrom.isDrink);
 		this.itemHasPotionEffectsInput.setDefaultBoolean(this.copyFrom.hasPotionEffects);
+		
+		this.copyFrom.eatenEffects.forEach(toAdd -> {
+			GuiComponentEffectInput input = this.itemEatenEffectsInput.createBlankComponent();
+			input.setDefaultEffect(toAdd);
+			this.itemEatenEffectsInput.addDefaultComponent(input);
+		});
 		
 		super.copyFromOther();
 	}

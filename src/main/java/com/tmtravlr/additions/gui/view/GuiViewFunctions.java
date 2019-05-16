@@ -30,16 +30,11 @@ public class GuiViewFunctions extends GuiViewAdditionType {
 	public void addAdditions() {
 		List<FunctionAdded> additions = AdditionTypeFunction.INSTANCE.getAllAdditions(this.addon);
 		
-		additions.sort(new Comparator<FunctionAdded>(){
-
-			@Override
-			public int compare(FunctionAdded first, FunctionAdded second) {
-				if (first == null || first.id == null || second == null || second.id == null) {
-					return 0;
-				}
-				return first.id.compareTo(second.id);
+		additions.sort((first, second) -> {
+			if (first == null || first.id == null || second == null || second.id == null) {
+				return 0;
 			}
-			
+			return first.id.compareTo(second.id);
 		});
 		
 		for (FunctionAdded addition : additions) {

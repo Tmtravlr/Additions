@@ -3,7 +3,6 @@ package com.tmtravlr.additions.type;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -18,15 +17,18 @@ import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
-import com.google.gson.JsonSyntaxException;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.AddonLoader;
+import com.tmtravlr.additions.addon.loottables.ExtendedLootTableManager;
 import com.tmtravlr.additions.addon.loottables.LootTableAdded;
 import com.tmtravlr.additions.addon.loottables.LootTablePreset;
 import com.tmtravlr.additions.addon.loottables.LootTablePresetManager;
 
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.storage.loot.LootTable;
+import net.minecraft.world.storage.loot.LootTableManager;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -129,7 +131,13 @@ public class AdditionTypeLootTable extends AdditionType<LootTableAdded> {
 				
 				if (fileName.contains(File.separator)) {
 					String[] locationStrings = fileName.split(Pattern.quote(File.separator), 2);
-					ResourceLocation location = new ResourceLocation(locationStrings[0], locationStrings[1]);
+					String locationPath = locationStrings[1];
+					
+					if (!"/".equals(File.separator)) {
+						locationPath = locationPath.replace(File.separatorChar, '/');
+					}
+					
+					ResourceLocation location = new ResourceLocation(locationStrings[0], locationPath);
 					LootTablePreset preset = null;
 					
 					try {
@@ -163,5 +171,30 @@ public class AdditionTypeLootTable extends AdditionType<LootTableAdded> {
 	
 	public Set<ResourceLocation> getAllLootTablesAdded() {
 		return this.lootTableLocations.values().stream().map(addition -> addition.location).collect(Collectors.toSet());
+	}
+	
+	public List<LootTable> getLootTableExtras(ResourceLocation lootTableLocation, LootTableManager lootTableManager) {
+		ResourceLocation extrasLocation = new ResourceLocation(lootTableLocation.getResourceDomain(), lootTableLocation.getResourcePath() + "_extra");
+		List<LootTable> extraLootTables = new ArrayList<>();
+		
+		for (Addon addon : AddonLoader.addonsLoaded) {
+			if (this.lootTableLocations.get(addon).stream().anyMatch(lootTableAdded -> lootTableAdded.location.equals(extrasLocation))) {
+				String filePath = FOLDER_NAME + File.separator + extrasLocation.getResourceDomain() + File.separator + extrasLocation.getResourcePath().replace('/', File.separatorChar) + FILE_POSTFIX;
+				
+				try {
+					if (AddonLoader.addonFileExists(addon.addonFolder, filePath)) {
+						String data = AddonLoader.readAddonFile(addon.addonFolder, filePath);
+						
+						extraLootTables.add(ForgeHooks.loadLootTable(ExtendedLootTableManager.LOOT_TABLE_GSON, extrasLocation, data, true, lootTableManager));
+					}
+	            } catch (JsonParseException e) {
+	            	AdditionsMod.logger.warn("Parsing error loading extra loot table {} for addon {}", extrasLocation, addon.id, e);
+	            } catch (IOException ioexception) {
+	            	AdditionsMod.logger.error("Couldn't load addon extra loot table {} from {} for addon {}", extrasLocation, filePath, addon.id, ioexception);
+				}
+			}
+		}
+		
+		return extraLootTables;
 	}
 }

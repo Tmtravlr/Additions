@@ -147,6 +147,12 @@ public class AddonLoader {
 		}
 	}
 	
+	/**
+	 * Returns true if a file exists at the given path.
+	 * 
+	 * @param addonFolder The addon's folder, or zip file
+	 * @param path The file's path
+	 */
 	public static boolean addonFileExists(File addonFolder, String path) throws IOException {
 		if (addonFolder.isDirectory()) {
 			File file = new File(addonFolder, path);
@@ -170,6 +176,12 @@ public class AddonLoader {
 		}
 	}
 	
+	/**
+	 * Returns list of all files in the addon as string paths, starting from the given path.
+	 * 
+	 * @param addonFolder The addon's folder, or zip file
+	 * @param path The path to start getting files from. This is usually a sub-folder.
+	 */
 	public static List<String> getAddonFilePaths(File addonFolder, String path) throws IOException {
 		List<String> filePaths = new ArrayList<>();
 		
@@ -219,6 +231,12 @@ public class AddonLoader {
 		return filePaths;
 	}
 	
+	/**
+	 * Reads the file in the addon at the path to a string.
+	 * 
+	 * @param addonFolder The addon's folder, or zip file
+	 * @param path The path of the file to read.
+	 */
 	public static String readAddonFile(File addonFolder, String path) throws IOException {
 		if (addonFolder.isDirectory()) {
 			File file = new File(addonFolder, path);
@@ -253,6 +271,14 @@ public class AddonLoader {
 		}
 	}
 	
+	/**
+	 * Reads the file in the addon at the path to a list of strings, which are 
+	 * the lines of the file. Makes it a lot easier to deal with different line
+	 * endings in different OS's.
+	 * 
+	 * @param addonFolder The addon's folder, or zip file
+	 * @param path The path of the file to read.
+	 */
 	public static List<String> readAddonFileLines(File addonFolder, String path) throws IOException {
 		List<String> lines = new ArrayList<String>();
 		if (addonFolder.isDirectory()) {

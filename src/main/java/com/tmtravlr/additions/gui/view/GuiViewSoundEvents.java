@@ -30,16 +30,11 @@ public class GuiViewSoundEvents extends GuiViewAdditionType {
 	public void addAdditions() {
 		List<SoundEventAdded> additions = AdditionTypeSoundEvent.INSTANCE.getAllAdditions(this.addon);
 		
-		additions.sort(new Comparator<SoundEventAdded>(){
-
-			@Override
-			public int compare(SoundEventAdded first, SoundEventAdded second) {
-				if (first == null || first.getSoundName() == null || second == null || second.getSoundName() == null) {
-					return 0;
-				}
-				return first.getSoundName().compareTo(second.getSoundName());
+		additions.sort((first, second) -> {
+			if (first == null || first.getSoundName() == null || second == null || second.getSoundName() == null) {
+				return 0;
 			}
-			
+			return first.getSoundName().compareTo(second.getSoundName());
 		});
 		
 		for (SoundEventAdded addition : additions) {

@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSyntaxException;
 import com.tmtravlr.additions.AdditionsMod;
+import com.tmtravlr.additions.addon.blocks.IBlockAdded;
 import com.tmtravlr.additions.util.JsonGenerator;
 import com.tmtravlr.additions.util.OtherSerializers;
 import com.tmtravlr.additions.util.JsonGenerator.JsonElementPair;
@@ -34,6 +35,16 @@ public class LootTablePresetBlockItemDrop extends LootTablePreset {
 	public int itemMax = 1;
 	public boolean fortunable = true;
 	public boolean silkTouchable = true;
+	
+	private String getItemNameFromBlock() {
+		String itemName = Item.getItemFromBlock(this.block).getRegistryName().toString();
+		
+		if (this.block instanceof IBlockAdded && ((IBlockAdded)this.block).getItemBlock() != null) {
+			itemName = ((IBlockAdded)this.block).getItemBlock().getAsItem().getRegistryName().toString();
+		}
+		
+		return itemName;
+	}
 	
 	public static class Serializer extends LootTablePreset.Serializer<LootTablePresetBlockItemDrop> {
 		
@@ -140,7 +151,7 @@ public class LootTablePresetBlockItemDrop extends LootTablePreset {
 						new JsonElementPair("entries", JsonGenerator.createJsonObjectArray(
 								JsonGenerator.createJsonObject(
 										new JsonElementPair("type", "item"),
-										new JsonElementPair("name", Item.getItemFromBlock(preset.block).getRegistryName().toString()),
+										new JsonElementPair("name", preset.getItemNameFromBlock()),
 										new JsonElementPair("weight", 1)
 								)
 						)),
@@ -151,6 +162,8 @@ public class LootTablePresetBlockItemDrop extends LootTablePreset {
 						))
 				));
 			}
+			
+			json.add("pools", pools);
 			
 			return json;
 		}
@@ -166,7 +179,7 @@ public class LootTablePresetBlockItemDrop extends LootTablePreset {
 				throw new JsonSyntaxException("Expected preset_block to be a block, was unknown string '" + blockName + "'");
 			}
 			
-			preset.dropStack = new ItemStack(JsonUtils.getItem(json, "preset_dropItem"), 1, JsonUtils.getInt(json, "preset_dropMeta", 0));
+			preset.dropStack = OtherSerializers.ItemStackSerializer.deserialize(JsonUtils.getJsonObject(json, "preset_dropStack"));
 			
 			if (json.has("preset_dropTag")) {
 				String tagString = JsonUtils.getString(json, "preset_dropTag");

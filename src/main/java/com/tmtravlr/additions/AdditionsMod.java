@@ -7,6 +7,8 @@ import com.tmtravlr.additions.addon.advancements.AddonAdvancementManager;
 import com.tmtravlr.additions.addon.blocks.BlockAddedManager;
 import com.tmtravlr.additions.addon.blocks.mapcolors.BlockMapColorManager;
 import com.tmtravlr.additions.addon.blocks.materials.BlockMaterialManager;
+import com.tmtravlr.additions.addon.effects.EffectManager;
+import com.tmtravlr.additions.addon.effects.cause.EffectCauseManager;
 import com.tmtravlr.additions.addon.entities.EntityAddedProjectile;
 import com.tmtravlr.additions.addon.functions.AddonFunctionManager;
 import com.tmtravlr.additions.addon.items.ItemAddedManager;
@@ -51,7 +53,7 @@ import net.minecraftforge.fml.relauncher.Side;
      name = AdditionsMod.MOD_NAME, 
      version = AdditionsMod.VERSION, 
 	 guiFactory = "com.tmtravlr.additions.gui.AdditionsGuiFactory", 
-	 dependencies = "after:*;required:lootoverhaul@[1.1,)"
+	 dependencies = "after:*;required:lootoverhaul@[1.2,)"
 )
 public class AdditionsMod {
 	
@@ -88,6 +90,8 @@ public class AdditionsMod {
         ItemAddedManager.registerDefaultItems();
         RecipeAddedManager.registerDefaultRecipes();
         LootTablePresetManager.registerDefaultLootTablePresets();
+        EffectManager.registerDefaultEffects();
+        EffectCauseManager.registerDefaultEffectCauses();
         AdditionTypeManager.registerDefaultAdditionTypes();
         AttributeTypeManager.initVanillaAttributes();
         SoundEventLoader.registerSoundEvents();
