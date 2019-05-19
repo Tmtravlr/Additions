@@ -57,6 +57,7 @@ public class GuiEditItemArrow extends GuiEditItemBaseProjectile<ItemAddedArrow> 
 		this.advancedComponents.add(this.itemSticksInGroundInput);
 		this.advancedComponents.add(this.itemPiercesEntitiesInput);
 		this.advancedComponents.add(this.itemWorksInWaterInput);
+		this.advancedComponents.add(this.itemHitEffectsInput);
 		this.advancedComponents.add(this.itemHasPotionEffectsInput);
 		this.advancedComponents.add(this.itemRenders3DInput);
 		this.advancedComponents.add(this.itemDamageIgnoresSpeedInput);

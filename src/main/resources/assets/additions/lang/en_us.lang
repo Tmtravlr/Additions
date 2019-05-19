@@ -125,11 +125,57 @@ type.recipe.brewing.description=A recipe for brewing a potion in a brewing stand
 type.recipe.brewing.complete.title=Brewing - Complete Set of Recipes
 type.recipe.brewing.complete.description=A vanilla-like set of brewing recipes to brew regular, splash, and lingering potions, with redstone and glowstone. Saves creating up to 24 other recipes!
 
-type.effectCause.held.title=Item Is Held
+type.effectCause.held.title=Item is Held
 type.effectCause.held.description=Runs the effect when an item is in your mainhand, offhand, or either.
+type.effectCause.inInventory.title=Item is in Inventory
+type.effectCause.inInventory.description=Runs the effect when an item is in your inventory.
+type.effectCause.worn.title=Item is Worn
+type.effectCause.worn.description=Runs the effect when you wear the armor, or set of armor.
+type.effectCause.rightClickItem.title=Item is Right Clicked
+type.effectCause.rightClickItem.description=Runs the effect when you right click the item.
+type.effectCause.leftClickItem.title=Item is Left Clicked
+type.effectCause.leftClickItem.description=Runs the effect when you left click the item.
+type.effectCause.digWithItem.title=Digging with Item
+type.effectCause.digWithItem.description=Runs the effect when you are digging a block with this item.
+type.effectCause.breakBlockWithItem.title=Break Block with Item
+type.effectCause.breakBlockWithItem.description=Runs the effect when you break a block with this item.
+type.effectCause.attackWithItem.title=Attacking with Item
+type.effectCause.attackWithItem.description=Runs the effect when you attack a mob with this item.
+type.effectCause.usingItem.title=Using Item
+type.effectCause.usingItem.description=Runs the effect when you are using an item, like eating food, drawing a bow, etc.
+type.effectCause.standOnBlock.title=Standing on Block
+type.effectCause.standOnBlock.description=Runs the effect when you are standing on a block.
+type.effectCause.standInBlock.title=Standing inside Block
+type.effectCause.standInBlock.description=Runs the effect when you are standing inside a block.
+type.effectCause.rightClickBlock.title=Block is Right Clicked
+type.effectCause.rightClickBlock.description=Runs the effect when you right click a block.
+type.effectCause.digBlock.title=Digging Block
+type.effectCause.digBlock.description=Runs the effect when you right are digging a block.
+type.effectCause.breakBlock.title=Block is Broken
+type.effectCause.breakBlock.description=Runs the effect when you right break a block.
+type.effectCause.entitySpawned.title=Entity is Spawned
+type.effectCause.entitySpawned.description=Runs the effect when an entity is spawned.
+type.effectCause.entityUdpate.title=Entity Updates
+type.effectCause.entityUdpate.description=Runs the effect when an entity updates.
+type.effectCause.rightClickEntity.title=Entity is Right Clicked
+type.effectCause.rightClickEntity.description=Runs the effect when you right click an entity.
+type.effectCause.entityAttacked.title=Entity is Attacked
+type.effectCause.entityAttacked.description=Runs the effect when you attack an entity.
+type.effectCause.entityDeath.title=Entity Dies
+type.effectCause.entityDeath.description=Runs the effect when an entity dies.
 
 type.effect.potion.title=Apply Potion Effect
+type.effect.potion.title.withName=Apply Potion Effect: %s
 type.effect.potion.description=Applies a potion effect to the living entity, if there is one.
+type.effect.command.title=Run Command
+type.effect.command.title.withName=Run Command: %s
+type.effect.command.description=Runs a command as the entity affected, or at the position.
+type.effect.lootTableInside.title=Generate Loot Table Inside
+type.effect.lootTableInside.title.withName=Generate Loot Table Inside: %s
+type.effect.lootTableInside.description=Generates a loot table inside a block or entity if it has an inventory, like chests and minecart chests.
+type.effect.lootTableAt.title=Generate Loot Table
+type.effect.lootTableAt.title.withName=Generate Loot Table: %s
+type.effect.lootTableAt.description=Generate items from a loot table, and drops them on the ground.
 
 attribute.modifier.noEffect=No Effect
 
@@ -260,6 +306,15 @@ gui.popup.selectSound.duplicate.title=Replace Old Sound?
 gui.popup.selectSound.duplicate.message=A sound with id '%s' already exists. Replace it?
 
 gui.popup.color.title=Edit Color
+
+gui.popup.deleteAddon.title=Delete %s
+gui.popup.deleteAddon.message=Warning! If you delete %s, you will lose all of your work. You may want to make a backup first, if you haven't. Are you sure you want to delete it and restart the game?
+gui.popup.deleteAddon.problem.noDelete.title=Problem Deleting %s
+gui.popup.deleteAddon.problem.noDelete.message=Couldn't delete the addon. The message was '%1$s'. You can close the game and delete the file '%2$s' yourself.
+
+gui.popup.addonDeleted.title=Deleted %s
+gui.popup.addonDeleted.message=%s has been deleted. The game must be restarted for the changes to take effect. Click below to close the game so you can restart it.
+gui.popup.addonDeleted.button.restart=Restart Game
 
 gui.popup.shareAddon.title=Share Your Addon!
 gui.popup.shareAddon.button=Share Your Addon
@@ -480,6 +535,7 @@ gui.edit.item.shooter.consumesOneAmmo.label=Consumes One Ammo
 gui.edit.item.shooter.consumesOneAmmo.info=If this shoots more than one projectile and doesn't have infinity, it will only consume one.
 gui.edit.item.shooter.shotSound.label=Shot Sound
 gui.edit.item.shooter.ammoItems.label=Ammo Items
+gui.edit.item.shooter.shotEffects.label=Shot Effects
 
 gui.edit.item.bow.title=Create New Bow
 gui.edit.item.bow.drawTime.label=Draw Time
@@ -499,11 +555,13 @@ gui.edit.item.projectile.damageIgnoresSpeed.label=Damage Ignores Speed
 gui.edit.item.projectile.damageIgnoresSpeed.info=The projectile will always do the same damage, regardless of speed. Good if you want to make a gun that does little damage.
 gui.edit.item.projectile.renders3D.label=Renders 3D
 gui.edit.item.projectile.hitSound.label=Hit Sound
+gui.edit.item.projectile.hitEffects.label=Hit Effects
 
 gui.edit.item.throwable.title=Create New Throwable
 gui.edit.item.throwable.velocity.label=Velocity
 gui.edit.item.throwable.inaccuracy.label=Inaccuracy
 gui.edit.item.throwable.throwSound.label=Throw Sound
+gui.edit.item.throwable.throwEffects.label=Throw Effects
 
 gui.edit.item.arrow.title=Create New Arrow
 
@@ -735,6 +793,16 @@ gui.edit.effect.potion.delay.info=Delay in ticks until this potion applies again
 gui.edit.effect.potion.problem.noType.message=You must select a type of potion!
 gui.edit.effect.potion.problem.noPreset.message=You must select a potion preset!
 gui.edit.effect.potion.problem.noCustom.message=You must create a customized potion!
+
+gui.edit.effect.command.command.label=Command
+gui.edit.effect.command.commandSenderName.label=Command Sender Name
+gui.edit.effect.command.commandSenderName.info=Name of the command sender if not run by a mob.
+gui.edit.effect.command.problem.noCommand.message=You must enter a command!
+
+gui.edit.effect.lootTable.lootTable=Loot Table
+gui.edit.effect.lootTable.useLootTableSeed.label=Use Loot Table Seed
+gui.edit.effect.lootTable.lootTableSeed.label=Loot Table Seed
+gui.edit.effect.lootTable.problem.noLootTable.message=You must enter a loot table!
 
 gui.edit.function.title=Create New Function
 gui.edit.function.id.label=Function Id

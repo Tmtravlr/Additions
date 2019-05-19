@@ -40,7 +40,7 @@ public class GuiComponentDropdownInputSoundEvent extends GuiComponentDropdownInp
 	    
 	};
 
-	public GuiComponentDropdownInputSoundEvent(String label, GuiEdit editScreen, Addon addon) {
+	public GuiComponentDropdownInputSoundEvent(String label, Addon addon, GuiEdit editScreen) {
 		super(label, editScreen);
 		this.addon = addon;
 

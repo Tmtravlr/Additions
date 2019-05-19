@@ -1,5 +1,6 @@
 package com.tmtravlr.additions.addon.items;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,11 +10,16 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.effects.Effect;
 import com.tmtravlr.additions.addon.effects.EffectManager;
+import com.tmtravlr.additions.addon.recipes.IngredientOreNBT;
+import com.tmtravlr.additions.type.AdditionTypeEffect;
+import com.tmtravlr.additions.util.OtherSerializers;
 
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
@@ -40,8 +46,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @since July 2017 
  */
 public class ItemAddedFood extends ItemFood implements IItemAdded {
-	
-	private static final EffectManager.Serializer EFFECT_SERIALIZER = new EffectManager.Serializer();
 	
 	public static final ResourceLocation TYPE = new ResourceLocation(AdditionsMod.MOD_ID, "food");
 	
@@ -246,7 +250,7 @@ public class ItemAddedFood extends ItemFood implements IItemAdded {
 		}
 		
 		if (!this.eatenEffects.isEmpty()) {
-			this.eatenEffects.forEach(effect -> effect.applyEffect(player));
+			this.eatenEffects.forEach(effect -> effect.applyEffect(player, player));
 		}
     }
 	
@@ -314,7 +318,7 @@ public class ItemAddedFood extends ItemFood implements IItemAdded {
 				JsonArray jsonArray = new JsonArray();
 				
 				for (Effect effect : itemAdded.eatenEffects) {
-					jsonArray.add(EFFECT_SERIALIZER.serialize(effect, Effect.class, context));
+					jsonArray.add(AdditionTypeEffect.GSON.toJsonTree(effect, Effect.class));
 				}
 				
 				json.add("eaten_effects", jsonArray);
@@ -336,16 +340,21 @@ public class ItemAddedFood extends ItemFood implements IItemAdded {
 			itemAdded.isDrink = JsonUtils.getBoolean(json, "is_drink", false);
 			itemAdded.hasPotionEffects = JsonUtils.getBoolean(json, "has_potion_effects", false);
 			
+			super.deserializeDefaults(json, context, itemAdded);
+			return itemAdded;
+		}
+		
+		@Override
+		public void postDeserialize(JsonObject json, ItemAddedFood itemAdded) {
 			if (json.has("eaten_effects")) {
 				itemAdded.eatenEffects = new ArrayList<>();
 				
 				JsonUtils.getJsonArray(json, "eaten_effects").forEach(effectJson -> {
-					itemAdded.eatenEffects.add(EFFECT_SERIALIZER.deserialize(effectJson, Effect.class, context));
+					itemAdded.eatenEffects.add(AdditionTypeEffect.GSON.fromJson(effectJson, Effect.class));
 				});
 			}
 			
-			super.deserializeDefaults(json, context, itemAdded);
-			return itemAdded;
+			this.postDeserializeDefaults(json, itemAdded);
 		}
     }
 

@@ -1,5 +1,9 @@
 package com.tmtravlr.additions.addon.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.tmtravlr.additions.addon.effects.Effect;
 import com.tmtravlr.additions.addon.items.IItemAddedProjectile;
 
 import net.minecraft.block.Block;
@@ -96,8 +100,13 @@ public class EntityAddedProjectile extends EntityArrow implements IEntityAddedPr
 	@Override
     protected void onHit(RayTraceResult result) {
 		Entity entity = result.entityHit;
+		List<Effect> collisionEffects = this.getCollisionEffects();
 		
 		if (entity != null) {
+			if (!collisionEffects.isEmpty()) {
+				collisionEffects.forEach(effect -> effect.applyEffect(this.shootingEntity, entity));
+			}
+			
 			float motionMultiplier = this.damageIgnoresSpeed ? 1 : MathHelper.sqrt(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
 			float damage = motionMultiplier * Math.max(this.baseDamage + (float)this.getDamage(), 0);
 
@@ -161,16 +170,16 @@ public class EntityAddedProjectile extends EntityArrow implements IEntityAddedPr
 				}
 	
 				if (!this.getPiercesEntities() && !this.world.isRemote) {
-					this.doCollisionEffects();
 					
 					if (!(entity instanceof EntityEnderman)) {
+						this.doCollisionSpecialEffects();
 						this.setDead();
 					}
 				}
 			} else {
 				if (!this.getSticksInGround()) {
 					if (!this.world.isRemote) {
-						this.doCollisionEffects();
+						this.doCollisionSpecialEffects();
 						this.setDead();
 					}
 				} else if (!this.getPiercesEntities()) {
@@ -193,18 +202,17 @@ public class EntityAddedProjectile extends EntityArrow implements IEntityAddedPr
 				}
 			}
 		} else { 
+			if (!this.world.isRemote && !collisionEffects.isEmpty()) {
+				collisionEffects.forEach(effect -> effect.applyEffect(this.shootingEntity, this.world, result.getBlockPos()));
+			}
+			
 			if (this.getSticksInGround()) {
 	            this.collideWithBlock(result);
 			} else if (!this.world.isRemote) {
-				this.doCollisionEffects();
+				this.doCollisionSpecialEffects();
 				this.setDead();
 			}
         }
-		
-		//TODO: Effects
-//		if (this.itemThrown != null && !this.worldObj.isRemote) {
-//			LootPPHelper.dropThrownDropAdditions(this.itemThrown, this);
-//		}
 	}
 	
 	@Override
@@ -348,8 +356,18 @@ public class EntityAddedProjectile extends EntityArrow implements IEntityAddedPr
         	this.hitSound = throwable.getHitSound();
         }
     }
+    
+    private List<Effect> getCollisionEffects() {
+    	ItemStack projectileItem = this.getArrowStack();
+    	
+    	if (projectileItem.getItem() instanceof IItemAddedProjectile) {
+    		return ((IItemAddedProjectile)projectileItem.getItem()).getHitEffects();
+    	}
+    	
+    	return new ArrayList<>();
+    }
 	
-	private void doCollisionEffects() {
+	private void doCollisionSpecialEffects() {
 		if (!this.world.isRemote) {
 			if (this.world instanceof WorldServer) {
 				((WorldServer)this.world).spawnParticle(EnumParticleTypes.ITEM_CRACK, this.posX, this.posY, this.posZ, 8, 0, 0, 0, ((double)this.rand.nextFloat() - 0.5D) * 0.2D, Item.getIdFromItem(this.getArrowStack().getItem()), this.getArrowStack().getItemDamage());

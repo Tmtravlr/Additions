@@ -94,7 +94,7 @@ public class GuiEditArmorMaterial extends GuiEditItemMaterial<ArmorMaterialAdded
 			this.bootsArmorInput.setDefaultInteger(this.oldMaterial.getBootsArmor());
 		}
 		
-		this.equipSoundInput = new GuiComponentDropdownInputSoundEvent(I18n.format("gui.edit.itemMaterial.equipSound.label"), this, this.addon);
+		this.equipSoundInput = new GuiComponentDropdownInputSoundEvent(I18n.format("gui.edit.itemMaterial.equipSound.label"), this.addon, this);
 		this.equipSoundInput.setRequired();
 		if (!this.isNew) {
 			this.equipSoundInput.setDefaultSelected(this.oldMaterial.getEquipSound());

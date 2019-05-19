@@ -9,13 +9,16 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.tmtravlr.additions.AdditionsMod;
+import com.tmtravlr.additions.addon.effects.Effect;
 import com.tmtravlr.additions.addon.entities.EntityAddedProjectile;
 import com.tmtravlr.additions.addon.entities.IEntityAddedProjectile;
 import com.tmtravlr.additions.addon.recipes.IngredientOreNBT;
+import com.tmtravlr.additions.type.AdditionTypeEffect;
 import com.tmtravlr.additions.util.OtherSerializers;
 
 import net.minecraft.client.util.ITooltipFlag;
@@ -77,6 +80,7 @@ public class ItemAddedGun extends ItemBow implements IItemAdded {
 	public float efficiencyMultiplier = 0;
 	public SoundEvent shotSound = SoundEvents.ENTITY_ARROW_SHOOT;
 	public List<Item> ammoItems = new ArrayList<>();
+	public List<Effect> shotEffects = new ArrayList<>();
 
 	@Override
 	public void setTooltip(List<String> infoToAdd) {
@@ -219,6 +223,10 @@ public class ItemAddedGun extends ItemBow implements IItemAdded {
                 if (ammoStack.isEmpty()) {
                     Item ammoItem = this.findInfinityAmmo(gunStack);
                     
+                    if (ammoItem == null && player.capabilities.isCreativeMode) {
+                    	ammoItem = this.findCreativeAmmo(gunStack);
+                    }
+                    
                     if (ammoItem == null) {
                     	continue;
                     }
@@ -252,6 +260,10 @@ public class ItemAddedGun extends ItemBow implements IItemAdded {
         if (gunFired) {
     		gunStack.damageItem(1, player);
             player.addStat(StatList.getObjectUseStats(this));
+    		
+    		if (!this.shotEffects.isEmpty()) {
+    			this.shotEffects.forEach(effect -> effect.applyEffect(player, player));
+    		}
             
             int reloadTime = this.getReloadTime(gunStack);
             if (reloadTime > 0) {
@@ -337,6 +349,18 @@ public class ItemAddedGun extends ItemBow implements IItemAdded {
     	} else {
     		return true;
     	}
+    }
+
+    //Item to fall back to if there is no infinity ammo item
+    public Item findCreativeAmmo(ItemStack gunStack) {
+    	Item creativeAmmo = null;
+    	
+    	if (!this.ammoItems.isEmpty()) {
+	    	int randomIndex = RAND.nextInt(this.ammoItems.size());
+	    	creativeAmmo = this.ammoItems.get(randomIndex);
+    	}
+    	
+    	return creativeAmmo;
     }
     
     public double getProjectileDamage(ItemStack gunStack) {
@@ -491,6 +515,16 @@ public class ItemAddedGun extends ItemBow implements IItemAdded {
 				json.add("shot_sound", OtherSerializers.SoundEventSerializer.serialize(itemAdded.shotSound));
 			}
 			
+			if (!itemAdded.shotEffects.isEmpty()) {
+				JsonArray jsonArray = new JsonArray();
+				
+				for (Effect effect : itemAdded.shotEffects) {
+					jsonArray.add(AdditionTypeEffect.GSON.toJsonTree(effect, Effect.class));
+				}
+				
+				json.add("shot_effects", jsonArray);
+			}
+			
 			return json;
 		}
 		
@@ -533,8 +567,16 @@ public class ItemAddedGun extends ItemBow implements IItemAdded {
 			if (JsonUtils.hasField(json, "ammo_items")) {
 				itemAdded.ammoItems = OtherSerializers.ItemListSerializer.deserialize(json.get("ammo_items"), "ammo_items");
 			}
+
+			if (json.has("shot_effects")) {
+				itemAdded.shotEffects = new ArrayList<>();
+				
+				JsonUtils.getJsonArray(json, "shot_effects").forEach(effectJson -> {
+					itemAdded.shotEffects.add(AdditionTypeEffect.GSON.fromJson(effectJson, Effect.class));
+				});
+			}
 			
-			postDeserializeDefaults(json, itemAdded);
+			this.postDeserializeDefaults(json, itemAdded);
 		}
     }
 

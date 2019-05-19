@@ -1,16 +1,20 @@
 package com.tmtravlr.additions.addon.items;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSyntaxException;
 import com.tmtravlr.additions.AdditionsMod;
+import com.tmtravlr.additions.addon.effects.Effect;
 import com.tmtravlr.additions.addon.entities.EntityAddedProjectile;
 import com.tmtravlr.additions.addon.entities.IEntityAddedProjectile;
+import com.tmtravlr.additions.type.AdditionTypeEffect;
 import com.tmtravlr.additions.util.OtherSerializers;
 
 import net.minecraft.client.util.ITooltipFlag;
@@ -61,6 +65,7 @@ public class ItemAddedProjectile extends ItemAddedSimple implements IItemAddedPr
 	public boolean worksWithInfinity = false;
 	public boolean damageIgnoresSpeed = false;
 	public SoundEvent hitSound = null;
+	public List<Effect> hitEffects = new ArrayList<>();
 	
 	public ItemAddedProjectile() {
 		super();
@@ -178,6 +183,16 @@ public class ItemAddedProjectile extends ItemAddedSimple implements IItemAddedPr
 	}
 	
 	@Override
+	public List<Effect> getHitEffects() {
+		return this.hitEffects;
+	}
+	
+	@Override
+	public void setHitEffects(List<Effect> hitEffects) {
+		this.hitEffects = hitEffects;
+	}
+	
+	@Override
 	public boolean isInfinite(ItemStack projectile, ItemStack bow) {
 		return this.worksWithInfinity;
 	}
@@ -289,6 +304,16 @@ public class ItemAddedProjectile extends ItemAddedSimple implements IItemAddedPr
 				json.add("hit_sound", OtherSerializers.SoundEventSerializer.serialize(itemAdded.hitSound));
 			}
 			
+			if (!itemAdded.hitEffects.isEmpty()) {
+				JsonArray jsonArray = new JsonArray();
+				
+				for (Effect effect : itemAdded.hitEffects) {
+					jsonArray.add(AdditionTypeEffect.GSON.toJsonTree(effect, Effect.class));
+				}
+				
+				json.add("hit_effects", jsonArray);
+			}
+			
 			return json;
 		}
 		
@@ -314,6 +339,19 @@ public class ItemAddedProjectile extends ItemAddedSimple implements IItemAddedPr
 			
 			super.deserializeDefaults(json, context, itemAdded);
 			return itemAdded;
+		}
+		
+		@Override
+		public void postDeserialize(JsonObject json, ItemAddedProjectile itemAdded) {
+			if (json.has("hit_effects")) {
+				itemAdded.hitEffects = new ArrayList<>();
+				
+				JsonUtils.getJsonArray(json, "hit_effects").forEach(effectJson -> {
+					itemAdded.hitEffects.add(AdditionTypeEffect.GSON.fromJson(effectJson, Effect.class));
+				});
+			}
+			
+			this.postDeserializeDefaults(json, itemAdded);
 		}
     }
 

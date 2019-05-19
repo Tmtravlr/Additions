@@ -19,8 +19,8 @@ public class GuiRecipeCardDisplayCraftingShaped extends GuiRecipeCardDisplayCraf
 			NonNullList<IngredientOreNBT> displayIngredients = NonNullList.withSize(9, IngredientOreNBT.EMPTY);
 			
 			int ingredientsIndex = 0;
-			for (int x = 2; x >= 0; x--) {
-				for (int y = 2; y >= 0; y--) {
+			for (int y = 0; y < 3; y++) {
+				for (int x = 0; x < 3; x++) {
 					int index = y * 3 + x;
 					
 					if (x < this.recipe.recipe.getRecipeWidth() && y < this.recipe.recipe.getRecipeHeight() && ingredientsIndex < this.recipe.recipe.getIngredients().size()) {

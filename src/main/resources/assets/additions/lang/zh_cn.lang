@@ -1,0 +1,874 @@
+death.attack.additions.bash=%s 被打死了
+death.attack.additions.bash.player=%1$s被%2$s打死
+death.attack.additions.thrown=%1$s 被 %2$s 处理了
+death.attack.additions.thrown.player=%%2$s使用%3$s处理了1$s
+death.attack.additions.projectile=%1$s被%2$s射中
+death.attack.additions.projectile.player=%1$s是由%2$s用%3$s射死的
+
+entity.additions_projectile.name=炮弹
+
+subtitles.block.cauldron.wash=洗涤物品
+subtitles.item.shield.bash=护甲值
+subtitles.item.shield.swing=韧甲值
+
+item.shield.info.bashDamage=%s 攻击伤害
+item.shield.info.bashSpeed=%s 攻击速度
+item.projectile.info.damage=%s 远程伤害
+item.bow.info.drawTime=%s 拉弓速度
+item.gun.info.reloadTime=%s 装载时间
+
+type.item.simple.title=简单
+type.item.simple.description=只是一个简单的项目。适合作为制作原料。
+type.item.food.title=食物或者饮品
+type.item.food.description=你可以吃或喝的东西！你也可以在吃的时候设置效果。
+type.item.armor.title=护甲
+type.item.armor.description=一件盔甲, 头盔、胸甲、护腿或靴子。
+type.item.hat.title=头
+type.item.hat.description=你戴在头上的东西。在你的头上使用一个物品模型，非常适合戴面具和帽子！它也可以有一个屏幕覆盖，就像一个南瓜。
+type.item.sword.title=剑
+type.item.sword.description=可以攻击的剑，它也能割断蛛网。
+type.item.pickaxe.title=镐
+type.item.pickaxe.description=用来挖方块
+type.item.shovel.title=铲
+type.item.shovel.description=可以挖掘泥土
+type.item.axe.title=斧
+type.item.axe.description=一把可以用来砍木头的斧子，它也可以破盾
+type.item.hoe.title=锄
+type.item.hoe.description=你可以用锄头锄地
+type.item.multitool.title=多功能工具
+type.item.multitool.description=一个多功能工具，可以同时使用多种工具类型。
+type.item.club.title=棍棒
+type.item.club.description=一种可以攻击的钝兵器，它也会使盾牌失效。
+type.item.shears.title=剪刀
+type.item.shears.description=一个剪刀，你可以剪蜘蛛网，收集植物，剪羊毛。
+type.item.firestarter.title=起火器
+type.item.firestarter.description=一种类似打火石的东西，你可以点火，引燃炸药，并用它点燃爬行器。
+type.item.shield.title=盾
+type.item.shield.description=你可以用来阻挡攻击的盾牌。也可以有猛击攻击。
+type.item.bow.title=弓
+type.item.bow.description=一个弓，你可以从中拉伸并发射弹药。
+type.item.gun.title=枪
+type.item.gun.description=你可以用“重新装弹”冷却以此发射弹药的枪。
+type.item.throwable.title=弹药
+type.item.throwable.description=你可以用弓/枪投掷或射击的物品。
+type.item.arrow.title=箭
+type.item.arrow.description=使用原版的弓射箭，也可以用你制造的枪或弓射出去。
+type.item.projectile.title=炮弹
+type.item.projectile.description=你只能从你制造的枪/弓上发射的炮弹。有利于子弹和激光爆炸。
+type.item.record.title=唱片
+type.item.record.description=你可以在唱片机上使用的唱片。
+
+type.block.simple.title=方块
+type.block.simple.description=一个简单的块。适合装饰和资源块。
+type.block.falling.title=重力块
+type.block.falling.description=像沙子、铁砧和龙蛋一样掉落的块。
+type.block.stairs.title=楼梯
+type.block.stairs.description=一段楼梯。
+type.block.slab.title=台阶
+type.block.slab.description=台阶可以有水平和垂直的版本。
+type.block.tile.title=地毯或瓷砖
+type.block.tile.description=地毯或瓷砖状的块。可以放在地板上，也可以放在墙壁和天花板上。
+type.block.pane.title=板或条
+type.block.pane.description=像玻璃板或铁栅栏一样的块。
+type.block.ladder.title=梯子
+type.block.ladder.description=可以爬的梯子
+type.block.wall.title=墙
+type.block.wall.description=像圆石墙。
+type.block.fence.title=栅栏
+type.block.fence.description=一个栅栏方块
+type.block.fenceGate.title=栅栏门
+type.block.fenceGate.description=栅栏门而已
+type.block.plant.title=植物
+type.block.plant.description=像植物一样的块。适用于花草。
+type.block.vine.title=藤蔓
+type.block.vine.description=你能爬的藤蔓
+type.block.grass.title=草方块
+type.block.grass.description=能蔓延的方块
+type.block.pillar.title=原木
+type.block.pillar.description=木柴或木柱块
+type.block.leaves.title=树叶
+type.block.leaves.description=一块树叶，当它附近的木头被毁坏时，它会自动腐烂。
+type.block.cake.title=蛋糕
+type.block.cake.description=一块你可以吃的东西！也可以用来做比萨饼之类的食物。
+type.block.workbench.title=工作台
+type.block.workbench.description=一个工作台
+type.block.furnace.title=熔炉
+type.block.furnace.description=具有可配置速度和燃料消耗的熔炉。
+type.block.luckyBlock.title=幸运方块
+type.block.luckyBlock.description=会掉落掠夺表的块。掠夺表的好坏会受到块本身的运气属性以及玩家运气的影响。
+
+type.lootTable.preset.empty.title=空的掠夺表
+type.lootTable.preset.empty.description=一个什么都不掉的掠夺表
+type.lootTable.preset.otherLootTable.title=另一个掠夺表
+type.lootTable.preset.otherLootTable.description=掉落另一个掠夺表的掠夺表。如果你有几滴同样的东西掉下来（所以你不必每次都重新写）。
+type.lootTable.preset.blockItself.title=本体方块
+type.lootTable.preset.blockItself.description=要配置的方块
+type.lootTable.preset.blockItem.title=方块物品掉落
+type.lootTable.preset.blockItem.description=一种用来配置方块掉落的掠夺表，它可以掉落一个除自身以外的物品，如钻石矿石。也可以受财富和丝绸接触的影响。
+
+type.recipe.crafting.shaped.title=合成-有序合成
+type.recipe.crafting.shaped.description=一种工艺配方，其中的项目必须在一个特定的形状。
+type.recipe.crafting.shapeless.title=合成-无序合成
+type.recipe.crafting.shapeless.description=一种工艺配方，其中的物品可以按任意顺序排列。
+type.recipe.crafting.tipProjectile.title=合成-滞留合成
+type.recipe.crafting.tipProjectile.description=用任何滞留药剂投掷/丢弃的工艺配方
+type.recipe.crafting.dyeItem.title=合成-染色合成
+type.recipe.crafting.dyeItem.description=给物品染色的工艺配方，比如给皮革盔甲染色。
+type.recipe.crafting.modifyDamage.title=合成-配置耐久
+type.recipe.crafting.modifyDamage.description=修改耐久的工艺配方
+type.recipe.crafting.modifyNbt.title=合成-配置NBT
+type.recipe.crafting.modifyNbt.description=修改物品的NBT标签的工艺配方。
+type.recipe.smelting.title=熔炼
+type.recipe.smelting.description=在炉中熔炼的配方。
+type.recipe.brewing.title=酿造-单一配方
+type.recipe.brewing.description=在酿造台上酿造药水的配方。
+type.recipe.brewing.complete.title=酿造-整套配方
+type.recipe.brewing.complete.description=一套类似原版的酿造配方，可以酿造规则的、喷溅的、滞留型的药水，附加萤石和红石。最多可保存24个其他配方！
+
+type.effectCause.held.title=手上的物品
+type.effectCause.held.description=当一个项目在您的主手、副手或两者之一时运行该效果。
+
+type.effect.potion.title=使用药水效果
+type.effect.potion.description=对实体更新药水效果（如果有）
+
+attribute.modifier.noEffect=无
+
+gui.buttons.back=返回
+gui.buttons.cancel=取消
+gui.buttons.close=关闭
+gui.buttons.continue=继续
+gui.buttons.create=创建
+gui.buttons.delete=删除
+gui.buttons.done=完成
+gui.buttons.duplicate=复制
+gui.buttons.replace=替换
+gui.buttons.edit=修改
+gui.buttons.save=保存
+gui.buttons.update=更新
+gui.buttons.add=增加
+gui.buttons.new=新的
+gui.buttons.unlock=解锁
+gui.buttons.share=分享
+gui.buttons.goToFolder=到文件夹
+gui.buttons.goToFolders=打开文件夹
+gui.buttons.selectFile=选择文件
+
+gui.dropdown.nothingToShow=无
+gui.dropdown.itemMaterial.armor.addNew=++ 添加新护甲材料 ++
+gui.dropdown.itemMaterial.tool.addNew=++ 添加新工具材料 ++
+gui.dropdown.soundEvent.addNew=++ 添加新声音事件 ++
+gui.dropdown.soundFile.addNew=++ 添加新声音文件 ++
+
+gui.suggestion.noSuggestions=无建议
+
+gui.loadingError.title=加载扩展模组时出现问题
+gui.loadingError.modNotFound=这个模组: %1$s 依赖于 %2$s 版本的 '%3$s'
+gui.loadingError.addonNotFound=这个模组: %1$s 依赖于 %2$s 版本的 '%3$s'
+gui.loadingError.version= %s 版本
+gui.loadingError.version.any=任意版本
+gui.loadingError.dependancyCycle=在加载附加依赖项时发现一个循环.循环中的第一个加载项是 %s .
+
+gui.additions.main.byAuthor=(%2$s) By %1$s
+
+gui.warnDialogue.problem.title=哦豁!
+gui.warnDialogue.unsaved.title=未保存的更改
+gui.warnDialogue.unsaved.message=您有未保存的更改！先保存他们？
+gui.warnDialogue.unsaved.continue=不保存
+gui.warnDialogue.delete.title=确认删除
+gui.warnDialogue.delete.message=确定要删除?此操作将不能撤销
+gui.warnDialogue.restart.created.title=创建成功！
+gui.warnDialogue.restart.created.message=添加成功！你必须重新启动游戏，它才能出现在游戏和一些列表中。现在重新启动吗？（将关闭游戏）
+gui.warnDialogue.restart.updated.title=更新成功！
+gui.warnDialogue.restart.updated.message=添加成功更新！您可能需要重新启动游戏才能显示某些更新。现在重新启动吗？（将关闭游戏）
+gui.warnDialogue.restart.continue=现在重启
+gui.warnDialogue.restart.close=再等等
+gui.warnDialogue.noTypeGui.message=找不到为类型 %s 注册的屏幕
+
+gui.popup.reloadResources.title=重新加载资源
+gui.popup.reloadResources.message=重新加载资源.请稍等
+
+gui.popup.selectFile.title=选择文件
+gui.popup.selectFile.message=从文件选择器中选择一个文件
+
+gui.popup.texture.animation.title=设置动画
+gui.popup.texture.animation.message=看起来你的图像是一个动画。要选择.mcmeta文件还是生成默认文件？
+gui.popup.texture.animation.file.label=动画文件
+gui.popup.texture.animation.button.generate=生成默认文件
+gui.popup.texture.animation.generated.title=生成动画文件
+gui.popup.texture.animation.generated.message=动画文件生成成功！
+gui.popup.texture.animation.loaded.title=已加载动画文件！
+gui.popup.texture.animation.loaded.message=动画文件已成功加载！
+gui.popup.texture.animation.problem.title=加载动画时出现问题
+gui.popup.texture.animation.problem.message=无法加载选定的动画文件。请确保它存在，然后重试！
+
+gui.popup.model.title=自定义模型
+gui.popup.model.item.message=您必须手动创建和添加纹理和项目模型！将项目模型放入此文件夹并调用它：%s
+gui.popup.model.item.armor.message=您必须手动创建和添加纹理和项目模型！将项目模型放置在此文件夹中并调用它：%1$s，然后调用armore纹理：%2$s，使用透明纹理（如果需要）：%3$s
+gui.popup.model.item.hatOverlay.message=您必须手动创建和添加纹理和项目模型！将项目模型放入此文件夹并调用它：%1$s，如果需要，调用屏幕覆盖纹理：%2$s
+gui.popup.model.block.message=您必须手动创建和添加纹理、块模型和块状态！将其放入此文件夹并调用块状态：%s
+gui.popup.model.block.withItem.message=您必须手动创建和添加纹理、项模型、块模型和块状态！将块状态和项模型放置在这些文件夹中，并调用块状态：%1$s和项模型：%2$s
+
+gui.popup.itemStack.title=编辑物品堆栈
+gui.popup.itemStack.item.label=物品
+gui.popup.itemStack.meta.label=元数据
+gui.popup.itemStack.count.label=数量
+gui.popup.itemStack.items.label=一些物品
+gui.popup.itemStack.nbt.label=NBT
+
+gui.popup.attributeModifier.title=编辑属性修饰符
+gui.popup.attributeModifier.attributeName.label=属性名
+gui.popup.attributeModifier.amount.label=数量
+gui.popup.attributeModifier.operation.label=操作
+gui.popup.attributeModifier.operation.info=0添加修改器，1和2用稍微不同的方式乘以（1+数量）。有关详细信息，请确认%s。
+gui.popup.attributeModifier.slot.label=栏位
+gui.popup.attributeModifier.uuid.label=UUID
+gui.popup.attributeModifier.uuid.info=将UUID留空以生成默认的UUID
+gui.popup.attributeModifier.problem.slotRequired.title=需要栏位
+gui.popup.attributeModifier.problem.slotRequired.message=您需要指定一个栏位
+
+gui.popup.potionEffect.编辑药水效果
+gui.popup.potionEffect.potion.label=药水
+gui.popup.potionEffect.duration.label=持续时间
+gui.popup.potionEffect.duration.info药剂效果的持续时间以tick为单位，每秒20tick。
+gui.popup.potionEffect.amplifier.label=增幅
+gui.popup.potionEffect.amplifier.info=药剂效应的增幅。0增幅是1级药剂，1是2级药剂，等等。
+gui.popup.potionEffect.particle.label=粒子类别
+gui.popup.potionEffect.particle.normal.label=普通
+gui.popup.potionEffect.particle.faded.label=逐渐消失
+gui.popup.potionEffect.particle.none.label=无
+
+gui.popup.itemMaterial.armor.delete.message=是否确实要删除？任何使用这种材料的物品都将其材料设置为皮革。这是无法撤消的。
+gui.popup.itemMaterial.tool.delete.message=是否确实要删除？使用这种材料的任何物品都将其材料设置为模板。这是无法撤消的。
+
+gui.popup.advancement.addAdvancement.title=增加附魔
+gui.popup.advancement.addAdvancement.message=通过GUI还不支持添加/编辑改进（因为它们相当复杂！），但您可以打开文件夹并手动添加它们。然后，您可以运行/reload命令ingame来刷新高级。
+
+gui.popup.lootTable.addLootTable.title=添加掠夺表
+gui.popup.lootTable.addLootTable.message=您可以使用预设添加一个简单的掠夺表。但是，通过GUI还不支持添加/编辑完整的掠夺表（因为它们相当复杂！）。但是，您可以打开文件夹并手动添加它们，然后运行/reload命令ingame刷新抢劫表。
+gui.popup.lootTable.usePreset=使用预设
+
+gui.popup.structure.addStructure.title=添加结构
+gui.popup.structure.addStructure.message=必须使用结构块同时创建结构。一旦你保存了一个，选择它在这里添加到你的模组。
+
+gui.popup.selectSound.title=添加新的声音
+gui.popup.selectSound.message.id=首先，给你的新声音一个ID。
+gui.popup.selectSound.message.select=然后，在下面选择一个文件。
+gui.popup.selectSound.id.label=音乐ID
+gui.popup.selectSound.problem.title=添加声音时出现问题
+gui.popup.selectSound.problem.message=哦，声音文件保存不正确（错误消息是%s）。您可以尝试再次选择它。
+gui.popup.selectSound.duplicate.title=替换之前的声音？
+gui.popup.selectSound.duplicate.message=ID为“%s”的声音已存在。替换它？
+
+gui.popup.color.title=编辑颜色
+
+gui.popup.shareAddon.title=分享你的模组！
+gui.popup.shareAddon.button=分享你的模组
+gui.popup.shareAddon.message1=压缩你的插件，这样你可以分享它！
+gui.popup.shareAddon.message2=只有当您的加载项完成并且您没有更多的更改要做时才这样做，因为这将锁定您的加载项以防止进一步的更改。
+gui.popup.shareAddon.success.title=加载项准备共享！
+gui.popup.shareAddon.success.message=成功压缩加载项！它被称为“%s”。单击下面转到文件夹，以便您可以共享它。
+gui.popup.shareAddon.problem.title=压缩加载项时出现问题
+gui.popup.shareAddon.problem.message=压缩加载项时出现问题。消息是“%s”。你可以再试一次，但现在情况可能很奇怪。
+
+gui.popup.lockAddon.title=压缩模组
+gui.popup.lockAddon.message=这可能需要一段时间，请稍候…
+
+gui.popup.addonVersion.title=设置模组版本
+gui.popup.addonVersion.message=给你的插件一个版本号！它只能有数字和点。
+gui.popup.addonVersion.message.lastVersion=给你的插件一个版本号！它只能有数字和点。最后一个版本是“%s”。
+gui.popup.addonVersion.label=模组版本
+gui.popup.addonVersion.problem.noVersion.title=需要模组版本
+gui.popup.addonVersion.problem.noVersion.message=您需要模组的版本！
+
+gui.popup.unlockAddon.title=解压模组
+gui.popup.unlockAddon.message=这可能需要一段时间，请稍候…
+gui.popup.unlockAddon.warning.title=解压警告
+gui.popup.unlockAddon.warning.message=如果解锁此加载项，它将被解压并移动到加载项/添加文件夹。如果你不是这个插件的作者，你可能不想要这个。您确定要解锁它吗？
+gui.popup.unlockAddon.problem.title=解压缩模组时出现问题
+gui.popup.unlockAddon.problem.message=解压缩模组时出现问题。消息是“%s”。你可以再试一次，但现在情况可能很奇怪。
+gui.popup.unlockAddon.problem.noDelete.title=删除“%s”时出现问题
+gui.popup.unlockAddon.problem.noDelete.message1=您的模组解压成功。但是，无法删除旧的压缩文件“%s”，这很常见。
+gui.popup.unlockAddon.problem.noDelete.message2=进入文件夹并自己删除（关闭游戏后），否则游戏将无法正常启动。
+gui.popup.unlockAddon.success.title=模组解锁完成
+gui.popup.unlockAddon.success.message=成功解锁模组！
+
+gui.view.showAdvanced=显示高级选项
+gui.view.additionType.type=类型: %s
+gui.view.additionType.id=Id: %s
+gui.view.additionType.name=名称: %s
+gui.view.additionType.description=描述: %s
+gui.view.additionType.count=数量: %s
+gui.view.additionType.items=物品: %s
+gui.view.additionType.material=材料: %s
+gui.view.additionType.commands=指令: %s
+gui.view.additionType.sounds=音乐: %s
+gui.view.additionType.preset=预设: %s
+gui.view.additionType.cause=时间 %s
+gui.view.additionType.effects.singular=然后运行%s效果
+gui.view.additionType.effects.plural=然后运行%s效果
+
+gui.view.addon.items.label=查看添加的物品 (%s)
+gui.view.addon.items.title=%s 的物品
+gui.view.addon.items.none.message=%s 没有任何物品
+gui.view.addon.itemMaterials.label=查看添加的材料 (%s)
+gui.view.addon.itemMaterials.title=%s 的材料
+gui.view.addon.itemMaterials.none.message=%s 没有材料
+gui.view.addon.blocks.label=查看添加的方块 (%s)
+gui.view.addon.blocks.title=%s 的方块
+gui.view.addon.blocks.none.message=%s 没有任何方块
+gui.view.addon.creativeTabs.label=查看创造模式选项卡 (%s)
+gui.view.addon.creativeTabs.title=%s 的创造模式选项卡
+gui.view.addon.creativeTabs.none.message=%s 没有创造模式选项卡
+gui.view.addon.recipes.label=查看添加的配方 (%s)
+gui.view.addon.recipes.title=%s 的配方
+gui.view.addon.recipes.none.message=%s 没有任何合成配方
+gui.view.addon.effects.label=查看添加的药水效果 (%s)
+gui.view.addon.effects.title=%s 的药水效果
+gui.view.addon.effects.none.message=%s 没有任何药水效果
+gui.view.addon.functions.label=查看添加的功能 (%s)
+gui.view.addon.functions.title=%s 的功能
+gui.view.addon.functions.none.message=%s 没有任何功能
+gui.view.addon.advancements.label=查看添加的附魔 (%s)
+gui.view.addon.advancements.title=%s 的附魔
+gui.view.addon.advancements.none.message=%s 没有任何附魔
+gui.view.addon.structures.label=查看添加的结构 (%s)
+gui.view.addon.structures.title=%s 的结构
+gui.view.addon.structures.none.message=%s 没有任何结构
+gui.view.addon.lootTables.label=查看掠夺表 (%s)
+gui.view.addon.lootTables.title=%s 的掠夺表
+gui.view.addon.lootTables.none.message=%s 没有任何掠夺表
+gui.view.addon.soundEvents.label=查看添加的声音 (%s)
+gui.view.addon.soundEvents.title=%s 的声音
+gui.view.addon.soundEvents.none.message=%s 没有任何声音
+
+gui.view.addon.locked.message=此模组已锁定！如果要对其进行任何更改，必须先将其解锁。
+
+gui.edit.editing=修改中: %s
+gui.edit.id.info=ID只能包含小写字母、数字或下划线。
+gui.edit.id.withFolders.info=ID只能包含小写字母、数字、下划线或斜杠。
+gui.edit.id.noEdit.info=创建后无法更改ID
+gui.edit.problem.noId=ID不能为空
+gui.edit.problem.noName=名字不能为空
+
+gui.edit.addon.title=创建新addon
+gui.edit.addon.addonId.label=addon Id
+gui.edit.addon.addonName.label=addon名字
+gui.edit.addon.addonAuthor.label=另外的
+gui.edit.addon.addonIcon.label=添加图标
+gui.edit.addon.required.info=如果您需要其他mods或addons提供的项目/食谱等，这些功能非常有用。还可以将加载项添加到“加载前”列表中，以便在加载前加载！您还可以添加版本范围，如模组依赖关系。像additions@[1.1，）表示至少是additions的1.1版本。
+gui.edit.addon.required.warning=警告！如果找不到这些mod或addon，游戏将无法启动。所以不要乱动，除非你的插件真的需要这些模块或插件！
+gui.edit.addon.requiredMods.label=必需mods
+gui.edit.addon.requiredAddons.label=必须addons
+gui.edit.addon.loadOrder.info=如果您需要在addon之前/之后加载另一个addon（比如加载您需要的项目），这些功能非常有用。*意味着一切。
+gui.edit.addon.dependencies.label=在此之前加载
+gui.edit.addon.dependents.label=在这之后加载
+gui.edit.addon.loopFunction.label=循环函数
+gui.edit.addon.loopFunction.info=这个插件的函数将在每一个游戏tick运行
+gui.edit.addon.problem.title=创建addon时出现问题
+gui.edit.addon.problem.duplicate=ID为“%s”的addon已存在！
+gui.edit.addon.problem.noAddonId=addon ID不能为空。
+gui.edit.addon.problem.noAddonName=addon 名称不能为空。
+gui.edit.addon.problem.allBeforeAfter=无法加载*包括在此addon之前和之后！
+gui.edit.addon.problem.bothBeforeAfter=在“加载前”和“加载后”列表中不能有相同的addon“%s”！
+gui.edit.addon.problem.beforeAll=在"加载后"不能有addon “%s”（如果*在加载前！
+gui.edit.addon.problem.afterAll=如果*在"加载后"中，则在"加载前"中不能有addon“%s”！
+
+gui.edit.selectType.label=选择类型
+gui.edit.selectType.descrpition.default=选择上面的类型。
+gui.edit.selectType.descrpition.none=找不到此类型的描述。
+
+gui.edit.item.title=创建一个新物品
+gui.edit.item.itemType.label=物品类型
+gui.edit.item.itemId.label=物品Id
+gui.edit.item.itemName.label=物品名称
+gui.edit.item.itemShines.label=物品总是发出附魔光效
+gui.edit.item.burnTime.label=燃料燃烧时间
+gui.edit.item.burnTime.info=这个东西在炉子里作为燃料燃烧多少tick。0表示不是燃料。
+gui.edit.item.itemTooltip.label=物品工具提示
+gui.edit.item.updateTexture.label=更新项目纹理
+gui.edit.item.itemContainer.label=物品容器
+gui.edit.item.maxStackSize.label=最大堆栈大小
+gui.edit.item.oreDictEntries.label=矿物字典条目
+gui.edit.item.attributeModifiers.label=项目属性
+gui.edit.item.applyVanillaAttributes.label=应用普通属性
+gui.edit.item.repairStacks.label=修理物品
+gui.edit.item.enchantability.label=迷人性
+gui.edit.item.enchantability.info=这种材料的自然魅力有多好。0表示不迷人。石头是5，钻石是10，黄金是22。
+gui.edit.item.durability.label=耐久
+gui.edit.item.hasPotionEffects.label=有药水效果
+gui.edit.item.hasPotionEffect.info=如果为真，则该项目可能具有不同的药剂效果，如药剂或箭头。药水的颜色将应用于物品的颜色层。
+gui.edit.item.useEfficiency.label=使用效率
+gui.edit.item.useEfficiency.info=这个物品可以使用效率附魔来提高它的速度吗？0.5意味着在效率为5的情况下，它将是速度的两倍。1.0意味着在效率5时，它将是即时的。
+gui.edit.item.efficiencyMultiplier.label=效率乘数
+gui.edit.item.problem.title=创建项目时出现问题
+gui.edit.item.problem.duplicate=ID为“%s”的物品已存在！
+gui.edit.item.problem.noId=物品ID不能为空。
+gui.edit.item.problem.noName=物品名称不能为空
+
+gui.edit.item.simple.title=创建一个新的简单物品
+
+gui.edit.item.food.title=创建新的食物
+gui.edit.item.food.hunger.label=恢复饥饿值
+gui.edit.item.food.hunger.info=这种食物能恢复的饥饿值（半个鸡腿）
+gui.edit.item.food.saturation.label=饱和度恢复
+gui.edit.item.food.saturation.info=你吃得多饱啊。曲奇是0.4，苹果是2.4，面包是6，金苹果是9.6。
+gui.edit.item.food.eatTime.label=食用时间
+gui.edit.item.food.eatTime.info=吃食物所需的时间，以tick计（每秒20tick）。
+gui.edit.item.food.alwaysEdible.label=永远可以吃
+gui.edit.item.food.wolvesEat.label=狼也吃
+gui.edit.item.food.isDrink.label=这是饮料！
+gui.edit.item.food.eatenEffects.label=药水效果
+
+gui.edit.item.record.title=创建新唱片
+gui.edit.item.record.music.label=音乐曲目
+gui.edit.item.record.description.label=音乐描述
+gui.edit.item.record.description.info=在自动存储塔中播放记录时显示
+gui.edit.item.record.problem.noMusic=必须选择音乐曲目
+
+gui.edit.item.armor.title=创建新护甲物品
+gui.edit.item.armor.material.label=护甲材料
+gui.edit.item.armor.slot.label=护甲栏位
+gui.edit.item.armor.colored.label=有色的
+gui.edit.item.armor.problem.noMaterial=护甲材料不能是空白的。
+gui.edit.item.armor.problem.noSlot=护甲栏位不能为空
+gui.edit.item.armor.problem.noOverlay.title=更新护甲纹理
+gui.edit.item.armor.problem.noOverlay.message=护甲可以着色，但没有发现覆盖护甲纹理。现在加一个？
+
+gui.edit.item.hat.title=制作新帽子
+gui.edit.item.hat.hasScreenOverlay.label=有屏幕覆盖
+gui.edit.item.hat.problem.noOverlay.title=更新帽子屏幕覆盖
+gui.edit.item.hat.problem.noOverlay.message=帽子有一个屏幕覆盖，但没有找到覆盖。现在加一个？
+gui.edit.item.tool.material.label=工具材料
+
+gui.edit.item.tool.problem.noMaterial=工具材料不能为空
+
+gui.edit.item.sword.title=创建新剑
+
+gui.edit.item.club.title=创建新棒
+
+gui.edit.item.pickaxe.title=创建新镐
+
+gui.edit.item.axe.title=创建新斧
+
+gui.edit.item.shovel.title=创建新铲
+
+gui.edit.item.hoe.title=创建新锄
+
+gui.edit.item.shears.title=创建新剪刀
+
+gui.edit.item.firestarter.title=创建新起火器
+
+gui.edit.item.multitool.title=创建新多用途工具
+gui.edit.item.multitool.harvestRadius.label=收获
+gui.edit.item.multitool.harvestRadius.info=工具将在一个正方形中收获块，边距中间这么远。对于3x3收割区，半径为1，5x5为2等。
+gui.edit.item.multitool.harvestDepth.label=重新播种时间
+gui.edit.item.multitool.harvestDepth.info=当他被采收时与重新种植的时间
+gui.edit.item.multitool.toolTypes.label=工具类别
+
+gui.edit.item.shield.title=创建新盾牌
+gui.edit.item.shield.bashDamage.label=攻击伤害
+gui.edit.item.shield.bashCooldown.label=攻击冷却
+gui.edit.item.shield.bashSwingSound.label=攻击声音
+gui.edit.item.shield.bashHitSound.label=击中声音
+
+gui.edit.item.shooter.damage.label=伤害
+gui.edit.item.shooter.scattering.label=散射
+gui.edit.item.shooter.shotCount.label=数量
+gui.edit.item.shooter.firesVanillaArrows.label=发射原版箭
+gui.edit.item.shooter.alwaysInfinite.label=总是无限
+gui.edit.item.shooter.consumesOneAmmo.label=消耗一个弹药
+gui.edit.item.shooter.consumesOneAmmo.info=如果它发射了不止一个弹丸并且没有无穷大，它将只消耗一个。
+gui.edit.item.shooter.shotSound.label=声音
+gui.edit.item.shooter.ammoItems.label=子弹
+
+gui.edit.item.bow.title=创建新弓
+gui.edit.item.bow.drawTime.label=拉伸时间
+
+gui.edit.item.gun.title=创建新枪
+gui.edit.item.gun.shotVelocity.label=射击速度
+gui.edit.item.gun.reloadTime.label=装载时间
+
+gui.edit.item.projectile.baseDamage.label=伤害
+gui.edit.item.projectile.basePunch.label=击退
+gui.edit.item.projectile.gravity.label=重力
+gui.edit.item.projectile.worksInWater.label=在水中工作
+gui.edit.item.projectile.piercesEntities.label=穿刺
+gui.edit.item.projectile.sticksInGround.label=粘在地上
+gui.edit.item.projectile.worksWithInfinity.label=无限
+gui.edit.item.projectile.damageIgnoresSpeed.label=伤害忽略速度
+gui.edit.item.projectile.damageIgnoresSpeed.info=不管速度如何，炮弹都会造成同样的伤害。很好，如果你想制造一把损坏很小的枪。
+gui.edit.item.projectile.renders3D.label=渲染3D
+gui.edit.item.projectile.hitSound.label=声音
+
+gui.edit.item.throwable.title=创建新的投掷物
+gui.edit.item.throwable.velocity.label=速度
+gui.edit.item.throwable.inaccuracy.label=不准确性
+gui.edit.item.throwable.throwSound.label=声音
+
+gui.edit.item.arrow.title=创建新箭
+
+gui.edit.item.projectile.title=创建新的炮弹
+
+gui.edit.itemMaterial.armor.title=创建新护甲材料
+gui.edit.itemMaterial.tool.title=创建新工具材料
+gui.edit.itemMaterial.id.label=材质ID
+gui.edit.itemMaterial.repairStack.label=修理物品
+gui.edit.itemMaterial.baseToolDurability.label=工具耐久
+gui.edit.itemMaterial.baseToolDurability.info=这些工具的耐久性。石头是131，铁是250，钻石是1561。
+gui.edit.itemMaterial.harvestLevel.label=挖掘等级
+gui.edit.itemMaterial.harvestLevel.info=这些工具能收获多少矿石。例如，石/煤为0，铁/青金石为1，金/钻石/红石为2，黑曜石为3。
+gui.edit.itemMaterial.efficiency.label=工具效率
+gui.edit.itemMaterial.efficiency.info=这些工具能以多快的速度打破方块。石头是4.0，钻石是8.0，黄金是12.0。
+gui.edit.itemMaterial.baseAttackDamage.label=攻击伤害系数
+gui.edit.itemMaterial.baseAttackDamage.info=这些工具的基础攻击伤害。木头/黄金为0.0，石头为1.0，铁为2.0，钻石为3.0。
+gui.edit.itemMaterial.baseArmorDurability.label=护甲耐久系数
+gui.edit.itemMaterial.baseArmorDurability.info该材料护甲的基本耐久性系数。皮5，铁15，钻石33。
+gui.edit.itemMaterial.toughness.label=护甲韧性
+gui.edit.itemMaterial.helmetArmor.label=头盔护甲
+gui.edit.itemMaterial.chestplateArmor.label=胸甲护甲
+gui.edit.itemMaterial.leggingsArmor.label=护腿护甲
+gui.edit.itemMaterial.bootsArmor.label=靴子护甲
+gui.edit.itemMaterial.equipSound.label=装备音响
+gui.edit.itemMaterial.problem.title=创建物品时出现问题
+gui.edit.itemMaterial.problem.duplicate=ID为“%s”的物品已存在！
+gui.edit.itemMaterial.problem.noEquipSound=必须选择设备声音！
+gui.edit.itemMaterial.success.title=更新物品材料
+gui.edit.itemMaterial.success.message=已成功更新物品材料。
+
+gui.edit.block.title=创建新方块
+gui.edit.block.blockType.label=方块类型
+gui.edit.block.blockId.label=方块ID
+gui.edit.block.blockName.label=方块名称
+gui.edit.block.blockMaterial.label=方块材料
+gui.edit.block.updateTexture.label=更新方块材料
+gui.edit.block.mapColor.label=在地图上的颜色
+gui.edit.block.hardness.label=硬度
+gui.edit.block.hardness.info=打破这个方块需要多长时间。-1表示牢不可破。土0.5，木2.0，石1.5，矿石3.0，黑曜石50.0，基岩-1.0。
+gui.edit.block.resistance.label=防爆性
+gui.edit.block.resistance.info=这个方块能很好地抵抗爆炸。如土0.0，木5.0，石10.0，黑曜石2000.0，基岩6000000.0。
+gui.edit.block.harvestLevel.label=挖掘等级
+gui.edit.block.harvestLevel.info=获取此块需要什么级别的工具。例如，石头是1，铁是2，钻石矿石是3，黑曜石是4。 0则表示任何内容。
+gui.edit.block.harvestTool.label=挖掘工具
+gui.edit.block.harvestTool.info=挖这个块需要什么样的工具（像石斧）。如果你能用手挖的话，留下空白。
+gui.edit.block.effectiveTools.label=有效工具
+gui.edit.block.opacity.label=不透明性
+gui.edit.block.opacity.info=穿过这个方块有多少光线被挡住了。例如，玻璃为0，冰为3，实心块为15。
+gui.edit.block.flammability.label=易燃性
+gui.edit.block.flammability.info=这个木块烧得多快。例如，木板20，植物100，TNT 15，原木5。
+gui.edit.block.fireSpreadSpeed.label=火势蔓延速度
+gui.edit.block.fireSpreadSpeed.info=火蔓延到这个方块有多快。例如，木板和圆木为5，植物为60，TNT为100。
+gui.edit.block.bookshelfStrength.label=书架强度
+gui.edit.block.bookshelfStrength.info=这个方块对魔法桌有多大的影响。书架是1。
+gui.edit.block.beaconColorMultiplier.label=信标颜色倍增器
+gui.edit.block.slipperiness.label=润滑
+gui.edit.block.slipperiness.info= 这个方块有多滑。正常块度为0.6，冰度为0.98。
+gui.edit.block.isSlime.label=是史莱姆吗
+gui.edit.block.isBeaconBase.label=是信标基座吗
+gui.edit.block.canPistonsPush.label=活塞能推动吗
+gui.edit.block.hasCollisionBox.label=有碰撞箱
+gui.edit.block.sameCollisionBoundingBox.label=相同碰撞/边界
+gui.edit.block.sameCollisionBoundingBox.info=块的碰撞框是否与其边界框相同？
+gui.edit.block.boundingBoxMinX.label=边界框最小 X
+gui.edit.block.boundingBoxMinY.label=边界框最小 Y
+gui.edit.block.boundingBoxMinZ.label=边界框最小 Z
+gui.edit.block.boundingBoxMaxX.label=边界框最大 X
+gui.edit.block.boundingBoxMaxY.label=边界框最大 Y
+gui.edit.block.boundingBoxMaxZ.label=边界框最大 Z
+gui.edit.block.collisionBoxMinX.label=碰撞箱最小 X
+gui.edit.block.collisionBoxMinY.label=碰撞箱最小 Y
+gui.edit.block.collisionBoxMinZ.label=碰撞箱最小 Z
+gui.edit.block.collisionBoxMaxX.label=碰撞箱最大 X
+gui.edit.block.collisionBoxMaxY.label=碰撞箱最大 Y
+gui.edit.block.collisionBoxMaxZ.label=碰撞箱最大 Z
+gui.edit.block.drop.label=方块掉落
+gui.edit.block.drop.option.nothing=无
+gui.edit.block.drop.option.itself=此方块
+gui.edit.block.drop.option.item=资源物品: %s
+gui.edit.block.drop.option.lootTable=掠夺表: %s
+gui.edit.block.drop.option.custom=自定义
+gui.edit.block.problem.title=创建物品时出现问题
+gui.edit.block.problem.duplicate=ID为“%s”的块或项已存在！
+gui.edit.block.problem.noId=方块ID不能为空。
+gui.edit.block.problem.noName=方块名称不能为空。
+gui.edit.block.problem.noMaterial=方块材料不能为空。
+
+gui.edit.block.simple.title=创建新的简单方块
+
+gui.edit.creativeTab.title=创建新的创造模式选项卡
+gui.edit.creativeTab.id.label=选项卡ID
+gui.edit.creativeTab.name.label=选项卡名称
+gui.edit.creativeTab.hasSearchBar.label=有搜索栏
+gui.edit.creativeTab.icon.label=选项卡图标
+gui.edit.creativeTab.items.label=选项卡物品
+gui.edit.creativeTab.problem.title=创建创造模式选项卡时出现问题
+gui.edit.creativeTab.problem.noItems=您必须将物品添加到选项卡项目中的“创造模式”选项卡！
+gui.edit.creativeTab.problem.duplicate=ID为“%s”的创造模式选项卡已存在！
+gui.edit.creativeTab.success.title=已成功更新您的创造模式选项卡
+gui.edit.creativeTab.success.message=已成功更新您的创造模式选项卡
+
+gui.edit.recipe.title=创建新配方
+gui.edit.recipe.id.label=配方id
+gui.edit.recipe.addItem.info=单击此处添加项目
+gui.edit.recipe.problem.title=创建配方时出现问题
+gui.edit.recipe.problem.noId=配方ID不能为空。
+gui.edit.recipe.problem.noInput=你必须给你的配方一个输入！
+gui.edit.recipe.problem.noOutput=你必须给你的配方一个输出！
+gui.edit.recipe.problem.duplicate=ID为“%s”的配方已存在！
+gui.edit.recipe.success.title=更新配方完成
+gui.edit.recipe.success.message=更新配方完成
+
+gui.edit.recipe.crafting.group.label=配方组
+gui.edit.recipe.crafting.group.info=同一组的食谱将一起出现在香草工艺书中。如果您不以域（如Minecraft:）开始，则会向其中添加%s:。
+
+gui.edit.recipe.crafting.shapeless.title=创建新的无序合成配方
+gui.edit.recipe.crafting.shapeless.recipe.label=无序合成
+
+gui.edit.recipe.crafting.shaped.title=创建新的有序合成
+gui.edit.recipe.crafting.shaped.button.useThisItem=使用这个物品
+gui.edit.recipe.crafting.shaped.recipe.label=有序合成
+gui.edit.recipe.crafting.shaped.mirror.label=镜像合成
+gui.edit.recipe.crafting.shaped.mirror.info=如果是真的，配方将垂直镜像（就像你如何用两边的绳子制作弓一样）
+gui.edit.recipe.crafting.shaped.replaceAll.title=像这样更换所有成分？
+gui.edit.recipe.crafting.shaped.replaceAll.message1.singular=找到%s其他成分，如
+gui.edit.recipe.crafting.shaped.replaceAll.message1.plural=找到%s其他成分，如
+gui.edit.recipe.crafting.shaped.replaceAll.message2=全部更换？还是就这个？
+gui.edit.recipe.crafting.shaped.replaceAll.button.all=所有
+gui.edit.recipe.crafting.shaped.replaceAll.button.one=就这个
+
+gui.edit.recipe.crafting.dyeItem.title=创建新染色配方
+gui.edit.recipe.crafting.dyeItem.item.label=染色物品
+gui.edit.recipe.crafting.dyeItem.washInCauldron.label=在炼药锅中洗涤
+gui.edit.recipe.crafting.dyeItem.washInCauldron.info=如果你用这个东西右击一个装满水的大锅，你能像香草皮盔甲一样把染料洗掉吗？
+gui.edit.recipe.crafting.dyeItem.colorTagPath.label=彩色标签路径名称
+gui.edit.recipe.crafting.dyeItem.problem.noItemToDye.message=你必须给你的食谱一个染色的项目！
+gui.edit.recipe.crafting.dyeItem.problem.noColorTagPath.message=你必须给一个颜色标签的路径！
+
+gui.edit.recipe.crafting.tipProjectile.title=创建新的抛射体倾翻配方
+gui.edit.recipe.crafting.tipProjectile.untippedProjectile.label=无弹头弹丸
+gui.edit.recipe.crafting.tipProjectile.tippedProjectile.label=弹头
+gui.edit.recipe.crafting.tipProjectile.problem.noUntipped.message=你必须给你的配方一个弹丸在一开始
+gui.edit.recipe.crafting.tipProjectile.problem.noTipped.message=你必须给你的配方一个弹头！
+
+gui.edit.recipe.crafting.modify.label=修改
+gui.edit.recipe.crafting.modify.itemToModify.label=修改物品
+gui.edit.recipe.crafting.modify.differentOutput.label=有不同的输出
+gui.edit.recipe.crafting.modify.differentOutput.info=如果为真，配方将输出另一个项目，并将修改后的项目保留在工艺表中。
+gui.edit.recipe.crafting.modify.output.label=配方输出
+gui.edit.recipe.crafting.modify.modifiers.label=修改
+gui.edit.recipe.crafting.modify.problem.noItemToModify.message=你必须给你的配方一个物品来修改！
+gui.edit.recipe.crafting.modify.problem.noModifiers.message=你必须给你的配方修改！
+
+gui.edit.recipe.crafting.modifyDamage.title=创建新的修改伤害配方
+
+gui.edit.recipe.crafting.modifyNbt.title=创建新的修改标签配方
+gui.edit.recipe.crafting.modifyNbt.nbtPath.label=标签路径名称
+gui.edit.recipe.crafting.modifyNbt.problem.noNbtPath.message=您必须给出标签的路径！
+
+gui.edit.recipe.smelting.title=创建新的熔炼配方
+gui.edit.recipe.smelting.input.label=冶炼输入
+gui.edit.recipe.smelting.output.label=冶炼输出
+gui.edit.recipe.smelting.xp.label=经验
+gui.edit.recipe.smelting.xp.info=有机会从熔炼中获得xp。例如，将圆石冶炼成石头有0.1个，烤土豆有0.35个，冶炼金矿石有1.0个。
+
+gui.edit.recipe.brewing.title=创建新的酿造配方
+gui.edit.recipe.brewing.ingredient.label=配料
+gui.edit.recipe.brewing.input.label=药剂输入
+gui.edit.recipe.brewing.output.label=药剂输出
+gui.edit.recipe.brewing.problem.noIngredient.message=你一定要有配料！
+
+gui.edit.recipe.brewing.complete.title=创建酿造配方集
+gui.edit.recipe.brewing.complete.inputTag.label=输入标签
+gui.edit.recipe.brewing.complete.outputTag.label=输出标签
+gui.edit.recipe.brewing.complete.outputExtendedTag.label=扩展药水标签
+gui.edit.recipe.brewing.complete.outputPoweredTag.label=强力药水标签
+gui.edit.recipe.brewing.complete.allowExtended.label=允许红石
+gui.edit.recipe.brewing.complete.allowExtended.info=允许添加红石
+gui.edit.recipe.brewing.complete.allowPowered.label=允许萤石
+gui.edit.recipe.brewing.complete.allowPowered.info=允许添加萤石
+gui.edit.recipe.brewing.complete.allowMundane.label=允许平凡
+gui.edit.recipe.brewing.complete.allowMundane.info=用水瓶冲泡原料会产生普通药水吗？
+gui.edit.recipe.brewing.complete.allowSplash.label=允许喷溅
+gui.edit.recipe.brewing.complete.allowLingering.label允许滞留
+gui.edit.recipe.brewing.complete.problem.noInputTag.message=您必须有一个输入标签！
+gui.edit.recipe.brewing.complete.problem.noOutputTag.message=您必须有一个输出标签！
+
+gui.edit.effectList.title=创建新药水效果
+gui.edit.effectList.when.message=当..
+gui.edit.effectList.then.message=然后..
+gui.edit.effectList.id.label=药水ID
+gui.edit.effectList.cause.label=引起
+gui.edit.effectList.effects.label=影响
+gui.edit.effectList.problem.title=在生成效果的时候发现问题
+gui.edit.effectList.problem.duplicate.message=ID为“%s”的效果已存在！
+gui.edit.effectList.problem.noCause.message=你一定有原因！
+gui.edit.effectList.problem.noEffects.message=你一定有效果！
+gui.edit.effectList.success.title=更新效果
+gui.edit.effectList.success.message=已成功更新您的效果
+
+gui.edit.effectCause.title=编辑原因
+gui.edit.effectCause.type.label=原因类型
+gui.edit.effectCause.noGui.message=找不到GUI来编辑这类原因！请在上面选择其他类型。
+gui.edit.effectCause.problem.title=问题产生原因
+gui.edit.effectCause.problem.noGui.message=因为这个原因没有图形用户界面，所以无法保存它！
+
+gui.edit.effectCause.held.itemStack.label=手持物品
+gui.edit.effectCause.held.hand.label=手
+gui.edit.effectCause.held.hand.mainhand.label=主手
+gui.edit.effectCause.held.hand.offhand.label=副手
+gui.edit.effectCause.held.hand.both.label=两只手
+gui.edit.effectCause.held.problem.noItem.message=您必须有一个物品！
+gui.edit.effectCause.held.problem.noHand.message=必须选择手类型！
+
+gui.edit.effect.title=编辑效果
+gui.edit.effect.type.label=效果类型
+gui.edit.effect.chance.label=效果机会
+gui.edit.effect.chance.info=这种效果发生的几率，0.0是没有机会的，1.0一直是。
+gui.edit.effect.noGui.message=找不到GUI来编辑这种效果！请在上面选择其他类型。
+gui.edit.effect.problem.title=在生成效果的时候发现问题
+gui.edit.effect.problem.noGui.message=这个效果没有图形用户界面，所以无法保存它！
+
+gui.edit.effect.potion.type.label=药水类型
+gui.edit.effect.potion.type.preset.label=药水预设
+gui.edit.effect.potion.type.custom.label=定制药水
+gui.edit.effect.potion.delay.label=应用程序延迟
+gui.edit.effect.potion.delay.info=延迟tick直到这药水再次使用。对于像再生这样的药水很重要，它会随着时间的推移而产生效果，当你不断地使用药剂的时候（比如当你穿着盔甲的时候）。
+gui.edit.effect.potion.problem.noType.message=您必须选择药水类型！
+gui.edit.effect.potion.problem.noPreset.message=必须选择药水预设！
+gui.edit.effect.potion.problem.noCustom.message=你必须创建一个定制的药水！
+
+gui.edit.function.title=创建新函数
+gui.edit.function.id.label=函数ID
+gui.edit.function.commands.label=指令
+gui.edit.function.problem.title=创建函数时出现问题
+gui.edit.function.problem.noCommands=必须向函数中添加命令！
+gui.edit.function.problem.duplicate=ID为“%s”的函数已存在！
+gui.edit.function.success.title=更新函数完成
+gui.edit.function.success.message=更新函数完成
+
+gui.edit.lootTable.title=创建新的掠夺表
+gui.edit.lootTable.id.label=掠夺表ID
+gui.edit.lootTable.problem.title=创建抢劫表时出现问题
+gui.edit.lootTable.problem.noId=掠夺表ID不能为空
+gui.edit.lootTable.success.title=掠夺表更新完成
+gui.edit.lootTable.success.message=掠夺表更新完成
+
+gui.edit.lootTable.preset.empty.title=创建新的空掠夺表
+
+gui.edit.lootTable.preset.otherLootTable.title=创建新的掠夺表，该表将丢弃另一个掠夺表
+gui.edit.lootTable.preset.otherLootTable.lootTable.label=掠夺表
+gui.edit.lootTable.preset.otherLootTable.problem.noLootTable=你必须选择一个掠夺表
+
+gui.edit.lootTable.preset.blockItself.title=创建新的方块掉落掠夺表
+gui.edit.lootTable.preset.blockItself.block.label=方块
+gui.edit.lootTable.preset.blockItself.problem.noBlock=必须选择一个块！
+
+gui.edit.lootTable.preset.blockItem.title=创建新的方块掉落掠夺表
+gui.edit.lootTable.preset.blockItem.block.label=方块
+gui.edit.lootTable.preset.blockItem.item.label=物品
+gui.edit.lootTable.preset.blockItem.itemMin.label=物品最小
+gui.edit.lootTable.preset.blockItem.itemMax.label=物品最大
+gui.edit.lootTable.preset.blockItem.fortunable.label=使用时运
+gui.edit.lootTable.preset.blockItem.silkTouchable.label=用丝绸触感
+gui.edit.lootTable.preset.blockItem.problem.noBlock=必须选择一个块！
+gui.edit.lootTable.preset.blockItem.problem.noItem=您必须选择一个物品！
+
+gui.edit.soundEvent.title=创建新声音事件
+gui.edit.soundEvent.id.label=声音事件ID
+gui.edit.soundEvent.subtitle.label=字幕
+gui.edit.soundEvent.replace.label=替换现有
+gui.edit.soundEvent.sounds.label=声音
+gui.edit.soundEvent.sounds.sound.label=声音
+gui.edit.soundEvent.problem.title=创建声音事件时发现问题
+gui.edit.soundEvent.problem.noSounds=您必须将声音添加到声音事件中！
+gui.edit.soundEvent.problem.duplicate=ID为“%s”的声音事件已存在！
+gui.edit.soundEvent.success.title=更新声音事件完成
+gui.edit.soundEvent.success.message=更新声音事件完成
+
+gui.edit.sound.title=编辑声音
+gui.edit.sound.type.label=编辑声音类型
+gui.edit.sound.type.info=选择其他声音事件或声音文件。
+gui.edit.sound.sound.label=声音文件
+gui.edit.sound.event.label=声音事件
+gui.edit.sound.volume.label=音量
+gui.edit.sound.pitch.label=音调
+gui.edit.sound.stream.label=流音
+gui.edit.sound.weight.label=分量
+gui.edit.sound.weight.info=选择这个声音的可能性有多大。越高意味着越有可能。
+
+gui.edit.itemStackGroup.title=编辑物品堆栈组
+gui.edit.itemStackGroup.message.oreOrGroup=您可以使用矿物字典条目或项目列表。（如果你真的想的话，可以两者兼备）
+gui.edit.itemStackGroup.oreDict=矿物词典条目
+gui.edit.itemStackGroup.itemGroup=物品表
+
+gui.edit.blockDrop.title=编辑块掉落
+gui.edit.blockDrop.type.label=掉落类型
+gui.edit.blockDrop.type.nothing=无
+gui.edit.blockDrop.type.itself=此方块
+gui.edit.blockDrop.type.item=资源物品
+gui.edit.blockDrop.type.lootTable=掠夺表
+gui.edit.blockDrop.type.custom=自定义
+gui.edit.blockDrop.nothing.message=这个方块什么也不会掉
+gui.edit.blockDrop.itself.message=这个方块会掉他自己
+gui.edit.blockDrop.custom.message=该块现在有一个自定义放置。这里没有简单的编辑方法，但是您仍然可以将其更改为上面的类型之一。
+gui.edit.blockDrop.xp.min.label=XP 最小
+gui.edit.blockDrop.xp.min.info=当块被破坏时，最小的xp值会出现，并且会掉落一些不是它本身的东西。例如，对于煤炭矿石，这是0，对于石英矿石，这是2，对于钻石矿石，这是3。
+gui.edit.blockDrop.xp.max.label=XP 最大
+gui.edit.blockDrop.xp.max.info=当块破坏并掉落除自身之外的其他内容时，最大xp将出现。例如，对于煤矿石，这是2，对于石英矿石，这是5，对于钻石矿石，这是7。
+
+gui.edit.blockDrop.popup.title=自定义块掉落
+gui.edit.blockDrop.popup.message=自定义块的掉落，或者暂时将其保留为默认放置。
+gui.edit.blockDrop.popup.customize=自定义掉落
+gui.edit.blockDrop.popup.useDefault=使用默认值
+
+gui.edit.blockDrop.cancel.title=取消添加块掉落
+gui.edit.blockDrop.cancel.message=取消添加自定义块掉落并使用默认配置？
+
+gui.edit.texture.addTexturesLater=稍后添加
+gui.edit.texture.customModel=自定义模型
+gui.edit.texture.success.title=纹理加载完成
+gui.edit.texture.success.message=纹理更新成功！
+gui.edit.texture.problem.title=加载纹理时出现问题
+gui.edit.texture.problem.noTexture.message=您需要选择一个物品纹理！
+gui.edit.texture.problem.noTexture.specific.message=您需要选择%s！
+gui.edit.texture.problem.cantLoad.message=无法加载至少一个选定的图像。确保它们仍然存在并且是有效的图像！
+gui.edit.texture.problem.wrongDimensions.title=图像尺寸错误
+gui.edit.texture.problem.wrongDimensions.notSidesx2.message=PNG图像的边必须是2的幂。（如8x8、16x16、32x32、64x64等）
+gui.edit.texture.problem.wrongDimensions.tooWide.message=PNG图像不能比它的高宽（作为动画，它可以比宽高）。
+gui.edit.texture.problem.wrongDimensions.badAnimation.message=图像不够高，无法成为动画，但太高，无法成为常规图像。它必须是正方形或者是一堆正方形。
+
+gui.edit.texture.item.title=纹理化您的物品！
+gui.edit.texture.item.base.message=为%s选择一个纹理，该纹理应该是PNG文件。但是，如果您想要一个自定义模型，您必须自己创建它！
+gui.edit.texture.item.base.label=物品纹理
+gui.edit.texture.item.color.message=如果你的物品可以被染色（像皮甲），在这里添加将被着色的覆盖层。保留为空可删除任何现有覆盖。
+gui.edit.texture.item.color.label=彩色纹理
+gui.edit.texture.item.colored.label=这是有色的
+
+gui.edit.texture.armor.base.message=为%s选择一个护甲纹理，它应该是一个PNG文件，宽度是高的两倍。如果你的盔甲是有色的，这就是有色的纹理。
+gui.edit.texture.armor.base.label=护甲纹理
+gui.edit.texture.armor.overlay.message=为%s选择一个护甲覆盖纹理，该纹理将在着色部分上呈现。保留为空可删除任何现有覆盖。
+gui.edit.texture.armor.overlay.label=护甲覆盖
+gui.edit.texture.armor.enableColor.message=要添加颜色覆盖，请在编辑屏幕中启用颜色切换。
+gui.edit.texture.armor.problem.noTexture.message=你需要选择一个盔甲纹理！
+gui.edit.texture.armor.problem.wrongDimensions.notSidesx2.message=PNG图像的边必须是2的幂，宽度必须是高的两倍。（如64x32、128x64、256x128等）
+
+gui.edit.texture.hatOverlay.message=或者，为玩家佩戴%s时选择屏幕覆盖纹理，该纹理应为方形PNG文件。保留为空可删除任何现有覆盖。
+gui.edit.texture.hatOverlay.label=屏幕覆盖
+gui.edit.texture.hatOverlay.hasHatOverlay.input=有屏幕覆盖
+gui.edit.texture.hatOverlay.problem.wrongDimensions.notSquare.message=帽罩纹理必须为方形。
+
+gui.edit.texutre.bow.base0.message=为开始拉弓时选择纹理。
+gui.edit.texutre.bow.base0.label=纹理0
+gui.edit.texutre.bow.color0.message=为开始拉弓时选择颜色覆盖。
+gui.edit.texutre.bow.color0.label=拉纹理0
+gui.edit.texutre.bow.base1.message=选择一个纹理，当弓处于拉的中间时。
+gui.edit.texutre.bow.base1.label=纹理1
+gui.edit.texutre.bow.color1.message=选择一个颜色覆盖当弓在拉的中间。
+gui.edit.texutre.bow.color1.label=拉纹理1
+gui.edit.texutre.bow.base2.message=选择一个纹理，当弓完成拉。
+gui.edit.texutre.bow.base2.label=纹理2
+gui.edit.texutre.bow.color2.message=选择一个颜色覆盖当弓完成拉。
+gui.edit.texutre.bow.color2.label=拉纹理2
+
+gui.edit.texture.block.title=纹理化你的方块！
+gui.edit.texture.block.message=为%s选择一个纹理，该纹理应该是PNG文件。但是，如果您想要一个自定义模型，您必须自己创建它！
+gui.edit.texture.block.label=方块纹理

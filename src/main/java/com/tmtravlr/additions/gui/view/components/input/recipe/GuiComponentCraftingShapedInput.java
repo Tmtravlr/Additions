@@ -103,8 +103,8 @@ public class GuiComponentCraftingShapedInput extends GuiComponentCraftingRecipeI
 			primer.width = maxX - minX + 1;
 			primer.height = maxY - minY + 1;
 			
-			for (int x = maxX; x >= 0; x--) {
-				for (int y = maxY; y >= 0; y--) {
+			for (int y = minY; y < maxY + 1; y++) {
+				for (int x = minX; x < maxX + 1; x++) {
 					int index = y * 3 + x;
 					IngredientOreNBT ingredient = this.ingredients.get(index);
 					
@@ -120,8 +120,8 @@ public class GuiComponentCraftingShapedInput extends GuiComponentCraftingRecipeI
 		this.ingredients = NonNullList.withSize(MAX_INGREDIENTS, IngredientOreNBT.EMPTY);
 		
 		int ingredientsIndex = 0;
-		for (int x = 2; x >= 0; x--) {
-			for (int y = 2; y >= 0; y--) {
+		for (int y = 0; y < 3; y++) {
+			for (int x = 0; x < 3; x++) {
 				int index = y * 3 + x;
 				
 				if (x < width && y < height && ingredientsIndex < ingredients.size()) {

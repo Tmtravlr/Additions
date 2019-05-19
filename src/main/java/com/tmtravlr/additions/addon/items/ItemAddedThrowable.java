@@ -1,15 +1,19 @@
 package com.tmtravlr.additions.addon.items;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.tmtravlr.additions.AdditionsMod;
+import com.tmtravlr.additions.addon.effects.Effect;
 import com.tmtravlr.additions.addon.entities.EntityAddedProjectile;
 import com.tmtravlr.additions.addon.entities.IEntityAddedProjectile;
+import com.tmtravlr.additions.type.AdditionTypeEffect;
 import com.tmtravlr.additions.util.OtherSerializers;
 
 import net.minecraft.client.util.ITooltipFlag;
@@ -64,6 +68,8 @@ public class ItemAddedThrowable extends ItemAddedSimple implements IItemAddedPro
 	public boolean damageIgnoresSpeed = false;
 	public SoundEvent throwSound = SoundEvents.ENTITY_SNOWBALL_THROW;
 	public SoundEvent hitSound = null;
+	public List<Effect> throwEffects = new ArrayList<>();
+	public List<Effect> hitEffects = new ArrayList<>();
 	
 	public ItemAddedThrowable() {
 		super();
@@ -181,6 +187,16 @@ public class ItemAddedThrowable extends ItemAddedSimple implements IItemAddedPro
 	}
 	
 	@Override
+	public List<Effect> getHitEffects() {
+		return this.hitEffects;
+	}
+	
+	@Override
+	public void setHitEffects(List<Effect> hitEffects) {
+		this.hitEffects = hitEffects;
+	}
+	
+	@Override
 	public boolean isInfinite(ItemStack projectile, ItemStack bow) {
 		return this.worksWithInfinity;
 	}
@@ -228,6 +244,10 @@ public class ItemAddedThrowable extends ItemAddedSimple implements IItemAddedPro
         	
         	thrown.shoot(player, player.rotationPitch, player.rotationYaw, 0.0F, this.velocity, this.inaccuracy);
             world.spawnEntity(thrown);
+    		
+    		if (!this.throwEffects.isEmpty()) {
+    			this.throwEffects.forEach(effect -> effect.applyEffect(player, player));
+    		}
         }
 
         if (!player.capabilities.isCreativeMode) {
@@ -335,6 +355,26 @@ public class ItemAddedThrowable extends ItemAddedSimple implements IItemAddedPro
 				json.add("hit_sound", OtherSerializers.SoundEventSerializer.serialize(itemAdded.hitSound));
 			}
 			
+			if (!itemAdded.throwEffects.isEmpty()) {
+				JsonArray jsonArray = new JsonArray();
+				
+				for (Effect effect : itemAdded.throwEffects) {
+					jsonArray.add(AdditionTypeEffect.GSON.toJsonTree(effect, Effect.class));
+				}
+				
+				json.add("throw_effects", jsonArray);
+			}
+			
+			if (!itemAdded.hitEffects.isEmpty()) {
+				JsonArray jsonArray = new JsonArray();
+				
+				for (Effect effect : itemAdded.hitEffects) {
+					jsonArray.add(AdditionTypeEffect.GSON.toJsonTree(effect, Effect.class));
+				}
+				
+				json.add("hit_effects", jsonArray);
+			}
+			
 			return json;
 		}
 		
@@ -366,6 +406,27 @@ public class ItemAddedThrowable extends ItemAddedSimple implements IItemAddedPro
 			
 			super.deserializeDefaults(json, context, itemAdded);
 			return itemAdded;
+		}
+		
+		@Override
+		public void postDeserialize(JsonObject json, ItemAddedThrowable itemAdded) {
+			if (json.has("throw_effects")) {
+				itemAdded.throwEffects = new ArrayList<>();
+				
+				JsonUtils.getJsonArray(json, "throw_effects").forEach(effectJson -> {
+					itemAdded.throwEffects.add(AdditionTypeEffect.GSON.fromJson(effectJson, Effect.class));
+				});
+			}
+			
+			if (json.has("hit_effects")) {
+				itemAdded.hitEffects = new ArrayList<>();
+				
+				JsonUtils.getJsonArray(json, "hit_effects").forEach(effectJson -> {
+					itemAdded.hitEffects.add(AdditionTypeEffect.GSON.fromJson(effectJson, Effect.class));
+				});
+			}
+			
+			this.postDeserializeDefaults(json, itemAdded);
 		}
     }
 

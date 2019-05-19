@@ -1,5 +1,7 @@
 package com.tmtravlr.additions.gui.view.edit.item;
 
+import java.util.stream.Collectors;
+
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.items.IItemAdded;
 import com.tmtravlr.additions.addon.items.IItemAddedProjectile;
@@ -7,8 +9,10 @@ import com.tmtravlr.additions.addon.items.ItemAddedThrowable;
 import com.tmtravlr.additions.gui.message.GuiMessageBox;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentBooleanInput;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentFloatInput;
+import com.tmtravlr.additions.gui.view.components.input.GuiComponentListInput;
 import com.tmtravlr.additions.gui.view.components.input.dropdown.GuiComponentDropdownInputSoundEvent;
 import com.tmtravlr.additions.gui.view.components.input.dropdown.GuiComponentDropdownInputToolMaterial;
+import com.tmtravlr.additions.gui.view.components.input.effect.GuiComponentEffectInput;
 import com.tmtravlr.additions.type.AdditionTypeItemMaterial;
 
 import net.minecraft.client.gui.GuiScreen;
@@ -35,6 +39,7 @@ public abstract class GuiEditItemBaseProjectile<T extends IItemAdded & IItemAdde
 	protected GuiComponentBooleanInput itemPiercesEntitiesInput;
 	protected GuiComponentBooleanInput itemDamageIgnoresSpeedInput;
 	protected GuiComponentDropdownInputSoundEvent itemHitSoundInput;
+	protected GuiComponentListInput<GuiComponentEffectInput> itemHitEffectsInput;
     
 	public GuiEditItemBaseProjectile(GuiScreen parentScreen, String title, Addon addon) {
 		super(parentScreen, title, addon);
@@ -104,11 +109,27 @@ public abstract class GuiEditItemBaseProjectile<T extends IItemAdded & IItemAdde
 			this.itemDamageIgnoresSpeedInput.setDefaultBoolean(this.item.damageIgnoresSpeed());
 		}
 		
-		this.itemHitSoundInput = new GuiComponentDropdownInputSoundEvent(I18n.format("gui.edit.item.projectile.hitSound.label"), this, this.addon);
+		this.itemHitSoundInput = new GuiComponentDropdownInputSoundEvent(I18n.format("gui.edit.item.projectile.hitSound.label"), this.addon, this);
 		if (!this.isNew) {
 			this.itemHitSoundInput.setDefaultSelected(this.item.getHitSound());
 		} else if (!(this.item instanceof ItemAddedThrowable)) {
 			this.itemHitSoundInput.setDefaultSelected(SoundEvents.ENTITY_ARROW_HIT);
+		}
+		
+		this.itemHitEffectsInput = new GuiComponentListInput<GuiComponentEffectInput>(I18n.format("gui.edit.item.projectile.hitEffects.label"), this) {
+
+			@Override
+			public GuiComponentEffectInput createBlankComponent() {
+				return new GuiComponentEffectInput("", GuiEditItemBaseProjectile.this.addon, this.editScreen);
+			}
+			
+		};
+		if (!this.isNew) {
+			this.item.getHitEffects().forEach(toAdd -> {
+				GuiComponentEffectInput input = this.itemHitEffectsInput.createBlankComponent();
+				input.setDefaultEffect(toAdd);
+				this.itemHitEffectsInput.addDefaultComponent(input);
+			});
 		}
 	}
 	
@@ -127,6 +148,10 @@ public abstract class GuiEditItemBaseProjectile<T extends IItemAdded & IItemAdde
 		this.item.setDamageIgnoresSpeed(this.itemDamageIgnoresSpeedInput.getBoolean());
 		this.item.setHitSound(this.itemHitSoundInput.getSelected());
 		
+		if (!this.itemHitEffectsInput.getComponents().isEmpty()) {
+			this.item.setHitEffects(this.itemHitEffectsInput.getComponents().stream().filter(input -> input.getEffect() != null).map(GuiComponentEffectInput::getEffect).collect(Collectors.toList()));
+		}
+		
 		super.saveObject();
 	}
 	
@@ -143,6 +168,12 @@ public abstract class GuiEditItemBaseProjectile<T extends IItemAdded & IItemAdde
 		this.itemPiercesEntitiesInput.setDefaultBoolean(this.copyFrom.piercesEntities());
 		this.itemDamageIgnoresSpeedInput.setDefaultBoolean(this.copyFrom.damageIgnoresSpeed());
 		this.itemHitSoundInput.setDefaultSelected(this.copyFrom.getHitSound());
+		
+		this.copyFrom.getHitEffects().forEach(toAdd -> {
+			GuiComponentEffectInput input = this.itemHitEffectsInput.createBlankComponent();
+			input.setDefaultEffect(toAdd);
+			this.itemHitEffectsInput.addDefaultComponent(input);
+		});
 		
 		super.copyFromOther();
 	}

@@ -50,7 +50,7 @@ public class CommonEventHandler {
 		if (!AdditionTypeEffect.INSTANCE.getInHandEffects().isEmpty()) {
 			for (Entry<EffectCauseItemInHand, List<Effect>> entry : AdditionTypeEffect.INSTANCE.getInHandEffects().entrySet()) {
 				if (entry.getKey().applies(event.getEntityLiving())) {
-					entry.getValue().forEach(effect -> effect.applyEffect(event.getEntityLiving()));
+					entry.getValue().forEach(effect -> effect.applyEffect(event.getEntityLiving(), event.getEntityLiving()));
 				}
 			}
 		}

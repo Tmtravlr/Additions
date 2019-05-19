@@ -1,10 +1,12 @@
 package com.tmtravlr.additions.addon.items;
 
+import java.util.List;
+
+import com.tmtravlr.additions.addon.effects.Effect;
 import com.tmtravlr.additions.addon.entities.IEntityAddedProjectile;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
@@ -55,6 +57,10 @@ public interface IItemAddedProjectile {
 	public SoundEvent getHitSound();
 	
 	public void setHitSound(SoundEvent hitSound);
+	
+	public List<Effect> getHitEffects();
+	
+	public void setHitEffects(List<Effect> hitEffects);
 
 	public boolean isInfinite(ItemStack projectile, ItemStack bow);
 	

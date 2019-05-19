@@ -2,7 +2,8 @@ package com.tmtravlr.additions.addon.effects;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+
+import javax.annotation.Nullable;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
@@ -28,8 +29,6 @@ import net.minecraft.world.World;
  */
 public class EffectPotion extends Effect {
 	public static final ResourceLocation TYPE = new ResourceLocation(AdditionsMod.MOD_ID, "potion");
-	
-	private static final Random RAND = new Random();
 
 	public PotionType potionType;
 	public PotionEffect potion;
@@ -37,8 +36,8 @@ public class EffectPotion extends Effect {
 	public float chance = 1;
 
 	@Override
-	public void applyEffect(Entity entity) {
-		if (!entity.world.isRemote && entity instanceof EntityLivingBase && RAND.nextFloat() <= this.chance) {
+	public void applyEffect(@Nullable Entity cause, Entity entity) {
+		if (!entity.world.isRemote && entity instanceof EntityLivingBase && entity.world.rand.nextFloat() <= this.chance) {
 			List<PotionEffect> effectsToApply = new ArrayList<>();
 			
 			if (this.potionType != null) {
@@ -74,7 +73,7 @@ public class EffectPotion extends Effect {
 	}
 
 	@Override
-	public void applyEffect(World world, BlockPos pos) {
+	public void applyEffect(@Nullable Entity cause, World world, BlockPos pos) {
 		//Nothing to do here...
 	}
 

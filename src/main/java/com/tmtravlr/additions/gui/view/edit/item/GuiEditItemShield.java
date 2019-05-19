@@ -105,14 +105,14 @@ public class GuiEditItemShield extends GuiEditItem<ItemAddedShield> {
 		this.itemUseEfficiencyInput.setInfo(new TextComponentTranslation("gui.edit.item.useEfficiency.info"));
 		this.itemUseEfficiencyInput.setDefaultBoolean(this.item.efficiencyMultiplier != 0);
 
-		this.itemBashSwingSoundInput = new GuiComponentDropdownInputSoundEvent(I18n.format("gui.edit.item.shield.bashSwingSound.label"), this, this.addon);
+		this.itemBashSwingSoundInput = new GuiComponentDropdownInputSoundEvent(I18n.format("gui.edit.item.shield.bashSwingSound.label"), this.addon, this);
 		if (!this.isNew) {
 			this.itemBashSwingSoundInput.setDefaultSelected(this.item.bashSwingSound);
 		} else {
 			this.itemBashSwingSoundInput.setDefaultSelected(SoundEvents.ITEM_ARMOR_EQUIP_IRON);
 		}
 
-		this.itemBashHitSoundInput = new GuiComponentDropdownInputSoundEvent(I18n.format("gui.edit.item.shield.bashHitSound.label"), this, this.addon);
+		this.itemBashHitSoundInput = new GuiComponentDropdownInputSoundEvent(I18n.format("gui.edit.item.shield.bashHitSound.label"), this.addon, this);
 		if (!this.isNew) {
 			this.itemBashHitSoundInput.setDefaultSelected(this.item.bashHitSound);
 		} else {

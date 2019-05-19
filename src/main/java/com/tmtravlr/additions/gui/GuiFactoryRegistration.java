@@ -2,9 +2,14 @@ package com.tmtravlr.additions.gui;
 
 import java.util.Collections;
 
+import javax.annotation.Nullable;
+
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.blocks.BlockAddedManager;
 import com.tmtravlr.additions.addon.blocks.BlockAddedSimple;
+import com.tmtravlr.additions.addon.effects.EffectCommand;
+import com.tmtravlr.additions.addon.effects.EffectLootTableAt;
+import com.tmtravlr.additions.addon.effects.EffectLootTableInside;
 import com.tmtravlr.additions.addon.effects.EffectManager;
 import com.tmtravlr.additions.addon.effects.EffectPotion;
 import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemInHand;
@@ -110,6 +115,9 @@ import com.tmtravlr.additions.gui.view.edit.recipe.GuiEditRecipeCraftingShaped;
 import com.tmtravlr.additions.gui.view.edit.recipe.GuiEditRecipeCraftingShapeless;
 import com.tmtravlr.additions.gui.view.edit.recipe.GuiEditRecipeSmelting;
 import com.tmtravlr.additions.gui.view.edit.update.effect.GuiEditHandlerEffectCauseItemInHand;
+import com.tmtravlr.additions.gui.view.edit.update.effect.GuiEditHandlerEffectCommand;
+import com.tmtravlr.additions.gui.view.edit.update.effect.GuiEditHandlerEffectLootTableAt;
+import com.tmtravlr.additions.gui.view.edit.update.effect.GuiEditHandlerEffectLootTableInside;
 import com.tmtravlr.additions.gui.view.edit.update.effect.GuiEditHandlerEffectPotion;
 import com.tmtravlr.additions.type.AdditionTypeManager;
 
@@ -117,8 +125,10 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.potion.PotionUtils;
+import net.minecraft.util.ResourceLocation;
 
 public class GuiFactoryRegistration {
 
@@ -1018,8 +1028,26 @@ public class GuiFactoryRegistration {
 		EffectManager.registerGuiFactory(EffectPotion.TYPE, new IGuiEffectFactory<EffectPotion>() {
 
 			@Override
-			public String getTitle() {
-				return I18n.format("type.effect.potion.title");
+			public String getTitle(@Nullable EffectPotion effect) {
+				if (effect == null) {
+					return I18n.format("type.effect.potion.title");
+				} else {
+					String effectName = "";
+					
+					if (effect.potion != null) {
+						ResourceLocation potionName = Potion.REGISTRY.getNameForObject(effect.potion.getPotion());
+						
+						if (potionName != null) {
+							effectName = potionName.toString();
+						}
+					}
+					
+					if (effect.potionType != null) {
+						effectName = I18n.format(effect.potionType.getNamePrefixed("potion.effect."));
+					}
+					
+					return effectName.isEmpty() ? I18n.format("type.effect.potion.title") : I18n.format("type.effect.potion.title.withName", effectName);
+				}
 			}
 
 			@Override
@@ -1043,6 +1071,66 @@ public class GuiFactoryRegistration {
 			public IGuiEffectEditHandler getEditHandler() {
 				
 				return new GuiEditHandlerEffectPotion();
+			}
+			
+		});
+		
+		EffectManager.registerGuiFactory(EffectCommand.TYPE, new IGuiEffectFactory<EffectCommand>() {
+
+			@Override
+			public String getTitle(@Nullable EffectCommand effect) {
+				return effect == null ? I18n.format("type.effect.command.title") : I18n.format("type.effect.command.title.withName", effect.command);
+			}
+
+			@Override
+			public ItemStack getDisplayStack(EffectCommand effect) {
+				return ItemStack.EMPTY;
+			}
+
+			@Override
+			public IGuiEffectEditHandler getEditHandler() {
+				
+				return new GuiEditHandlerEffectCommand();
+			}
+			
+		});
+		
+		EffectManager.registerGuiFactory(EffectLootTableInside.TYPE, new IGuiEffectFactory<EffectLootTableInside>() {
+
+			@Override
+			public String getTitle(@Nullable EffectLootTableInside effect) {
+				return effect == null ? I18n.format("type.effect.lootTableInside.title") : I18n.format("type.effect.lootTableInside.title.withName", effect.lootTable.toString());
+			}
+
+			@Override
+			public ItemStack getDisplayStack(EffectLootTableInside effect) {
+				return ItemStack.EMPTY;
+			}
+
+			@Override
+			public IGuiEffectEditHandler getEditHandler() {
+				
+				return new GuiEditHandlerEffectLootTableInside();
+			}
+			
+		});
+		
+		EffectManager.registerGuiFactory(EffectLootTableAt.TYPE, new IGuiEffectFactory<EffectLootTableAt>() {
+
+			@Override
+			public String getTitle(@Nullable EffectLootTableAt effect) {
+				return effect == null ? I18n.format("type.effect.lootTableAt.title") : I18n.format("type.effect.lootTableAt.title.withName", effect.lootTable.toString());
+			}
+
+			@Override
+			public ItemStack getDisplayStack(EffectLootTableAt effect) {
+				return ItemStack.EMPTY;
+			}
+
+			@Override
+			public IGuiEffectEditHandler getEditHandler() {
+				
+				return new GuiEditHandlerEffectLootTableAt();
 			}
 			
 		});

@@ -145,7 +145,7 @@ public class GuiComponentEffectInput implements IGuiViewComponent {
 				this.selectedText.setText(EffectManager.getTypeFor(effect).toString());
 			} else {
 				this.displayStack = factory.getDisplayStack(effect);
-				this.selectedText.setText(factory.getTitle());
+				this.selectedText.setText(factory.getTitle(effect));
 			}
 		}
 		

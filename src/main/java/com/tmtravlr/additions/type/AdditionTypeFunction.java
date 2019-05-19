@@ -53,13 +53,13 @@ public class AdditionTypeFunction extends AdditionType<FunctionAdded> {
 	@SideOnly(Side.CLIENT)
 	public void saveAddition(Addon addon, FunctionAdded addition) {
 		if (!this.loadedFunctions.containsEntry(addon, addition)) {
-			File additionFolder = new File(addon.addonFolder, FOLDER_NAME);
+			File additionFolder = new File(addon.addonFolder, FOLDER_NAME + File.separator + addition.id.getResourceDomain());
 			
 			if (!additionFolder.isDirectory()) {
 				additionFolder.mkdirs();
 			}
 
-			File additionFile = new File(additionFolder, addition.id.getResourceDomain() + File.separator + addition.id.getResourcePath() + FILE_POSTFIX);
+			File additionFile = new File(additionFolder, addition.id.getResourcePath() + FILE_POSTFIX);
 			
 			try {
 				final PrintStream functionWriteStream = new PrintStream(additionFile);

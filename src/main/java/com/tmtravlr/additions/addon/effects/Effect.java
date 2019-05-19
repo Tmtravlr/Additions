@@ -1,12 +1,12 @@
 package com.tmtravlr.additions.addon.effects;
 
+import javax.annotation.Nullable;
+
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-import com.tmtravlr.additions.addon.effects.cause.EffectCause;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -19,9 +19,9 @@ import net.minecraft.world.World;
  */
 public abstract class Effect {
 	
-	public abstract void applyEffect(Entity entity);
+	public abstract void applyEffect(@Nullable Entity cause, Entity entity);
 	
-	public abstract void applyEffect(World world, BlockPos pos);
+	public abstract void applyEffect(@Nullable Entity cause, World world, BlockPos pos);
 	
 	public abstract static class Serializer<T extends Effect> {
 		private final ResourceLocation effectType;

@@ -320,6 +320,12 @@ public class AddonLoader {
 		}
 	}
 	
+	public static void deleteAddon(Addon addon) throws IOException {
+		for (Path path : Files.walk(addon.addonFolder.toPath()).sorted(Comparator.reverseOrder()).collect(Collectors.toList())) {
+			Files.delete(path);
+		}
+	}
+	
 	public static void setupNewAddon(Addon addon) {
 		addonsLoaded.add(addon);
 		ADDONS_NAMED.put(addon.id, addon);
@@ -342,7 +348,10 @@ public class AddonLoader {
 		addon.locked = true;
 		AdditionsMod.proxy.registerAsResourcePack(addon.addonFolder);
 		AdditionsMod.proxy.refreshResources();
-		Files.walk(oldFolder.toPath()).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
+		
+		for (Path path : Files.walk(oldFolder.toPath()).sorted(Comparator.reverseOrder()).collect(Collectors.toList())) {
+			Files.delete(path);
+		}
 	}
 	
 	public static void unlockAddon(Addon addon) throws IOException {

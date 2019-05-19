@@ -58,7 +58,7 @@ public class GuiEditEffectInput extends GuiEditUpdate {
 			public String getSelectionName(ResourceLocation selection) {
 				IGuiEffectFactory factory = EffectManager.getGuiFactoryFor(selection);
 				
-				return factory == null ? selection.toString() : factory.getTitle();
+				return factory == null ? selection.toString() : factory.getTitle(null);
 			}
 			
 			@Override

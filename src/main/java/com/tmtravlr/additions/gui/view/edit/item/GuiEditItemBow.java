@@ -13,6 +13,7 @@ import com.tmtravlr.additions.gui.view.components.input.GuiComponentIngredientOr
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentListInput;
 import com.tmtravlr.additions.gui.view.components.input.dropdown.GuiComponentDropdownInputItem;
 import com.tmtravlr.additions.gui.view.components.input.dropdown.GuiComponentDropdownInputSoundEvent;
+import com.tmtravlr.additions.gui.view.components.input.effect.GuiComponentEffectInput;
 import com.tmtravlr.additions.gui.view.edit.texture.GuiEditItemBowTexture;
 import com.tmtravlr.additions.gui.view.edit.texture.GuiEditItemTexture;
 import com.tmtravlr.additions.util.models.ItemModelManager;
@@ -44,6 +45,7 @@ public class GuiEditItemBow extends GuiEditItem<ItemAddedBow> {
 	private GuiComponentFloatInput itemEfficiencyMultiplierInput;
 	private GuiComponentDropdownInputSoundEvent itemShotSoundInput;
 	private GuiComponentListInput<GuiComponentDropdownInputItem> itemAmmoItemsInput;
+	private GuiComponentListInput<GuiComponentEffectInput> itemShotEffectsInput;
 
 	public GuiEditItemBow(GuiScreen parentScreen, String title, Addon addon, ItemAddedBow item) {
 		super(parentScreen, title, addon);
@@ -71,7 +73,7 @@ public class GuiEditItemBow extends GuiEditItem<ItemAddedBow> {
 		
 		this.itemEnchantabilityInput = new GuiComponentIntegerInput(I18n.format("gui.edit.item.enchantability.label"), this, false);
 		this.itemEnchantabilityInput.setMinimum(0);
-		this.itemEnchantabilityInput.setInfo(new TextComponentTranslation("gui.edit.enchantability.info"));
+		this.itemEnchantabilityInput.setInfo(new TextComponentTranslation("gui.edit.item.enchantability.info"));
 		if (!this.isNew) {
 			this.itemEnchantabilityInput.setDefaultInteger(this.item.enchantability);
 		}
@@ -149,7 +151,7 @@ public class GuiEditItemBow extends GuiEditItem<ItemAddedBow> {
 		this.itemUseEfficiencyInput.setInfo(new TextComponentTranslation("gui.edit.item.useEfficiency.info"));
 		this.itemUseEfficiencyInput.setDefaultBoolean(this.item.efficiencyMultiplier != 0);
 		
-		this.itemShotSoundInput = new GuiComponentDropdownInputSoundEvent(I18n.format("gui.edit.item.shooter.shotSound.label"), this, this.addon);
+		this.itemShotSoundInput = new GuiComponentDropdownInputSoundEvent(I18n.format("gui.edit.item.shooter.shotSound.label"), this.addon, this);
 		if (!this.isNew) {
 			this.itemShotSoundInput.setDefaultSelected(this.item.shotSound);
 		} else {
@@ -174,6 +176,22 @@ public class GuiEditItemBow extends GuiEditItem<ItemAddedBow> {
 			this.itemAmmoItemsInput.setDefaultComponents(ammoItemInputs);
 		}
 		
+		this.itemShotEffectsInput = new GuiComponentListInput<GuiComponentEffectInput>(I18n.format("gui.edit.item.shooter.shotEffects.label"), this) {
+
+			@Override
+			public GuiComponentEffectInput createBlankComponent() {
+				return new GuiComponentEffectInput("", GuiEditItemBow.this.addon, this.editScreen);
+			}
+			
+		};
+		if (!this.isNew) {
+			this.item.shotEffects.forEach(toAdd -> {
+				GuiComponentEffectInput input = this.itemShotEffectsInput.createBlankComponent();
+				input.setDefaultEffect(toAdd);
+				this.itemShotEffectsInput.addDefaultComponent(input);
+			});
+		}
+		
 		if (this.copyFrom != null) {
 			this.copyFromOther();
 		}
@@ -195,6 +213,7 @@ public class GuiEditItemBow extends GuiEditItem<ItemAddedBow> {
 		this.advancedComponents.add(this.itemFiresVanillaArrowsInput);
 		this.advancedComponents.add(this.itemConsumesOneAmmoInput);
 		this.advancedComponents.add(this.itemAmmoItemsInput);
+		this.advancedComponents.add(this.itemShotEffectsInput);
 		this.advancedComponents.add(this.itemScatteringInput);
 		this.advancedComponents.add(this.itemUseEfficiencyInput);
 		this.advancedComponents.add(this.itemEfficiencyMultiplierInput);
@@ -223,6 +242,10 @@ public class GuiEditItemBow extends GuiEditItem<ItemAddedBow> {
 		this.item.shotSound = this.itemShotSoundInput.getSelected();
 		this.item.ammoItems = this.itemAmmoItemsInput.getComponents().stream().map(GuiComponentDropdownInputItem::getSelected).collect(Collectors.toList());
 		
+		if (!this.itemShotEffectsInput.getComponents().isEmpty()) {
+			this.item.shotEffects = this.itemShotEffectsInput.getComponents().stream().filter(input -> input.getEffect() != null).map(GuiComponentEffectInput::getEffect).collect(Collectors.toList());
+		}
+		
 		super.saveObject();
 	}
 	
@@ -242,13 +265,17 @@ public class GuiEditItemBow extends GuiEditItem<ItemAddedBow> {
 		this.itemEfficiencyMultiplierInput.setDefaultFloat(this.copyFrom.efficiencyMultiplier == 0 ? 0.5f : this.copyFrom.efficiencyMultiplier);
 		this.itemShotSoundInput.setDefaultSelected(this.copyFrom.shotSound);
 		
-		List<GuiComponentDropdownInputItem> ammoItemInputs = this.copyFrom.ammoItems.stream().map(ammoItem -> {
+		this.copyFrom.ammoItems.forEach(toAdd -> {
 			GuiComponentDropdownInputItem input = this.itemAmmoItemsInput.createBlankComponent();
-			input.setDefaultSelected(ammoItem);
-			return input;
-		}).collect(Collectors.toList());
+			input.setDefaultSelected(toAdd);
+			this.itemAmmoItemsInput.addDefaultComponent(input);
+		});
 		
-		this.itemAmmoItemsInput.setDefaultComponents(ammoItemInputs);
+		this.copyFrom.shotEffects.forEach(toAdd -> {
+			GuiComponentEffectInput input = this.itemShotEffectsInput.createBlankComponent();
+			input.setDefaultEffect(toAdd);
+			this.itemShotEffectsInput.addDefaultComponent(input);
+		});
 		
 		super.copyFromOther();
 	}

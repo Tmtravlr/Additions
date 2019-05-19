@@ -19,6 +19,12 @@ import com.tmtravlr.additions.gui.view.edit.GuiEdit;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextComponentTranslation;
 
+/**
+ * Creates or updates a potion effect
+ * 
+ * @author Rebeca Rey (Tmtravlr)
+ * @date May 2019
+ */
 public class GuiEditHandlerEffectPotion implements IGuiEffectEditHandler {
 	private GuiEdit editScreen;
 

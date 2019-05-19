@@ -35,6 +35,9 @@ public class EffectManager {
 	
 	public static void registerDefaultEffects() {
 	    registerEffectType(new EffectPotion.Serializer());
+	    registerEffectType(new EffectCommand.Serializer());
+	    registerEffectType(new EffectLootTableInside.Serializer());
+	    registerEffectType(new EffectLootTableAt.Serializer());
 	}
 	
 	public static void registerEffectType(Effect.Serializer <? extends Effect > effectSerializer) {
