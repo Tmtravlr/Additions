@@ -127,9 +127,55 @@ type.recipe.brewing.complete.description=一套类似原版的酿造配方，可
 
 type.effectCause.held.title=手上的物品
 type.effectCause.held.description=当一个项目在您的主手、副手或两者之一时运行该效果。
+type.effectCause.inInventory.title=物品在背包中
+type.effectCause.inInventory.description=当物品在背包中运行效果
+type.effectCause.worn.title=穿戴
+type.effectCause.worn.description=当你穿盔甲或盔甲时运行效果。
+type.effectCause.rightClickItem.title=右键
+type.effectCause.rightClickItem.description=右键单击物品时运行效果。
+type.effectCause.leftClickItem.title=左键
+type.effectCause.leftClickItem.description=在左键单击物品时运行效果。
+type.effectCause.digWithItem.title=挖掘
+type.effectCause.digWithItem.description=使用此物品挖掘块时运行效果。
+type.effectCause.breakBlockWithItem.title=破坏了方块
+type.effectCause.breakBlockWithItem.description=使用此物品破坏了一个方块就运行效果。
+type.effectCause.attackWithItem.title=攻击
+type.effectCause.attackWithItem.description=使用该物品攻击生物时运行效果
+type.effectCause.usingItem.title=使用
+type.effectCause.usingItem.description=当你使用一个项目时运行效果，比如吃食物，拉弓等等。
+type.effectCause.standOnBlock.title=站在方块上
+type.effectCause.standOnBlock.description=当你站在一个块上时运行效果。
+type.effectCause.standInBlock.title=站在方块内
+type.effectCause.standInBlock.description=当你站在一个块内时运行效果。
+type.effectCause.rightClickBlock.title=方块被右键单击
+type.effectCause.rightClickBlock.description=右键单击方块时运行效果。
+type.effectCause.digBlock.title=挖方块时
+type.effectCause.digBlock.description=当你正在挖方块时运行效果。
+type.effectCause.breakBlock.title=方块被破坏
+type.effectCause.breakBlock.description=当方块被破坏时运行效果。
+type.effectCause.entitySpawned.title=生物生成
+type.effectCause.entitySpawned.description=在生成实体时运行效果。
+type.effectCause.entityUdpate.title=实体更新
+type.effectCause.entityUdpate.description=在实体更新时运行效果。
+type.effectCause.rightClickEntity.title=实体被右键
+type.effectCause.rightClickEntity.description=右键单击实体时运行效果。
+type.effectCause.entityAttacked.title=实体被攻击
+type.effectCause.entityAttacked.description=实体被攻击时运行效果。
+type.effectCause.entityDeath.title=实体死亡
+type.effectCause.entityDeath.description=实体死亡时运行效果
 
-type.effect.potion.title=使用药水效果
-type.effect.potion.description=对实体更新药水效果（如果有）
+type.effect.potion.title=使用效果
+type.effect.potion.title.withName=更新效果: %s
+type.effect.potion.description=对实体更新效果（如果有）
+type.effect.command.title=运行命令
+type.effect.command.title.withName=运行命令: %s
+type.effect.command.description=以被指定的实体或者其位置运行命令
+type.effect.lootTableInside.title=在内部生成掠夺表
+type.effect.lootTableInside.title.withName=在内部生成掠夺表: %s
+type.effect.lootTableInside.description=如果一个块或实体有库存（如箱子和矿车箱子），则在该块或实体内生成一个掠夺表。
+type.effect.lootTableAt.title=生成掠夺表
+type.effect.lootTableAt.title.withName=生成掠夺表: %s
+type.effect.lootTableAt.description=从掠夺表中生成物品，并将他们丢在地上。
 
 attribute.modifier.noEffect=无
 
@@ -191,7 +237,7 @@ gui.popup.selectFile.title=选择文件
 gui.popup.selectFile.message=从文件选择器中选择一个文件
 
 gui.popup.texture.animation.title=设置动画
-gui.popup.texture.animation.message=看起来你的图像是一个动画。要选择.mcmeta文件还是生成默认文件？
+gui.popup.texture.animation.message=看起来你的图像是一个动画。要选择.mcmeta文件还是生成动画文件？
 gui.popup.texture.animation.file.label=动画文件
 gui.popup.texture.animation.button.generate=生成默认文件
 gui.popup.texture.animation.generated.title=生成动画文件
@@ -226,7 +272,7 @@ gui.popup.attributeModifier.uuid.info=将UUID留空以生成默认的UUID
 gui.popup.attributeModifier.problem.slotRequired.title=需要栏位
 gui.popup.attributeModifier.problem.slotRequired.message=您需要指定一个栏位
 
-gui.popup.potionEffect.编辑药水效果
+gui.popup.potionEffect.title=编辑药水效果
 gui.popup.potionEffect.potion.label=药水
 gui.popup.potionEffect.duration.label=持续时间
 gui.popup.potionEffect.duration.info药剂效果的持续时间以tick为单位，每秒20tick。
@@ -261,36 +307,45 @@ gui.popup.selectSound.duplicate.message=ID为“%s”的声音已存在。替换
 
 gui.popup.color.title=编辑颜色
 
-gui.popup.shareAddon.title=分享你的模组！
-gui.popup.shareAddon.button=分享你的模组
-gui.popup.shareAddon.message1=压缩你的插件，这样你可以分享它！
-gui.popup.shareAddon.message2=只有当您的加载项完成并且您没有更多的更改要做时才这样做，因为这将锁定您的加载项以防止进一步的更改。
-gui.popup.shareAddon.success.title=加载项准备共享！
-gui.popup.shareAddon.success.message=成功压缩加载项！它被称为“%s”。单击下面转到文件夹，以便您可以共享它。
-gui.popup.shareAddon.problem.title=压缩加载项时出现问题
+gui.popup.deleteAddon.title=删除 %s
+gui.popup.deleteAddon.message=警告！如果删除%s，将丢失所有工作。如果没有，您可能要先备份。是否确实要删除并重新启动游戏？
+gui.popup.deleteAddon.problem.noDelete.title=删除%s时出现问题
+gui.popup.deleteAddon.problem.noDelete.message=无法删除加载项。消息是“%1$s”。您可以自己关闭游戏并删除文件“%2$s”。。
+
+gui.popup.addonDeleted.title=删除 %s
+gui.popup.addonDeleted.message=%s已被删除。必须重新启动游戏才能使更改生效。单击下面关闭游戏，以便重新启动。
+gui.popup.addonDeleted.button.restart=重启游戏
+
+gui.popup.shareAddon.title=分享你的Addon!
+gui.popup.shareAddon.button=分享你的Addon
+gui.popup.shareAddon.message1=压缩你的addon以分享它!
+gui.popup.shareAddon.message2=只有当您的addon完成并且您没有更多的更改要做时才这样做，因为这将锁定您的加载项以防止进一步的更改。
+gui.popup.shareAddon.success.title=Addon 已经可以分享了！
+gui.popup.shareAddon.success.message=成功压缩addon！它被称为“%s”。单击下面转到文件夹，以便您可以共享它。
+gui.popup.shareAddon.problem.title=压缩时出现问题
 gui.popup.shareAddon.problem.message=压缩加载项时出现问题。消息是“%s”。你可以再试一次，但现在情况可能很奇怪。
 
-gui.popup.lockAddon.title=压缩模组
+gui.popup.lockAddon.title=压缩addon
 gui.popup.lockAddon.message=这可能需要一段时间，请稍候…
 
-gui.popup.addonVersion.title=设置模组版本
-gui.popup.addonVersion.message=给你的插件一个版本号！它只能有数字和点。
+gui.popup.addonVersion.title=设置addon版本
+gui.popup.addonVersion.message=给你的addon一个版本号！它只能有数字和点。
 gui.popup.addonVersion.message.lastVersion=给你的插件一个版本号！它只能有数字和点。最后一个版本是“%s”。
-gui.popup.addonVersion.label=模组版本
-gui.popup.addonVersion.problem.noVersion.title=需要模组版本
-gui.popup.addonVersion.problem.noVersion.message=您需要模组的版本！
+gui.popup.addonVersion.label=addon版本
+gui.popup.addonVersion.problem.noVersion.title=需要addon版本
+gui.popup.addonVersion.problem.noVersion.message=您需要addon的版本！
 
-gui.popup.unlockAddon.title=解压模组
+gui.popup.unlockAddon.title=解压addon
 gui.popup.unlockAddon.message=这可能需要一段时间，请稍候…
 gui.popup.unlockAddon.warning.title=解压警告
-gui.popup.unlockAddon.warning.message=如果解锁此加载项，它将被解压并移动到加载项/添加文件夹。如果你不是这个插件的作者，你可能不想要这个。您确定要解锁它吗？
-gui.popup.unlockAddon.problem.title=解压缩模组时出现问题
-gui.popup.unlockAddon.problem.message=解压缩模组时出现问题。消息是“%s”。你可以再试一次，但现在情况可能很奇怪。
+gui.popup.unlockAddon.warning.message=如果解锁此addon，它将被解压并移动到加载项/添加文件夹。如果你不是这个插件的作者，你可能不想要这个。您确定要解锁它吗？
+gui.popup.unlockAddon.problem.title=解压缩addon时出现问题
+gui.popup.unlockAddon.problem.message=解压缩addon时出现问题。消息是“%s”。你可以再试一次，但现在情况可能很奇怪。
 gui.popup.unlockAddon.problem.noDelete.title=删除“%s”时出现问题
-gui.popup.unlockAddon.problem.noDelete.message1=您的模组解压成功。但是，无法删除旧的压缩文件“%s”，这很常见。
+gui.popup.unlockAddon.problem.noDelete.message1=您的addon解压成功。但是，无法删除旧的压缩文件“%s”，这很常见。
 gui.popup.unlockAddon.problem.noDelete.message2=进入文件夹并自己删除（关闭游戏后），否则游戏将无法正常启动。
-gui.popup.unlockAddon.success.title=模组解锁完成
-gui.popup.unlockAddon.success.message=成功解锁模组！
+gui.popup.unlockAddon.success.title=addon解锁完成
+gui.popup.unlockAddon.success.message=成功解锁addon！
 
 gui.view.showAdvanced=显示高级选项
 gui.view.additionType.type=类型: %s
@@ -322,9 +377,9 @@ gui.view.addon.creativeTabs.none.message=%s 没有创造模式选项卡
 gui.view.addon.recipes.label=查看添加的配方 (%s)
 gui.view.addon.recipes.title=%s 的配方
 gui.view.addon.recipes.none.message=%s 没有任何合成配方
-gui.view.addon.effects.label=查看添加的药水效果 (%s)
-gui.view.addon.effects.title=%s 的药水效果
-gui.view.addon.effects.none.message=%s 没有任何药水效果
+gui.view.addon.effects.label=查看添加的效果 (%s)
+gui.view.addon.effects.title=%s 的效果
+gui.view.addon.effects.none.message=%s 没有任何效果
 gui.view.addon.functions.label=查看添加的功能 (%s)
 gui.view.addon.functions.title=%s 的功能
 gui.view.addon.functions.none.message=%s 没有任何功能
@@ -341,7 +396,7 @@ gui.view.addon.soundEvents.label=查看添加的声音 (%s)
 gui.view.addon.soundEvents.title=%s 的声音
 gui.view.addon.soundEvents.none.message=%s 没有任何声音
 
-gui.view.addon.locked.message=此模组已锁定！如果要对其进行任何更改，必须先将其解锁。
+gui.view.addon.locked.message=此addon已锁定！如果要对其进行任何更改，必须先将其解锁。
 
 gui.edit.editing=修改中: %s
 gui.edit.id.info=ID只能包含小写字母、数字或下划线。
@@ -377,7 +432,7 @@ gui.edit.selectType.label=选择类型
 gui.edit.selectType.descrpition.default=选择上面的类型。
 gui.edit.selectType.descrpition.none=找不到此类型的描述。
 
-gui.edit.item.title=创建一个新物品
+gui.edit.item.title=新物品
 gui.edit.item.itemType.label=物品类型
 gui.edit.item.itemId.label=物品Id
 gui.edit.item.itemName.label=物品名称
@@ -400,7 +455,7 @@ gui.edit.item.hasPotionEffect.info=如果为真，则该项目可能具有不同
 gui.edit.item.useEfficiency.label=使用效率
 gui.edit.item.useEfficiency.info=这个物品可以使用效率附魔来提高它的速度吗？0.5意味着在效率为5的情况下，它将是速度的两倍。1.0意味着在效率5时，它将是即时的。
 gui.edit.item.efficiencyMultiplier.label=效率乘数
-gui.edit.item.problem.title=创建项目时出现问题
+gui.edit.item.problem.title=创建物品时出现问题
 gui.edit.item.problem.duplicate=ID为“%s”的物品已存在！
 gui.edit.item.problem.noId=物品ID不能为空。
 gui.edit.item.problem.noName=物品名称不能为空
@@ -417,7 +472,7 @@ gui.edit.item.food.eatTime.info=吃食物所需的时间，以tick计（每秒20
 gui.edit.item.food.alwaysEdible.label=永远可以吃
 gui.edit.item.food.wolvesEat.label=狼也吃
 gui.edit.item.food.isDrink.label=这是饮料！
-gui.edit.item.food.eatenEffects.label=药水效果
+gui.edit.item.food.eatenEffects.label=效果
 
 gui.edit.item.record.title=创建新唱片
 gui.edit.item.record.music.label=音乐曲目
@@ -480,6 +535,7 @@ gui.edit.item.shooter.consumesOneAmmo.label=消耗一个弹药
 gui.edit.item.shooter.consumesOneAmmo.info=如果它发射了不止一个弹丸并且没有无穷大，它将只消耗一个。
 gui.edit.item.shooter.shotSound.label=声音
 gui.edit.item.shooter.ammoItems.label=子弹
+gui.edit.item.shooter.shotEffects.label=击中效果
 
 gui.edit.item.bow.title=创建新弓
 gui.edit.item.bow.drawTime.label=拉伸时间
@@ -499,11 +555,13 @@ gui.edit.item.projectile.damageIgnoresSpeed.label=伤害忽略速度
 gui.edit.item.projectile.damageIgnoresSpeed.info=不管速度如何，炮弹都会造成同样的伤害。很好，如果你想制造一把损坏很小的枪。
 gui.edit.item.projectile.renders3D.label=渲染3D
 gui.edit.item.projectile.hitSound.label=声音
+gui.edit.item.projectile.hitEffects.label=击中效果
 
 gui.edit.item.throwable.title=创建新的投掷物
 gui.edit.item.throwable.velocity.label=速度
 gui.edit.item.throwable.inaccuracy.label=不准确性
 gui.edit.item.throwable.throwSound.label=声音
+gui.edit.item.throwable.throwEffects.label=投掷效果
 
 gui.edit.item.arrow.title=创建新箭
 
@@ -692,10 +750,10 @@ gui.edit.recipe.brewing.complete.allowLingering.label允许滞留
 gui.edit.recipe.brewing.complete.problem.noInputTag.message=您必须有一个输入标签！
 gui.edit.recipe.brewing.complete.problem.noOutputTag.message=您必须有一个输出标签！
 
-gui.edit.effectList.title=创建新药水效果
+gui.edit.effectList.title=创建新效果
 gui.edit.effectList.when.message=当..
 gui.edit.effectList.then.message=然后..
-gui.edit.effectList.id.label=药水ID
+gui.edit.effectList.id.label=效果ID
 gui.edit.effectList.cause.label=引起
 gui.edit.effectList.effects.label=影响
 gui.edit.effectList.problem.title=在生成效果的时候发现问题
@@ -735,6 +793,16 @@ gui.edit.effect.potion.delay.info=延迟tick直到这药水再次使用。对于
 gui.edit.effect.potion.problem.noType.message=您必须选择药水类型！
 gui.edit.effect.potion.problem.noPreset.message=必须选择药水预设！
 gui.edit.effect.potion.problem.noCustom.message=你必须创建一个定制的药水！
+
+gui.edit.effect.command.command.label=命令
+gui.edit.effect.command.commandSenderName.label=设定命令使用者名称
+gui.edit.effect.command.commandSenderName.info=不是由生物运行，而是命令使用者的名称
+gui.edit.effect.command.problem.noCommand.message=必须输入命令！
+
+gui.edit.effect.lootTable.lootTable.label=掠夺表
+gui.edit.effect.lootTable.useLootTableSeed.label=使用掠夺表种子
+gui.edit.effect.lootTable.lootTableSeed.label=掠夺表种子
+gui.edit.effect.lootTable.problem.noLootTable.message=你必须确认一个掠夺表！
 
 gui.edit.function.title=创建新函数
 gui.edit.function.id.label=函数ID
@@ -800,7 +868,7 @@ gui.edit.itemStackGroup.message.oreOrGroup=您可以使用矿物字典条目或�
 gui.edit.itemStackGroup.oreDict=矿物词典条目
 gui.edit.itemStackGroup.itemGroup=物品表
 
-gui.edit.blockDrop.title=编辑块掉落
+gui.edit.blockDrop.title=编辑方块掉落
 gui.edit.blockDrop.type.label=掉落类型
 gui.edit.blockDrop.type.nothing=无
 gui.edit.blockDrop.type.itself=此方块
@@ -841,7 +909,7 @@ gui.edit.texture.item.base.message=为%s选择一个纹理，该纹理应该是P
 gui.edit.texture.item.base.label=物品纹理
 gui.edit.texture.item.color.message=如果你的物品可以被染色（像皮甲），在这里添加将被着色的覆盖层。保留为空可删除任何现有覆盖。
 gui.edit.texture.item.color.label=彩色纹理
-gui.edit.texture.item.colored.label=这是有色的
+gui.edit.texture.item.colored.label=可染色
 
 gui.edit.texture.armor.base.message=为%s选择一个护甲纹理，它应该是一个PNG文件，宽度是高的两倍。如果你的盔甲是有色的，这就是有色的纹理。
 gui.edit.texture.armor.base.label=护甲纹理
@@ -858,16 +926,16 @@ gui.edit.texture.hatOverlay.problem.wrongDimensions.notSquare.message=帽罩纹�
 
 gui.edit.texutre.bow.base0.message=为开始拉弓时选择纹理。
 gui.edit.texutre.bow.base0.label=纹理0
-gui.edit.texutre.bow.color0.message=为开始拉弓时选择颜色覆盖。
-gui.edit.texutre.bow.color0.label=拉纹理0
-gui.edit.texutre.bow.base1.message=选择一个纹理，当弓处于拉的中间时。
+gui.edit.texutre.bow.color0.message=为开始拉弓时选择染色覆盖层。
+gui.edit.texutre.bow.color0.label=染色覆盖纹理0
+gui.edit.texutre.bow.base1.message=选择一个纹理，当弓拉到一半。
 gui.edit.texutre.bow.base1.label=纹理1
-gui.edit.texutre.bow.color1.message=选择一个颜色覆盖当弓在拉的中间。
-gui.edit.texutre.bow.color1.label=拉纹理1
-gui.edit.texutre.bow.base2.message=选择一个纹理，当弓完成拉。
+gui.edit.texutre.bow.color1.message=选择一个染色覆盖当弓拉到一半。
+gui.edit.texutre.bow.color1.label=染色覆盖纹理1
+gui.edit.texutre.bow.base2.message=选择一个纹理，当拉弓完成。
 gui.edit.texutre.bow.base2.label=纹理2
-gui.edit.texutre.bow.color2.message=选择一个颜色覆盖当弓完成拉。
-gui.edit.texutre.bow.color2.label=拉纹理2
+gui.edit.texutre.bow.color2.message=选择一个染色覆盖当拉弓完成。
+gui.edit.texutre.bow.color2.label=染色覆盖纹理2
 
 gui.edit.texture.block.title=纹理化你的方块！
 gui.edit.texture.block.message=为%s选择一个纹理，该纹理应该是PNG文件。但是，如果您想要一个自定义模型，您必须自己创建它！

@@ -4,9 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.tmtravlr.additions.addon.effects.Effect;
-import com.tmtravlr.additions.addon.effects.EffectCommand;
 import com.tmtravlr.additions.addon.effects.EffectLootTableAt;
-import com.tmtravlr.additions.addon.effects.EffectPotion;
 import com.tmtravlr.additions.api.gui.IGuiEffectEditHandler;
 import com.tmtravlr.additions.gui.message.GuiMessageBox;
 import com.tmtravlr.additions.gui.view.components.GuiComponentDisplayText;
@@ -14,10 +12,6 @@ import com.tmtravlr.additions.gui.view.components.IGuiViewComponent;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentBooleanInput;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentFloatInput;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentIntegerInput;
-import com.tmtravlr.additions.gui.view.components.input.GuiComponentPotionEffectInput;
-import com.tmtravlr.additions.gui.view.components.input.GuiComponentStringInput;
-import com.tmtravlr.additions.gui.view.components.input.dropdown.GuiComponentDropdownInput;
-import com.tmtravlr.additions.gui.view.components.input.dropdown.GuiComponentDropdownInputPotionType;
 import com.tmtravlr.additions.gui.view.components.input.suggestion.GuiComponentSuggestionInputLootTable;
 import com.tmtravlr.additions.gui.view.edit.GuiEdit;
 
@@ -47,7 +41,7 @@ public class GuiEditHandlerEffectLootTableAt implements IGuiEffectEditHandler {
 		
 		this.description = new GuiComponentDisplayText(editScreen, new TextComponentTranslation("type.effect.lootTableAt.description"));
 		
-		this.lootTableInput = new GuiComponentSuggestionInputLootTable(I18n.format("gui.edit.effect.lootTable.lootTable"), editScreen);
+		this.lootTableInput = new GuiComponentSuggestionInputLootTable(I18n.format("gui.edit.effect.lootTable.lootTable.label"), editScreen);
 		this.lootTableInput.setRequired();
 		if (effectLootTable != null) {
 			this.lootTableInput.setDefaultText(effectLootTable.lootTable.toString());

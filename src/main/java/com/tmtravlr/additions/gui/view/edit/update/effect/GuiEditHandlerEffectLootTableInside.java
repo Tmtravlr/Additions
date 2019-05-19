@@ -42,7 +42,7 @@ public class GuiEditHandlerEffectLootTableInside implements IGuiEffectEditHandle
 		
 		this.description = new GuiComponentDisplayText(editScreen, new TextComponentTranslation("type.effect.lootTableInside.description"));
 		
-		this.lootTableInput = new GuiComponentSuggestionInputLootTable(I18n.format("gui.edit.effect.lootTable.lootTable"), editScreen);
+		this.lootTableInput = new GuiComponentSuggestionInputLootTable(I18n.format("gui.edit.effect.lootTable.lootTable.label"), editScreen);
 		this.lootTableInput.setRequired();
 		if (effectLootTable != null) {
 			this.lootTableInput.setDefaultText(effectLootTable.lootTable.toString());
