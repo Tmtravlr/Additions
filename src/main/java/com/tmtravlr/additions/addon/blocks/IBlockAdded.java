@@ -18,7 +18,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
@@ -61,34 +60,6 @@ public interface IBlockAdded {
 	
 	public void setXpDroppedMax(int xpMax);
 	
-	public void setHasCollisionBox(boolean hasCollisionBox);
-	
-	public void setHasSameCollisionBoundingBox(boolean sameCollisionBoundingBox);
-	
-	public void setBoundingBoxMinX(float boundingBoxMinX);
-	
-	public void setBoundingBoxMinY(float boundingBoxMinY);
-	
-	public void setBoundingBoxMinZ(float boundingBoxMinZ);
-	
-	public void setBoundingBoxMaxX(float boundingBoxMaxX);
-	
-	public void setBoundingBoxMaxY(float boundingBoxMaxY);
-	
-	public void setBoundingBoxMaxZ(float boundingBoxMaxZ);
-	
-	public void setCollisionBoxMinX(float collisionBoxMinX);
-	
-	public void setCollisionBoxMinY(float collisionBoxMinY);
-	
-	public void setCollisionBoxMinZ(float collisionBoxMinZ);
-	
-	public void setCollisionBoxMaxX(float collisionBoxMaxX);
-	
-	public void setCollisionBoxMaxY(float collisionBoxMaxY);
-	
-	public void setCollisionBoxMaxZ(float collisionBoxMaxZ);
-	
 	@Nullable
 	public IItemAddedBlock getItemBlock();
 	
@@ -124,37 +95,11 @@ public interface IBlockAdded {
 	
 	public int getOpacity();
 	
+	public int getLightLevel();
+	
 	public int getXpDroppedMin();
 	
 	public int getXpDroppedMax();
-	
-	public boolean hasCollisionBox();
-	
-	public boolean hasSameCollisionBoundingBox();
-	
-	public float getBoundingBoxMinX();
-	
-	public float getBoundingBoxMinY();
-	
-	public float getBoundingBoxMinZ();
-	
-	public float getBoundingBoxMaxX();
-	
-	public float getBoundingBoxMaxY();
-	
-	public float getBoundingBoxMaxZ();
-	
-	public float getCollisionBoxMinX();
-	
-	public float getCollisionBoxMinY();
-	
-	public float getCollisionBoxMinZ();
-	
-	public float getCollisionBoxMaxX();
-	
-	public float getCollisionBoxMaxY();
-	
-	public float getCollisionBoxMaxZ();
 	
 	public default void registerModels() {
 		AdditionsMod.proxy.registerBlockRender(this.getAsBlock());
@@ -241,6 +186,10 @@ public interface IBlockAdded {
 				json.addProperty("light_opacity", blockAdded.getLightOpacity(blockAdded.getDefaultState()));
 			}
 			
+			if (blockAdded.getLightValue(blockAdded.getDefaultState()) > 0) {
+				json.addProperty("light_level", blockAdded.getLightValue(blockAdded.getDefaultState()));
+			}
+			
 			if (Blocks.FIRE.getFlammability(blockAdded) > 0) {
 				json.addProperty("flammability", Blocks.FIRE.getFlammability(blockAdded));
 			}
@@ -286,62 +235,6 @@ public interface IBlockAdded {
 				json.addProperty("xp_dropped_max", blockAddedObj.getXpDroppedMax());
 			}
 			
-			if (!blockAddedObj.hasCollisionBox()) {
-				json.addProperty("has_collision_box", false);
-			}
-			
-			if (!blockAddedObj.hasSameCollisionBoundingBox()) {
-				json.addProperty("same_collision_bounding_box", false);
-			}
-			
-			if (blockAddedObj.getBoundingBoxMinX() != 0) {
-				json.addProperty("bounding_box_min_x", blockAddedObj.getBoundingBoxMinX());
-			}
-			
-			if (blockAddedObj.getBoundingBoxMinY() != 0) {
-				json.addProperty("bounding_box_min_y", blockAddedObj.getBoundingBoxMinY());
-			}
-			
-			if (blockAddedObj.getBoundingBoxMinZ() != 0) {
-				json.addProperty("bounding_box_min_z", blockAddedObj.getBoundingBoxMinZ());
-			}
-			
-			if (blockAddedObj.getBoundingBoxMaxX() != 1) {
-				json.addProperty("bounding_box_max_x", blockAddedObj.getBoundingBoxMaxX());
-			}
-			
-			if (blockAddedObj.getBoundingBoxMaxY() != 1) {
-				json.addProperty("bounding_box_max_y", blockAddedObj.getBoundingBoxMaxY());
-			}
-			
-			if (blockAddedObj.getBoundingBoxMaxZ() != 1) {
-				json.addProperty("bounding_box_max_z", blockAddedObj.getBoundingBoxMaxZ());
-			}
-			
-			if (blockAddedObj.getCollisionBoxMinX() != 0) {
-				json.addProperty("collision_box_min_x", blockAddedObj.getCollisionBoxMinX());
-			}
-			
-			if (blockAddedObj.getCollisionBoxMinY() != 0) {
-				json.addProperty("collision_box_min_y", blockAddedObj.getCollisionBoxMinY());
-			}
-			
-			if (blockAddedObj.getCollisionBoxMinZ() != 0) {
-				json.addProperty("collision_box_min_z", blockAddedObj.getCollisionBoxMinZ());
-			}
-			
-			if (blockAddedObj.getCollisionBoxMaxX() != 1) {
-				json.addProperty("collision_box_max_x", blockAddedObj.getCollisionBoxMaxX());
-			}
-			
-			if (blockAddedObj.getCollisionBoxMaxY() != 1) {
-				json.addProperty("collision_box_max_y", blockAddedObj.getCollisionBoxMaxY());
-			}
-			
-			if (blockAddedObj.getCollisionBoxMaxZ() != 1) {
-				json.addProperty("collision_box_max_z", blockAddedObj.getCollisionBoxMaxZ());
-			}
-			
 			return json;
         }
 
@@ -376,6 +269,7 @@ public interface IBlockAdded {
 			}
 			
 			blockAdded.setLightOpacity(MathHelper.clamp(JsonUtils.getInt(json, "light_opacity", 15), 0, 15));
+			blockAdded.setLightLevel(MathHelper.clamp(JsonUtils.getInt(json, "light_level", 0), 0, 15) / 15F);
 			
 			int flammability = JsonUtils.getInt(json, "flammability", 0);
 			int fireSpreadSpeed = JsonUtils.getInt(json, "fire_spread_speed", 0);
@@ -396,20 +290,6 @@ public interface IBlockAdded {
 			blockAdded.setCanPistonsPush(JsonUtils.getBoolean(json, "can_pistons_push", true));
 			blockAdded.setXpDroppedMin(JsonUtils.getInt(json, "xp_dropped_min", 0));
 			blockAdded.setXpDroppedMax(JsonUtils.getInt(json, "xp_dropped_max", 0));
-			blockAdded.setHasCollisionBox(JsonUtils.getBoolean(json, "has_collision_box", true));
-			blockAdded.setHasSameCollisionBoundingBox(JsonUtils.getBoolean(json, "same_collision_bounding_box", true));
-			blockAdded.setBoundingBoxMinX(JsonUtils.getFloat(json, "bounding_box_min_x", 0));
-			blockAdded.setBoundingBoxMinY(JsonUtils.getFloat(json, "bounding_box_min_y", 0));
-			blockAdded.setBoundingBoxMinZ(JsonUtils.getFloat(json, "bounding_box_min_z", 0));
-			blockAdded.setBoundingBoxMaxX(Math.max(JsonUtils.getFloat(json, "bounding_box_max_x", 1), blockAdded.getBoundingBoxMinX()));
-			blockAdded.setBoundingBoxMaxY(Math.max(JsonUtils.getFloat(json, "bounding_box_max_y", 1), blockAdded.getBoundingBoxMinY()));
-			blockAdded.setBoundingBoxMaxZ(Math.max(JsonUtils.getFloat(json, "bounding_box_max_z", 1), blockAdded.getBoundingBoxMinZ()));
-			blockAdded.setCollisionBoxMinX(JsonUtils.getFloat(json, "collision_box_min_x", 0));
-			blockAdded.setCollisionBoxMinY(JsonUtils.getFloat(json, "collision_box_min_y", 0));
-			blockAdded.setCollisionBoxMinZ(JsonUtils.getFloat(json, "collision_box_min_z", 0));
-			blockAdded.setCollisionBoxMaxX(Math.max(JsonUtils.getFloat(json, "collision_box_max_x", 1), blockAdded.getCollisionBoxMinX()));
-			blockAdded.setCollisionBoxMaxY(Math.max(JsonUtils.getFloat(json, "collision_box_max_y", 1), blockAdded.getCollisionBoxMinY()));
-			blockAdded.setCollisionBoxMaxZ(Math.max(JsonUtils.getFloat(json, "collision_box_max_z", 1), blockAdded.getCollisionBoxMinZ()));
         	
         	return blockAdded;
         }

@@ -17,6 +17,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.JsonSyntaxException;
 import com.tmtravlr.additions.addon.items.blocks.ItemAddedBlockSimple;
+import com.tmtravlr.additions.addon.items.blocks.ItemAddedBlockSlab;
 import com.tmtravlr.additions.api.gui.IGuiItemAddedFactory;
 
 import net.minecraft.util.JsonUtils;
@@ -56,11 +57,12 @@ public class ItemAddedManager {
 	    registerItemType(new ItemAddedArrow.Serializer());
 	    registerItemType(new ItemAddedProjectile.Serializer());
 	    registerItemType(new ItemAddedBlockSimple.Serializer());
+	    registerItemType(new ItemAddedBlockSlab.Serializer());
 	}
 	
 	public static void registerItemType(IItemAdded.Serializer <? extends IItemAdded > itemSerializer) {
 	    ResourceLocation resourcelocation = itemSerializer.getItemAddedType();
-	    Class<? extends IItemAdded> oclass = (Class<? extends IItemAdded>)itemSerializer.getItemAddedClass();
+	    Class<? extends IItemAdded> oclass = itemSerializer.getItemAddedClass();
 	
 	    if (NAME_TO_SERIALIZER_MAP.containsKey(resourcelocation)) {
 	        throw new IllegalArgumentException("Can't re-register item type name " + resourcelocation);
@@ -120,7 +122,8 @@ public class ItemAddedManager {
 	}
 	
 	public static class Serializer implements JsonDeserializer<IItemAdded>, JsonSerializer<IItemAdded> {
-        public IItemAdded deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context) throws JsonParseException {
+        @Override
+		public IItemAdded deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context) throws JsonParseException {
             JsonObject json = JsonUtils.getJsonObject(jsonElement, "item");
             ResourceLocation resourcelocation = new ResourceLocation(JsonUtils.getString(json, "type"));
             IItemAdded.Serializer<?> serializer;
@@ -134,7 +137,8 @@ public class ItemAddedManager {
             return serializer.deserialize(json, context);
         }
 
-        public JsonElement serialize(IItemAdded itemAdded, Type type, JsonSerializationContext context) {
+        @Override
+		public JsonElement serialize(IItemAdded itemAdded, Type type, JsonSerializationContext context) {
             IItemAdded.Serializer<IItemAdded> serializer = ItemAddedManager.<IItemAdded>getSerializerFor(itemAdded);
             JsonObject json = serializer.serialize(itemAdded, context);
             json.addProperty("type", serializer.getItemAddedType().toString());

@@ -3,7 +3,6 @@ package com.tmtravlr.additions.gui.view.edit.update;
 import com.tmtravlr.additions.addon.recipes.IngredientOreNBT;
 import com.tmtravlr.additions.gui.view.GuiView;
 import com.tmtravlr.additions.gui.view.components.GuiComponentDisplayText;
-import com.tmtravlr.additions.gui.view.components.input.GuiComponentIngredientOreNBTInput;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentItemStackInput;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentListInput;
 import com.tmtravlr.additions.gui.view.components.input.suggestion.GuiComponentSuggestionInputOreDict;
@@ -41,6 +40,7 @@ public abstract class GuiEditIngredientOreNBT extends GuiEditUpdate {
 			public GuiComponentItemStackInput createBlankComponent() {
 				GuiComponentItemStackInput input = new GuiComponentItemStackInput("", this.editScreen);
 				input.disableCount();
+				input.enableAnyDamage();
 				return input;
 			}
 			

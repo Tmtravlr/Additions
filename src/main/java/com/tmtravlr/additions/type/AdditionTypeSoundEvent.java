@@ -1,10 +1,7 @@
 package com.tmtravlr.additions.type;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.reflect.ParameterizedType;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -32,6 +29,7 @@ import net.minecraft.client.audio.SoundList;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
@@ -47,9 +45,16 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class AdditionTypeSoundEvent extends AdditionType<SoundEventAdded> {
 
 	@SideOnly(Side.CLIENT)
-	private static final Gson SOUNDS_JSON_GSON = ObfuscationReflectionHelper.getPrivateValue(SoundHandler.class, null, "field_147699_c", "GSON");
+	private static Gson SOUNDS_JSON_GSON;
 	@SideOnly(Side.CLIENT)
-	private static final ParameterizedType SOUNDS_JSON_TYPE = ObfuscationReflectionHelper.getPrivateValue(SoundHandler.class, null, "field_147696_d", "TYPE"); 
+	private static ParameterizedType SOUNDS_JSON_TYPE;
+	
+	static {
+		if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
+			SOUNDS_JSON_GSON = ObfuscationReflectionHelper.getPrivateValue(SoundHandler.class, null, "field_147699_c", "GSON");
+			SOUNDS_JSON_TYPE = ObfuscationReflectionHelper.getPrivateValue(SoundHandler.class, null, "field_147696_d", "TYPE");
+		}
+	}
 	
 	public static final ResourceLocation NAME = new ResourceLocation(AdditionsMod.MOD_ID, "sound");
 	public static final String EVENT_LIST_FILE = "data" + File.separator + "sound_events" + File.separator + "sound_event_list.txt";

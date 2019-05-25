@@ -27,7 +27,7 @@ import com.tmtravlr.additions.addon.items.ItemAddedManager;
 import com.tmtravlr.additions.addon.items.blocks.IItemAddedBlock;
 
 import net.minecraft.block.Block;
-import net.minecraft.item.Item;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -95,6 +95,10 @@ public class AdditionTypeBlock extends AdditionType<IBlockAdded> {
 						
 						this.loadedBlocks.put(addon, blockAdded);
 						ForgeRegistries.BLOCKS.register(block.setUnlocalizedName(blockName).setRegistryName(blockRegistryName));
+						
+						if (!(blockAdded instanceof BlockLiquid)) {
+							AdditionsMod.proxy.ignoreLiquidLevel(blockAdded);
+						}
 					
 						IItemAddedBlock itemAdded = blockAdded.getItemBlock();
 						if (itemAdded != null) {

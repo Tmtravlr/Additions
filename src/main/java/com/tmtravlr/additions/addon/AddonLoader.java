@@ -32,10 +32,7 @@ import com.google.gson.JsonSyntaxException;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.type.AdditionTypeManager;
 
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiErrorScreen;
 import net.minecraft.util.text.translation.I18n;
-import net.minecraftforge.fml.client.CustomModLoadingErrorDisplayException;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModAPIManager;
 import net.minecraftforge.fml.common.ModContainer;
@@ -143,7 +140,7 @@ public class AddonLoader {
 		try {
 			addonsLoaded = sorter.sort();
 		} catch (ModSortingException e) {
-			throw new AddonLoadingException(I18n.translateToLocalFormatted("gui.loadingError.dependancyCycle", (Addon)e.getExceptionData().getFirstBadNode()));
+			throw AdditionsMod.proxy.createLoadingException(I18n.translateToLocalFormatted("gui.loadingError.dependancyCycle", (Addon)e.getExceptionData().getFirstBadNode()));
 		}
 	}
 	
@@ -500,7 +497,7 @@ public class AddonLoader {
 		}
 	}
 	
-	private static CustomModLoadingErrorDisplayException createNotFoundException(Addon addon, ArtifactVersion acceptedVersion, boolean mod) {
+	private static RuntimeException createNotFoundException(Addon addon, ArtifactVersion acceptedVersion, boolean mod) {
 		String versionString;
 		
 		if (acceptedVersion instanceof DefaultArtifactVersion) {
@@ -514,38 +511,7 @@ public class AddonLoader {
 			versionString = acceptedVersion.toString();
 		}
 		
-//    	AdditionsMod.proxy.throwAddonLoadingException("gui.loadingError." + (mod ? "mod" : "addon") + "NotFound", addon, acceptedVersion);
-    	return new AddonLoadingException(I18n.translateToLocalFormatted("gui.loadingError." + (mod ? "mod" : "addon") + "NotFound", addon, versionString, acceptedVersion.getLabel()));
-	}
-
-	private static class AddonLoadingException extends CustomModLoadingErrorDisplayException {
-		private String message;
-		
-		public AddonLoadingException(String message) {
-			this.message = message;
-		}
-		
-		@Override
-		public void initGui(GuiErrorScreen errorScreen, FontRenderer fontRenderer) {}
-
-		@Override
-		public void drawScreen(GuiErrorScreen errorScreen, FontRenderer fontRenderer, int mouseRelX, int mouseRelY, float tickTime) {
-			errorScreen.drawDefaultBackground();
-			
-			int middleX = errorScreen.width / 2;
-			int middleY = errorScreen.height / 2;
-			
-			errorScreen.drawCenteredString(fontRenderer, I18n.translateToLocal("gui.loadingError.title"), middleX, middleY - 10, 0xbbbbbb);
-			
-			int messageWidth = fontRenderer.getStringWidth(message);
-			int fontX = (messageWidth > errorScreen.width - 80) ? 40 : middleX - messageWidth / 2;
-			int fontY =  middleY + 10;
-			
-			for (String line : fontRenderer.listFormattedStringToWidth(message, errorScreen.width - 80)) {
-				fontRenderer.drawString(line, fontX, fontY, 0xffffff);
-				fontY += fontRenderer.FONT_HEIGHT + 5;
-			}
-		}
+    	return AdditionsMod.proxy.createLoadingException(I18n.translateToLocalFormatted("gui.loadingError." + (mod ? "mod" : "addon") + "NotFound", addon, versionString, acceptedVersion.getLabel()));
 	}
 	
 }

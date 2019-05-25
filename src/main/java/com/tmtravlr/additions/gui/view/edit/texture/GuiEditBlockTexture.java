@@ -3,7 +3,6 @@ package com.tmtravlr.additions.gui.view.edit.texture;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 
 import javax.imageio.ImageIO;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -185,6 +184,10 @@ public class GuiEditBlockTexture extends GuiEdit {
 	}
 	
 	protected boolean checkTexture(File fileChosen) {
+		return this.checkTexture(fileChosen, "");
+	}
+	
+	protected boolean checkTexture(File fileChosen, String textureEnding) {
 		try {
 			BufferedImage image = ImageIO.read(fileChosen);
 			if (image == null) {
@@ -208,9 +211,9 @@ public class GuiEditBlockTexture extends GuiEdit {
 			} else {
 				if (imageWidth != imageHeight) {
 					//Animation
-					this.mc.displayGuiScreen(new GuiMessageBoxSelectBlockAnimation(this, this.addon, this.block));
+					this.mc.displayGuiScreen(new GuiMessageBoxSelectBlockAnimation(this, this.addon, this.block, textureEnding));
 				} else {
-					BlockModelManager.deleteTextureAnimation(this.addon, this.block);
+					BlockModelManager.deleteTextureAnimation(this.addon, this.block, textureEnding);
 				}
 				
 				return true;

@@ -5,19 +5,18 @@ import java.util.ArrayList;
 
 import org.lwjgl.input.Mouse;
 
+import com.tmtravlr.additions.addon.Addon;
+import com.tmtravlr.additions.addon.AddonLoader;
+import com.tmtravlr.additions.gui.view.GuiViewAddon;
+import com.tmtravlr.additions.gui.view.edit.GuiEditAddon;
+import com.tmtravlr.additions.util.client.CommonGuiUtils;
+
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.client.GuiSlotModList;
-
-import com.tmtravlr.additions.addon.Addon;
-import com.tmtravlr.additions.addon.AddonLoader;
-import com.tmtravlr.additions.gui.view.GuiViewAddon;
-import com.tmtravlr.additions.gui.view.edit.GuiEditAddon;
 
 /**
  * Additions Main Menu
@@ -101,6 +100,7 @@ public class GuiAdditionsMainMenu extends GuiScreen {
     }
     
     public void addonSelected(Addon addon) {
+		CommonGuiUtils.playClickSound();
     	if (addon == createNew) {
     		this.mc.displayGuiScreen(new GuiEditAddon(this, I18n.format("gui.edit.addon.title")));
     	} else {

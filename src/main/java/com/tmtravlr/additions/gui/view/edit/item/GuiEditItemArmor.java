@@ -3,14 +3,11 @@ package com.tmtravlr.additions.gui.view.edit.item;
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.items.ItemAddedArmor;
 import com.tmtravlr.additions.gui.message.GuiMessageBox;
-import com.tmtravlr.additions.gui.message.GuiMessageBoxTwoButton;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentBooleanInput;
 import com.tmtravlr.additions.gui.view.components.input.dropdown.GuiComponentDropdownInput;
 import com.tmtravlr.additions.gui.view.components.input.dropdown.GuiComponentDropdownInputArmorMaterial;
 import com.tmtravlr.additions.gui.view.edit.texture.GuiEditItemArmorTexture;
-import com.tmtravlr.additions.gui.view.edit.texture.GuiEditItemTexture;
 import com.tmtravlr.additions.type.AdditionTypeItemMaterial;
-import com.tmtravlr.additions.util.models.ItemModelManager;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -54,6 +51,7 @@ public class GuiEditItemArmor extends GuiEditItem<ItemAddedArmor> {
 		
 		this.itemSlotInput = new GuiComponentDropdownInput<EntityEquipmentSlot>(I18n.format("gui.edit.item.armor.slot.label"), this) {
 			
+			@Override
 			public String getSelectionName(EntityEquipmentSlot selected) {
 				return selected == null ? "" : selected.getName();
 			}
@@ -65,7 +63,7 @@ public class GuiEditItemArmor extends GuiEditItem<ItemAddedArmor> {
 		this.itemSlotInput.addSelection(EntityEquipmentSlot.LEGS);
 		this.itemSlotInput.addSelection(EntityEquipmentSlot.FEET);
 		if (!this.isNew) {
-			this.itemSlotInput.setDefaultSelected(this.item.getEquipmentSlot());
+			this.itemSlotInput.setDefaultSelected(this.item.armorType);
 		}
 		
 		this.itemColoredInput = new GuiComponentBooleanInput(I18n.format("gui.edit.item.armor.colored.label"), this);
@@ -126,7 +124,7 @@ public class GuiEditItemArmor extends GuiEditItem<ItemAddedArmor> {
 	@Override
 	protected void copyFromOther() {
 		this.itemMaterialInput.setDefaultSelected(AdditionTypeItemMaterial.INSTANCE.getMaterialWithArmorMaterial(this.copyFrom.getArmorMaterial()));
-		this.itemSlotInput.setDefaultSelected(this.copyFrom.getEquipmentSlot());
+		this.itemSlotInput.setDefaultSelected(this.copyFrom.armorType);
 		this.itemColoredInput.setDefaultBoolean(this.copyFrom.colored);
 		this.itemApplyVanillaAttributesInput.setDefaultBoolean(this.copyFrom.applyVanillaAttributes);
 		

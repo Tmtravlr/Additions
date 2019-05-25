@@ -157,13 +157,13 @@ public class ItemAddedMultiTool extends ItemTool implements IItemAdded {
 	}
 
 	@Override
-    public java.util.Set<String> getToolClasses(ItemStack stack) {
+    public Set<String> getToolClasses(ItemStack stack) {
         return toolClasses;
     }
 
     @Override
     public int getHarvestLevel(ItemStack stack, String toolClass, @Nullable EntityPlayer player, @Nullable IBlockState blockState) {
-        return this.harvestLevel;
+    	return this.toolClasses.contains(toolClass) ? this.harvestLevel : -1;
     }
 
 	@Override

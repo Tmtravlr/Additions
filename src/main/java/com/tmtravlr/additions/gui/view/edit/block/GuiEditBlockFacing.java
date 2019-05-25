@@ -1,26 +1,32 @@
 package com.tmtravlr.additions.gui.view.edit.block;
 
 import com.tmtravlr.additions.addon.Addon;
-import com.tmtravlr.additions.addon.blocks.BlockAddedSimple;
+import com.tmtravlr.additions.addon.blocks.BlockAddedFacing;
 import com.tmtravlr.additions.addon.items.blocks.ItemAddedBlockSimple;
+import com.tmtravlr.additions.gui.view.components.input.GuiComponentBooleanInput;
+import com.tmtravlr.additions.gui.view.edit.texture.GuiEditBlockFacingTexture;
 
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.TextComponentTranslation;
 
 /**
- * Page for adding a new simple block or editing an existing one.
+ * Page for adding a new block that can face different directions or editing an existing one.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since December 2018
+ * @since May 2019
  */
-public class GuiEditBlockSimple extends GuiEditBlockModifiableBoundingBox<BlockAddedSimple> {
+public class GuiEditBlockFacing extends GuiEditBlockModifiableBoundingBox<BlockAddedFacing> {
+
+	protected GuiComponentBooleanInput blockCanFaceVerticallyInput;
     
-	public GuiEditBlockSimple(GuiScreen parentScreen, String title, Addon addon, BlockAddedSimple block) {
+	public GuiEditBlockFacing(GuiScreen parentScreen, String title, Addon addon, BlockAddedFacing block) {
 		super(parentScreen, title, addon);
 		
 		this.isNew = block == null;
 		
 		if (this.isNew) {
-			this.block = new BlockAddedSimple();
+			this.block = new BlockAddedFacing();
 			this.block.setItemBlock(new ItemAddedBlockSimple());
 		} else {
 			this.block = block;
@@ -30,6 +36,10 @@ public class GuiEditBlockSimple extends GuiEditBlockModifiableBoundingBox<BlockA
 	@Override
 	public void initComponents() {
 		super.initComponents();
+		
+		this.blockCanFaceVerticallyInput = new GuiComponentBooleanInput(I18n.format("gui.edit.block.facing.canFaceVertically.label"), this);
+		this.blockCanFaceVerticallyInput.setInfo(new TextComponentTranslation("gui.edit.block.facing.canFaceVertically.info"));
+		this.blockCanFaceVerticallyInput.setDefaultBoolean(this.block.canFaceVertically);
 		
 		if (this.copyFrom != null) {
 			this.copyFromOther();
@@ -47,7 +57,8 @@ public class GuiEditBlockSimple extends GuiEditBlockModifiableBoundingBox<BlockA
 			this.components.add(this.blockDropInput);
 			this.components.add(this.blockTextureButton);
 		}
-		
+
+		this.advancedComponents.add(this.blockCanFaceVerticallyInput);
 		this.advancedComponents.add(this.blockLightLevelInput);
 		this.advancedComponents.add(this.blockEffectiveToolsInput);
 		this.advancedComponents.add(this.blockFlammabilityInput);
@@ -81,4 +92,21 @@ public class GuiEditBlockSimple extends GuiEditBlockModifiableBoundingBox<BlockA
 		this.advancedComponents.add(this.itemBlockContainerInput);
 		this.advancedComponents.add(this.itemBlockAttributesInput);
 	}
+	
+	@Override
+	public void saveObject() {
+		this.block.canFaceVertically = this.blockCanFaceVerticallyInput.getBoolean();
+		super.saveObject();
+	}
+	
+	@Override
+	protected void copyFromOther() {
+	    this.blockCanFaceVerticallyInput.setDefaultBoolean(this.copyFrom.canFaceVertically);
+	    super.copyFromOther();
+	}
+    
+    @Override
+	protected GuiScreen getTextureDialogue(GuiScreen nextScreen) {
+    	return new GuiEditBlockFacingTexture(nextScreen, this.addon, this.block, this.isNew);
+    }
 }

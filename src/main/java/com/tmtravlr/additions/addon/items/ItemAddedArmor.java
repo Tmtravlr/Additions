@@ -15,12 +15,9 @@ import com.tmtravlr.additions.AdditionsMod;
 
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
-import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.JsonUtils;
@@ -62,14 +59,14 @@ public class ItemAddedArmor extends ItemArmor implements IItemAdded {
 	public void setArmorMaterial(ItemArmor.ArmorMaterial material) {
 		if (material != this.getArmorMaterial()) {
 			ObfuscationReflectionHelper.setPrivateValue(ItemArmor.class, this, material, "field_77878_bZ", "material");
-	        this.setMaxDamage(material.getDurability(this.getEquipmentSlot()));
-	        ObfuscationReflectionHelper.setPrivateValue(ItemArmor.class, this, material.getDamageReductionAmount(this.getEquipmentSlot()), "field_77879_b", "damageReduceAmount");
+	        this.setMaxDamage(material.getDurability(this.armorType));
+	        ObfuscationReflectionHelper.setPrivateValue(ItemArmor.class, this, material.getDamageReductionAmount(this.armorType), "field_77879_b", "damageReduceAmount");
 	        ObfuscationReflectionHelper.setPrivateValue(ItemArmor.class, this, material.getToughness(), "field_189415_e", "toughness");
 		}
 	}
 	
 	public void setEquipmentSlot(EntityEquipmentSlot slot) {
-		if (slot != this.getEquipmentSlot()) {
+		if (slot != this.armorType) {
 			ObfuscationReflectionHelper.setPrivateValue(ItemArmor.class, this, slot, "field_77881_a", "armorType");
 	        this.setMaxDamage(this.getArmorMaterial().getDurability(slot));
 	        ObfuscationReflectionHelper.setPrivateValue(ItemArmor.class, this, this.getArmorMaterial().getDamageReductionAmount(slot), "field_77879_b", "damageReduceAmount");
@@ -294,7 +291,7 @@ public class ItemAddedArmor extends ItemArmor implements IItemAdded {
 			JsonObject json = super.serialize(itemAdded, context);
 			
 			json.addProperty("material", itemAdded.getArmorMaterial().toString());
-			json.addProperty("slot", itemAdded.getEquipmentSlot().toString());
+			json.addProperty("slot", itemAdded.armorType.toString());
 			if (!itemAdded.applyVanillaAttributes) {
 				json.addProperty("vanilla_attributes", false);
 			}

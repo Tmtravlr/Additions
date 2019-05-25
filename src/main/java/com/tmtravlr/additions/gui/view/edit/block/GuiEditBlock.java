@@ -11,7 +11,6 @@ import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.blocks.IBlockAdded;
 import com.tmtravlr.additions.addon.items.blocks.IItemAddedBlock;
 import com.tmtravlr.additions.addon.loottables.LootTableAdded;
-import com.tmtravlr.additions.addon.loottables.LootTablePreset;
 import com.tmtravlr.additions.addon.loottables.LootTablePresetBlockItself;
 import com.tmtravlr.additions.gui.message.GuiMessageBox;
 import com.tmtravlr.additions.gui.message.GuiMessageBoxNeedsRestart;
@@ -73,6 +72,7 @@ public abstract class GuiEditBlock<T extends IBlockAdded> extends GuiEdit {
 	protected GuiComponentSuggestionInputToolType blockHarvestToolInput;
 	protected GuiComponentListInput<GuiComponentSuggestionInputToolType> blockEffectiveToolsInput;
 	protected GuiComponentIntegerInput blockOpacityInput;
+	protected GuiComponentIntegerInput blockLightLevelInput;
 	protected GuiComponentIntegerInput blockFlammabilityInput;
 	protected GuiComponentIntegerInput blockFireSpreadSpeedInput;
 	protected GuiComponentIntegerInput blockBookshelfStrengthInput;
@@ -81,20 +81,6 @@ public abstract class GuiEditBlock<T extends IBlockAdded> extends GuiEdit {
 	protected GuiComponentBooleanInput blockIsSlimeInput;
 	protected GuiComponentBooleanInput blockIsBeaconBaseInput;
 	protected GuiComponentBooleanInput blockCanPistonsPushInput;
-	protected GuiComponentBooleanInput blockHasCollisionBoxInput;
-	protected GuiComponentBooleanInput blockSameCollisionBoundingBoxInput;
-	protected GuiComponentFloatInput blockBoundingBoxMinXInput;
-	protected GuiComponentFloatInput blockBoundingBoxMinYInput;
-	protected GuiComponentFloatInput blockBoundingBoxMinZInput;
-	protected GuiComponentFloatInput blockBoundingBoxMaxXInput;
-	protected GuiComponentFloatInput blockBoundingBoxMaxYInput;
-	protected GuiComponentFloatInput blockBoundingBoxMaxZInput;
-	protected GuiComponentFloatInput blockCollisionBoxMinXInput;
-	protected GuiComponentFloatInput blockCollisionBoxMinYInput;
-	protected GuiComponentFloatInput blockCollisionBoxMinZInput;
-	protected GuiComponentFloatInput blockCollisionBoxMaxXInput;
-	protected GuiComponentFloatInput blockCollisionBoxMaxYInput;
-	protected GuiComponentFloatInput blockCollisionBoxMaxZInput;
 	protected GuiComponentBlockDropInput blockDropInput;
 	protected GuiComponentButton blockTextureButton;
 	
@@ -188,6 +174,12 @@ public abstract class GuiEditBlock<T extends IBlockAdded> extends GuiEdit {
 		this.blockOpacityInput.setMaximum(15);
 		this.blockOpacityInput.setDefaultInteger(this.block.getOpacity());
 		
+		this.blockLightLevelInput = new GuiComponentIntegerInput(I18n.format("gui.edit.block.lightLevel.label"), this, false);
+		this.blockLightLevelInput.setInfo(new TextComponentTranslation("gui.edit.block.lightLevel.info"));
+		this.blockLightLevelInput.setMinimum(0);
+		this.blockLightLevelInput.setMaximum(15);
+		this.blockLightLevelInput.setDefaultInteger(this.block.getLightLevel());
+		
 		this.blockFlammabilityInput = new GuiComponentIntegerInput(I18n.format("gui.edit.block.flammability.label"), this, false);
 		this.blockFlammabilityInput.setInfo(new TextComponentTranslation("gui.edit.block.flammability.info"));
 		this.blockFlammabilityInput.setMinimum(0);
@@ -220,105 +212,6 @@ public abstract class GuiEditBlock<T extends IBlockAdded> extends GuiEdit {
 		
 		this.blockCanPistonsPushInput = new GuiComponentBooleanInput(I18n.format("gui.edit.block.canPistonsPush.label"), this);
 		this.blockCanPistonsPushInput.setDefaultBoolean(this.block.canPistonsPush());
-		
-		this.blockBoundingBoxMinXInput = new GuiComponentFloatInput(I18n.format("gui.edit.block.boundingBoxMinX.label"), this, false);
-		this.blockBoundingBoxMinXInput.setMinimum(0);
-		this.blockBoundingBoxMinXInput.setMaximum(1);
-		this.blockBoundingBoxMinXInput.setDefaultFloat(this.block.getBoundingBoxMinX());
-		
-		this.blockBoundingBoxMinYInput = new GuiComponentFloatInput(I18n.format("gui.edit.block.boundingBoxMinY.label"), this, false);
-		this.blockBoundingBoxMinYInput.setMinimum(0);
-		this.blockBoundingBoxMinYInput.setMaximum(1);
-		this.blockBoundingBoxMinYInput.setDefaultFloat(this.block.getBoundingBoxMinY());
-		
-		this.blockBoundingBoxMinZInput = new GuiComponentFloatInput(I18n.format("gui.edit.block.boundingBoxMinZ.label"), this, false);
-		this.blockBoundingBoxMinZInput.setMinimum(0);
-		this.blockBoundingBoxMinZInput.setMaximum(1);
-		this.blockBoundingBoxMinZInput.setDefaultFloat(this.block.getBoundingBoxMinZ());
-		
-		this.blockBoundingBoxMaxXInput = new GuiComponentFloatInput(I18n.format("gui.edit.block.boundingBoxMaxX.label"), this, false);
-		this.blockBoundingBoxMaxXInput.setMinimum(0);
-		this.blockBoundingBoxMaxXInput.setMaximum(1);
-		this.blockBoundingBoxMaxXInput.setDefaultFloat(this.block.getBoundingBoxMaxX());
-		
-		this.blockBoundingBoxMaxYInput = new GuiComponentFloatInput(I18n.format("gui.edit.block.boundingBoxMaxY.label"), this, false);
-		this.blockBoundingBoxMaxYInput.setMinimum(0);
-		this.blockBoundingBoxMaxYInput.setMaximum(1);
-		this.blockBoundingBoxMaxYInput.setDefaultFloat(this.block.getBoundingBoxMaxY());
-		
-		this.blockBoundingBoxMaxZInput = new GuiComponentFloatInput(I18n.format("gui.edit.block.boundingBoxMaxZ.label"), this, false);
-		this.blockBoundingBoxMaxZInput.setMinimum(0);
-		this.blockBoundingBoxMaxZInput.setMaximum(1);
-		this.blockBoundingBoxMaxZInput.setDefaultFloat(this.block.getBoundingBoxMaxZ());
-	    
-		this.blockCollisionBoxMinXInput = new GuiComponentFloatInput(I18n.format("gui.edit.block.collisionBoxMinX.label"), this, false);
-		this.blockCollisionBoxMinXInput.setMinimum(0);
-		this.blockCollisionBoxMinXInput.setMaximum(1);
-		this.blockCollisionBoxMinXInput.setDefaultFloat(this.block.getCollisionBoxMinX());
-	    
-		this.blockCollisionBoxMinYInput = new GuiComponentFloatInput(I18n.format("gui.edit.block.collisionBoxMinY.label"), this, false);
-		this.blockCollisionBoxMinYInput.setMinimum(0);
-		this.blockCollisionBoxMinYInput.setMaximum(1);
-		this.blockCollisionBoxMinYInput.setDefaultFloat(this.block.getCollisionBoxMinY());
-	    
-		this.blockCollisionBoxMinZInput = new GuiComponentFloatInput(I18n.format("gui.edit.block.collisionBoxMinZ.label"), this, false);
-		this.blockCollisionBoxMinZInput.setMinimum(0);
-		this.blockCollisionBoxMinZInput.setMaximum(1);
-		this.blockCollisionBoxMinZInput.setDefaultFloat(this.block.getCollisionBoxMinZ());
-	    
-		this.blockCollisionBoxMaxXInput = new GuiComponentFloatInput(I18n.format("gui.edit.block.collisionBoxMaxX.label"), this, false);
-		this.blockCollisionBoxMaxXInput.setMinimum(0);
-		this.blockCollisionBoxMaxXInput.setMaximum(1);
-		this.blockCollisionBoxMaxXInput.setDefaultFloat(this.block.getCollisionBoxMaxX());
-	    
-		this.blockCollisionBoxMaxYInput = new GuiComponentFloatInput(I18n.format("gui.edit.block.collisionBoxMaxY.label"), this, false);
-		this.blockCollisionBoxMaxYInput.setMinimum(0);
-		this.blockCollisionBoxMaxYInput.setMaximum(1);
-		this.blockCollisionBoxMaxYInput.setDefaultFloat(this.block.getCollisionBoxMaxY());
-	    
-		this.blockCollisionBoxMaxZInput = new GuiComponentFloatInput(I18n.format("gui.edit.block.collisionBoxMaxZ.label"), this, false);
-		this.blockCollisionBoxMaxZInput.setMinimum(0);
-		this.blockCollisionBoxMaxZInput.setMaximum(1);
-		this.blockCollisionBoxMaxZInput.setDefaultFloat(this.block.getCollisionBoxMaxZ());
-		
-		this.blockHasCollisionBoxInput = new GuiComponentBooleanInput(I18n.format("gui.edit.block.hasCollisionBox.label"), this) {
-			
-			@Override
-			public void setDefaultBoolean(boolean input) {
-				super.setDefaultBoolean(input);
-				GuiEditBlock.this.blockCollisionBoxMinXInput.setHidden(!input);
-				GuiEditBlock.this.blockCollisionBoxMinYInput.setHidden(!input);
-				GuiEditBlock.this.blockCollisionBoxMinZInput.setHidden(!input);
-				GuiEditBlock.this.blockCollisionBoxMaxXInput.setHidden(!input);
-				GuiEditBlock.this.blockCollisionBoxMaxYInput.setHidden(!input);
-				GuiEditBlock.this.blockCollisionBoxMaxZInput.setHidden(!input);
-			}
-			
-		};
-		this.blockHasCollisionBoxInput.setDefaultBoolean(this.block.hasCollisionBox());
-		
-		this.blockSameCollisionBoundingBoxInput = new GuiComponentBooleanInput(I18n.format("gui.edit.block.sameCollisionBoundingBox.label"), this) {
-			
-			@Override
-			public void setDefaultBoolean(boolean input) {
-				super.setDefaultBoolean(input);
-				if (input) {
-					GuiEditBlock.this.blockHasCollisionBoxInput.setHidden(true);
-					GuiEditBlock.this.blockCollisionBoxMinXInput.setHidden(true);
-					GuiEditBlock.this.blockCollisionBoxMinYInput.setHidden(true);
-					GuiEditBlock.this.blockCollisionBoxMinZInput.setHidden(true);
-					GuiEditBlock.this.blockCollisionBoxMaxXInput.setHidden(true);
-					GuiEditBlock.this.blockCollisionBoxMaxYInput.setHidden(true);
-					GuiEditBlock.this.blockCollisionBoxMaxZInput.setHidden(true);
-				} else {
-					GuiEditBlock.this.blockHasCollisionBoxInput.setHidden(false);
-					GuiEditBlock.this.blockHasCollisionBoxInput.setDefaultBoolean(GuiEditBlock.this.blockHasCollisionBoxInput.getBoolean());
-				}
-			}
-			
-		};
-		this.blockSameCollisionBoundingBoxInput.setInfo(new TextComponentTranslation("gui.edit.block.sameCollisionBoundingBox.info"));
-		this.blockSameCollisionBoundingBoxInput.setDefaultBoolean(this.block.hasCollisionBox());
 		
 		if (this.block.getItemBlock() != null) {
 			IItemAddedBlock itemBlock = this.block.getItemBlock();
@@ -388,14 +281,6 @@ public abstract class GuiEditBlock<T extends IBlockAdded> extends GuiEdit {
 	}
 	
 	@Override
-	public void onToggleShowAdvanced(boolean showAdvanced) {
-		if (showAdvanced) {
-			this.blockHasCollisionBoxInput.setDefaultBoolean(this.blockHasCollisionBoxInput.getBoolean());
-			this.blockSameCollisionBoundingBoxInput.setDefaultBoolean(this.blockSameCollisionBoundingBoxInput.getBoolean());
-		}
-	}
-	
-	@Override
 	public void saveObject() {
 		String name = this.isNew ? this.addon.id + "-" + this.blockIdInput.getText() : this.block.getId();
 		String displayName = this.blockNameInput.getText();
@@ -430,6 +315,7 @@ public abstract class GuiEditBlock<T extends IBlockAdded> extends GuiEdit {
 		this.block.setHarvestTool(this.blockHarvestToolInput.getText());
 		this.block.setEffectiveTools(this.blockEffectiveToolsInput.getComponents().stream().map(GuiComponentSuggestionInputToolType::getText).collect(Collectors.toList()));
 		this.block.getAsBlock().setLightOpacity(this.blockOpacityInput.getInteger());
+		this.block.getAsBlock().setLightLevel(this.blockLightLevelInput.getInteger() / 15F);
 		
 		int flammability = this.blockFlammabilityInput.getInteger();
 		int fireSpreadSpeed = this.blockFireSpreadSpeedInput.getInteger();
@@ -443,20 +329,6 @@ public abstract class GuiEditBlock<T extends IBlockAdded> extends GuiEdit {
 		this.block.setIsSlime(this.blockIsSlimeInput.getBoolean());
 		this.block.setIsBeaconBase(this.blockIsBeaconBaseInput.getBoolean());
 		this.block.setCanPistonsPush(this.blockCanPistonsPushInput.getBoolean());
-		this.block.setHasCollisionBox(this.blockHasCollisionBoxInput.getBoolean());
-		this.block.setHasSameCollisionBoundingBox(this.blockSameCollisionBoundingBoxInput.getBoolean());
-		this.block.setBoundingBoxMinX(this.blockBoundingBoxMinXInput.getFloat());
-		this.block.setBoundingBoxMinY(this.blockBoundingBoxMinYInput.getFloat());
-		this.block.setBoundingBoxMinZ(this.blockBoundingBoxMinZInput.getFloat());
-		this.block.setBoundingBoxMaxX(Math.max(this.blockBoundingBoxMaxXInput.getFloat(), this.block.getBoundingBoxMinX()));
-		this.block.setBoundingBoxMaxY(Math.max(this.blockBoundingBoxMaxYInput.getFloat(), this.block.getBoundingBoxMinY()));
-		this.block.setBoundingBoxMaxZ(Math.max(this.blockBoundingBoxMaxZInput.getFloat(), this.block.getBoundingBoxMinZ()));
-		this.block.setCollisionBoxMinX(this.blockCollisionBoxMinXInput.getFloat());
-		this.block.setCollisionBoxMinY(this.blockCollisionBoxMinYInput.getFloat());
-		this.block.setCollisionBoxMinZ(this.blockCollisionBoxMinZInput.getFloat());
-		this.block.setCollisionBoxMaxX(Math.max(this.blockCollisionBoxMaxXInput.getFloat(), this.block.getCollisionBoxMinX()));
-		this.block.setCollisionBoxMaxY(Math.max(this.blockCollisionBoxMaxYInput.getFloat(), this.block.getCollisionBoxMinY()));
-		this.block.setCollisionBoxMaxZ(Math.max(this.blockCollisionBoxMaxZInput.getFloat(), this.block.getCollisionBoxMinZ()));
 		
 		if (this.block.getItemBlock() != null) {
 			IItemAddedBlock itemBlock = this.block.getItemBlock();
@@ -542,7 +414,8 @@ public abstract class GuiEditBlock<T extends IBlockAdded> extends GuiEdit {
 			this.blockEffectiveToolsInput.addDefaultComponent(suggestionInput);
 		});
 		
-	    this.blockOpacityInput.setDefaultInteger(this.copyFrom.getOpacity());
+		this.blockOpacityInput.setDefaultInteger(this.copyFrom.getOpacity());
+	    this.blockLightLevelInput.setDefaultInteger(this.copyFrom.getLightLevel());
 	    this.blockFlammabilityInput.setDefaultInteger(Blocks.FIRE.getFlammability(this.copyFrom.getAsBlock()));
 	    this.blockFireSpreadSpeedInput.setDefaultInteger(Blocks.FIRE.getEncouragement(this.copyFrom.getAsBlock()));
 	    this.blockBookshelfStrengthInput.setDefaultInteger(this.copyFrom.getBookshelfStrength());
@@ -551,20 +424,6 @@ public abstract class GuiEditBlock<T extends IBlockAdded> extends GuiEdit {
 	    this.blockIsSlimeInput.setDefaultBoolean(this.copyFrom.isSlime());
 	    this.blockIsBeaconBaseInput.setDefaultBoolean(this.copyFrom.isBeaconBase());
 	    this.blockCanPistonsPushInput.setDefaultBoolean(this.copyFrom.canPistonsPush());
-	    this.blockHasCollisionBoxInput.setDefaultBoolean(this.copyFrom.hasCollisionBox());
-	    this.blockSameCollisionBoundingBoxInput.setDefaultBoolean(this.copyFrom.hasSameCollisionBoundingBox());
-	    this.blockBoundingBoxMinXInput.setDefaultFloat(this.copyFrom.getBoundingBoxMinX());
-	    this.blockBoundingBoxMinYInput.setDefaultFloat(this.copyFrom.getBoundingBoxMinY());
-	    this.blockBoundingBoxMinZInput.setDefaultFloat(this.copyFrom.getBoundingBoxMinZ());
-	    this.blockBoundingBoxMinXInput.setDefaultFloat(this.copyFrom.getBoundingBoxMinX());
-	    this.blockBoundingBoxMaxYInput.setDefaultFloat(this.copyFrom.getBoundingBoxMaxY());
-	    this.blockBoundingBoxMaxZInput.setDefaultFloat(this.copyFrom.getBoundingBoxMaxZ());
-	    this.blockCollisionBoxMinXInput.setDefaultFloat(this.copyFrom.getCollisionBoxMinX());
-	    this.blockCollisionBoxMinYInput.setDefaultFloat(this.copyFrom.getCollisionBoxMinY());
-	    this.blockCollisionBoxMinZInput.setDefaultFloat(this.copyFrom.getCollisionBoxMinZ());
-	    this.blockCollisionBoxMinXInput.setDefaultFloat(this.copyFrom.getCollisionBoxMinX());
-	    this.blockCollisionBoxMaxYInput.setDefaultFloat(this.copyFrom.getCollisionBoxMaxY());
-	    this.blockCollisionBoxMaxZInput.setDefaultFloat(this.copyFrom.getCollisionBoxMaxZ());
 		
 		if (this.copyFrom.getItemBlock() != null && this.block.getItemBlock() != null) {
 			IItemAddedBlock itemBlock = this.copyFrom.getItemBlock();

@@ -2,28 +2,15 @@ package com.tmtravlr.additions.gui.view.components.input;
 
 import java.io.IOException;
 
-import com.tmtravlr.additions.gui.message.GuiMessageBoxTwoButton;
 import com.tmtravlr.additions.gui.message.edit.GuiMessageBoxEditItemStack;
-import com.tmtravlr.additions.gui.view.GuiView;
 import com.tmtravlr.additions.gui.view.components.IGuiViewComponent;
-import com.tmtravlr.additions.gui.view.components.input.dropdown.GuiComponentDropdownInputItem;
 import com.tmtravlr.additions.gui.view.edit.GuiEdit;
 import com.tmtravlr.additions.util.client.CommonGuiUtils;
 
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 
 /**
  * Lets you build an item stack.
@@ -44,6 +31,7 @@ public class GuiComponentItemStackInput implements IGuiViewComponent {
 	private boolean hidden = false;
 	private ItemStack itemStack = ItemStack.EMPTY;
 	private boolean hasMeta = true;
+	private boolean hasAnyDamage = false;
 	private boolean hasCount = true;
 	private boolean hasTag = true;
 	
@@ -136,6 +124,10 @@ public class GuiComponentItemStackInput implements IGuiViewComponent {
 	
 	public void disableMetadata() {
 		this.hasMeta = false;
+	}
+	
+	public void enableAnyDamage() {
+		this.hasAnyDamage = true;
 	}
 	
 	public void disableCount() {

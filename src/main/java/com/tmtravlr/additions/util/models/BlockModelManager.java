@@ -3,6 +3,8 @@ package com.tmtravlr.additions.util.models;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -17,25 +19,65 @@ public class BlockModelManager {
 	public static final String ANIMATION_FILE_POSTFIX = ".png.mcmeta";
 	public static final String MODEL_FILE_POSTFIX = ".json";
 	
+	public static final String MODEL_SLAB_FULL_ENDING = "_full";
+	public static final String MODEL_SLAB_TOP_ENDING = "_top";
+	public static final String MODEL_SLAB_VERTICAL_ENDING = "_vertical";
+	
+	public static final String MODEL_STAIRS_INNER_ENDING = "_inner";
+	public static final String MODEL_STAIRS_OUTER_ENDING = "_outer";
+	
+	public static final String TEXTURE_FACING_SIDE_ENDING = "_side";
+	public static final String TEXTURE_FACING_TOP_ENDING = "_top";
+
+	public static final String TEXTURE_PILLAR_TOP_ENDING = "_top";
+	
 	public static void saveBlockTexture(Addon addon, IBlockAdded block, File texture, BlockModelType type) throws IOException {
 		File blockStateFolder = getBlockStateFolder(addon);
 		File modelFolder = getBlockModelFolder(addon);
 		File textureFolder = getBlockTextureFolder(addon);
 		
-		String blockStateFileContents;
-		String modelFileContents;
+		String blockStateFileContents = "";
+		Map<String, String> modelFileContents = new HashMap<>();
 		
 		switch (type) {
+		case SLAB:
+			blockStateFileContents = BlockModelGenerator.getBlockStateSlab(block.getId());
+			modelFileContents.put(block.getId() + MODEL_SLAB_FULL_ENDING, BlockModelGenerator.getBlockModelSimple(block.getId()));
+			modelFileContents.put(block.getId(), BlockModelGenerator.getBlockModelSlabBottom(block.getId()));
+			modelFileContents.put(block.getId() + MODEL_SLAB_TOP_ENDING, BlockModelGenerator.getBlockModelSlabTop(block.getId()));
+			modelFileContents.put(block.getId() + MODEL_SLAB_VERTICAL_ENDING, BlockModelGenerator.getBlockModelSlabVertical(block.getId()));
+			break;
+		case STAIRS:
+			blockStateFileContents = BlockModelGenerator.getBlockStateStairs(block.getId());
+			modelFileContents.put(block.getId(), BlockModelGenerator.getBlockModelStairs(block.getId()));
+			modelFileContents.put(block.getId() + MODEL_STAIRS_INNER_ENDING, BlockModelGenerator.getBlockModelStairsInner(block.getId()));
+			modelFileContents.put(block.getId() + MODEL_STAIRS_OUTER_ENDING, BlockModelGenerator.getBlockModelStairsOuter(block.getId()));
+			break;
+		case TILE:
+			blockStateFileContents = BlockModelGenerator.getBlockStateCarpet(block.getId());
+			modelFileContents.put(block.getId(), BlockModelGenerator.getBlockModelCarpetBottom(block.getId()));
+			break;
+		case FACING:
+			blockStateFileContents = BlockModelGenerator.getBlockStateFacing(block.getId());
+			modelFileContents.put(block.getId(), BlockModelGenerator.getBlockModelFacing(block.getId()));
+			break;
+		case PILLAR:
+			blockStateFileContents = BlockModelGenerator.getBlockStatePillar(block.getId());
+			modelFileContents.put(block.getId(), BlockModelGenerator.getBlockModelPillar(block.getId()));
+			break;
 		default:
-			blockStateFileContents = BlockModelGenerator.getSimpleBlockState(block.getId());
-			modelFileContents = BlockModelGenerator.getSimpleBlockModel(block.getId());
+			blockStateFileContents = BlockModelGenerator.getBlockStateSimple(block.getId());
+			modelFileContents.put(block.getId(), BlockModelGenerator.getBlockModelSimple(block.getId()));
 		}
 		
 		File blockStateFile = new File(blockStateFolder, getBlockModelName(block));
 		FileUtils.writeStringToFile(blockStateFile, blockStateFileContents, StandardCharsets.UTF_8);
 		
-		File modelFile = new File(modelFolder, getBlockModelName(block));
-		FileUtils.writeStringToFile(modelFile, modelFileContents, StandardCharsets.UTF_8);
+		for (String modelPrefix : modelFileContents.keySet()) {
+			File modelFile = new File(modelFolder, getBlockModelName(modelPrefix));
+			FileUtils.writeStringToFile(modelFile, modelFileContents.get(modelPrefix), StandardCharsets.UTF_8);
+		}
+		
 		
 		File textureFile = new File(textureFolder, block.getId() + TEXTURE_FILE_POSTFIX);
 		FileUtils.copyFile(texture, textureFile);
@@ -43,10 +85,17 @@ public class BlockModelManager {
 		ItemModelManager.saveItemBlockModel(addon, block);
 	}
 	
-	public static void saveTextureAnimation(Addon addon, IBlockAdded block, @Nullable File textureAnimation) throws IOException {
+	public static void saveBlockTextureWithEnding(Addon addon, IBlockAdded block, File texture, String textureEnding) throws IOException {
+		File textureFolder = getBlockTextureFolder(addon);
+
+		File textureFile = new File(textureFolder, block.getId() + textureEnding + TEXTURE_FILE_POSTFIX);
+		FileUtils.copyFile(texture, textureFile);
+	}
+	
+	public static void saveTextureAnimation(Addon addon, IBlockAdded block, String ending, @Nullable File textureAnimation) throws IOException {
 		File textureFolder = getBlockTextureFolder(addon);
 		
-		File animationFile = new File(textureFolder, block.getId() + TEXTURE_FILE_POSTFIX + ANIMATION_FILE_POSTFIX);
+		File animationFile = new File(textureFolder, block.getId() + ending + ANIMATION_FILE_POSTFIX);
 
 		if (textureAnimation != null) {
 			FileUtils.copyFile(textureAnimation, animationFile);
@@ -57,8 +106,12 @@ public class BlockModelManager {
 	}
 	
 	public static void deleteTextureAnimation(Addon addon, IBlockAdded block) throws IOException {
+		deleteTextureAnimation(addon, block, "");
+	}
+	
+	public static void deleteTextureAnimation(Addon addon, IBlockAdded block, String ending) throws IOException {
 		File textureFolder = getBlockTextureFolder(addon);
-		File animationFile = new File(textureFolder, block.getId() + TEXTURE_FILE_POSTFIX + ANIMATION_FILE_POSTFIX);
+		File animationFile = new File(textureFolder, block.getId() + ending + ANIMATION_FILE_POSTFIX);
 		
 		if (animationFile.exists()) {
 			animationFile.delete();
@@ -66,7 +119,11 @@ public class BlockModelManager {
 	}
 	
 	public static String getBlockModelName(IBlockAdded block) {
-		return block.getId() + MODEL_FILE_POSTFIX;
+		return getBlockModelName(block.getId());
+	}
+	
+	public static String getBlockModelName(String modelPrefix) {
+		return modelPrefix + MODEL_FILE_POSTFIX;
 	}
 	
 	public static File getBlockStateFolder(Addon addon) {
@@ -104,19 +161,22 @@ public class BlockModelManager {
 		SLAB,
 		STAIRS,
 		TILE,
+		FACING,
+		PILLAR,
+		BARS,
+		WALL,
 		FENCE,
 		FENCE_GATE,
-		WALL,
-		BARS,
-		LADDER,
-		BUTTON,
-		PRESSURE_PLATE,
+		DOOR,
 		TRAPDOOR,
 		LAMP,
-		FACING,
+		BUTTON,
+		PRESSURE_PLATE,
+		LEVER,
+		LADDER,
 		PLANT,
-		PILLAR,
 		CAKE,
-		FURNACE
+		FURNACE,
+		WORKBENCH
 	}
 }

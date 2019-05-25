@@ -1,26 +1,26 @@
 package com.tmtravlr.additions.gui.view.edit.block;
 
 import com.tmtravlr.additions.addon.Addon;
-import com.tmtravlr.additions.addon.blocks.BlockAddedSimple;
+import com.tmtravlr.additions.addon.blocks.BlockAddedFalling;
 import com.tmtravlr.additions.addon.items.blocks.ItemAddedBlockSimple;
 
 import net.minecraft.client.gui.GuiScreen;
 
 /**
- * Page for adding a new simple block or editing an existing one.
+ * Page for adding a new falling block or editing an existing one.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since December 2018
+ * @since May 2019
  */
-public class GuiEditBlockSimple extends GuiEditBlockModifiableBoundingBox<BlockAddedSimple> {
+public class GuiEditBlockFalling extends GuiEditBlockModifiableBoundingBox<BlockAddedFalling> {
     
-	public GuiEditBlockSimple(GuiScreen parentScreen, String title, Addon addon, BlockAddedSimple block) {
+	public GuiEditBlockFalling(GuiScreen parentScreen, String title, Addon addon, BlockAddedFalling block) {
 		super(parentScreen, title, addon);
 		
 		this.isNew = block == null;
 		
 		if (this.isNew) {
-			this.block = new BlockAddedSimple();
+			this.block = new BlockAddedFalling();
 			this.block.setItemBlock(new ItemAddedBlockSimple());
 		} else {
 			this.block = block;
@@ -47,7 +47,7 @@ public class GuiEditBlockSimple extends GuiEditBlockModifiableBoundingBox<BlockA
 			this.components.add(this.blockDropInput);
 			this.components.add(this.blockTextureButton);
 		}
-		
+
 		this.advancedComponents.add(this.blockLightLevelInput);
 		this.advancedComponents.add(this.blockEffectiveToolsInput);
 		this.advancedComponents.add(this.blockFlammabilityInput);

@@ -3,35 +3,23 @@ package com.tmtravlr.additions.gui.view.edit.texture;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 
 import javax.imageio.ImageIO;
-import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.ClientConfigLoader;
 import com.tmtravlr.additions.addon.Addon;
-import com.tmtravlr.additions.addon.items.IItemAdded;
-import com.tmtravlr.additions.addon.items.ItemAddedArmor;
 import com.tmtravlr.additions.addon.items.ItemAddedBow;
 import com.tmtravlr.additions.gui.message.GuiMessageBox;
-import com.tmtravlr.additions.gui.message.GuiMessageBoxRefreshingResources;
-import com.tmtravlr.additions.gui.message.GuiMessageBoxSelectItemAnimation;
 import com.tmtravlr.additions.gui.message.GuiMessageBoxSelectItemBowAnimation;
-import com.tmtravlr.additions.gui.view.GuiView;
 import com.tmtravlr.additions.gui.view.components.GuiComponentDisplayText;
-import com.tmtravlr.additions.gui.view.components.input.GuiComponentBooleanInput;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentFileInput;
-import com.tmtravlr.additions.gui.view.edit.GuiEdit;
-import com.tmtravlr.additions.util.client.CommonGuiUtils;
 import com.tmtravlr.additions.util.models.ItemModelManager;
 
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
 
 /**
  * Lets you select a texture for a simple item.
@@ -65,9 +53,9 @@ public class GuiEditItemBowTexture extends GuiEditItemTexture {
 	
 	@Override
 	public void initComponents() {
-		 this.baseBowPulling0TextureMessage = new GuiComponentDisplayText(this, new TextComponentTranslation("gui.edit.texutre.bow.base0.message"));
+		 this.baseBowPulling0TextureMessage = new GuiComponentDisplayText(this, new TextComponentTranslation("gui.edit.texture.bow.base0.message"));
 		 
-		 this.baseBowPulling0TextureFileInput = new GuiComponentFileInput(this, I18n.format("gui.edit.texutre.bow.base0.label"), this.addon, new FileNameExtensionFilter("PNG File", "png")) {
+		 this.baseBowPulling0TextureFileInput = new GuiComponentFileInput(this, I18n.format("gui.edit.texture.bow.base0.label"), this.addon, new FileNameExtensionFilter("PNG File", "png")) {
 			
 			@Override
 			protected void setFileDialogueFolder(File folder) {
@@ -88,9 +76,9 @@ public class GuiEditItemBowTexture extends GuiEditItemTexture {
 			this.baseBowPulling0TextureFileInput.setRequired();
 		}
 		 
-		 this.colorBowPulling0TextureMessage = new GuiComponentDisplayText(this, new TextComponentTranslation("gui.edit.texutre.bow.color0.message"));
+		 this.colorBowPulling0TextureMessage = new GuiComponentDisplayText(this, new TextComponentTranslation("gui.edit.texture.bow.color0.message"));
 		 
-		 this.colorBowPulling0TextureFileInput = new GuiComponentFileInput(this, I18n.format("gui.edit.texutre.bow.color0.label"), this.addon, new FileNameExtensionFilter("PNG File", "png")) {
+		 this.colorBowPulling0TextureFileInput = new GuiComponentFileInput(this, I18n.format("gui.edit.texture.bow.color0.label"), this.addon, new FileNameExtensionFilter("PNG File", "png")) {
 			
 			@Override
 			protected void setFileDialogueFolder(File folder) {
@@ -108,9 +96,9 @@ public class GuiEditItemBowTexture extends GuiEditItemTexture {
 			}
 		};
 		
-		 this.baseBowPulling1TextureMessage = new GuiComponentDisplayText(this, new TextComponentTranslation("gui.edit.texutre.bow.base1.message"));
+		 this.baseBowPulling1TextureMessage = new GuiComponentDisplayText(this, new TextComponentTranslation("gui.edit.texture.bow.base1.message"));
 		 
-		 this.baseBowPulling1TextureFileInput = new GuiComponentFileInput(this, I18n.format("gui.edit.texutre.bow.base1.label"), this.addon, new FileNameExtensionFilter("PNG File", "png")) {
+		 this.baseBowPulling1TextureFileInput = new GuiComponentFileInput(this, I18n.format("gui.edit.texture.bow.base1.label"), this.addon, new FileNameExtensionFilter("PNG File", "png")) {
 			
 			@Override
 			protected void setFileDialogueFolder(File folder) {
@@ -131,9 +119,9 @@ public class GuiEditItemBowTexture extends GuiEditItemTexture {
 			this.baseBowPulling1TextureFileInput.setRequired();
 		}
 		 
-		 this.colorBowPulling1TextureMessage = new GuiComponentDisplayText(this, new TextComponentTranslation("gui.edit.texutre.bow.color1.message"));
+		 this.colorBowPulling1TextureMessage = new GuiComponentDisplayText(this, new TextComponentTranslation("gui.edit.texture.bow.color1.message"));
 		 
-		 this.colorBowPulling1TextureFileInput = new GuiComponentFileInput(this, I18n.format("gui.edit.texutre.bow.color1.label"), this.addon, new FileNameExtensionFilter("PNG File", "png")) {
+		 this.colorBowPulling1TextureFileInput = new GuiComponentFileInput(this, I18n.format("gui.edit.texture.bow.color1.label"), this.addon, new FileNameExtensionFilter("PNG File", "png")) {
 			
 			@Override
 			protected void setFileDialogueFolder(File folder) {
@@ -151,9 +139,9 @@ public class GuiEditItemBowTexture extends GuiEditItemTexture {
 			}
 		};
 		
-		 this.baseBowPulling2TextureMessage = new GuiComponentDisplayText(this, new TextComponentTranslation("gui.edit.texutre.bow.base2.message"));
+		 this.baseBowPulling2TextureMessage = new GuiComponentDisplayText(this, new TextComponentTranslation("gui.edit.texture.bow.base2.message"));
 		 
-		 this.baseBowPulling2TextureFileInput = new GuiComponentFileInput(this, I18n.format("gui.edit.texutre.bow.base2.label"), this.addon, new FileNameExtensionFilter("PNG File", "png")) {
+		 this.baseBowPulling2TextureFileInput = new GuiComponentFileInput(this, I18n.format("gui.edit.texture.bow.base2.label"), this.addon, new FileNameExtensionFilter("PNG File", "png")) {
 			
 			@Override
 			protected void setFileDialogueFolder(File folder) {
@@ -174,9 +162,9 @@ public class GuiEditItemBowTexture extends GuiEditItemTexture {
 			this.baseBowPulling2TextureFileInput.setRequired();
 		}
 		 
-		 this.colorBowPulling2TextureMessage = new GuiComponentDisplayText(this, new TextComponentTranslation("gui.edit.texutre.bow.color2.message"));
+		 this.colorBowPulling2TextureMessage = new GuiComponentDisplayText(this, new TextComponentTranslation("gui.edit.texture.bow.color2.message"));
 		 
-		 this.colorBowPulling2TextureFileInput = new GuiComponentFileInput(this, I18n.format("gui.edit.texutre.bow.color2.label"), this.addon, new FileNameExtensionFilter("PNG File", "png")) {
+		 this.colorBowPulling2TextureFileInput = new GuiComponentFileInput(this, I18n.format("gui.edit.texture.bow.color2.label"), this.addon, new FileNameExtensionFilter("PNG File", "png")) {
 			
 			@Override
 			protected void setFileDialogueFolder(File folder) {
@@ -222,17 +210,17 @@ public class GuiEditItemBowTexture extends GuiEditItemTexture {
 	@Override
 	protected boolean checkFiles() {
 		if (this.baseBowPulling0TextureFileInput.getFile() == null) {
-			this.mc.displayGuiScreen(new GuiMessageBox(this, I18n.format("gui.edit.texture.problem.title"), new TextComponentTranslation("gui.edit.texture.armor.problem.noTexture.specific.message", I18n.format("gui.edit.texutre.bow.base0.label")), I18n.format("gui.buttons.back")));
+			this.mc.displayGuiScreen(new GuiMessageBox(this, I18n.format("gui.edit.texture.problem.title"), new TextComponentTranslation("gui.edit.texture.armor.problem.noTexture.specific.message", I18n.format("gui.edit.texture.bow.base0.label")), I18n.format("gui.buttons.back")));
 			return false;
 		}
 		
 		if (this.baseBowPulling1TextureFileInput.getFile() == null) {
-			this.mc.displayGuiScreen(new GuiMessageBox(this, I18n.format("gui.edit.texture.problem.title"), new TextComponentTranslation("gui.edit.texture.armor.problem.noTexture.specific.message", I18n.format("gui.edit.texutre.bow.base1.label")), I18n.format("gui.buttons.back")));
+			this.mc.displayGuiScreen(new GuiMessageBox(this, I18n.format("gui.edit.texture.problem.title"), new TextComponentTranslation("gui.edit.texture.armor.problem.noTexture.specific.message", I18n.format("gui.edit.texture.bow.base1.label")), I18n.format("gui.buttons.back")));
 			return false;
 		}
 		
 		if (this.baseBowPulling2TextureFileInput.getFile() == null) {
-			this.mc.displayGuiScreen(new GuiMessageBox(this, I18n.format("gui.edit.texture.problem.title"), new TextComponentTranslation("gui.edit.texture.armor.problem.noTexture.specific.message", I18n.format("gui.edit.texutre.bow.base2.label")), I18n.format("gui.buttons.back")));
+			this.mc.displayGuiScreen(new GuiMessageBox(this, I18n.format("gui.edit.texture.problem.title"), new TextComponentTranslation("gui.edit.texture.armor.problem.noTexture.specific.message", I18n.format("gui.edit.texture.bow.base2.label")), I18n.format("gui.buttons.back")));
 			return false;
 		}
 		

@@ -65,9 +65,13 @@ type.block.falling.description=A block that falls, like sand, anvils, and dragon
 type.block.stairs.title=Stairs
 type.block.stairs.description=A block of stairs.
 type.block.slab.title=Slab
-type.block.slab.description=A slab block. Can have horizontal and vertical slabs.
-type.block.tile.title=Carpet or Tile
-type.block.tile.description=A carpet or tile-like block. Can be placed on the floor, or also walls and ceilings.
+type.block.slab.description=A slab block. Can have horizontal and optionally vertical slabs.
+type.block.carpet.title=Carpet or Tile
+type.block.carpet.description=A carpet or tile-like block. Can be placed on the floor, or optionally walls and ceilings.
+type.block.facing.title=Facing
+type.block.facing.description=A block that can face different directions like a pumpkin, or glazed terracotta. Can face horizontally and optionally vertically.
+type.block.pillar.title=Log or Pillar
+type.block.pillar.description=A wooden log or pillar block.
 type.block.pane.title=Pane or Bars
 type.block.pane.description=A block like glass panes or iron bars.
 type.block.ladder.title=Ladder
@@ -84,8 +88,6 @@ type.block.vine.title=Vine
 type.block.vine.description=A vine you can climb that spreads.
 type.block.grass.title=Grass
 type.block.grass.description=A grass-like block that spreads.
-type.block.pillar.title=Log or Pillar
-type.block.pillar.description=A wooden log or pillar block.
 type.block.leaves.title=Leaves
 type.block.leaves.description=A block of leaves that decays automatically when the logs near it are destroyed.
 type.block.cake.title=Cake
@@ -256,6 +258,7 @@ gui.popup.model.block.withItem.message=You'll have to manually create and add yo
 
 gui.popup.itemStack.title=Edit Item Stack
 gui.popup.itemStack.item.label=Item
+gui.popup.itemStack.anyDamage.label=Any Damage
 gui.popup.itemStack.meta.label=Metadata
 gui.popup.itemStack.count.label=Count
 gui.popup.itemStack.items.label=Items
@@ -611,6 +614,8 @@ gui.edit.block.harvestTool.info=What tool type is required to dig this block (li
 gui.edit.block.effectiveTools.label=Effective Tools
 gui.edit.block.opacity.label=Opacity
 gui.edit.block.opacity.info=How much light is blocked going through this block. For example, glass is 0, ice is 3, and solid blocks are 15.
+gui.edit.block.lightLevel.label=Light Level
+gui.edit.block.lightLevel.info=How much light this block gives off, with 0 being none, and 15 being max.
 gui.edit.block.flammability.label=Flammability
 gui.edit.block.flammability.info=How quickly this block burns. For example, planks are 20, plants are 100, tnt is 15, and logs are 5.
 gui.edit.block.fireSpreadSpeed.label=Fire Spread Speed
@@ -651,6 +656,28 @@ gui.edit.block.problem.noName=The Block Name cannot be blank.
 gui.edit.block.problem.noMaterial=The Block Material cannot be blank.
 
 gui.edit.block.simple.title=Create New Simple Block
+
+gui.edit.block.falling.title=Create New Falling Block
+
+gui.edit.block.stairs.title=Create New Stairs Block
+
+gui.edit.block.slab.title=Create New Slab Block
+gui.edit.block.slab.placeOnWalls.label=Place on Walls
+gui.edit.block.slab.placeOnWalls.info=If true, this slab can be placed vertically as well as horizontally.
+
+gui.edit.block.carpet.title=Create New Carpet/Tile Block
+gui.edit.block.carpet.placeOnWalls.label=Place on Walls
+gui.edit.block.carpet.placeOnWalls.info=If true, this carpet/tile can be placed on walls as well as on the ground.
+gui.edit.block.carpet.placeOnCeiling.label=Place on Ceiling
+gui.edit.block.carpet.placeOnCeiling.info=If true, this capet/tile can be placed on the ceiling.
+gui.edit.block.carpet.needsSupport.label=Needs Support
+gui.edit.block.carpet.needsSupport.info=If true, the block must be placed on a non-air block.
+
+gui.edit.block.facing.title=Create new Facing Block
+gui.edit.block.facing.canFaceVertically.label=Can Face Vertically
+gui.edit.block.facing.canFaceVertically.info=If true, this block can be placed facing up and down.
+
+gui.edit.block.pillar.title=Create new Log/Pillar Block
 
 gui.edit.creativeTab.title=Create New Creative Tab
 gui.edit.creativeTab.id.label=Tab Id
@@ -896,7 +923,7 @@ gui.edit.texture.customModel=Custom Model
 gui.edit.texture.success.title=Texture Loaded
 gui.edit.texture.success.message=Successfully updated the texture!
 gui.edit.texture.problem.title=Problem Loading Texture
-gui.edit.texture.problem.noTexture.message=You need to select an item texture!
+gui.edit.texture.problem.noTexture.message=You need to select a texture!
 gui.edit.texture.problem.noTexture.specific.message=You need to select the %s!
 gui.edit.texture.problem.cantLoad.message=Couldn't load at least one of the images selected. Make sure they still exist and are valid images!
 gui.edit.texture.problem.wrongDimensions.title=Wrong Image Dimensions
@@ -924,19 +951,32 @@ gui.edit.texture.hatOverlay.label=Screen Overlay
 gui.edit.texture.hatOverlay.hasHatOverlay.input=Has Screen Overlay
 gui.edit.texture.hatOverlay.problem.wrongDimensions.notSquare.message=The hat overlay texture must be square.
 
-gui.edit.texutre.bow.base0.message=Select a texture for when the bow starts pulling.
-gui.edit.texutre.bow.base0.label=Pull Texture 0
-gui.edit.texutre.bow.color0.message=Select a color overlay for when the bow starts pulling.
-gui.edit.texutre.bow.color0.label=Pull Color Texture 0
-gui.edit.texutre.bow.base1.message=Select a texture for when the bow is in the middle of pulling.
-gui.edit.texutre.bow.base1.label=Pull Texture 1
-gui.edit.texutre.bow.color1.message=Select a color overlay for when the bow is in the middle of pulling.
-gui.edit.texutre.bow.color1.label=Pull Color Texture 1
-gui.edit.texutre.bow.base2.message=Select a texture for when the bow finishes pulling.
-gui.edit.texutre.bow.base2.label=Pull Texture 2
-gui.edit.texutre.bow.color2.message=Select a color overlay for when the bow finishes pulling.
-gui.edit.texutre.bow.color2.label=Pull Color Texture 2
+gui.edit.texture.bow.base0.message=Select a texture for when the bow starts pulling.
+gui.edit.texture.bow.base0.label=Pull Texture 0
+gui.edit.texture.bow.color0.message=Select a color overlay for when the bow starts pulling.
+gui.edit.texture.bow.color0.label=Pull Color Texture 0
+gui.edit.texture.bow.base1.message=Select a texture for when the bow is in the middle of pulling.
+gui.edit.texture.bow.base1.label=Pull Texture 1
+gui.edit.texture.bow.color1.message=Select a color overlay for when the bow is in the middle of pulling.
+gui.edit.texture.bow.color1.label=Pull Color Texture 1
+gui.edit.texture.bow.base2.message=Select a texture for when the bow finishes pulling.
+gui.edit.texture.bow.base2.label=Pull Texture 2
+gui.edit.texture.bow.color2.message=Select a color overlay for when the bow finishes pulling.
+gui.edit.texture.bow.color2.label=Pull Color Texture 2
 
 gui.edit.texture.block.title=Texturize your Block!
 gui.edit.texture.block.message=Select a texture for %s, which should be a png file. If you want a custom model, however, you will have to create that yourself!
+gui.edit.texture.block.message.plural=Select textures for %s, which should be png files. If you want a custom model, however, you will have to create that yourself!
 gui.edit.texture.block.label=Block Texture
+
+gui.edit.texture.block.facing.front.message=Select a texture for the front of %s.
+gui.edit.texture.block.facing.front.label=Front Texture
+gui.edit.texture.block.facing.side.message=Select a texture for the sides of %s.
+gui.edit.texture.block.facing.side.label=Side Texture
+gui.edit.texture.block.facing.top.message=Select a texture for the top and bottom of %s.
+gui.edit.texture.block.facing.top.label=Top/Bottom Texture
+
+gui.edit.texture.block.pillar.side.message=Select a texture for the sides of %s.
+gui.edit.texture.block.pillar.side.label=Side Texture
+gui.edit.texture.block.pillar.top.message=Select a texture for the top and bottom of %s.
+gui.edit.texture.block.pillar.top.label=Top/Bottom Texture

@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import com.tmtravlr.additions.addon.blocks.IBlockAdded;
 import com.tmtravlr.additions.addon.entities.EntityAddedProjectile;
 import com.tmtravlr.additions.addon.entities.renderers.RenderAddedProjectile;
 import com.tmtravlr.additions.addon.items.IItemAdded;
@@ -13,13 +14,17 @@ import com.tmtravlr.additions.addon.items.ItemAddedShield;
 import com.tmtravlr.additions.gui.GuiFactoryRegistration;
 import com.tmtravlr.additions.network.CToSMessage;
 import com.tmtravlr.additions.network.PacketHandlerServer;
+import com.tmtravlr.additions.util.client.AddonLoadingException;
 
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockLiquid;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.resources.AbstractResourcePack;
 import net.minecraft.client.resources.FileResourcePack;
@@ -31,6 +36,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
@@ -80,6 +86,7 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void registerItemRenderDefinition(Item item) {
 		MC.getRenderItem().getItemModelMesher().register(item, new ItemMeshDefinition() {
+			@Override
 			public ModelResourceLocation getModelLocation(ItemStack stack) {
                 return new ModelResourceLocation(new ResourceLocation(AdditionsMod.MOD_ID, getItemName(stack.getItem().getUnlocalizedName())), "inventory");
             }
@@ -94,7 +101,8 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void registerItemColors(Item[] items) {
 		MC.getItemColors().registerItemColorHandler(new IItemColor() {
-            public int colorMultiplier(ItemStack stack, int tintIndex) {
+            @Override
+			public int colorMultiplier(ItemStack stack, int tintIndex) {
             	if (stack.getItem() instanceof IItemAdded && tintIndex == 1) {
 	                return ((IItemAdded)stack.getItem()).getColor(stack);
             	}
@@ -102,6 +110,11 @@ public class ClientProxy extends CommonProxy {
             	return -1;
             }
         }, items);
+	}
+	
+	@Override
+	public void ignoreLiquidLevel(IBlockAdded block) {
+		ModelLoader.setCustomStateMapper(block.getAsBlock(), (new StateMap.Builder()).ignore(new IProperty[] {BlockLiquid.LEVEL}).build());
 	}
 	
 	@Override
@@ -119,7 +132,7 @@ public class ClientProxy extends CommonProxy {
 		if (this.defaultResourcePacks != null) {
 			Iterator<IResourcePack> packIterator = this.defaultResourcePacks.iterator();
 			
-			while(packIterator.hasNext()) {
+			while (packIterator.hasNext()) {
 				IResourcePack resourcePack = packIterator.next();
 				if (resourcePack instanceof AbstractResourcePack) {
 					File packFile = ObfuscationReflectionHelper.getPrivateValue(AbstractResourcePack.class, (AbstractResourcePack)resourcePack, "field_110597_b", "resourcePackFile");
@@ -176,5 +189,10 @@ public class ClientProxy extends CommonProxy {
 			
 			AdditionsMod.networkWrapper.sendToServer(new CToSMessage(buff));
 		}
+	}
+	
+	@Override
+	public RuntimeException createLoadingException(String message) {
+		return new AddonLoadingException(message);
 	}
 }

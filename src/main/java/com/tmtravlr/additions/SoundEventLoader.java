@@ -11,9 +11,9 @@ public class SoundEventLoader {
 	public static final SoundEvent ITEM_SHIELD_SWING = new SoundEvent(new ResourceLocation(AdditionsMod.MOD_ID, "item.shield.swing"));
 	
 	public static void registerSoundEvents() {
-		ForgeRegistries.SOUND_EVENTS.register(BLOCK_CAULDRON_WASH.setRegistryName(BLOCK_CAULDRON_WASH.getSoundName()));
-		ForgeRegistries.SOUND_EVENTS.register(ITEM_SHIELD_BASH.setRegistryName(ITEM_SHIELD_BASH.getSoundName()));
-		ForgeRegistries.SOUND_EVENTS.register(ITEM_SHIELD_SWING.setRegistryName(ITEM_SHIELD_SWING.getSoundName()));
+		ForgeRegistries.SOUND_EVENTS.register(BLOCK_CAULDRON_WASH.setRegistryName(new ResourceLocation(AdditionsMod.MOD_ID, "block.cauldron.wash")));
+		ForgeRegistries.SOUND_EVENTS.register(ITEM_SHIELD_BASH.setRegistryName(new ResourceLocation(AdditionsMod.MOD_ID, "item.shield.bash")));
+		ForgeRegistries.SOUND_EVENTS.register(ITEM_SHIELD_SWING.setRegistryName(new ResourceLocation(AdditionsMod.MOD_ID, "item.shield.swing")));
 	}
 
 }

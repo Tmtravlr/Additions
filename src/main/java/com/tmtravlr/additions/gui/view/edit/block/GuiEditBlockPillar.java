@@ -1,26 +1,27 @@
 package com.tmtravlr.additions.gui.view.edit.block;
 
 import com.tmtravlr.additions.addon.Addon;
-import com.tmtravlr.additions.addon.blocks.BlockAddedSimple;
+import com.tmtravlr.additions.addon.blocks.BlockAddedPillar;
 import com.tmtravlr.additions.addon.items.blocks.ItemAddedBlockSimple;
+import com.tmtravlr.additions.gui.view.edit.texture.GuiEditBlockPillarTexture;
 
 import net.minecraft.client.gui.GuiScreen;
 
 /**
- * Page for adding a new simple block or editing an existing one.
+ * Page for adding a new pillar block or editing an existing one.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since December 2018
+ * @since May 2019
  */
-public class GuiEditBlockSimple extends GuiEditBlockModifiableBoundingBox<BlockAddedSimple> {
+public class GuiEditBlockPillar extends GuiEditBlockModifiableBoundingBox<BlockAddedPillar> {
     
-	public GuiEditBlockSimple(GuiScreen parentScreen, String title, Addon addon, BlockAddedSimple block) {
+	public GuiEditBlockPillar(GuiScreen parentScreen, String title, Addon addon, BlockAddedPillar block) {
 		super(parentScreen, title, addon);
 		
 		this.isNew = block == null;
 		
 		if (this.isNew) {
-			this.block = new BlockAddedSimple();
+			this.block = new BlockAddedPillar();
 			this.block.setItemBlock(new ItemAddedBlockSimple());
 		} else {
 			this.block = block;
@@ -47,7 +48,7 @@ public class GuiEditBlockSimple extends GuiEditBlockModifiableBoundingBox<BlockA
 			this.components.add(this.blockDropInput);
 			this.components.add(this.blockTextureButton);
 		}
-		
+
 		this.advancedComponents.add(this.blockLightLevelInput);
 		this.advancedComponents.add(this.blockEffectiveToolsInput);
 		this.advancedComponents.add(this.blockFlammabilityInput);
@@ -81,4 +82,9 @@ public class GuiEditBlockSimple extends GuiEditBlockModifiableBoundingBox<BlockA
 		this.advancedComponents.add(this.itemBlockContainerInput);
 		this.advancedComponents.add(this.itemBlockAttributesInput);
 	}
+    
+    @Override
+	protected GuiScreen getTextureDialogue(GuiScreen nextScreen) {
+    	return new GuiEditBlockPillarTexture(nextScreen, this.addon, this.block, this.isNew);
+    }
 }

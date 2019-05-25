@@ -34,12 +34,18 @@ public class BlockAddedManager {
 	private static final LinkedHashMap<ResourceLocation, IGuiBlockAddedFactory> NAME_TO_GUI_MAP = new LinkedHashMap<>();
 	
 	public static void registerDefaultBlocks() {
-	    registerBlockType(new BlockAddedSimple.Serializer());
+		registerBlockType(new BlockAddedSimple.Serializer());
+		registerBlockType(new BlockAddedFalling.Serializer());
+		registerBlockType(new BlockAddedStairs.Serializer());
+	    registerBlockType(new BlockAddedSlab.Serializer());
+	    registerBlockType(new BlockAddedCarpet.Serializer());
+	    registerBlockType(new BlockAddedFacing.Serializer());
+	    registerBlockType(new BlockAddedPillar.Serializer());
 	}
 	
 	public static void registerBlockType(IBlockAdded.Serializer <? extends IBlockAdded > blockSerializer) {
 	    ResourceLocation resourcelocation = blockSerializer.getBlockAddedType();
-	    Class<? extends IBlockAdded> oclass = (Class<? extends IBlockAdded>)blockSerializer.getBlockAddedClass();
+	    Class<? extends IBlockAdded> oclass = blockSerializer.getBlockAddedClass();
 	
 	    if (NAME_TO_SERIALIZER_MAP.containsKey(resourcelocation)) {
 	        throw new IllegalArgumentException("Can't re-register block type name " + resourcelocation);
@@ -99,7 +105,8 @@ public class BlockAddedManager {
 	}
 	
 	public static class Serializer implements JsonDeserializer<IBlockAdded>, JsonSerializer<IBlockAdded> {
-        public IBlockAdded deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context) throws JsonParseException {
+        @Override
+		public IBlockAdded deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context) throws JsonParseException {
             JsonObject json = JsonUtils.getJsonObject(jsonElement, "block");
             ResourceLocation resourcelocation = new ResourceLocation(JsonUtils.getString(json, "type"));
             IBlockAdded.Serializer<?> serializer;
@@ -113,7 +120,8 @@ public class BlockAddedManager {
             return serializer.deserialize(json, context);
         }
 
-        public JsonElement serialize(IBlockAdded blockAdded, Type type, JsonSerializationContext context) {
+        @Override
+		public JsonElement serialize(IBlockAdded blockAdded, Type type, JsonSerializationContext context) {
         	IBlockAdded.Serializer<IBlockAdded> serializer = BlockAddedManager.<IBlockAdded>getSerializerFor(blockAdded);
             JsonObject json = serializer.serialize(blockAdded, context);
             json.addProperty("type", serializer.getBlockAddedType().toString());

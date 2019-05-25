@@ -13,6 +13,7 @@ import com.tmtravlr.additions.addon.items.blocks.IItemAddedBlock;
 import com.tmtravlr.lootoverhaul.loot.LootContextExtendedBuilder;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockFalling;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.EnumPushReaction;
@@ -48,14 +49,14 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Basic Block
+ * Falling Block
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since December 2018 
+ * @since May 2019 
  */
-public class BlockAddedSimple extends Block implements IBlockAdded, IBlockAddedModifiableBoundingBox {
+public class BlockAddedFalling extends BlockFalling implements IBlockAdded, IBlockAddedModifiableBoundingBox {
 	
-	public static final ResourceLocation TYPE = new ResourceLocation(AdditionsMod.MOD_ID, "simple");
+	public static final ResourceLocation TYPE = new ResourceLocation(AdditionsMod.MOD_ID, "falling");
 	
 	private IItemAddedBlock itemBlock = null;
 	private String displayName = "";
@@ -84,7 +85,7 @@ public class BlockAddedSimple extends Block implements IBlockAdded, IBlockAddedM
 	private float collisionBoxMaxY = 1;
 	private float collisionBoxMaxZ = 1;
 
-	public BlockAddedSimple() {
+	public BlockAddedFalling() {
 		super(Material.ROCK);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(BlockLiquid.LEVEL, Integer.valueOf(0)));
 		this.setBlockMapColor(null);
@@ -534,13 +535,13 @@ public class BlockAddedSimple extends Block implements IBlockAdded, IBlockAddedM
     }
     
     @Override
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess world, BlockPos pos) {
     	if (!this.hasCollisionBox) {
     		return Block.NULL_AABB;
     	} else if (!this.sameCollisionBoundingBox) {
-    		return new AxisAlignedBB(this.collisionBoxMinX, this.collisionBoxMinY, this.collisionBoxMinZ, this.collisionBoxMaxX, this.collisionBoxMaxY, this.collisionBoxMaxZ);
+    		return blockState.getBoundingBox(world, pos);
     	}
-        return blockState.getBoundingBox(worldIn, pos);
+        return new AxisAlignedBB(this.boundingBoxMinX, this.boundingBoxMinY, this.boundingBoxMinZ, this.boundingBoxMaxX, this.boundingBoxMaxY, this.boundingBoxMaxZ);
     }
     
     @Override
@@ -667,14 +668,14 @@ public class BlockAddedSimple extends Block implements IBlockAdded, IBlockAddedM
     	return false;
     }
 	
-	public static class Serializer extends IBlockAdded.Serializer<BlockAddedSimple> {
+	public static class Serializer extends IBlockAdded.Serializer<BlockAddedFalling> {
 		
 		public Serializer() {
-			super(TYPE, BlockAddedSimple.class);
+			super(TYPE, BlockAddedFalling.class);
 		}
 		
 		@Override
-		public JsonObject serialize(BlockAddedSimple blockAdded, JsonSerializationContext context) {
+		public JsonObject serialize(BlockAddedFalling blockAdded, JsonSerializationContext context) {
 			JsonObject json = super.serialize(blockAdded, context);
 			
 			if (!blockAdded.hasCollisionBox()) {
@@ -737,8 +738,8 @@ public class BlockAddedSimple extends Block implements IBlockAdded, IBlockAddedM
 		}
 		
 		@Override
-		public BlockAddedSimple deserialize(JsonObject json, JsonDeserializationContext context) {
-			BlockAddedSimple blockAdded = new BlockAddedSimple();
+		public BlockAddedFalling deserialize(JsonObject json, JsonDeserializationContext context) {
+			BlockAddedFalling blockAdded = new BlockAddedFalling();
 			super.deserializeDefaults(json, context, blockAdded);
 			
 			blockAdded.setHasCollisionBox(JsonUtils.getBoolean(json, "has_collision_box", true));

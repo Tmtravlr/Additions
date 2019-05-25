@@ -1,13 +1,11 @@
 package com.tmtravlr.additions.gui.view.edit.recipe;
 
-import com.google.common.base.Predicate;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.recipes.RecipeAddedBrewing;
 import com.tmtravlr.additions.gui.message.GuiMessageBox;
 import com.tmtravlr.additions.gui.message.GuiMessageBoxNeedsRestart;
 import com.tmtravlr.additions.gui.view.GuiView;
-import com.tmtravlr.additions.gui.view.components.input.GuiComponentFloatInput;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentIngredientOreNBTInput;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentItemStackInput;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentStringInput;
@@ -69,6 +67,7 @@ public class GuiEditRecipeBrewing extends GuiEdit {
 		
 		this.recipeInputInput = new GuiComponentItemStackInput(I18n.format("gui.edit.recipe.brewing.input.label"), this);
 		this.recipeInputInput.disableCount();
+		this.recipeInputInput.enableAnyDamage();
 		this.recipeInputInput.setRequired();
 		this.recipeInputInput.setDefaultItemStack(this.addition.input);
 		

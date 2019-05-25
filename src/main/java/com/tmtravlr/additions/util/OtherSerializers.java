@@ -143,7 +143,7 @@ public class OtherSerializers {
 		public static List<String> deserialize(JsonElement jsonElement, String elementName) {
 			List<String> stringList = new ArrayList<>();
 			
-			if (JsonUtils.isString(jsonElement)) {
+			if (jsonElement.isJsonPrimitive() && jsonElement.getAsJsonPrimitive().isString()) {
 				stringList.add(JsonUtils.getString(jsonElement, elementName));
         	} else if (jsonElement.isJsonArray()) {
         		JsonArray jsonArray = jsonElement.getAsJsonArray();
@@ -190,7 +190,7 @@ public class OtherSerializers {
 		public static List<Item> deserialize(JsonElement jsonElement, String elementName) {
 			List<Item> itemList = new ArrayList<>();
 			
-			if (JsonUtils.isString(jsonElement)) {
+			if (jsonElement.isJsonPrimitive() && jsonElement.getAsJsonPrimitive().isString()) {
 				itemList.add(JsonUtils.getItem(jsonElement, elementName));
 			} else {
 				for (JsonElement jsonArrayElement : JsonUtils.getJsonArray(jsonElement, elementName)) {

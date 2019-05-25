@@ -1,6 +1,5 @@
 package com.tmtravlr.additions.gui.view.edit.recipe;
 
-import com.google.common.base.Predicate;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.recipes.RecipeAddedSmelting;
@@ -64,6 +63,7 @@ public class GuiEditRecipeSmelting extends GuiEdit {
 		
 		this.recipeInputInput = new GuiComponentItemStackInput(I18n.format("gui.edit.recipe.smelting.input.label"), this);
 		this.recipeInputInput.disableCount();
+		this.recipeInputInput.enableAnyDamage();
 		this.recipeInputInput.setRequired();
 		this.recipeInputInput.setDefaultItemStack(this.addition.input);
 		

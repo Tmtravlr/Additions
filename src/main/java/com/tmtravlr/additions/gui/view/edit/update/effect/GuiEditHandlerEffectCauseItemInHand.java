@@ -14,7 +14,6 @@ import com.tmtravlr.additions.gui.view.components.input.dropdown.GuiComponentDro
 import com.tmtravlr.additions.gui.view.edit.GuiEdit;
 
 import net.minecraft.client.resources.I18n;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.util.text.TextComponentTranslation;
 
 /**
@@ -42,6 +41,7 @@ public class GuiEditHandlerEffectCauseItemInHand implements IGuiEffectCauseEditH
 		
 		this.stackInput = new GuiComponentItemStackInput(I18n.format("gui.edit.effectCause.held.itemStack.label"), editScreen);
 		this.stackInput.setRequired();
+		this.stackInput.enableAnyDamage();
 		this.stackInput.disableCount();
 		if (causeHeld != null) {
 			this.stackInput.setDefaultItemStack(causeHeld.itemStack);

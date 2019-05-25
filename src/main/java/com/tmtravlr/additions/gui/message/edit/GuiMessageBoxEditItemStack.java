@@ -3,25 +3,27 @@ package com.tmtravlr.additions.gui.message.edit;
 import java.io.IOException;
 
 import com.tmtravlr.additions.gui.message.GuiMessageBoxTwoButton;
+import com.tmtravlr.additions.gui.view.components.input.GuiComponentBooleanInput;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentIntegerInput;
-import com.tmtravlr.additions.gui.view.components.input.GuiComponentItemStackInput;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentNBTInput;
 import com.tmtravlr.additions.gui.view.components.input.dropdown.GuiComponentDropdownInputItem;
 import com.tmtravlr.additions.gui.view.edit.GuiEdit;
 
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.oredict.OreDictionary;
 
 public abstract class GuiMessageBoxEditItemStack extends GuiMessageBoxTwoButton {
 	
 	protected GuiComponentDropdownInputItem itemInput;
+	protected GuiComponentBooleanInput anyDamageInput;
 	protected GuiComponentIntegerInput metaInput;
 	protected GuiComponentIntegerInput countInput;
 	protected GuiComponentNBTInput nbtInput;
 	
 	protected boolean hasMeta;
+	protected boolean hasAnyDamage;
 	protected boolean hasCount;
 	protected boolean hasTag;
 	
@@ -39,7 +41,23 @@ public abstract class GuiMessageBoxEditItemStack extends GuiMessageBoxTwoButton 
 		this.itemInput.setDefaultSelected(stack.isEmpty() ? null : stack.getItem());
 		
 		this.metaInput = new GuiComponentIntegerInput(I18n.format("gui.popup.itemStack.meta.label"), parentScreen, false);
-		this.metaInput.setDefaultInteger(stack.getMetadata());
+		this.metaInput.setDefaultInteger(stack.getMetadata() == OreDictionary.WILDCARD_VALUE && this.hasAnyDamage ? 0 : stack.getMetadata());
+		if (this.hasAnyDamage) {
+			this.metaInput.setHidden(true);
+		}
+		
+		this.anyDamageInput = new GuiComponentBooleanInput(I18n.format("gui.popup.itemStack.anyDamage.label"), parentScreen) {
+			
+			@Override
+			public void setDefaultBoolean(boolean input) {
+				if (input != this.getBoolean()) {
+					GuiMessageBoxEditItemStack.this.metaInput.setHidden(input);
+				}
+				super.setDefaultBoolean(input);
+			}
+			
+		};
+		this.anyDamageInput.setDefaultBoolean(this.hasAnyDamage ? stack.getMetadata() == OreDictionary.WILDCARD_VALUE : false);
 		
 		this.countInput = new GuiComponentIntegerInput(I18n.format("gui.popup.itemStack.count.label"), parentScreen, false);
 		this.countInput.setMaximum(64);
@@ -57,7 +75,7 @@ public abstract class GuiMessageBoxEditItemStack extends GuiMessageBoxTwoButton 
         if (this.itemInput.getSelected() == null) {
     		this.removeItemStack();
     	} else {
-    		ItemStack stack = new ItemStack(this.itemInput.getSelected(), this.hasCount ? this.countInput.getInteger() : 1, this.metaInput.getInteger());
+    		ItemStack stack = new ItemStack(this.itemInput.getSelected(), this.hasCount ? this.countInput.getInteger() : 1, this.hasAnyDamage && this.anyDamageInput.getBoolean() ? OreDictionary.WILDCARD_VALUE : this.metaInput.getInteger());
     		if (this.nbtInput.getTag() != null) {
     			stack.setTagCompound(this.nbtInput.getTag());
     		}
@@ -92,6 +110,12 @@ public abstract class GuiMessageBoxEditItemStack extends GuiMessageBoxTwoButton 
 		this.drawString(this.fontRenderer, this.itemInput.getLabel(), popupX + 10, componentY + this.itemInput.getHeight(popupX, popupRight)/2 - 5, 0xFFFFFF);
 		this.itemInput.drawInList(popupX + labelOffset + 10, componentY, popupRight, mouseX, mouseY);
 		componentY += this.itemInput.getHeight(popupX, popupRight);
+
+		if (this.hasMeta && this.hasAnyDamage) {
+			this.drawString(this.fontRenderer, this.anyDamageInput.getLabel(), popupX + 10, componentY + this.anyDamageInput.getHeight(popupX, popupRight)/2 - 5, 0xFFFFFF);
+			this.anyDamageInput.drawInList(popupX + labelOffset + 10, componentY, popupRight, mouseX, mouseY);
+			componentY += this.anyDamageInput.getHeight(popupX, popupRight);
+		}
 		
 		if (this.hasMeta) {
 			this.drawString(this.fontRenderer, this.metaInput.getLabel(), popupX + 10, componentY + this.metaInput.getHeight(popupX, popupRight)/2 - 5, 0xFFFFFF);
@@ -117,6 +141,10 @@ public abstract class GuiMessageBoxEditItemStack extends GuiMessageBoxTwoButton 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
     	this.itemInput.onMouseClicked(mouseX, mouseY, mouseButton);
+    	
+    	if (this.hasMeta && this.hasAnyDamage) {
+    		this.anyDamageInput.onMouseClicked(mouseX, mouseY, mouseButton);
+    	}
     	
     	if (this.hasMeta) {
     		this.metaInput.onMouseClicked(mouseX, mouseY, mouseButton);
@@ -164,6 +192,10 @@ public abstract class GuiMessageBoxEditItemStack extends GuiMessageBoxTwoButton 
     	int popupRight = popupLeft + popupWidth;
     	
     	int height = this.itemInput.getHeight(popupLeft, popupRight);
+    	
+    	if (this.hasMeta && this.hasAnyDamage) {
+    		height += this.anyDamageInput.getHeight(popupLeft, popupRight);
+    	}
     	
     	if (this.hasMeta) {
     		height += this.metaInput.getHeight(popupLeft, popupRight);

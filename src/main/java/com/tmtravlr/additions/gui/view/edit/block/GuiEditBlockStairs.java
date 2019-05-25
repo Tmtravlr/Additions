@@ -1,26 +1,28 @@
 package com.tmtravlr.additions.gui.view.edit.block;
 
 import com.tmtravlr.additions.addon.Addon;
-import com.tmtravlr.additions.addon.blocks.BlockAddedSimple;
+import com.tmtravlr.additions.addon.blocks.BlockAddedStairs;
 import com.tmtravlr.additions.addon.items.blocks.ItemAddedBlockSimple;
+import com.tmtravlr.additions.gui.view.edit.texture.GuiEditBlockTexture;
+import com.tmtravlr.additions.util.models.BlockModelManager;
 
 import net.minecraft.client.gui.GuiScreen;
 
 /**
- * Page for adding a new simple block or editing an existing one.
+ * Page for adding a new stairs block or editing an existing one.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since December 2018
+ * @since May 2019
  */
-public class GuiEditBlockSimple extends GuiEditBlockModifiableBoundingBox<BlockAddedSimple> {
+public class GuiEditBlockStairs extends GuiEditBlock<BlockAddedStairs> {
     
-	public GuiEditBlockSimple(GuiScreen parentScreen, String title, Addon addon, BlockAddedSimple block) {
+	public GuiEditBlockStairs(GuiScreen parentScreen, String title, Addon addon, BlockAddedStairs block) {
 		super(parentScreen, title, addon);
 		
 		this.isNew = block == null;
 		
 		if (this.isNew) {
-			this.block = new BlockAddedSimple();
+			this.block = new BlockAddedStairs();
 			this.block.setItemBlock(new ItemAddedBlockSimple());
 		} else {
 			this.block = block;
@@ -47,7 +49,7 @@ public class GuiEditBlockSimple extends GuiEditBlockModifiableBoundingBox<BlockA
 			this.components.add(this.blockDropInput);
 			this.components.add(this.blockTextureButton);
 		}
-		
+
 		this.advancedComponents.add(this.blockLightLevelInput);
 		this.advancedComponents.add(this.blockEffectiveToolsInput);
 		this.advancedComponents.add(this.blockFlammabilityInput);
@@ -59,20 +61,6 @@ public class GuiEditBlockSimple extends GuiEditBlockModifiableBoundingBox<BlockA
 		this.advancedComponents.add(this.blockCanPistonsPushInput);
 		this.advancedComponents.add(this.blockMapColorInput);
 		this.advancedComponents.add(this.blockBeaconColorMultiplierInput);
-		this.advancedComponents.add(this.blockBoundingBoxMinXInput);
-		this.advancedComponents.add(this.blockBoundingBoxMinYInput);
-		this.advancedComponents.add(this.blockBoundingBoxMinZInput);
-		this.advancedComponents.add(this.blockBoundingBoxMaxXInput);
-		this.advancedComponents.add(this.blockBoundingBoxMaxYInput);
-		this.advancedComponents.add(this.blockBoundingBoxMaxZInput);
-		this.advancedComponents.add(this.blockSameCollisionBoundingBoxInput);
-		this.advancedComponents.add(this.blockHasCollisionBoxInput);
-		this.advancedComponents.add(this.blockCollisionBoxMinXInput);
-		this.advancedComponents.add(this.blockCollisionBoxMinYInput);
-		this.advancedComponents.add(this.blockCollisionBoxMinZInput);
-		this.advancedComponents.add(this.blockCollisionBoxMaxXInput);
-		this.advancedComponents.add(this.blockCollisionBoxMaxYInput);
-		this.advancedComponents.add(this.blockCollisionBoxMaxZInput);
 		this.advancedComponents.add(this.itemBlockStackSizeInput);
 		this.advancedComponents.add(this.itemBlockShinesInput);
 		this.advancedComponents.add(this.itemBlockTooltipInput);
@@ -81,4 +69,9 @@ public class GuiEditBlockSimple extends GuiEditBlockModifiableBoundingBox<BlockA
 		this.advancedComponents.add(this.itemBlockContainerInput);
 		this.advancedComponents.add(this.itemBlockAttributesInput);
 	}
+    
+    @Override
+	protected GuiScreen getTextureDialogue(GuiScreen nextScreen) {
+    	return new GuiEditBlockTexture(nextScreen, this.addon, this.block, this.isNew, BlockModelManager.BlockModelType.STAIRS);
+    }
 }

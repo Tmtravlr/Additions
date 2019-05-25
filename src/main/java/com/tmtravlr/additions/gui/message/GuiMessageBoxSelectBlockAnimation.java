@@ -28,12 +28,18 @@ public class GuiMessageBoxSelectBlockAnimation extends GuiMessageBoxTwoButton {
 
 	protected Addon addon;
 	protected IBlockAdded block;
+	protected String textureEnding;
 
 	public GuiMessageBoxSelectBlockAnimation(GuiScreen parentScreen, Addon addon, IBlockAdded block) {
+		this(parentScreen, addon, block, "");
+	}
+
+	public GuiMessageBoxSelectBlockAnimation(GuiScreen parentScreen, Addon addon, IBlockAdded block, String textureEnding) {
 		super(parentScreen, parentScreen, I18n.format("gui.popup.texture.animation.title"), new TextComponentTranslation("gui.popup.texture.animation.message", block.getDisplayName()), I18n.format("gui.popup.texture.animation.button.generate"), I18n.format("gui.buttons.selectFile"));
 
 		this.addon = addon;
 		this.block = block;
+		this.textureEnding = textureEnding;
 	}
 	
 	@Override
@@ -62,7 +68,7 @@ public class GuiMessageBoxSelectBlockAnimation extends GuiMessageBoxTwoButton {
 	}
 	
 	protected void saveTextureAnimation(File fileChosen) throws IOException {
-		BlockModelManager.saveTextureAnimation(this.addon, this.block, fileChosen);
+		BlockModelManager.saveTextureAnimation(this.addon, this.block, this.textureEnding, fileChosen);
 	}
 	
 	protected void handleFileChosen(int chooserOption, JFileChooser chooser, File defaultFolder) {
