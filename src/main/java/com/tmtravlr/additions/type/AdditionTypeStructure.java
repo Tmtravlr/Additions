@@ -96,7 +96,13 @@ public class AdditionTypeStructure extends AdditionType<ResourceLocation> {
 				
 				if (fileName.contains(File.separator)) {
 					String[] locationStrings = fileName.split(Pattern.quote(File.separator), 2);
-					ResourceLocation location = new ResourceLocation(locationStrings[0], locationStrings[1]);
+					String locationPath = locationStrings[1];
+					
+					if (!"/".equals(File.separator)) {
+						locationPath = locationPath.replace(File.separatorChar, '/');
+					}
+					
+					ResourceLocation location = new ResourceLocation(locationStrings[0], locationPath);
 					
 					this.structureLocations.put(addon, location);
 				} else {
