@@ -131,30 +131,39 @@ type.effectCause.held.title=Item is Held
 type.effectCause.held.description=Runs the effect when an item is in your mainhand, offhand, or either.
 type.effectCause.inInventory.title=Item is in Inventory
 type.effectCause.inInventory.description=Runs the effect when an item is in your inventory.
-type.effectCause.worn.title=Item is Worn
-type.effectCause.worn.description=Runs the effect when you wear the armor, or set of armor.
-type.effectCause.rightClickItem.title=Item is Right Clicked
-type.effectCause.rightClickItem.description=Runs the effect when you right click the item.
-type.effectCause.leftClickItem.title=Item is Left Clicked
-type.effectCause.leftClickItem.description=Runs the effect when you left click the item.
-type.effectCause.digWithItem.title=Digging with Item
-type.effectCause.digWithItem.description=Runs the effect when you are digging a block with this item.
-type.effectCause.breakBlockWithItem.title=Break Block with Item
-type.effectCause.breakBlockWithItem.description=Runs the effect when you break a block with this item.
-type.effectCause.attackWithItem.title=Attacking with Item
-type.effectCause.attackWithItem.description=Runs the effect when you attack a mob with this item.
-type.effectCause.usingItem.title=Using Item
-type.effectCause.usingItem.description=Runs the effect when you are using an item, like eating food, drawing a bow, etc.
+type.effectCause.equipped.title.singular=Item is Equipped
+type.effectCause.equipped.title.plural=Items are Equipped
+type.effectCause.equipped.description=Runs the effect when you wear a piece of armor, or set of armor, optionally including mainhand and offhand.
+type.effectCause.itemRightClick.title=Item is Right Clicked
+type.effectCause.itemRightClick.description=Runs the effect when you right click the item.
+type.effectCause.itemRightClickBlock.title=Item Interacts with Block
+type.effectCause.itemRightClickBlock.description=Runs the effect when you right click a block with the item.
+type.effectCause.itemRightClickEntity.title=Item Interacts with Entity
+type.effectCause.itemRightClickEntity.description=Runs the effect when you right click an entity with the item.
+type.effectCause.itemUsing.title=Using Item
+type.effectCause.itemUsing.description=Runs the effect when you are using an item, like eating food, drawing a bow, etc.
+type.effectCause.itemLeftClick.title=Item is Left Clicked
+type.effectCause.itemLeftClick.description=Runs the effect when you left click the item in the air (not against a block or entity).
+type.effectCause.itemDigging.title=Digging with Item
+type.effectCause.itemDigging.description=Runs the effect when you are digging a block with this item.
+type.effectCause.itemBreakBlock.title=Break Block with Item
+type.effectCause.itemBreakBlock.description=Runs the effect when you break a block with this item.
+type.effectCause.itemAttack.title=Attacking with Item
+type.effectCause.itemAttack.description=Runs the effect when you attack a mob with this item.
+type.effectCause.killWithItem.title=Killing with Item
+type.effectCause.killWithItem.description=Runs the effect when you kill a mob with this item.
 type.effectCause.standOnBlock.title=Standing on Block
 type.effectCause.standOnBlock.description=Runs the effect when you are standing on a block.
 type.effectCause.standInBlock.title=Standing inside Block
 type.effectCause.standInBlock.description=Runs the effect when you are standing inside a block.
 type.effectCause.rightClickBlock.title=Block is Right Clicked
 type.effectCause.rightClickBlock.description=Runs the effect when you right click a block.
+type.effectCause.placeBlock.title=Block is Placed
+type.effectCause.placeBlock.description=Runs the effect when you place a block.
 type.effectCause.digBlock.title=Digging Block
-type.effectCause.digBlock.description=Runs the effect when you right are digging a block.
+type.effectCause.digBlock.description=Runs the effect when you are digging a block.
 type.effectCause.breakBlock.title=Block is Broken
-type.effectCause.breakBlock.description=Runs the effect when you right break a block.
+type.effectCause.breakBlock.description=Runs the effect when you break a block.
 type.effectCause.entitySpawned.title=Entity is Spawned
 type.effectCause.entitySpawned.description=Runs the effect when an entity is spawned.
 type.effectCause.entityUdpate.title=Entity Updates
@@ -163,6 +172,10 @@ type.effectCause.rightClickEntity.title=Entity is Right Clicked
 type.effectCause.rightClickEntity.description=Runs the effect when you right click an entity.
 type.effectCause.entityAttacked.title=Entity is Attacked
 type.effectCause.entityAttacked.description=Runs the effect when you attack an entity.
+type.effectCause.entityAttack.title=Entity Attacks
+type.effectCause.entityAttack.description=Runs the effect when an entity attacks its target.
+type.effectCause.entityKill.title=Entity Kills
+type.effectCause.entityKill.description=Runs the effect when an entity kills its target.
 type.effectCause.entityDeath.title=Entity Dies
 type.effectCause.entityDeath.description=Runs the effect when an entity dies.
 
@@ -178,6 +191,14 @@ type.effect.lootTableInside.description=Generates a loot table inside a block or
 type.effect.lootTableAt.title=Generate Loot Table
 type.effect.lootTableAt.title.withName=Generate Loot Table: %s
 type.effect.lootTableAt.description=Generate items from a loot table, and drops them on the ground.
+type.effect.cancelNormal.title=Cancel Normal Effect
+type.effect.cancelNormal.description=If something normally happens (like a mob taking damage, or dying), then this will cancel that.
+type.effect.consumeItem.title=Consume Item
+type.effect.consumeItem.title.withAmount=Consume %s Items
+type.effect.consumeItem.description=Consume an item from the item stack. Only works in some cases. Won't trigger if the player is in creative mode.
+type.effect.damageItem.title=Damage Item
+type.effect.damageItem.title.withAmount=Damage Item by %s
+type.effect.damageItem.description=Damage the item, if it is damageable. Only works in some cases. Won't trigger if the player is in creative mode.
 
 attribute.modifier.noEffect=No Effect
 
@@ -259,6 +280,7 @@ gui.popup.model.block.withItem.message=You'll have to manually create and add yo
 gui.popup.itemStack.title=Edit Item Stack
 gui.popup.itemStack.item.label=Item
 gui.popup.itemStack.anyDamage.label=Any Damage
+gui.popup.itemStack.anyDamage.info=If true, this item stack can have any metadata/damage.
 gui.popup.itemStack.meta.label=Metadata
 gui.popup.itemStack.count.label=Count
 gui.popup.itemStack.items.label=Items
@@ -285,6 +307,18 @@ gui.popup.potionEffect.particle.label=Particle Type
 gui.popup.potionEffect.particle.normal.label=Normal
 gui.popup.potionEffect.particle.faded.label=Faded
 gui.popup.potionEffect.particle.none.label=None
+
+gui.popup.equipmentItem.title=Edit Equipment Item
+gui.popup.equipmentItem.slot.label=Slot
+gui.popup.equipmentItem.item.label=Item
+gui.popup.equipmentItem.problem.slotRequired.title=Slot Needed
+gui.popup.equipmentItem.problem.slotRequired.message=You must select a slot!
+gui.popup.equipmentItem.display.head=On Head: %s
+gui.popup.equipmentItem.display.chest=On Chest: %s
+gui.popup.equipmentItem.display.legs=On Legs: %s
+gui.popup.equipmentItem.display.feet=On Feet: %s
+gui.popup.equipmentItem.display.mainhand=In Mainhand: %s
+gui.popup.equipmentItem.display.offhand=In Offhand: %s
 
 gui.popup.itemMaterial.armor.delete.message=Are you sure you want to delete this? Any items with this material will have their material set to leather. This cannot be undone.
 gui.popup.itemMaterial.tool.delete.message=Are you sure you want to delete this? Any items with this material will have their material set to wood. This cannot be undone.
@@ -792,9 +826,13 @@ gui.edit.effectList.success.message=Successfully updated your effect.
 
 gui.edit.effectCause.title=Edit Cause
 gui.edit.effectCause.type.label=Cause Type
+gui.edit.effectCause.targetSelf.label=Target Self
 gui.edit.effectCause.noGui.message=Couldn't find a GUI to edit this type of cause! Select a different type above.
 gui.edit.effectCause.problem.title=Problem Creating Cause
 gui.edit.effectCause.problem.noGui.message=There is no GUI for this cause, so there is no way to save it!
+
+gui.edit.effectCause.item.item.label=Item
+gui.edit.effectCause.item.problem.noItem.message=You must have an item!
 
 gui.edit.effectCause.held.itemStack.label=Held Item
 gui.edit.effectCause.held.hand.label=Hand
@@ -803,6 +841,20 @@ gui.edit.effectCause.held.hand.offhand.label=Offhand
 gui.edit.effectCause.held.hand.both.label=Either Hand
 gui.edit.effectCause.held.problem.noItem.message=You must have a held item!
 gui.edit.effectCause.held.problem.noHand.message=You must select a hand type!
+
+gui.edit.effectCause.equipped.items.label=Equipped Items
+gui.edit.effectCause.equipped.allRequired.label=All Required
+gui.edit.effectCause.equipped.required.label=Pieces Needed
+gui.edit.effectCause.equipped.required.info=Number of items that must be equipped to get the effect.
+gui.edit.effectCause.equipped.problem.noItems.message=You must add equipment items!
+
+gui.edit.effectCause.using.timeRequired.label=Time Required
+gui.edit.effectCause.using.timeRequired.info=How many ticks you must use this item for the effect to start triggering, with 20 ticks per second.
+
+gui.edit.effectCause.block.againstBlock.label=Against Block
+gui.edit.effectCause.block.againstBlock.info=If true, the effect will target against the block, instead of inside it. Good for items meant to place entities or blocks.
+gui.edit.effectCause.block.exceptReplaceable.label=Except Replaceable
+gui.edit.effectCause.block.exceptReplaceable.info=If true, the against block will ignore "replaceable" blocks like tallgrass and snow layers. Good if you are placing a block.
 
 gui.edit.effect.title=Edit Effect
 gui.edit.effect.type.label=Effect Type
@@ -830,6 +882,12 @@ gui.edit.effect.lootTable.lootTable.label=Loot Table
 gui.edit.effect.lootTable.useLootTableSeed.label=Use Loot Table Seed
 gui.edit.effect.lootTable.lootTableSeed.label=Loot Table Seed
 gui.edit.effect.lootTable.problem.noLootTable.message=You must enter a loot table!
+
+gui.edit.effect.consumeItem.amount.label=Amount to Consume
+gui.edit.effect.consumeItem.amount.info=Number of items to consume
+
+gui.edit.effect.damageItem.amount.label=Damage Amount
+gui.edit.effect.damageItem.amount.info=How much damage the item will take
 
 gui.edit.function.title=Create New Function
 gui.edit.function.id.label=Function Id

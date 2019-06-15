@@ -12,7 +12,6 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
@@ -23,6 +22,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
 
 /**
  * Sword Item
@@ -35,7 +35,7 @@ public class ItemAddedClub extends ItemAddedSimple implements IItemAddedTool {
 	public static final ResourceLocation TYPE = new ResourceLocation(AdditionsMod.MOD_ID, "club");
 	
 	public boolean applyVanillaAttributes = true;
-	private Item.ToolMaterial material;
+	private Item.ToolMaterial material = Item.ToolMaterial.WOOD;
 	
 	@Override
 	public void setToolMaterial(Item.ToolMaterial material) {
@@ -113,7 +113,7 @@ public class ItemAddedClub extends ItemAddedSimple implements IItemAddedTool {
     public boolean getIsRepairable(ItemStack toRepair, ItemStack repairStack) {
         ItemStack repairMaterial = this.material.getRepairItemStack();
         
-        if (!repairMaterial.isEmpty() && net.minecraftforge.oredict.OreDictionary.itemMatches(repairMaterial, repairStack, false)) {
+        if (!repairMaterial.isEmpty() && OreDictionary.itemMatches(repairMaterial, repairStack, false)) {
         	return true;
         }
         

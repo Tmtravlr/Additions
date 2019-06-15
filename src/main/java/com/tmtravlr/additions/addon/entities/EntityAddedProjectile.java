@@ -104,7 +104,7 @@ public class EntityAddedProjectile extends EntityArrow implements IEntityAddedPr
 		
 		if (entity != null) {
 			if (!collisionEffects.isEmpty()) {
-				collisionEffects.forEach(effect -> effect.applyEffect(this.shootingEntity, entity));
+				collisionEffects.forEach(effect -> effect.affectEntity(this.shootingEntity, entity));
 			}
 			
 			float motionMultiplier = this.damageIgnoresSpeed ? 1 : MathHelper.sqrt(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
@@ -203,7 +203,7 @@ public class EntityAddedProjectile extends EntityArrow implements IEntityAddedPr
 			}
 		} else { 
 			if (!this.world.isRemote && !collisionEffects.isEmpty()) {
-				collisionEffects.forEach(effect -> effect.applyEffect(this.shootingEntity, this.world, result.getBlockPos()));
+				collisionEffects.forEach(effect -> effect.affectBlock(this.shootingEntity, this.world, result.getBlockPos()));
 			}
 			
 			if (this.getSticksInGround()) {

@@ -1,19 +1,13 @@
 package com.tmtravlr.additions.gui.type.card.recipe;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import com.tmtravlr.additions.addon.recipes.IngredientOreNBT;
 import com.tmtravlr.additions.addon.recipes.RecipeAddedBrewing;
 import com.tmtravlr.additions.api.gui.IGuiRecipeCardDisplay;
-import com.tmtravlr.additions.gui.type.card.recipe.GuiRecipeCardDisplayCrafting.DisplayStack;
 import com.tmtravlr.additions.gui.view.GuiView;
 import com.tmtravlr.additions.util.client.CommonGuiUtils;
+import com.tmtravlr.additions.util.client.ItemStackDisplay;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.MathHelper;
 
 /**
  * Renders a brewing recipe
@@ -32,13 +26,10 @@ public class GuiRecipeCardDisplayBrewing implements IGuiRecipeCardDisplay {
 	
 	private RecipeAddedBrewing recipe;
 	
-	private ItemStack displayStack = ItemStack.EMPTY;
-	private DisplayStack cachedDisplayStack = new DisplayStack(IngredientOreNBT.EMPTY);
-	private int displayRefreshTime = 0;
+	private ItemStackDisplay stackDisplay = new ItemStackDisplay();
 	
 	public GuiRecipeCardDisplayBrewing(RecipeAddedBrewing recipe) {
 		this.recipe = recipe;
-		this.createDisplayStack(this.recipe.ingredient);
 	}
 
 	@Override
@@ -96,14 +87,10 @@ public class GuiRecipeCardDisplayBrewing implements IGuiRecipeCardDisplay {
 		Gui.drawRect(x + OUTPUT_SLOT_OFFSET_X, y + OUTPUT_SLOT_OFFSET_Y - 1, x + OUTPUT_SLOT_OFFSET_X + 22, y + OUTPUT_SLOT_OFFSET_Y + 21, 0xFFA0A0A0);
 		Gui.drawRect(x + OUTPUT_SLOT_OFFSET_X + 1, y + OUTPUT_SLOT_OFFSET_Y, x + OUTPUT_SLOT_OFFSET_X + 21, y + OUTPUT_SLOT_OFFSET_Y + 20, 0xFF000000);
 		
-		if (this.displayRefreshTime-- <= 0) {
-			this.displayRefreshTime = 40;
-			
-			this.displayStack = this.cachedDisplayStack.getDisplayStack();
-		}
+		this.stackDisplay.updateDisplay(this.recipe.ingredient.getMatchingStacks());
 
-		if (!this.displayStack.isEmpty()) {
-			viewScreen.renderItemStack(this.displayStack, x + INGREDIENT_SLOT_OFFSET_X + 3, y + INGREDIENT_SLOT_OFFSET_Y + 2, mouseX, mouseY, true, true);
+		if (!this.stackDisplay.getDisplayStack().isEmpty()) {
+			viewScreen.renderItemStack(this.stackDisplay.getDisplayStack(), x + INGREDIENT_SLOT_OFFSET_X + 3, y + INGREDIENT_SLOT_OFFSET_Y + 2, mouseX, mouseY, true, true);
 		}
 
 		if (!this.recipe.input.isEmpty()) {
@@ -112,36 +99,6 @@ public class GuiRecipeCardDisplayBrewing implements IGuiRecipeCardDisplay {
 		
 		if (!this.recipe.output.isEmpty()) {
 			viewScreen.renderItemStack(this.recipe.output, x + OUTPUT_SLOT_OFFSET_X + 3, y + OUTPUT_SLOT_OFFSET_Y + 2, mouseX, mouseY, true, true);
-		}
-	}
-	
-	protected void createDisplayStack(IngredientOreNBT ingredient) {
-		this.cachedDisplayStack = new DisplayStack(ingredient);
-	}
-	
-	private static class DisplayStack {
-		public ItemStack[] stacks = new ItemStack[0];
-		public int refreshCount = 0;
-		
-		public DisplayStack(IngredientOreNBT ingredient) {
-			this.stacks = ingredient.getMatchingStacks();
-		}
-		
-		public ItemStack getDisplayStack() {
-			ItemStack displayStack = ItemStack.EMPTY;
-			
-			if (stacks.length > 0) {
-				if (++this.refreshCount >= stacks.length) {
-					this.refreshCount = 0;
-				}
-				
-				int index = this.refreshCount % stacks.length;
-				displayStack = stacks[index];
-			} else {
-				this.refreshCount = 0;
-			}
-			
-			return displayStack;
 		}
 	}
 

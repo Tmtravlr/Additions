@@ -35,7 +35,7 @@ public class EffectLootTableAt extends Effect {
 	public float chance = 1;
 
 	@Override
-	public void applyEffect(@Nullable Entity cause, Entity entity) {
+	public void affectEntity(@Nullable Entity cause, Entity entity) {
 		if (entity.world instanceof WorldServer && entity.world.rand.nextFloat() <= this.chance) {
 			LootContextExtendedBuilder builder = new LootContextExtendedBuilder((WorldServer) entity.world);
 			builder.withLootedEntity(entity);
@@ -56,7 +56,7 @@ public class EffectLootTableAt extends Effect {
 	}
 
 	@Override
-	public void applyEffect(@Nullable Entity cause, World world, BlockPos pos) {
+	public void affectBlock(@Nullable Entity cause, World world, BlockPos pos) {
 		if (world instanceof WorldServer && world.rand.nextFloat() <= this.chance) {
 			LootContextExtendedBuilder builder = new LootContextExtendedBuilder((WorldServer) world);
 			builder.withPosition(pos);

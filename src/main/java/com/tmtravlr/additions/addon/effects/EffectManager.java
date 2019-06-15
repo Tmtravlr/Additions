@@ -38,11 +38,14 @@ public class EffectManager {
 	    registerEffectType(new EffectCommand.Serializer());
 	    registerEffectType(new EffectLootTableInside.Serializer());
 	    registerEffectType(new EffectLootTableAt.Serializer());
+	    registerEffectType(new EffectCancelNormal.Serializer());
+	    registerEffectType(new EffectConsumeItem.Serializer());
+	    registerEffectType(new EffectDamageItem.Serializer());
 	}
 	
 	public static void registerEffectType(Effect.Serializer <? extends Effect > effectSerializer) {
 	    ResourceLocation resourcelocation = effectSerializer.getEffectType();
-	    Class<? extends Effect> oclass = (Class<? extends Effect>)effectSerializer.getEffectClass();
+	    Class<? extends Effect> oclass = effectSerializer.getEffectClass();
 	
 	    if (NAME_TO_SERIALIZER_MAP.containsKey(resourcelocation)) {
 	        throw new IllegalArgumentException("Can't re-register effect type name " + resourcelocation);
@@ -102,7 +105,8 @@ public class EffectManager {
 	}
 	
 	public static class Serializer implements JsonDeserializer<Effect>, JsonSerializer<Effect> {
-	    public Effect deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context) throws JsonParseException {
+	    @Override
+		public Effect deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context) throws JsonParseException {
 	        JsonObject json = JsonUtils.getJsonObject(jsonElement, "effect");
 	        ResourceLocation resourcelocation = new ResourceLocation(JsonUtils.getString(json, "type"));
 	        Effect.Serializer<?> serializer;
@@ -116,7 +120,8 @@ public class EffectManager {
 	        return serializer.deserialize(json, context);
 	    }
 	
-	    public JsonElement serialize(Effect effect, Type type, JsonSerializationContext context) {
+	    @Override
+		public JsonElement serialize(Effect effect, Type type, JsonSerializationContext context) {
 	    	Effect.Serializer<Effect> serializer = EffectManager.<Effect>getSerializerFor(effect);
 	        JsonObject json = serializer.serialize(effect, context);
 	        json.addProperty("type", serializer.getEffectType().toString());

@@ -48,7 +48,7 @@ public class GuiMessageBox extends GuiScreenOverlay {
      * window resizes, the buttonList is cleared beforehand.
      */
     @Override
-    public void initGui() {  
+    public void initGui() {
         int popupWidth = this.getPopupWidth();      
         
         this.multilineMessage = this.fontRenderer.listFormattedStringToWidth(this.message.getFormattedText(), popupWidth - 50);

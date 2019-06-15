@@ -161,7 +161,7 @@ public class ItemAddedGun extends ItemBow implements IItemAdded {
 			tooltip.add(TextFormatting.GRAY + I18n.translateToLocalFormatted("item.projectile.info.damage", ItemStack.DECIMALFORMAT.format(damage)));
 		}
 		
-		tooltip.add(TextFormatting.GRAY + I18n.translateToLocalFormatted("item.gun.info.reloadTime", ItemStack.DECIMALFORMAT.format((float)this.getReloadTime(stack) / 20f)));
+		tooltip.add(TextFormatting.GRAY + I18n.translateToLocalFormatted("item.gun.info.reloadTime", ItemStack.DECIMALFORMAT.format(this.getReloadTime(stack) / 20f)));
 		
 		for (String line : extraTooltip) {
     		if(I18n.canTranslate(line)) {
@@ -262,7 +262,12 @@ public class ItemAddedGun extends ItemBow implements IItemAdded {
             player.addStat(StatList.getObjectUseStats(this));
     		
     		if (!this.shotEffects.isEmpty()) {
-    			this.shotEffects.forEach(effect -> effect.applyEffect(player, player));
+    			this.shotEffects.forEach(effect -> {
+    				effect.affectEntity(player, player);
+    				if (!gunStack.isEmpty()) {
+    					effect.affectItemStack(player, world, gunStack);
+    				}
+    			});
     		}
             
             int reloadTime = this.getReloadTime(gunStack);

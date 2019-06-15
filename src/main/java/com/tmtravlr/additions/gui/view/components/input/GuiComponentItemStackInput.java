@@ -6,8 +6,10 @@ import com.tmtravlr.additions.gui.message.edit.GuiMessageBoxEditItemStack;
 import com.tmtravlr.additions.gui.view.components.IGuiViewComponent;
 import com.tmtravlr.additions.gui.view.edit.GuiEdit;
 import com.tmtravlr.additions.util.client.CommonGuiUtils;
+import com.tmtravlr.additions.util.client.ItemStackDisplay;
 
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
@@ -20,6 +22,7 @@ import net.minecraft.item.ItemStack;
  */
 public class GuiComponentItemStackInput implements IGuiViewComponent {
 
+	public GuiScreen parentScreen;
 	public GuiEdit editScreen;
 	public GuiTextField selectedText;
 	
@@ -30,6 +33,7 @@ public class GuiComponentItemStackInput implements IGuiViewComponent {
 	private boolean required = false;
 	private boolean hidden = false;
 	private ItemStack itemStack = ItemStack.EMPTY;
+	private ItemStackDisplay stackDisplay = new ItemStackDisplay();
 	private boolean hasMeta = true;
 	private boolean hasAnyDamage = false;
 	private boolean hasCount = true;
@@ -37,6 +41,7 @@ public class GuiComponentItemStackInput implements IGuiViewComponent {
 	
 	public GuiComponentItemStackInput(String label, GuiEdit editScreen) {
 		this.editScreen = editScreen;
+		this.parentScreen = editScreen;
 		this.label = label;
 		this.selectedText = new GuiTextField(0, this.editScreen.getFontRenderer(), 0, 0, 0, 20);
 		this.selectedText.setMaxStringLength(1024);
@@ -83,6 +88,15 @@ public class GuiComponentItemStackInput implements IGuiViewComponent {
 		this.selectedText.y = y + 10;
 		this.selectedText.width = right - 60 - x;
 		
+		this.stackDisplay.updateDisplay(this.itemStack);
+		
+		String displayText = this.itemStack.isEmpty() ? "" : this.stackDisplay.getDisplayText();
+		
+		if (!this.selectedText.getText().equals(displayText)) {
+			this.selectedText.setText(displayText);
+			this.selectedText.setCursorPositionZero();
+		}
+		
 		this.selectedText.drawTextBox();
 		
 		if (!this.selectedText.getText().isEmpty()) {
@@ -94,7 +108,7 @@ public class GuiComponentItemStackInput implements IGuiViewComponent {
 			this.editScreen.drawTexturedModalRect(deleteX, deleteY, 60, 64, 13, 13);
 		}
 
-		this.editScreen.renderItemStack(this.itemStack, this.x + 3, itemDisplayTop + 2, mouseX, mouseY, true, true);
+		this.editScreen.renderItemStack(this.stackDisplay.getDisplayStack(), this.x + 3, itemDisplayTop + 2, mouseX, mouseY, true, true);
 	}
 
 	@Override
@@ -110,7 +124,19 @@ public class GuiComponentItemStackInput implements IGuiViewComponent {
 		}
 		
 		if (mouseX >= this.selectedText.x - 30 && mouseX < deleteX && mouseY >= this.selectedText.y && mouseY < this.selectedText.y + this.selectedText.height) {
-			this.editScreen.mc.displayGuiScreen(new GuiMessageBoxEditItemStackInput(this.editScreen, this.itemStack, hasMeta, hasCount, hasTag));
+			this.editScreen.mc.displayGuiScreen(new GuiMessageBoxEditItemStack(this.parentScreen, this.editScreen, this.itemStack, this.hasMeta, this.hasCount, this.hasTag, this.hasAnyDamage) {
+
+				@Override
+				protected void removeItemStack() {
+					GuiComponentItemStackInput.this.clearItemStack();
+				}
+
+				@Override
+				protected void saveItemStack(ItemStack stack) {
+					GuiComponentItemStackInput.this.setItemStack(stack);
+				}
+				
+			});
 		}
 	}
 
@@ -142,22 +168,17 @@ public class GuiComponentItemStackInput implements IGuiViewComponent {
 		this.required = true;
 	}
 	
+	public void setOtherParentScreen(GuiScreen parentScreen) {
+		this.parentScreen = parentScreen;
+	}
+	
 	public void setDefaultItemStack(ItemStack itemStack) {
 		this.itemStack = itemStack == null ? ItemStack.EMPTY : itemStack;
-		
-		if (itemStack == ItemStack.EMPTY) {
-			this.selectedText.setText("");
-		} else {
-			this.selectedText.setText(this.itemStack.getDisplayName());
-		}
-		
-		this.selectedText.setCursorPositionZero();
-		
+		this.stackDisplay = new ItemStackDisplay();
 	}
 
 	private void clearItemStack() {
 		this.itemStack = ItemStack.EMPTY;
-		this.selectedText.setText("");
 		this.editScreen.notifyHasChanges();
 	}
 	
@@ -168,23 +189,5 @@ public class GuiComponentItemStackInput implements IGuiViewComponent {
 	private void setItemStack(ItemStack stack) {
 		this.setDefaultItemStack(stack);
 		this.editScreen.notifyHasChanges();
-	}
-	
-	protected class GuiMessageBoxEditItemStackInput extends GuiMessageBoxEditItemStack {
-
-		public GuiMessageBoxEditItemStackInput(GuiEdit parentScreen, ItemStack stack, boolean hasMeta, boolean hasCount, boolean hasTag) {
-			super(parentScreen, stack, hasMeta, hasCount, hasTag);
-		}
-
-		@Override
-		protected void removeItemStack() {
-			GuiComponentItemStackInput.this.clearItemStack();
-		}
-
-		@Override
-		protected void saveItemStack(ItemStack stack) {
-			GuiComponentItemStackInput.this.setItemStack(stack);
-		}
-		
 	}
 }

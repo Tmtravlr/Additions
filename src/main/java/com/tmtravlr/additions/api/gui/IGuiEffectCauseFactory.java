@@ -1,14 +1,11 @@
 package com.tmtravlr.additions.api.gui;
 
-import java.util.List;
+import javax.annotation.Nullable;
 
-import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.effects.cause.EffectCause;
-import com.tmtravlr.additions.gui.view.components.IGuiViewComponent;
-import com.tmtravlr.additions.gui.view.edit.GuiEdit;
 
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 
 /**
  * Creates the edit screen for the effect cause.
@@ -21,12 +18,12 @@ public interface IGuiEffectCauseFactory<T extends EffectCause> {
 	/**
 	 * Returns a friendlier title for the effect cause type
 	 */
-	public String getTitle();
+	public String getTitle(@Nullable T cause);
 	
 	/**
 	 * Item stack to render to represent the effect cause
 	 */
-	public ItemStack getDisplayStack(T cause);
+	public NonNullList<ItemStack> getDisplayStacks(T cause);
 
 	/**
 	 * Creates a list of components to display on the edit screen for this effect cause

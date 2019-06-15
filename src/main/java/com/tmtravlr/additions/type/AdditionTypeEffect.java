@@ -22,7 +22,18 @@ import com.tmtravlr.additions.addon.effects.Effect;
 import com.tmtravlr.additions.addon.effects.EffectList;
 import com.tmtravlr.additions.addon.effects.EffectManager;
 import com.tmtravlr.additions.addon.effects.cause.EffectCause;
+import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemAttack;
+import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemBreakBlock;
+import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemDiggingBlock;
+import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemEquipped;
 import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemInHand;
+import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemInInventory;
+import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemKill;
+import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemLeftClick;
+import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemRightClick;
+import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemRightClickBlock;
+import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemRightClickEntity;
+import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemUsing;
 import com.tmtravlr.additions.addon.effects.cause.EffectCauseManager;
 
 import net.minecraft.util.ResourceLocation;
@@ -53,6 +64,17 @@ public class AdditionTypeEffect extends AdditionType<EffectList> {
 	private Multimap<Addon, EffectList> loadedEffects = HashMultimap.create();
 	
 	private Map<EffectCauseItemInHand, List<Effect>> inHandEffects = new HashMap<>();
+	private Map<EffectCauseItemInInventory, List<Effect>> inInventoryEffects = new HashMap<>();
+	private Map<EffectCauseItemEquipped, List<Effect>> equippedEffects = new HashMap<>();
+	private Map<EffectCauseItemRightClick, List<Effect>> itemRightClickEffects = new HashMap<>();
+	private Map<EffectCauseItemRightClickBlock, List<Effect>> itemRightClickBlockEffects = new HashMap<>();
+	private Map<EffectCauseItemRightClickEntity, List<Effect>> itemRightClickEntityEffects = new HashMap<>();
+	private Map<EffectCauseItemUsing, List<Effect>> usingEffects = new HashMap<>();
+	private Map<EffectCauseItemLeftClick, List<Effect>> itemLeftClickEffects = new HashMap<>();
+	private Map<EffectCauseItemDiggingBlock, List<Effect>> itemDiggingBlockEffects = new HashMap<>();
+	private Map<EffectCauseItemBreakBlock, List<Effect>> itemBreakBlockEffects = new HashMap<>();
+	private Map<EffectCauseItemAttack, List<Effect>> itemAttackEffects = new HashMap<>();
+	private Map<EffectCauseItemKill, List<Effect>> itemKillEffects = new HashMap<>();
 	
 	@Override
 	public void loadInit(List<Addon> addons, FMLInitializationEvent event) {
@@ -153,11 +175,79 @@ public class AdditionTypeEffect extends AdditionType<EffectList> {
 		return this.inHandEffects;
 	}
 	
+	public Map<EffectCauseItemInInventory, List<Effect>> getInInventoryEffects() {
+		return this.inInventoryEffects;
+	}
+	
+	public Map<EffectCauseItemEquipped, List<Effect>> getEquippedEffects() {
+		return this.equippedEffects;
+	}
+	
+	public Map<EffectCauseItemRightClick, List<Effect>> getItemRightClickEffects() {
+		return this.itemRightClickEffects;
+	}
+	
+	public Map<EffectCauseItemRightClickBlock, List<Effect>> getItemRightClickBlockEffects() {
+		return this.itemRightClickBlockEffects;
+	}
+	
+	public Map<EffectCauseItemRightClickEntity, List<Effect>> getItemRightClickEntityEffects() {
+		return this.itemRightClickEntityEffects;
+	}
+	
+	public Map<EffectCauseItemUsing, List<Effect>> getUsingEffects() {
+		return this.usingEffects;
+	}
+	
+	public Map<EffectCauseItemLeftClick, List<Effect>> getItemLeftClickEffects() {
+		return this.itemLeftClickEffects;
+	}
+	
+	public Map<EffectCauseItemDiggingBlock, List<Effect>> getItemDiggingBlockEffects() {
+		return this.itemDiggingBlockEffects;
+	}
+	
+	public Map<EffectCauseItemBreakBlock, List<Effect>> getItemBreakBlockEffects() {
+		return this.itemBreakBlockEffects;
+	}
+	
+	public Map<EffectCauseItemAttack, List<Effect>> getItemAttackEffects() {
+		return this.itemAttackEffects;
+	}
+	
+	public Map<EffectCauseItemKill, List<Effect>> getItemKillEffects() {
+		return this.itemKillEffects;
+	}
+	
 	private void refreshCachedEffects() {
 		this.inHandEffects.clear();
+		this.equippedEffects.clear();
+		this.inInventoryEffects.clear();
 		
 		for (EffectList addition : this.loadedEffects.values()) {
-			if (addition.cause instanceof EffectCauseItemInHand) {
+			if (addition.cause instanceof EffectCauseItemInInventory) {
+				this.inInventoryEffects.put(((EffectCauseItemInInventory)addition.cause), addition.effects);
+			} else if (addition.cause instanceof EffectCauseItemEquipped) {
+				this.equippedEffects.put(((EffectCauseItemEquipped)addition.cause), addition.effects);
+			} else if (addition.cause instanceof EffectCauseItemRightClick) {
+				this.itemRightClickEffects.put(((EffectCauseItemRightClick)addition.cause), addition.effects);
+			} else if (addition.cause instanceof EffectCauseItemRightClickBlock) {
+				this.itemRightClickBlockEffects.put(((EffectCauseItemRightClickBlock)addition.cause), addition.effects);
+			} else if (addition.cause instanceof EffectCauseItemRightClickEntity) {
+				this.itemRightClickEntityEffects.put(((EffectCauseItemRightClickEntity)addition.cause), addition.effects);
+			} else if (addition.cause instanceof EffectCauseItemUsing) {
+				this.usingEffects.put(((EffectCauseItemUsing)addition.cause), addition.effects);
+			} else if (addition.cause instanceof EffectCauseItemLeftClick) {
+				this.itemLeftClickEffects.put(((EffectCauseItemLeftClick)addition.cause), addition.effects);
+			} else if (addition.cause instanceof EffectCauseItemDiggingBlock) {
+				this.itemDiggingBlockEffects.put(((EffectCauseItemDiggingBlock)addition.cause), addition.effects);
+			} else if (addition.cause instanceof EffectCauseItemBreakBlock) {
+				this.itemBreakBlockEffects.put(((EffectCauseItemBreakBlock)addition.cause), addition.effects);
+			} else if (addition.cause instanceof EffectCauseItemAttack) {
+				this.itemAttackEffects.put(((EffectCauseItemAttack)addition.cause), addition.effects);
+			} else if (addition.cause instanceof EffectCauseItemKill) {
+				this.itemKillEffects.put(((EffectCauseItemKill)addition.cause), addition.effects);
+			} else if (addition.cause instanceof EffectCauseItemInHand) {
 				this.inHandEffects.put(((EffectCauseItemInHand)addition.cause), addition.effects);
 			}
 		}

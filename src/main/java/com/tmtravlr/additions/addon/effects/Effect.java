@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -19,9 +20,11 @@ import net.minecraft.world.World;
  */
 public abstract class Effect {
 	
-	public abstract void applyEffect(@Nullable Entity cause, Entity entity);
+	public void affectEntity(@Nullable Entity cause, Entity entity) {}
 	
-	public abstract void applyEffect(@Nullable Entity cause, World world, BlockPos pos);
+	public void affectBlock(@Nullable Entity cause, World world, BlockPos pos) {}
+	
+	public void affectItemStack(@Nullable Entity cause, World world, ItemStack stack) {}
 	
 	public abstract static class Serializer<T extends Effect> {
 		private final ResourceLocation effectType;

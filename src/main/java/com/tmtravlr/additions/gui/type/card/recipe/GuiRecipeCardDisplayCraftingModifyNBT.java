@@ -1,18 +1,12 @@
 package com.tmtravlr.additions.gui.type.card.recipe;
 
 import java.util.Arrays;
-import java.util.List;
 
 import com.tmtravlr.additions.addon.recipes.IngredientOreNBT;
-import com.tmtravlr.additions.addon.recipes.RecipeAddedCraftingDyeItem;
-import com.tmtravlr.additions.addon.recipes.RecipeAddedCraftingModifyDamage;
 import com.tmtravlr.additions.addon.recipes.RecipeAddedCraftingModifyNBT;
 
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 
 public class GuiRecipeCardDisplayCraftingModifyNBT extends GuiRecipeCardDisplayCrafting {
@@ -32,16 +26,13 @@ public class GuiRecipeCardDisplayCraftingModifyNBT extends GuiRecipeCardDisplayC
 			}
 			modifierList.setStackList(modifierStacks);
 			
-			NonNullList<IngredientOreNBT> displayIngredients = NonNullList.withSize(9, IngredientOreNBT.EMPTY);
-			displayIngredients.set(0, ingredientToModify);
-			displayIngredients.set(1, modifierList);
-			
-			this.createDisplayStacks(displayIngredients);
+			this.displayIngredients.set(0, ingredientToModify);
+			this.displayIngredients.set(1, modifierList);
 		}
 	}
 
 	@Override
-	protected ItemStack getOutput(List<ItemStack> inputs) {
+	protected ItemStack getOutput(NonNullList<ItemStack> inputs) {
 		if (this.recipe.output.isEmpty()) {
 			if (this.recipe.itemToModify != null && !this.recipe.modifyAmounts.isEmpty()) {
 				return this.recipe.getCraftingResult(this.mockInventoryCrafting(inputs));
@@ -53,7 +44,7 @@ public class GuiRecipeCardDisplayCraftingModifyNBT extends GuiRecipeCardDisplayC
 		}
 	}
 	
-	private InventoryCrafting mockInventoryCrafting(List<ItemStack> inputs) {
+	private InventoryCrafting mockInventoryCrafting(NonNullList<ItemStack> inputs) {
 		return new InventoryCrafting(null, 0, 0) {
 			@Override
 			public int getSizeInventory() {

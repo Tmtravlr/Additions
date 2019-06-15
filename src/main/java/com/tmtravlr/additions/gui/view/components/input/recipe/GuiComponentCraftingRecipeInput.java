@@ -17,22 +17,19 @@ import com.tmtravlr.additions.gui.view.components.input.GuiComponentItemStackInp
 import com.tmtravlr.additions.gui.view.edit.GuiEdit;
 import com.tmtravlr.additions.gui.view.edit.update.GuiEditIngredientOreNBT;
 import com.tmtravlr.additions.util.client.CommonGuiUtils;
+import com.tmtravlr.additions.util.client.ItemStackDisplay;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.common.crafting.CraftingHelper.ShapedPrimer;
-import net.minecraftforge.oredict.ShapedOreRecipe;
 
 /**
  * Lets you edit a crafting recipe
@@ -61,13 +58,12 @@ public abstract class GuiComponentCraftingRecipeInput implements IGuiViewCompone
 	protected NonNullList<IngredientOreNBT> ingredients = NonNullList.withSize(MAX_INGREDIENTS, IngredientOreNBT.EMPTY);
 	protected ItemStack output = ItemStack.EMPTY;
 	
-	protected List<ItemStack> displayStacks = new ArrayList<>();
-	protected List<DisplayStack> cachedDisplayStacks = new ArrayList<>();
-	protected int displayRefreshTime = 0;
+	protected List<ItemStackDisplay> stackDisplays = new ArrayList<>();
 	
 	public GuiComponentCraftingRecipeInput(String label, GuiEdit editScreen) {
 		this.editScreen = editScreen;
 		this.label = label;
+		this.recreateDisplayStacks();
 	}
 
 	@Override
@@ -120,20 +116,17 @@ public abstract class GuiComponentCraftingRecipeInput implements IGuiViewCompone
 		//Output slot
 		Gui.drawRect(this.x + OUTPUT_SLOT_OFFSET_X, this.y + OUTPUT_SLOT_OFFSET_Y - 1, this.x + OUTPUT_SLOT_OFFSET_X + 22, this.y + OUTPUT_SLOT_OFFSET_Y + 21, 0xFFA0A0A0);
 		Gui.drawRect(this.x + OUTPUT_SLOT_OFFSET_X + 1, this.y + OUTPUT_SLOT_OFFSET_Y, this.x + OUTPUT_SLOT_OFFSET_X + 21, this.y + OUTPUT_SLOT_OFFSET_Y + 20, 0xFF000000);
-		
-		
-		if (this.displayRefreshTime-- <= 0) {
-			this.displayRefreshTime = 40;
-			
-			this.displayStacks = this.cachedDisplayStacks.stream().map(DisplayStack::getDisplayStack).collect(Collectors.toList());
-		}
 
 		for (int i = 0; i < MAX_INGREDIENTS; i++) {
 			int offsetX = 3 + (i % 3) * 21;
 			int offsetY = 2 + MathHelper.floor(i / 3) * 21;
 			
-			if (i < this.displayStacks.size() && !this.displayStacks.get(i).isEmpty()) {
-				this.editScreen.renderItemStack(this.displayStacks.get(i), this.x + CRAFTING_GRID_OFFSET_X + offsetX, this.y + CRAFTING_GRID_OFFSET_Y + offsetY, mouseX, mouseY, true);
+			ItemStackDisplay stackDisplay = this.stackDisplays.get(i);
+			stackDisplay.updateDisplay(this.ingredients.get(i).getMatchingStacks());
+			ItemStack stack = stackDisplay.getDisplayStack();
+			
+			if (!stack.isEmpty()) {
+				this.editScreen.renderItemStack(stack, this.x + CRAFTING_GRID_OFFSET_X + offsetX, this.y + CRAFTING_GRID_OFFSET_Y + offsetY, mouseX, mouseY, true);
 			} else if (CommonGuiUtils.isMouseWithin(mouseX, mouseY, this.x + CRAFTING_GRID_OFFSET_X + offsetX, this.y + CRAFTING_GRID_OFFSET_Y + offsetY, 16, 16)) {
 				this.editScreen.renderInfoTooltip(Collections.singletonList(I18n.format("gui.edit.recipe.addItem.info")), mouseX, mouseY);
 			}
@@ -164,7 +157,7 @@ public abstract class GuiComponentCraftingRecipeInput implements IGuiViewCompone
 		}
 		
 		if (CommonGuiUtils.isMouseWithin(mouseX, mouseY, this.x + OUTPUT_SLOT_OFFSET_X, this.y + OUTPUT_SLOT_OFFSET_Y, 20, 20)) {
-			this.editScreen.mc.displayGuiScreen(new GuiMessageBoxEditItemStack(this.editScreen, this.output) {
+			this.editScreen.mc.displayGuiScreen(new GuiMessageBoxEditItemStack(this.editScreen, this.editScreen, this.output) {
 
 				@Override
 				protected void removeItemStack() {
@@ -228,7 +221,7 @@ public abstract class GuiComponentCraftingRecipeInput implements IGuiViewCompone
 						Gui.drawRect(this.width / 2 - 11, y - 3, this.width / 2 + 11, y + 19, 0xFFA0A0A0);
 						Gui.drawRect(this.width / 2 - 10, y - 2, this.width / 2 + 10, y + 18, 0xFF000000);
 
-				        GuiComponentCraftingRecipeInput.this.editScreen.renderItemStack(GuiComponentCraftingRecipeInput.this.displayStacks.get(index), this.width / 2 - 8, y, mouseX, mouseY, true);
+				        GuiComponentCraftingRecipeInput.this.editScreen.renderItemStack(GuiComponentCraftingRecipeInput.this.stackDisplays.get(index).getDisplayStack(), this.width / 2 - 8, y, mouseX, mouseY, true);
 						
 						y += 30;
 
@@ -299,12 +292,10 @@ public abstract class GuiComponentCraftingRecipeInput implements IGuiViewCompone
 	}
 	
 	protected void recreateDisplayStacks() {
-		this.cachedDisplayStacks = this.ingredients.stream().map(DisplayStack::new).collect(Collectors.toList());
-		this.forceDisplayRefresh();
-	}
-	
-	protected void forceDisplayRefresh() {
-		this.displayRefreshTime = 0;
+		this.stackDisplays.clear();
+		for (int i = 0; i < MAX_INGREDIENTS; i++) {
+			this.stackDisplays.add(new ItemStackDisplay());
+		}
 	}
 	
 	private List<IngredientMenuOption> getOtherOptions(int index) {
@@ -318,32 +309,6 @@ public abstract class GuiComponentCraftingRecipeInput implements IGuiViewCompone
 		}
 		
 		return otherOptions;
-	}
-	
-	private static class DisplayStack {
-		public ItemStack[] stacks = new ItemStack[0];
-		public int refreshCount = 0;
-		
-		public DisplayStack(IngredientOreNBT ingredient) {
-			this.stacks = ingredient.getMatchingStacks();
-		}
-		
-		public ItemStack getDisplayStack() {
-			ItemStack displayStack = ItemStack.EMPTY;
-			
-			if (stacks.length > 0) {
-				if (++this.refreshCount >= stacks.length) {
-					this.refreshCount = 0;
-				}
-				
-				int index = this.refreshCount % stacks.length;
-				displayStack = stacks[index];
-			} else {
-				this.refreshCount = 0;
-			}
-			
-			return displayStack;
-		}
 	}
 	
 	private static class GuiDropdownMenuEditInputIngredient extends GuiDropdownMenu {
@@ -383,7 +348,7 @@ public abstract class GuiComponentCraftingRecipeInput implements IGuiViewCompone
 		public void drawOption(MenuOption option, int index, int left, int right, int top) {
 			for (IngredientMenuOption otherOption : otherOptions) {
 				if (option == otherOption) {
-					this.parentInput.editScreen.renderItemStack(this.parentInput.displayStacks.get(otherOption.displayIndex), left + 3, top - 2, 0, 0, false);
+					this.parentInput.editScreen.renderItemStack(this.parentInput.stackDisplays.get(otherOption.displayIndex).getDisplayStack(), left + 3, top - 2, 0, 0, false);
 					super.drawOption(option, index, left + 18, right, top);
 					return;
 				}

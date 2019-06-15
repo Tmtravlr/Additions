@@ -2,7 +2,6 @@ package com.tmtravlr.additions.util.client;
 
 import java.awt.Desktop;
 import java.io.File;
-import java.net.URI;
 
 import javax.swing.JFileChooser;
 import javax.swing.UIManager;
@@ -43,7 +42,7 @@ public class CommonGuiUtils {
 	}
 	
 	public static void drawStringWithDots(FontRenderer fontRenderer, String text, int width, int x, int y, int color) {
-		fontRenderer.drawStringWithShadow(trimWithDots(fontRenderer, text, width), (float)x, (float)y, color);
+		fontRenderer.drawStringWithShadow(trimWithDots(fontRenderer, text, width), x, y, color);
 	}
     
     public static void openFolder(File folder) {

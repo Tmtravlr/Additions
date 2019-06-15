@@ -30,7 +30,7 @@ public class EffectLootTableInside extends Effect {
 	public float chance = 1;
 
 	@Override
-	public void applyEffect(@Nullable Entity cause, Entity entity) {
+	public void affectEntity(@Nullable Entity cause, Entity entity) {
 		if (!entity.world.isRemote && entity.world.rand.nextFloat() <= this.chance && entity instanceof ILootContainer) {
 			try {
 				NBTTagCompound entityTag = entity.writeToNBT(new NBTTagCompound());
@@ -48,7 +48,7 @@ public class EffectLootTableInside extends Effect {
 	}
 
 	@Override
-	public void applyEffect(@Nullable Entity cause, World world, BlockPos pos) {
+	public void affectBlock(@Nullable Entity cause, World world, BlockPos pos) {
 		if (!world.isRemote && world.rand.nextFloat() <= this.chance) {
 			TileEntity tileEntity = world.getTileEntity(pos);
 			if (tileEntity instanceof ILootContainer) {

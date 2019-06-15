@@ -1,24 +1,21 @@
 package com.tmtravlr.additions.gui.type.card;
 
 import com.tmtravlr.additions.addon.Addon;
-import com.tmtravlr.additions.addon.blocks.BlockAddedManager;
 import com.tmtravlr.additions.addon.effects.EffectList;
 import com.tmtravlr.additions.addon.effects.cause.EffectCauseManager;
-import com.tmtravlr.additions.api.gui.IGuiBlockAddedFactory;
 import com.tmtravlr.additions.api.gui.IGuiEffectCauseFactory;
-import com.tmtravlr.additions.gui.message.GuiMessageBox;
-import com.tmtravlr.additions.gui.type.button.GuiAdditionTypeButtonBlock;
 import com.tmtravlr.additions.gui.type.button.GuiAdditionTypeButtonEffect;
 import com.tmtravlr.additions.gui.view.GuiView;
 import com.tmtravlr.additions.gui.view.edit.GuiEditEffectList;
 import com.tmtravlr.additions.type.AdditionTypeEffect;
 import com.tmtravlr.additions.util.client.CommonGuiUtils;
+import com.tmtravlr.additions.util.client.ItemStackDisplay;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
 /**
@@ -30,7 +27,8 @@ import net.minecraft.util.text.TextFormatting;
 public class GuiAdditionCardEffect extends GuiAdditionCardColored {
 
 	private final EffectList addition;
-	private ItemStack displayStack = ItemStack.EMPTY;
+	private NonNullList<ItemStack> displayStacks = NonNullList.create();
+	private ItemStackDisplay stackDisplay = new ItemStackDisplay();
 	private int xOffset = 10;
 	
 	private String textId;
@@ -47,18 +45,20 @@ public class GuiAdditionCardEffect extends GuiAdditionCardColored {
 		ResourceLocation causeType = EffectCauseManager.getTypeFor(this.addition.cause);
 		IGuiEffectCauseFactory factory = EffectCauseManager.getGuiFactoryFor(causeType);
 		
-		this.displayStack = factory != null ? factory.getDisplayStack(this.addition.cause) : ItemStack.EMPTY;
+		if (factory != null) {
+			this.displayStacks = factory.getDisplayStacks(this.addition.cause);
+		}
 		
-		if (!this.displayStack.isEmpty()) {
+		if (!this.displayStacks.isEmpty()) {
 			this.xOffset = 45;
 		}
 		
 		this.textId = TextFormatting.GRAY + I18n.format("gui.view.additionType.id", TextFormatting.RESET + this.addition.id.toString() + TextFormatting.GRAY);
-		this.textCause = TextFormatting.GRAY + I18n.format("gui.view.additionType.cause", TextFormatting.RESET + (factory != null ? factory.getTitle() : causeType.toString()) + TextFormatting.GRAY);
+		this.textCause = TextFormatting.GRAY + I18n.format("gui.view.additionType.cause", TextFormatting.RESET + (factory != null ? factory.getTitle(this.addition.cause) : causeType.toString()) + TextFormatting.GRAY);
 		this.textEffectCount = TextFormatting.GRAY + I18n.format("gui.view.additionType.effects." + (this.addition.effects.size() == 1 ? "singular" : "plural"), TextFormatting.RESET + String.valueOf(this.addition.effects.size()) + TextFormatting.GRAY);
 		
 		this.filterId = this.addition.id.toString().toLowerCase();
-		this.filterCause = (factory != null ? factory.getTitle() : causeType.toString()).toLowerCase();
+		this.filterCause = (factory != null ? factory.getTitle(this.addition.cause) : causeType.toString()).toLowerCase();
 		
 		this.setColors(GuiAdditionTypeButtonEffect.BUTTON_COLOR_DARK, GuiAdditionTypeButtonEffect.BUTTON_COLOR_HOVER);
 	}
@@ -87,11 +87,13 @@ public class GuiAdditionCardEffect extends GuiAdditionCardColored {
     		CommonGuiUtils.drawStringWithDots(this.viewScreen.getFontRenderer(), this.textEffectCount, columnWidth - 10, this.x + this.xOffset + columnWidth, this.y + 25, 0xFFFFFF);
     	}
     	
-    	if (!this.displayStack.isEmpty()) {
+    	if (!this.displayStacks.isEmpty()) {
 			Gui.drawRect(this.x + 9, itemDisplayTop - 1, this.x + 31, itemDisplayTop + 21, 0xFFA0A0A0);
 			Gui.drawRect(this.x + 10, itemDisplayTop, this.x + 30, itemDisplayTop + 20, 0xFF000000);
 			
-    		this.viewScreen.renderItemStack(this.displayStack, this.x + 12, itemDisplayTop + 2, mouseX, mouseY, true);
+			this.stackDisplay.updateDisplay(this.displayStacks);
+
+    		this.viewScreen.renderItemStack(this.stackDisplay.getDisplayStack(), this.x + 12, itemDisplayTop + 2, mouseX, mouseY, true);
     	}
 	}
 
@@ -118,7 +120,7 @@ public class GuiAdditionCardEffect extends GuiAdditionCardColored {
 	}
 	
 	private boolean needs3Lines() {
-		return this.viewScreen.getFontRenderer().getStringWidth(this.textId) > this.getColumnWidth() || this.viewScreen.getFontRenderer().getStringWidth(this.textCause) > this.getColumnWidth() || this.width < 195 + this.xOffset;
+		return this.viewScreen.getFontRenderer().getStringWidth(this.textCause) > this.getColumnWidth() || this.viewScreen.getFontRenderer().getStringWidth(this.textEffectCount) > this.getColumnWidth() || this.width < 195 + this.xOffset;
 	}
 	
 	private int getColumnWidth() {

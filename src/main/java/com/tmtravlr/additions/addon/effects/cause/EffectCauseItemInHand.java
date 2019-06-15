@@ -8,37 +8,37 @@ import com.tmtravlr.additions.util.OtherSerializers;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTUtil;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.oredict.OreDictionary;
 
 /**
- * Cause for holding an item.
+ * Cause for killing an entity with an item.
  * 
  * @author Rebeca Rey (Tmtravlr)
  * @date May 2019
  */
-public class EffectCauseItemInHand extends EffectCause {
+public class EffectCauseItemInHand extends EffectCauseItem {
 	public static final ResourceLocation TYPE = new ResourceLocation(AdditionsMod.MOD_ID, "item_in_hand");
 	
-	public ItemStack itemStack;
 	public HandType handType = HandType.BOTH;
 	
 	public boolean applies(EntityLivingBase entity) {
-		if ((handType == HandType.BOTH || handType == HandType.MAINHAND) && itemMatches(entity.getHeldItemMainhand())) {
-			return true;
-		} else if ((handType == HandType.BOTH || handType == HandType.OFFHAND) && itemMatches(entity.getHeldItemOffhand())) {
-			return true;
-		}
-		return false;
+		return !this.getRelevantStack(entity).isEmpty();
 	}
 	
-	private boolean itemMatches(ItemStack stackToCheck) {
-		if (OreDictionary.itemMatches(stackToCheck, itemStack, false) && NBTUtil.areNBTEquals(itemStack.getTagCompound(), stackToCheck.getTagCompound(), true)) {
-			return true;
+	public ItemStack getRelevantStack(EntityLivingBase entity) {
+		if ((this.handType == HandType.BOTH || this.handType == HandType.MAINHAND) && itemMatches(entity.getHeldItemMainhand())) {
+			return entity.getHeldItemMainhand();
+		} else if ((this.handType == HandType.BOTH || this.handType == HandType.OFFHAND) && itemMatches(entity.getHeldItemOffhand())) {
+			return entity.getHeldItemOffhand();
 		}
-		return false;
+		
+		return ItemStack.EMPTY;
+	}
+	
+	public boolean applies(EnumHand hand, ItemStack stack) {
+		return this.itemMatches(stack) && this.handType == HandType.BOTH || hand == EnumHand.MAIN_HAND && this.handType == HandType.MAINHAND || hand == EnumHand.OFF_HAND && this.handType == HandType.OFFHAND;
 	}
 
 	public static class Serializer extends EffectCause.Serializer<EffectCauseItemInHand> {
@@ -52,7 +52,10 @@ public class EffectCauseItemInHand extends EffectCause {
 			JsonObject json = new JsonObject();
 			
 			json.add("item", OtherSerializers.ItemStackSerializer.serialize(effectCause.itemStack));
-			json.addProperty("hand", effectCause.handType.name());
+			
+			if (effectCause.handType != HandType.BOTH) {
+				json.addProperty("hand", effectCause.handType.name());
+			}
 			
 			return json;
 		}
@@ -62,15 +65,9 @@ public class EffectCauseItemInHand extends EffectCause {
 			EffectCauseItemInHand effectCause = new EffectCauseItemInHand();
 			
 			effectCause.itemStack = OtherSerializers.ItemStackSerializer.deserialize(JsonUtils.getJsonObject(json, "item"));
-			effectCause.handType = HandType.valueOf(JsonUtils.getString(json, "hand"));
+			effectCause.handType = HandType.valueOf(JsonUtils.getString(json, "hand", HandType.BOTH.name()));
 			
 			return effectCause;
 		}
     }
-	
-	public static enum HandType {
-		MAINHAND,
-		OFFHAND,
-		BOTH
-	}
 }

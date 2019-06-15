@@ -1,16 +1,14 @@
-package com.tmtravlr.additions.gui.view.edit.update.effect;
+package com.tmtravlr.additions.gui.view.edit.update.effect.cause;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.base.Objects;
 import com.tmtravlr.additions.addon.Addon;
-import com.tmtravlr.additions.addon.effects.EffectManager;
 import com.tmtravlr.additions.addon.effects.cause.EffectCause;
 import com.tmtravlr.additions.addon.effects.cause.EffectCauseManager;
 import com.tmtravlr.additions.api.gui.IGuiEffectCauseEditHandler;
 import com.tmtravlr.additions.api.gui.IGuiEffectCauseFactory;
-import com.tmtravlr.additions.api.gui.IGuiEffectFactory;
 import com.tmtravlr.additions.gui.message.GuiMessageBox;
 import com.tmtravlr.additions.gui.view.components.GuiComponentDisplayText;
 import com.tmtravlr.additions.gui.view.components.IGuiViewComponent;
@@ -59,7 +57,7 @@ public class GuiEditEffectCauseInput extends GuiEditUpdate {
 			public String getSelectionName(ResourceLocation selection) {
 				IGuiEffectCauseFactory factory = EffectCauseManager.getGuiFactoryFor(selection);
 				
-				return factory == null ? selection.toString() : factory.getTitle();
+				return factory == null ? selection.toString() : factory.getTitle(null);
 			}
 			
 			@Override

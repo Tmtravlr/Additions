@@ -7,14 +7,12 @@ import com.tmtravlr.additions.gui.view.components.IGuiViewComponent;
 import com.tmtravlr.additions.gui.view.edit.GuiEdit;
 import com.tmtravlr.additions.gui.view.edit.update.GuiEditIngredientOreNBTInput;
 import com.tmtravlr.additions.util.client.CommonGuiUtils;
+import com.tmtravlr.additions.util.client.ItemStackDisplay;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraftforge.oredict.OreDictionary;
 
 /**
  * Lets you build an item stack.
@@ -35,11 +33,7 @@ public class GuiComponentIngredientOreNBTInput implements IGuiViewComponent {
 	protected boolean required = false;
 	protected IngredientOreNBT ingredient = new IngredientOreNBT();
 	
-	protected ItemStack displayStack = ItemStack.EMPTY;
-	protected int refreshCount = 0;
-	protected int displayRefreshTime = 0;
-	
-	protected NonNullList<ItemStack> cachedDisplayItems;
+	protected ItemStackDisplay stackDisplay = new ItemStackDisplay();
 	
 	public GuiComponentIngredientOreNBTInput(String label, GuiEdit editScreen) {
 		this.editScreen = editScreen;
@@ -89,6 +83,14 @@ public class GuiComponentIngredientOreNBTInput implements IGuiViewComponent {
 		this.selectedText.y = y + 10;
 		this.selectedText.width = right - 90 - x;
 		
+		this.stackDisplay.updateDisplay(this.ingredient.getMatchingStacks());
+		
+		String displayText = this.getDisplayText();
+		if (!this.selectedText.getText().equals(displayText)) {
+			this.selectedText.setText(displayText);
+			this.selectedText.setCursorPositionZero();
+		}
+		
 		this.selectedText.drawTextBox();
 		
 		if (!this.selectedText.getText().isEmpty()) {
@@ -99,21 +101,8 @@ public class GuiComponentIngredientOreNBTInput implements IGuiViewComponent {
 			int deleteY = this.selectedText.y + (this.selectedText.height / 2 - 6);
 			this.editScreen.drawTexturedModalRect(deleteX, deleteY, 60, 64, 13, 13);
 		}
-		
-		if (this.displayRefreshTime-- <= 0) {
-			this.displayRefreshTime = 40;
-			
-			this.displayStack = this.getDisplayStack();
-			
-			if (this.displayStack.isEmpty()) {
-				this.selectedText.setText("");
-			} else {
-				this.selectedText.setText(this.getDisplayText());
-			}
-			this.selectedText.setCursorPositionZero();
-		}
 
-		this.editScreen.renderItemStack(this.displayStack, this.x + 3, itemDisplayTop + 2, mouseX, mouseY, true);
+		this.editScreen.renderItemStack(this.stackDisplay.getDisplayStack(), this.x + 3, itemDisplayTop + 2, mouseX, mouseY, true);
 	}
 
 	@Override
@@ -151,7 +140,7 @@ public class GuiComponentIngredientOreNBTInput implements IGuiViewComponent {
 		} else {
 			this.ingredient = group;
 		}
-		this.cachedDisplayItems = this.ingredient.getAllStacks();
+		this.stackDisplay = new ItemStackDisplay();
 	}
 	
 	public void setIngredient(IngredientOreNBT group) {
@@ -164,33 +153,10 @@ public class GuiComponentIngredientOreNBTInput implements IGuiViewComponent {
 	}
 	
 	protected String getDisplayText() {
-		return this.displayStack.getDisplayName();
+		return this.stackDisplay.getDisplayText();
 	}
 	
 	protected GuiScreen getUpdateScreen() {
 		return new GuiEditIngredientOreNBTInput(this.editScreen, this);
-	}
-	
-	// Gets an item stack that should display based on the time.
-	private ItemStack getDisplayStack() {
-		if (cachedDisplayItems == null) {
-			cachedDisplayItems = this.ingredient.getAllStacks();
-		}
-		
-		if (++this.refreshCount >= cachedDisplayItems.size()) {
-			this.refreshCount = 0;
-		}
-		
-		if (!cachedDisplayItems.isEmpty()) {
-			int index = this.refreshCount % cachedDisplayItems.size();
-			ItemStack stack = cachedDisplayItems.get(index).copy();
-			if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
-				stack.setItemDamage(0);
-			}
-			return stack;
-		}
-		
-		this.refreshCount = 0;
-		return ItemStack.EMPTY;
 	}
 }

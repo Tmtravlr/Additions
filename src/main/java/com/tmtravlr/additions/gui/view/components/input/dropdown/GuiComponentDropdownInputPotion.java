@@ -1,28 +1,18 @@
 package com.tmtravlr.additions.gui.view.components.input.dropdown;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import com.tmtravlr.additions.gui.view.edit.GuiEdit;
 
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.potion.PotionType;
-import net.minecraft.potion.PotionUtils;
 
 /**
  * Dropdown list specifically for items, which renders the items in the list.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2017
+ * @since May 2019
  */
 public class GuiComponentDropdownInputPotion extends GuiComponentDropdownInput<Potion> {
 

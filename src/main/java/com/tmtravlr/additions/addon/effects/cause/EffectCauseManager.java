@@ -34,12 +34,23 @@ public class EffectCauseManager {
 	private static final LinkedHashMap<ResourceLocation, IGuiEffectCauseFactory> NAME_TO_GUI_MAP = new LinkedHashMap<>();
 	
 	public static void registerDefaultEffectCauses() {
-	    registerEffectCause(new EffectCauseItemInHand.Serializer());
+		registerEffectCause(new EffectCauseItemInHand.Serializer());
+		registerEffectCause(new EffectCauseItemInInventory.Serializer());
+		registerEffectCause(new EffectCauseItemEquipped.Serializer());
+		registerEffectCause(new EffectCauseItemRightClick.Serializer());
+		registerEffectCause(new EffectCauseItemRightClickBlock.Serializer());
+		registerEffectCause(new EffectCauseItemRightClickEntity.Serializer());
+	    registerEffectCause(new EffectCauseItemUsing.Serializer());
+	    registerEffectCause(new EffectCauseItemLeftClick.Serializer());
+	    registerEffectCause(new EffectCauseItemDiggingBlock.Serializer());
+	    registerEffectCause(new EffectCauseItemBreakBlock.Serializer());
+	    registerEffectCause(new EffectCauseItemAttack.Serializer());
+		registerEffectCause(new EffectCauseItemKill.Serializer());
 	}
 	
 	public static void registerEffectCause(EffectCause.Serializer <? extends EffectCause> effectCauseSerializer) {
 	    ResourceLocation resourcelocation = effectCauseSerializer.getEffectCauseType();
-	    Class<? extends EffectCause> oclass = (Class<? extends EffectCause>)effectCauseSerializer.getEffectCauseClass();
+	    Class<? extends EffectCause> oclass = effectCauseSerializer.getEffectCauseClass();
 	
 	    if (NAME_TO_SERIALIZER_MAP.containsKey(resourcelocation)) {
 	        throw new IllegalArgumentException("Can't re-register effect cause name " + resourcelocation);
@@ -99,7 +110,8 @@ public class EffectCauseManager {
 	}
 	
 	public static class Serializer implements JsonDeserializer<EffectCause>, JsonSerializer<EffectCause> {
-	    public EffectCause deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context) throws JsonParseException {
+	    @Override
+		public EffectCause deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context) throws JsonParseException {
 	        JsonObject json = JsonUtils.getJsonObject(jsonElement, "effect");
 	        ResourceLocation resourcelocation = new ResourceLocation(JsonUtils.getString(json, "type"));
 	        EffectCause.Serializer<?> serializer;
@@ -113,7 +125,8 @@ public class EffectCauseManager {
 	        return serializer.deserialize(json, context);
 	    }
 	
-	    public JsonElement serialize(EffectCause effectCause, Type type, JsonSerializationContext context) {
+	    @Override
+		public JsonElement serialize(EffectCause effectCause, Type type, JsonSerializationContext context) {
 	    	EffectCause.Serializer<EffectCause> serializer = EffectCauseManager.<EffectCause>getSerializerFor(effectCause);
 	        JsonObject json = serializer.serialize(effectCause, context);
 	        json.addProperty("type", serializer.getEffectCauseType().toString());

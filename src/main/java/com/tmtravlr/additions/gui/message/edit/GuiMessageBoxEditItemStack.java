@@ -9,9 +9,11 @@ import com.tmtravlr.additions.gui.view.components.input.GuiComponentNBTInput;
 import com.tmtravlr.additions.gui.view.components.input.dropdown.GuiComponentDropdownInputItem;
 import com.tmtravlr.additions.gui.view.edit.GuiEdit;
 
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.oredict.OreDictionary;
 
 public abstract class GuiMessageBoxEditItemStack extends GuiMessageBoxTwoButton {
@@ -22,52 +24,54 @@ public abstract class GuiMessageBoxEditItemStack extends GuiMessageBoxTwoButton 
 	protected GuiComponentIntegerInput countInput;
 	protected GuiComponentNBTInput nbtInput;
 	
+	protected int currentComponentsHeight = 0;
+	
 	protected boolean hasMeta;
 	protected boolean hasAnyDamage;
 	protected boolean hasCount;
 	protected boolean hasTag;
 	
-	public GuiMessageBoxEditItemStack(GuiEdit parentScreen, ItemStack stack) {
-		this(parentScreen, stack, true, true, true);
+	public GuiMessageBoxEditItemStack(GuiScreen parentScreen, GuiEdit editScreen, ItemStack stack) {
+		this(parentScreen, editScreen, stack, true, true, true, false);
 	}
 
-	public GuiMessageBoxEditItemStack(GuiEdit parentScreen, ItemStack stack, boolean hasMeta, boolean hasCount, boolean hasTag) {
+	public GuiMessageBoxEditItemStack(GuiScreen parentScreen, GuiEdit editScreen, ItemStack stack, boolean hasMeta, boolean hasCount, boolean hasTag, boolean hasAnyDamage) {
 		super(parentScreen, parentScreen, I18n.format("gui.popup.itemStack.title"), new TextComponentString(""), I18n.format("gui.buttons.back"), I18n.format("gui.buttons.update"));
 		this.hasMeta = hasMeta;
 		this.hasCount = hasCount;
 		this.hasTag = hasTag;
+		this.hasAnyDamage = hasAnyDamage;
 		
-		this.itemInput = new GuiComponentDropdownInputItem(I18n.format("gui.popup.itemStack.item.label"), parentScreen);
+		this.itemInput = new GuiComponentDropdownInputItem(I18n.format("gui.popup.itemStack.item.label"), editScreen);
 		this.itemInput.setDefaultSelected(stack.isEmpty() ? null : stack.getItem());
 		
-		this.metaInput = new GuiComponentIntegerInput(I18n.format("gui.popup.itemStack.meta.label"), parentScreen, false);
+		this.metaInput = new GuiComponentIntegerInput(I18n.format("gui.popup.itemStack.meta.label"), editScreen, false);
 		this.metaInput.setDefaultInteger(stack.getMetadata() == OreDictionary.WILDCARD_VALUE && this.hasAnyDamage ? 0 : stack.getMetadata());
 		if (this.hasAnyDamage) {
 			this.metaInput.setHidden(true);
 		}
 		
-		this.anyDamageInput = new GuiComponentBooleanInput(I18n.format("gui.popup.itemStack.anyDamage.label"), parentScreen) {
+		this.anyDamageInput = new GuiComponentBooleanInput(I18n.format("gui.popup.itemStack.anyDamage.label"), editScreen) {
 			
 			@Override
 			public void setDefaultBoolean(boolean input) {
-				if (input != this.getBoolean()) {
-					GuiMessageBoxEditItemStack.this.metaInput.setHidden(input);
-				}
+				GuiMessageBoxEditItemStack.this.metaInput.setHidden(input);
 				super.setDefaultBoolean(input);
 			}
 			
 		};
-		this.anyDamageInput.setDefaultBoolean(this.hasAnyDamage ? stack.getMetadata() == OreDictionary.WILDCARD_VALUE : false);
+		this.anyDamageInput.setInfo(new TextComponentTranslation("gui.popup.itemStack.anyDamage.info"));
+		this.anyDamageInput.setDefaultBoolean(this.hasAnyDamage ? (stack.isEmpty() ? true : stack.getMetadata() == OreDictionary.WILDCARD_VALUE) : false);
 		
-		this.countInput = new GuiComponentIntegerInput(I18n.format("gui.popup.itemStack.count.label"), parentScreen, false);
+		this.countInput = new GuiComponentIntegerInput(I18n.format("gui.popup.itemStack.count.label"), editScreen, false);
 		this.countInput.setMaximum(64);
 		this.countInput.setMinimum(1);
 		this.countInput.setDefaultInteger(stack.getCount());
 		
-		this.nbtInput = new GuiComponentNBTInput(I18n.format("gui.popup.itemStack.nbt.label"), parentScreen);
+		this.nbtInput = new GuiComponentNBTInput(I18n.format("gui.popup.itemStack.nbt.label"), editScreen);
 		this.nbtInput.setDefaultText(stack.hasTagCompound() ? stack.getTagCompound().toString() : "{}");
 		
-		this.setViewScreen(parentScreen);
+		this.setViewScreen(editScreen);
 	}
 
 	@Override
@@ -117,7 +121,7 @@ public abstract class GuiMessageBoxEditItemStack extends GuiMessageBoxTwoButton 
 			componentY += this.anyDamageInput.getHeight(popupX, popupRight);
 		}
 		
-		if (this.hasMeta) {
+		if (this.hasMeta && !this.metaInput.isHidden()) {
 			this.drawString(this.fontRenderer, this.metaInput.getLabel(), popupX + 10, componentY + this.metaInput.getHeight(popupX, popupRight)/2 - 5, 0xFFFFFF);
 			this.metaInput.drawInList(popupX + labelOffset + 10, componentY, popupRight, mouseX, mouseY);
 			componentY += this.metaInput.getHeight(popupX, popupRight);
@@ -146,7 +150,7 @@ public abstract class GuiMessageBoxEditItemStack extends GuiMessageBoxTwoButton 
     		this.anyDamageInput.onMouseClicked(mouseX, mouseY, mouseButton);
     	}
     	
-    	if (this.hasMeta) {
+    	if (this.hasMeta && !this.metaInput.isHidden()) {
     		this.metaInput.onMouseClicked(mouseX, mouseY, mouseButton);
     	}
 
@@ -165,7 +169,7 @@ public abstract class GuiMessageBoxEditItemStack extends GuiMessageBoxTwoButton 
     public void keyTyped(char keyTyped, int keyCode) throws IOException {
     	this.itemInput.onKeyTyped(keyTyped, keyCode);
     	
-    	if (this.hasMeta) {
+    	if (this.hasMeta && !this.metaInput.isHidden()) {
     		this.metaInput.onKeyTyped(keyTyped, keyCode);
     	}
 
@@ -197,7 +201,7 @@ public abstract class GuiMessageBoxEditItemStack extends GuiMessageBoxTwoButton 
     		height += this.anyDamageInput.getHeight(popupLeft, popupRight);
     	}
     	
-    	if (this.hasMeta) {
+    	if (this.hasMeta && !this.metaInput.isHidden()) {
     		height += this.metaInput.getHeight(popupLeft, popupRight);
     	}
     	
@@ -207,6 +211,12 @@ public abstract class GuiMessageBoxEditItemStack extends GuiMessageBoxTwoButton 
     	
     	if (this.hasTag) {
     		height += this.nbtInput.getHeight(popupLeft, popupRight);
+    	}
+    	
+    	if (height != this.currentComponentsHeight) {
+    		this.currentComponentsHeight = height;
+    		this.buttonList.clear();
+    		this.initGui();
     	}
     	
     	return height;

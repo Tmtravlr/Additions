@@ -1,39 +1,28 @@
 package com.tmtravlr.additions.gui.view.components.input.recipe;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.tmtravlr.additions.addon.recipes.IngredientOreNBT;
-import com.tmtravlr.additions.gui.message.GuiMessageBoxTwoButton;
 import com.tmtravlr.additions.gui.message.edit.GuiMessageBoxEditItemStack;
 import com.tmtravlr.additions.gui.view.components.IGuiViewComponent;
 import com.tmtravlr.additions.gui.view.components.helpers.GuiDropdownMenu;
-import com.tmtravlr.additions.gui.view.components.helpers.GuiDropdownMenu.MenuOption;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentItemStackInput;
 import com.tmtravlr.additions.gui.view.edit.GuiEdit;
 import com.tmtravlr.additions.gui.view.edit.update.GuiEditIngredientOreNBT;
 import com.tmtravlr.additions.util.client.CommonGuiUtils;
+import com.tmtravlr.additions.util.client.ItemStackDisplay;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.common.crafting.CraftingHelper.ShapedPrimer;
-import net.minecraftforge.oredict.ShapedOreRecipe;
 
 /**
  * Lets you edit a smelting recipe
@@ -60,9 +49,7 @@ public class GuiComponentRecipeSmeltingInput implements IGuiViewComponent {
 	protected IngredientOreNBT ingredient = IngredientOreNBT.EMPTY;
 	protected ItemStack output = ItemStack.EMPTY;
 	
-	protected ItemStack displayStack = ItemStack.EMPTY;
-	protected DisplayStack cachedDisplayStack = new DisplayStack(IngredientOreNBT.EMPTY);
-	protected int displayRefreshTime = 0;
+	protected ItemStackDisplay stackDisplay = new ItemStackDisplay();
 	
 	public GuiComponentRecipeSmeltingInput(String label, GuiEdit editScreen) {
 		this.editScreen = editScreen;
@@ -119,15 +106,10 @@ public class GuiComponentRecipeSmeltingInput implements IGuiViewComponent {
 		Gui.drawRect(this.x + OUTPUT_SLOT_OFFSET_X, this.y + OUTPUT_SLOT_OFFSET_Y - 1, this.x + OUTPUT_SLOT_OFFSET_X + 22, this.y + OUTPUT_SLOT_OFFSET_Y + 21, 0xFFA0A0A0);
 		Gui.drawRect(this.x + OUTPUT_SLOT_OFFSET_X + 1, this.y + OUTPUT_SLOT_OFFSET_Y, this.x + OUTPUT_SLOT_OFFSET_X + 21, this.y + OUTPUT_SLOT_OFFSET_Y + 20, 0xFF000000);
 		
+		this.stackDisplay.updateDisplay(this.ingredient.getMatchingStacks());
 		
-		if (this.displayRefreshTime-- <= 0) {
-			this.displayRefreshTime = 40;
-			
-			this.displayStack = this.cachedDisplayStack.getDisplayStack();
-		}
-		
-		if (!this.displayStack.isEmpty()) {
-			this.editScreen.renderItemStack(this.displayStack, this.x + INPUT_SLOT_OFFSET_X + 2, this.y + INPUT_SLOT_OFFSET_Y + 1, mouseX, mouseY, true);
+		if (!this.stackDisplay.getDisplayStack().isEmpty()) {
+			this.editScreen.renderItemStack(this.stackDisplay.getDisplayStack(), this.x + INPUT_SLOT_OFFSET_X + 2, this.y + INPUT_SLOT_OFFSET_Y + 1, mouseX, mouseY, true);
 		} else if (CommonGuiUtils.isMouseWithin(mouseX, mouseY, this.x + INPUT_SLOT_OFFSET_X + 2, this.y + INPUT_SLOT_OFFSET_Y + 1, 16, 16)) {
 			this.editScreen.renderInfoTooltip(Collections.singletonList(I18n.format("gui.edit.recipe.addItem.info")), mouseX, mouseY);
 		}
@@ -150,7 +132,7 @@ public class GuiComponentRecipeSmeltingInput implements IGuiViewComponent {
 		}
 		
 		if (CommonGuiUtils.isMouseWithin(mouseX, mouseY, this.x + OUTPUT_SLOT_OFFSET_X, this.y + OUTPUT_SLOT_OFFSET_Y, 20, 20)) {
-			this.editScreen.mc.displayGuiScreen(new GuiMessageBoxEditItemStack(this.editScreen, this.output) {
+			this.editScreen.mc.displayGuiScreen(new GuiMessageBoxEditItemStack(this.editScreen, this.editScreen, this.output) {
 
 				@Override
 				protected void removeItemStack() {
@@ -206,38 +188,7 @@ public class GuiComponentRecipeSmeltingInput implements IGuiViewComponent {
 	}
 	
 	protected void recreateDisplayStack() {
-		this.cachedDisplayStack = new DisplayStack(this.ingredient);
-		this.forceDisplayRefresh();
-	}
-	
-	protected void forceDisplayRefresh() {
-		this.displayRefreshTime = 0;
-	}
-	
-	private static class DisplayStack {
-		public ItemStack[] stacks = new ItemStack[0];
-		public int refreshCount = 0;
-		
-		public DisplayStack(IngredientOreNBT ingredient) {
-			this.stacks = ingredient.getMatchingStacks();
-		}
-		
-		public ItemStack getDisplayStack() {
-			ItemStack displayStack = ItemStack.EMPTY;
-			
-			if (stacks.length > 0) {
-				if (++this.refreshCount >= stacks.length) {
-					this.refreshCount = 0;
-				}
-				
-				int index = this.refreshCount % stacks.length;
-				displayStack = stacks[index];
-			} else {
-				this.refreshCount = 0;
-			}
-			
-			return displayStack;
-		}
+		this.stackDisplay = new ItemStackDisplay();
 	}
 	
 	private static class GuiDropdownMenuEditInputIngredient extends GuiDropdownMenu {

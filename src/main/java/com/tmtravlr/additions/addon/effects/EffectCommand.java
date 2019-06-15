@@ -29,14 +29,14 @@ public class EffectCommand extends Effect {
 	public float chance = 1;
 
 	@Override
-	public void applyEffect(@Nullable Entity cause, Entity entity) {
+	public void affectEntity(@Nullable Entity cause, Entity entity) {
 		if (entity.world.getMinecraftServer() != null && entity.world.rand.nextFloat() <= this.chance) {
 			entity.world.getMinecraftServer().commandManager.executeCommand(entity, this.command);
 		}
 	}
 
 	@Override
-	public void applyEffect(@Nullable Entity cause, World world, BlockPos pos) {
+	public void affectBlock(@Nullable Entity cause, World world, BlockPos pos) {
 		if (world.getMinecraftServer() != null && world.rand.nextFloat() <= this.chance) {
 			world.getMinecraftServer().commandManager.executeCommand(new CommandSenderGeneric(this.commandSenderName, world, pos), this.command);
 		}

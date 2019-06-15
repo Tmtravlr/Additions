@@ -1,13 +1,10 @@
 package com.tmtravlr.additions.gui.type.card.recipe;
 
-import java.util.List;
-
 import com.tmtravlr.additions.addon.recipes.IngredientOreNBT;
 import com.tmtravlr.additions.addon.recipes.RecipeAddedCraftingDyeItem;
 
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 
 public class GuiRecipeCardDisplayCraftingDyeItem extends GuiRecipeCardDisplayCrafting {
@@ -23,16 +20,13 @@ public class GuiRecipeCardDisplayCraftingDyeItem extends GuiRecipeCardDisplayCra
 			ingredientToDye.setStackList(NonNullList.withSize(1, new ItemStack(this.recipe.itemToDye)));
 			dyeList.setOreName("dye");
 			
-			NonNullList<IngredientOreNBT> displayIngredients = NonNullList.withSize(9, IngredientOreNBT.EMPTY);
-			displayIngredients.set(0, ingredientToDye);
-			displayIngredients.set(1, dyeList);
-			
-			this.createDisplayStacks(displayIngredients);
+			this.displayIngredients.set(0, ingredientToDye);
+			this.displayIngredients.set(1, dyeList);
 		}
 	}
 
 	@Override
-	protected ItemStack getOutput(List<ItemStack> inputs) {
+	protected ItemStack getOutput(NonNullList<ItemStack> inputs) {
 		if (this.recipe.itemToDye != null) {
 			return this.recipe.getCraftingResult(this.mockInventoryCrafting(inputs));
 		} else {
@@ -40,7 +34,7 @@ public class GuiRecipeCardDisplayCraftingDyeItem extends GuiRecipeCardDisplayCra
 		}
 	}
 	
-	private InventoryCrafting mockInventoryCrafting(List<ItemStack> inputs) {
+	private InventoryCrafting mockInventoryCrafting(NonNullList<ItemStack> inputs) {
 		return new InventoryCrafting(null, 0, 0) {
 			@Override
 			public int getSizeInventory() {

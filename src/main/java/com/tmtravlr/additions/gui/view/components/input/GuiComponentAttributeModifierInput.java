@@ -7,13 +7,11 @@ import java.util.stream.Collectors;
 
 import com.tmtravlr.additions.gui.message.GuiMessageBox;
 import com.tmtravlr.additions.gui.message.GuiMessageBoxTwoButton;
-import com.tmtravlr.additions.gui.view.GuiView;
 import com.tmtravlr.additions.gui.view.components.IGuiViewComponent;
 import com.tmtravlr.additions.gui.view.components.input.dropdown.GuiComponentDropdownInput;
 import com.tmtravlr.additions.gui.view.components.input.suggestion.GuiComponentSuggestionInput;
 import com.tmtravlr.additions.gui.view.edit.GuiEdit;
 import com.tmtravlr.additions.type.attribute.AttributeTypeManager;
-import com.tmtravlr.additions.util.OtherSerializers;
 import com.tmtravlr.additions.util.client.CommonGuiUtils;
 
 import net.minecraft.client.gui.GuiButton;
@@ -24,7 +22,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -43,9 +40,6 @@ public class GuiComponentAttributeModifierInput implements IGuiViewComponent {
 	private boolean required = false;
 	private AttributeModifier modifier = null;
 	private EntityEquipmentSlot slot = null;
-	private boolean hasMeta = true;
-	private boolean hasCount = true;
-	private boolean hasNBT = true;
 	
 	public GuiComponentAttributeModifierInput(String label, GuiEdit editScreen) {
 		this.editScreen = editScreen;
@@ -221,10 +215,11 @@ public class GuiComponentAttributeModifierInput implements IGuiViewComponent {
 				
 			};
 			this.slotInput.setRequired();
+			this.slotInput.disallowDelete();
 			for(EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
 				this.slotInput.addSelection(slot);
 			}
-			if (parent.modifier != null) {
+			if (parent.slot != null) {
 				this.slotInput.setDefaultSelected(parent.slot);
 			}
 			

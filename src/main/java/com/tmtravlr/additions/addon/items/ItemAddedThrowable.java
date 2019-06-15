@@ -246,7 +246,7 @@ public class ItemAddedThrowable extends ItemAddedSimple implements IItemAddedPro
             world.spawnEntity(thrown);
     		
     		if (!this.throwEffects.isEmpty()) {
-    			this.throwEffects.forEach(effect -> effect.applyEffect(player, player));
+    			this.throwEffects.forEach(effect -> effect.affectEntity(player, player));
     		}
         }
 

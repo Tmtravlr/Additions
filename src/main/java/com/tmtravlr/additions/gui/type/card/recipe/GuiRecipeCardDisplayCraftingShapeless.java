@@ -1,12 +1,11 @@
 package com.tmtravlr.additions.gui.type.card.recipe;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.tmtravlr.additions.addon.recipes.IngredientOreNBT;
 import com.tmtravlr.additions.addon.recipes.RecipeAddedCraftingShapeless;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.NonNullList;
 
 public class GuiRecipeCardDisplayCraftingShapeless extends GuiRecipeCardDisplayCrafting {
 	
@@ -15,12 +14,15 @@ public class GuiRecipeCardDisplayCraftingShapeless extends GuiRecipeCardDisplayC
 	public GuiRecipeCardDisplayCraftingShapeless(RecipeAddedCraftingShapeless recipe) {
 		this.recipe = recipe;
 		if (this.recipe.recipe != null) {
-			this.createDisplayStacks(this.recipe.recipe.getIngredients().stream().map(ingredient -> ingredient instanceof IngredientOreNBT ? (IngredientOreNBT) ingredient : new IngredientOreNBT()).collect(Collectors.toList()));
+			for (int i = 0; i < MAX_INGREDIENTS && i < this.recipe.recipe.getIngredients().size(); i++) {
+				Ingredient ingredient = this.recipe.recipe.getIngredients().get(i);
+				this.displayIngredients.set(i, ingredient instanceof IngredientOreNBT ? (IngredientOreNBT) ingredient : new IngredientOreNBT());
+			}
 		}
 	}
 
 	@Override
-	protected ItemStack getOutput(List<ItemStack> inputs) {
+	protected ItemStack getOutput(NonNullList<ItemStack> inputs) {
 		if (this.recipe.recipe != null) {
 			return this.recipe.recipe.getRecipeOutput();
 		} else {

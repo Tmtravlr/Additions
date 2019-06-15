@@ -1,10 +1,11 @@
-package com.tmtravlr.additions.gui.view.edit.update.effect;
+package com.tmtravlr.additions.gui.view.edit.update.effect.cause;
 
 import java.util.Arrays;
 import java.util.List;
 
 import com.tmtravlr.additions.addon.effects.cause.EffectCause;
-import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemInHand;
+import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemRightClick;
+import com.tmtravlr.additions.addon.effects.cause.HandType;
 import com.tmtravlr.additions.api.gui.IGuiEffectCauseEditHandler;
 import com.tmtravlr.additions.gui.message.GuiMessageBox;
 import com.tmtravlr.additions.gui.view.components.GuiComponentDisplayText;
@@ -17,60 +18,57 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextComponentTranslation;
 
 /**
- * Creates components and handles saving the in hand effect.
+ * Creates components and handles saving the right click effect cause.
  * 
  * @author Rebeca Rey (Tmtravlr)
- * @date May 2019
+ * @date June 2019
  */
-public class GuiEditHandlerEffectCauseItemInHand implements IGuiEffectCauseEditHandler {
-	private static final String MAINHAND_LABEL = I18n.format("gui.edit.effectCause.held.hand.mainhand.label");
-	private static final String OFFHAND_LABEL = I18n.format("gui.edit.effectCause.held.hand.offhand.label");
-	private static final String BOTH_HANDS_LABEL = I18n.format("gui.edit.effectCause.held.hand.both.label");
+public class GuiEditHandlerEffectCauseItemRightClick implements IGuiEffectCauseEditHandler {
 	
 	private GuiEdit editScreen;
 	private GuiComponentDisplayText description;
 	private GuiComponentItemStackInput stackInput;
-	private GuiComponentDropdownInput<EffectCauseItemInHand.HandType> handInput;
+	private GuiComponentDropdownInput<HandType> handInput;
 
 	@Override
 	public List<IGuiViewComponent> createViewComponents(GuiEdit editScreen, EffectCause cause) {
 		this.editScreen = editScreen;
-		EffectCauseItemInHand causeHeld = (cause instanceof EffectCauseItemInHand) ? (EffectCauseItemInHand) cause : null;
+		EffectCauseItemRightClick specificCause = (cause instanceof EffectCauseItemRightClick) ? (EffectCauseItemRightClick) cause : null;
 		
-		this.description = new GuiComponentDisplayText(editScreen, new TextComponentTranslation("type.effectCause.held.description"));
+		this.description = new GuiComponentDisplayText(editScreen, new TextComponentTranslation("type.effectCause.itemRightClick.description"));
 		
-		this.stackInput = new GuiComponentItemStackInput(I18n.format("gui.edit.effectCause.held.itemStack.label"), editScreen);
+		this.stackInput = new GuiComponentItemStackInput(I18n.format("gui.edit.effectCause.item.item.label"), editScreen);
 		this.stackInput.setRequired();
 		this.stackInput.enableAnyDamage();
 		this.stackInput.disableCount();
-		if (causeHeld != null) {
-			this.stackInput.setDefaultItemStack(causeHeld.itemStack);
+		if (specificCause != null) {
+			this.stackInput.setDefaultItemStack(specificCause.itemStack);
 		}
 		
-		this.handInput = new GuiComponentDropdownInput<EffectCauseItemInHand.HandType>(I18n.format("gui.edit.effectCause.held.hand.label"), editScreen) {
+		this.handInput = new GuiComponentDropdownInput<HandType>(I18n.format("gui.edit.effectCause.held.hand.label"), editScreen) {
 			
 			@Override
-			public String getSelectionName(EffectCauseItemInHand.HandType selected) {
+			public String getSelectionName(HandType selected) {
 				switch(selected) {
 				case MAINHAND:
-					return MAINHAND_LABEL;
+					return HandTypeLabel.MAINHAND_LABEL.getLabel();
 				case OFFHAND:
-					return OFFHAND_LABEL;
+					return HandTypeLabel.OFFHAND_LABEL.getLabel();
 				case BOTH:
-					return BOTH_HANDS_LABEL;
+					return HandTypeLabel.BOTH_HANDS_LABEL.getLabel();
 				default:
 					return "";	
 				}
 			}
 			
 		};
-		this.handInput.setSelections(EffectCauseItemInHand.HandType.values());
+		this.handInput.setSelections(HandType.values());
 		this.handInput.setRequired();
 		this.handInput.disallowDelete();
-		if (causeHeld != null) {
-			this.handInput.setDefaultSelected(causeHeld.handType);
+		if (specificCause != null) {
+			this.handInput.setDefaultSelected(specificCause.handType);
 		} else {
-			this.handInput.setDefaultSelected(EffectCauseItemInHand.HandType.BOTH);
+			this.handInput.setDefaultSelected(HandType.BOTH);
 		}
 		
 		return Arrays.asList(this.description, this.stackInput, this.handInput);
@@ -83,7 +81,7 @@ public class GuiEditHandlerEffectCauseItemInHand implements IGuiEffectCauseEditH
 		}
 		
 		if (this.stackInput.getItemStack().isEmpty()) {
-			this.editScreen.mc.displayGuiScreen(new GuiMessageBox(this.editScreen, I18n.format("gui.edit.effectCause.problem.title"), new TextComponentTranslation("gui.edit.effectCause.held.problem.noItem.message"), I18n.format("gui.buttons.back")));
+			this.editScreen.mc.displayGuiScreen(new GuiMessageBox(this.editScreen, I18n.format("gui.edit.effectCause.problem.title"), new TextComponentTranslation("gui.edit.effectCause.item.problem.noItem.message"), I18n.format("gui.buttons.back")));
 			return null;
 		}
 		
@@ -92,7 +90,7 @@ public class GuiEditHandlerEffectCauseItemInHand implements IGuiEffectCauseEditH
 			return null;
 		}
 		
-		EffectCauseItemInHand cause = new EffectCauseItemInHand();
+		EffectCauseItemRightClick cause = new EffectCauseItemRightClick();
 		cause.itemStack = this.stackInput.getItemStack();
 		cause.handType = this.handInput.getSelected();
 		

@@ -8,13 +8,15 @@ import com.tmtravlr.additions.addon.effects.cause.EffectCauseManager;
 import com.tmtravlr.additions.api.gui.IGuiEffectCauseFactory;
 import com.tmtravlr.additions.gui.view.components.IGuiViewComponent;
 import com.tmtravlr.additions.gui.view.edit.GuiEdit;
-import com.tmtravlr.additions.gui.view.edit.update.effect.GuiEditEffectCauseInput;
+import com.tmtravlr.additions.gui.view.edit.update.effect.cause.GuiEditEffectCauseInput;
 import com.tmtravlr.additions.util.client.CommonGuiUtils;
+import com.tmtravlr.additions.util.client.ItemStackDisplay;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 
 /**
  * Lets you build an effect cause.
@@ -35,7 +37,8 @@ public class GuiComponentEffectCauseInput implements IGuiViewComponent {
 	protected boolean hidden = false;
 	protected String label = "";
 	protected boolean required = false;
-	protected ItemStack displayStack = ItemStack.EMPTY;
+	private NonNullList<ItemStack> displayStacks = NonNullList.create();
+	private ItemStackDisplay stackDisplay = new ItemStackDisplay();
 	
 	public GuiComponentEffectCauseInput(String label, Addon addon, GuiEdit editScreen) {
 		this.editScreen = editScreen;
@@ -92,13 +95,15 @@ public class GuiComponentEffectCauseInput implements IGuiViewComponent {
 			this.editScreen.drawTexturedModalRect(deleteX, deleteY, 60, 64, 13, 13);
 		}
 
-		if (!this.displayStack.isEmpty()) {
+		if (!this.displayStacks.isEmpty()) {
 			int itemDisplayTop = this.y + 10;
 			
 			Gui.drawRect(this.x, itemDisplayTop - 1, this.x + 22, itemDisplayTop + 21, 0xFFA0A0A0);
 			Gui.drawRect(this.x + 1, itemDisplayTop, this.x + 21, itemDisplayTop + 20, 0xFF000000);
 			
-			this.editScreen.renderItemStack(this.displayStack, this.x + 3, itemDisplayTop + 2, mouseX, mouseY, true);
+			this.stackDisplay.updateDisplay(this.displayStacks);
+			
+			this.editScreen.renderItemStack(this.stackDisplay.getDisplayStack(), this.x + 3, itemDisplayTop + 2, mouseX, mouseY, true);
 		}
 	}
 
@@ -135,20 +140,21 @@ public class GuiComponentEffectCauseInput implements IGuiViewComponent {
 		this.effectCause = effectCause;
 		
 		if (effectCause == null) {
-			this.displayStack = ItemStack.EMPTY;
+			this.displayStacks = NonNullList.create();
 			this.selectedText.setText("");
 		} else {
 			IGuiEffectCauseFactory factory = EffectCauseManager.getGuiFactoryFor(EffectCauseManager.getTypeFor(effectCause));
 			
 			if (factory == null) {
-				this.displayStack = ItemStack.EMPTY;
+				this.displayStacks = NonNullList.create();
 				this.selectedText.setText(EffectCauseManager.getTypeFor(effectCause).toString());
 			} else {
-				this.displayStack = factory.getDisplayStack(effectCause);
-				this.selectedText.setText(factory.getTitle());
+				this.displayStacks = factory.getDisplayStacks(effectCause);
+				this.selectedText.setText(factory.getTitle(effectCause));
 			}
 		}
-		
+
+		this.stackDisplay = new ItemStackDisplay();
 		this.selectedText.setCursorPositionZero();
 	}
 	
@@ -162,6 +168,6 @@ public class GuiComponentEffectCauseInput implements IGuiViewComponent {
 	}
 
 	private int getItemDisplayOffset() {
-		return this.displayStack.isEmpty() ? 0 : 30;
+		return this.displayStacks.isEmpty() ? 0 : 30;
 	}
 }

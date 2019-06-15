@@ -86,7 +86,8 @@ public class ItemAddedBow extends ItemBow implements IItemAdded {
 		super();
         this.addPropertyOverride(new ResourceLocation("pull"), new IItemPropertyGetter() {
         	
-            @SideOnly(Side.CLIENT)
+            @Override
+			@SideOnly(Side.CLIENT)
             public float apply(ItemStack stack, @Nullable World world, @Nullable EntityLivingBase entity) {
                 if (entity == null) {
                     return 0.0F;
@@ -177,7 +178,7 @@ public class ItemAddedBow extends ItemBow implements IItemAdded {
 			tooltip.add(TextFormatting.GRAY + I18n.translateToLocalFormatted("item.projectile.info.damage", ItemStack.DECIMALFORMAT.format(damage)));
 		}
 		
-		tooltip.add(TextFormatting.GRAY + I18n.translateToLocalFormatted("item.bow.info.drawTime", ItemStack.DECIMALFORMAT.format((float)this.getDrawTime(stack) / 20f)));
+		tooltip.add(TextFormatting.GRAY + I18n.translateToLocalFormatted("item.bow.info.drawTime", ItemStack.DECIMALFORMAT.format(this.getDrawTime(stack) / 20f)));
 		
 		for (String line : extraTooltip) {
     		if(I18n.canTranslate(line)) {
@@ -289,7 +290,12 @@ public class ItemAddedBow extends ItemBow implements IItemAdded {
         		bowStack.damageItem(1, player);
         		
         		if (!this.shotEffects.isEmpty()) {
-        			this.shotEffects.forEach(effect -> effect.applyEffect(player, player));
+        			this.shotEffects.forEach(effect -> {
+        				effect.affectEntity(player, player);
+        				if (!bowStack.isEmpty()) {
+        					effect.affectItemStack(player, world, bowStack);
+        				}
+        			});
         		}
         		
                 player.addStat(StatList.getObjectUseStats(this));

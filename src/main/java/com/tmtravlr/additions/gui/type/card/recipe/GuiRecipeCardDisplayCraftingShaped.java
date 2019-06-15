@@ -1,7 +1,5 @@
 package com.tmtravlr.additions.gui.type.card.recipe;
 
-import java.util.List;
-
 import com.tmtravlr.additions.addon.recipes.IngredientOreNBT;
 import com.tmtravlr.additions.addon.recipes.RecipeAddedCraftingShaped;
 
@@ -16,7 +14,6 @@ public class GuiRecipeCardDisplayCraftingShaped extends GuiRecipeCardDisplayCraf
 	public GuiRecipeCardDisplayCraftingShaped(RecipeAddedCraftingShaped recipe) {
 		this.recipe = recipe;
 		if (this.recipe.recipe != null) {
-			NonNullList<IngredientOreNBT> displayIngredients = NonNullList.withSize(9, IngredientOreNBT.EMPTY);
 			
 			int ingredientsIndex = 0;
 			for (int y = 0; y < 3; y++) {
@@ -25,18 +22,16 @@ public class GuiRecipeCardDisplayCraftingShaped extends GuiRecipeCardDisplayCraf
 					
 					if (x < this.recipe.recipe.getRecipeWidth() && y < this.recipe.recipe.getRecipeHeight() && ingredientsIndex < this.recipe.recipe.getIngredients().size()) {
 						Ingredient ingredient = this.recipe.recipe.getIngredients().get(ingredientsIndex);
-						displayIngredients.set(index, ingredient instanceof IngredientOreNBT ? (IngredientOreNBT) ingredient : IngredientOreNBT.EMPTY);
+						this.displayIngredients.set(index, ingredient instanceof IngredientOreNBT ? (IngredientOreNBT) ingredient : IngredientOreNBT.EMPTY);
 						ingredientsIndex++;
 					}
 				}
 			}
-			
-			this.createDisplayStacks(displayIngredients);
 		}
 	}
 
 	@Override
-	protected ItemStack getOutput(List<ItemStack> inputs) {
+	protected ItemStack getOutput(NonNullList<ItemStack> inputs) {
 		if (this.recipe.recipe != null) {
 			return this.recipe.recipe.getRecipeOutput();
 		} else {

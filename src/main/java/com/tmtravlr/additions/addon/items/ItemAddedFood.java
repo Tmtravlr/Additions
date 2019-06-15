@@ -250,7 +250,7 @@ public class ItemAddedFood extends ItemFood implements IItemAdded {
 		}
 		
 		if (!this.eatenEffects.isEmpty()) {
-			this.eatenEffects.forEach(effect -> effect.applyEffect(player, player));
+			this.eatenEffects.forEach(effect -> effect.affectEntity(player, player));
 		}
     }
 	

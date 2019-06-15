@@ -18,8 +18,6 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.potion.PotionType;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 /**
  * Info about a potion effect to apply.
@@ -36,7 +34,7 @@ public class EffectPotion extends Effect {
 	public float chance = 1;
 
 	@Override
-	public void applyEffect(@Nullable Entity cause, Entity entity) {
+	public void affectEntity(@Nullable Entity cause, Entity entity) {
 		if (!entity.world.isRemote && entity instanceof EntityLivingBase && entity.world.rand.nextFloat() <= this.chance) {
 			List<PotionEffect> effectsToApply = new ArrayList<>();
 			
@@ -70,11 +68,6 @@ public class EffectPotion extends Effect {
 				}
 			}
 		}
-	}
-
-	@Override
-	public void applyEffect(@Nullable Entity cause, World world, BlockPos pos) {
-		//Nothing to do here...
 	}
 
 	public static class Serializer extends Effect.Serializer<EffectPotion> {
