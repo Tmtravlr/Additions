@@ -33,7 +33,7 @@ public class GuiEditHandlerEffectConsumeItem implements IGuiEffectEditHandler {
 		this.editScreen = editScreen;
 		EffectConsumeItem effectConsumeItem = (effect instanceof EffectConsumeItem) ? (EffectConsumeItem) effect : null;
 		
-		this.description = new GuiComponentDisplayText(editScreen, new TextComponentTranslation("type.effect.command.description"));
+		this.description = new GuiComponentDisplayText(editScreen, new TextComponentTranslation("type.effect.consumeItem.description"));
 		
 		this.amountInput = new GuiComponentIntegerInput(I18n.format("gui.edit.effect.consumeItem.amount.label"), editScreen, false);
 		this.amountInput.setInfo(new TextComponentTranslation("gui.edit.effect.consumeItem.amount.info"));

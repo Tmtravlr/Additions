@@ -33,7 +33,7 @@ public class GuiEditHandlerEffectDamageItem implements IGuiEffectEditHandler {
 		this.editScreen = editScreen;
 		EffectDamageItem effectDamageItem = (effect instanceof EffectDamageItem) ? (EffectDamageItem) effect : null;
 		
-		this.description = new GuiComponentDisplayText(editScreen, new TextComponentTranslation("type.effect.command.description"));
+		this.description = new GuiComponentDisplayText(editScreen, new TextComponentTranslation("type.effect.damageItem.description"));
 		
 		this.amountInput = new GuiComponentIntegerInput(I18n.format("gui.edit.effect.damageItem.amount.label"), editScreen, false);
 		this.amountInput.setInfo(new TextComponentTranslation("gui.edit.effect.damageItem.amount.info"));
