@@ -74,6 +74,11 @@ public class GuiEditBlockPillar extends GuiEditBlockModifiableBoundingBox<BlockA
 		this.advancedComponents.add(this.blockCollisionBoxMaxXInput);
 		this.advancedComponents.add(this.blockCollisionBoxMaxYInput);
 		this.advancedComponents.add(this.blockCollisionBoxMaxZInput);
+		this.advancedComponents.add(this.blockPlaceSoundInput);
+		this.advancedComponents.add(this.blockBreakSoundInput);
+		this.advancedComponents.add(this.blockHitSoundInput);
+		this.advancedComponents.add(this.blockStepSoundInput);
+		this.advancedComponents.add(this.blockFallSoundInput);
 		this.advancedComponents.add(this.itemBlockStackSizeInput);
 		this.advancedComponents.add(this.itemBlockShinesInput);
 		this.advancedComponents.add(this.itemBlockTooltipInput);

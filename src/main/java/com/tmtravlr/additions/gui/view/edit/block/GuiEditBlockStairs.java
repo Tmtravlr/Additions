@@ -61,6 +61,11 @@ public class GuiEditBlockStairs extends GuiEditBlock<BlockAddedStairs> {
 		this.advancedComponents.add(this.blockCanPistonsPushInput);
 		this.advancedComponents.add(this.blockMapColorInput);
 		this.advancedComponents.add(this.blockBeaconColorMultiplierInput);
+		this.advancedComponents.add(this.blockPlaceSoundInput);
+		this.advancedComponents.add(this.blockBreakSoundInput);
+		this.advancedComponents.add(this.blockHitSoundInput);
+		this.advancedComponents.add(this.blockStepSoundInput);
+		this.advancedComponents.add(this.blockFallSoundInput);
 		this.advancedComponents.add(this.itemBlockStackSizeInput);
 		this.advancedComponents.add(this.itemBlockShinesInput);
 		this.advancedComponents.add(this.itemBlockTooltipInput);

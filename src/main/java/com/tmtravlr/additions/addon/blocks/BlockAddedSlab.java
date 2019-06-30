@@ -39,6 +39,7 @@ import net.minecraft.util.JsonUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -81,6 +82,11 @@ public class BlockAddedSlab extends BlockSlab implements IBlockAdded {
 	private boolean canPistonsPush = true;
 	private int xpDroppedMin = 0;
 	private int xpDroppedMax = 0;
+	private SoundEvent placeSound = null;
+	private SoundEvent breakSound = null;
+	private SoundEvent hitSound = null;
+	private SoundEvent stepSound = null;
+	private SoundEvent fallSound = null;
 	
 	public boolean placeOnWalls;
 
@@ -105,10 +111,53 @@ public class BlockAddedSlab extends BlockSlab implements IBlockAdded {
 	public void setBlockMaterial(Material material) {
 		ObfuscationReflectionHelper.setPrivateValue(Block.class, this, material, "field_149764_J", "blockMaterial");
         this.translucent = !material.blocksLight();
-        SoundType blockSoundType = BlockMaterialManager.getBlockSoundType(material);
+        this.updateSoundType();
+	}
+
+	@Override
+	public void setPlaceSound(SoundEvent sound) {
+		this.placeSound = sound;
+        this.updateSoundType();
+	}
+
+	@Override
+	public void setBreakSound(SoundEvent sound) {
+		this.breakSound = sound;
+        this.updateSoundType();
+	}
+
+	@Override
+	public void setHitSound(SoundEvent sound) {
+		this.hitSound = sound;
+        this.updateSoundType();
+	}
+
+	@Override
+	public void setStepSound(SoundEvent sound) {
+		this.stepSound = sound;
+        this.updateSoundType();
+	}
+
+	@Override
+	public void setFallSound(SoundEvent sound) {
+		this.fallSound = sound;
+        this.updateSoundType();
+	}
+	
+	private void updateSoundType() {
+		SoundType blockSoundType = BlockMaterialManager.getBlockSoundType(this.blockMaterial);
         
         if (blockSoundType == null) {
         	blockSoundType = SoundType.STONE;
+        }
+        
+        if (this.placeSound != null || this.breakSound != null || this.hitSound != null || this.stepSound != null || this.fallSound != null) {
+        	blockSoundType = new SoundType(1.0F, 1.0F, 
+					this.breakSound == null ? blockSoundType.getBreakSound() : this.breakSound, 
+					this.stepSound == null ? blockSoundType.getStepSound() : this.stepSound, 
+        			this.placeSound == null ? blockSoundType.getPlaceSound() : this.placeSound, 
+					this.hitSound == null ? blockSoundType.getHitSound() : this.hitSound, 
+					this.fallSound == null ? blockSoundType.getFallSound() : this.fallSound);
         }
         
         this.setSoundType(blockSoundType);
@@ -187,6 +236,31 @@ public class BlockAddedSlab extends BlockSlab implements IBlockAdded {
 	@Override
 	public Material getBlockMaterial() {
 		return this.blockMaterial;
+	}
+
+	@Override
+	public SoundEvent getPlaceSound() {
+		return this.placeSound;
+	}
+
+	@Override
+	public SoundEvent getBreakSound() {
+		return this.breakSound;
+	}
+
+	@Override
+	public SoundEvent getHitSound() {
+		return this.hitSound;
+	}
+
+	@Override
+	public SoundEvent getStepSound() {
+		return this.stepSound;
+	}
+
+	@Override
+	public SoundEvent getFallSound() {
+		return this.fallSound;
 	}
 	
 	@Override
@@ -359,7 +433,7 @@ public class BlockAddedSlab extends BlockSlab implements IBlockAdded {
     
     @Override
     public EnumPushReaction getMobilityFlag(IBlockState state) {
-        return this.canPistonsPush ? EnumPushReaction.BLOCK : this.blockMaterial.getMobilityFlag();
+        return this.canPistonsPush ? this.blockMaterial.getMobilityFlag() : EnumPushReaction.BLOCK;
     }
     
     @Override

@@ -28,6 +28,7 @@ import com.tmtravlr.additions.gui.view.components.input.GuiComponentStringInput;
 import com.tmtravlr.additions.gui.view.components.input.dropdown.GuiComponentDropdownInputBlockMapColor;
 import com.tmtravlr.additions.gui.view.components.input.dropdown.GuiComponentDropdownInputBlockMaterial;
 import com.tmtravlr.additions.gui.view.components.input.dropdown.GuiComponentDropdownInputItem;
+import com.tmtravlr.additions.gui.view.components.input.dropdown.GuiComponentDropdownInputSoundEvent;
 import com.tmtravlr.additions.gui.view.components.input.suggestion.GuiComponentSuggestionInputOreDict;
 import com.tmtravlr.additions.gui.view.components.input.suggestion.GuiComponentSuggestionInputToolType;
 import com.tmtravlr.additions.gui.view.edit.GuiEdit;
@@ -81,6 +82,11 @@ public abstract class GuiEditBlock<T extends IBlockAdded> extends GuiEdit {
 	protected GuiComponentBooleanInput blockIsSlimeInput;
 	protected GuiComponentBooleanInput blockIsBeaconBaseInput;
 	protected GuiComponentBooleanInput blockCanPistonsPushInput;
+	protected GuiComponentDropdownInputSoundEvent blockPlaceSoundInput;
+	protected GuiComponentDropdownInputSoundEvent blockBreakSoundInput;
+	protected GuiComponentDropdownInputSoundEvent blockHitSoundInput;
+	protected GuiComponentDropdownInputSoundEvent blockStepSoundInput;
+	protected GuiComponentDropdownInputSoundEvent blockFallSoundInput;
 	protected GuiComponentBlockDropInput blockDropInput;
 	protected GuiComponentButton blockTextureButton;
 	
@@ -213,6 +219,21 @@ public abstract class GuiEditBlock<T extends IBlockAdded> extends GuiEdit {
 		this.blockCanPistonsPushInput = new GuiComponentBooleanInput(I18n.format("gui.edit.block.canPistonsPush.label"), this);
 		this.blockCanPistonsPushInput.setDefaultBoolean(this.block.canPistonsPush());
 		
+		this.blockPlaceSoundInput = new GuiComponentDropdownInputSoundEvent(I18n.format("gui.edit.block.placeSound.label"), this.addon, this);
+		this.blockPlaceSoundInput.setDefaultSelected(this.block.getPlaceSound());
+		
+		this.blockBreakSoundInput = new GuiComponentDropdownInputSoundEvent(I18n.format("gui.edit.block.breakSound.label"), this.addon, this);
+		this.blockBreakSoundInput.setDefaultSelected(this.block.getBreakSound());
+		
+		this.blockHitSoundInput = new GuiComponentDropdownInputSoundEvent(I18n.format("gui.edit.block.hitSound.label"), this.addon, this);
+		this.blockHitSoundInput.setDefaultSelected(this.block.getHitSound());
+		
+		this.blockStepSoundInput = new GuiComponentDropdownInputSoundEvent(I18n.format("gui.edit.block.stepSound.label"), this.addon, this);
+		this.blockStepSoundInput.setDefaultSelected(this.block.getStepSound());
+		
+		this.blockFallSoundInput = new GuiComponentDropdownInputSoundEvent(I18n.format("gui.edit.block.fallSound.label"), this.addon, this);
+		this.blockFallSoundInput.setDefaultSelected(this.block.getFallSound());
+		
 		if (this.block.getItemBlock() != null) {
 			IItemAddedBlock itemBlock = this.block.getItemBlock();
 			this.itemBlockStackSizeInput = new GuiComponentIntegerInput(I18n.format("gui.edit.item.maxStackSize.label"), this, false);
@@ -329,6 +350,11 @@ public abstract class GuiEditBlock<T extends IBlockAdded> extends GuiEdit {
 		this.block.setIsSlime(this.blockIsSlimeInput.getBoolean());
 		this.block.setIsBeaconBase(this.blockIsBeaconBaseInput.getBoolean());
 		this.block.setCanPistonsPush(this.blockCanPistonsPushInput.getBoolean());
+		this.block.setPlaceSound(this.blockPlaceSoundInput.getSelected());
+		this.block.setBreakSound(this.blockBreakSoundInput.getSelected());
+		this.block.setHitSound(this.blockHitSoundInput.getSelected());
+		this.block.setStepSound(this.blockStepSoundInput.getSelected());
+		this.block.setFallSound(this.blockFallSoundInput.getSelected());
 		
 		if (this.block.getItemBlock() != null) {
 			IItemAddedBlock itemBlock = this.block.getItemBlock();
@@ -424,6 +450,11 @@ public abstract class GuiEditBlock<T extends IBlockAdded> extends GuiEdit {
 	    this.blockIsSlimeInput.setDefaultBoolean(this.copyFrom.isSlime());
 	    this.blockIsBeaconBaseInput.setDefaultBoolean(this.copyFrom.isBeaconBase());
 	    this.blockCanPistonsPushInput.setDefaultBoolean(this.copyFrom.canPistonsPush());
+	    this.blockPlaceSoundInput.setDefaultSelected(this.copyFrom.getPlaceSound());
+	    this.blockBreakSoundInput.setDefaultSelected(this.copyFrom.getBreakSound());
+	    this.blockHitSoundInput.setDefaultSelected(this.copyFrom.getHitSound());
+	    this.blockStepSoundInput.setDefaultSelected(this.copyFrom.getStepSound());
+	    this.blockFallSoundInput.setDefaultSelected(this.copyFrom.getFallSound());
 		
 		if (this.copyFrom.getItemBlock() != null && this.block.getItemBlock() != null) {
 			IItemAddedBlock itemBlock = this.copyFrom.getItemBlock();

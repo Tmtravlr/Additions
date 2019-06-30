@@ -1,6 +1,8 @@
 package com.tmtravlr.additions.gui.view.edit.recipe;
 
-import com.google.common.base.Predicate;
+
+import java.util.Optional;
+
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.recipes.RecipeAddedBrewingComplete;
@@ -9,7 +11,6 @@ import com.tmtravlr.additions.gui.message.GuiMessageBoxNeedsRestart;
 import com.tmtravlr.additions.gui.view.GuiView;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentBooleanInput;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentIngredientOreNBTInput;
-import com.tmtravlr.additions.gui.view.components.input.GuiComponentItemStackInput;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentNBTInput;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentStringInput;
 import com.tmtravlr.additions.gui.view.edit.GuiEdit;
@@ -39,6 +40,8 @@ public class GuiEditRecipeBrewingComplete extends GuiEdit {
     protected GuiComponentStringInput recipeIdInput;
     protected GuiComponentIngredientOreNBTInput recipeIngredientInput;
     protected GuiComponentNBTInput recipeInputTagInput;
+    protected GuiComponentNBTInput recipeInputExtendedTagInput;
+    protected GuiComponentNBTInput recipeInputPoweredTagInput;
     protected GuiComponentNBTInput recipeOutputTagInput;
     protected GuiComponentNBTInput recipeOutputExtendedTagInput;
     protected GuiComponentNBTInput recipeOutputPoweredTagInput;
@@ -79,6 +82,12 @@ public class GuiEditRecipeBrewingComplete extends GuiEdit {
 		this.recipeInputTagInput = new GuiComponentNBTInput(I18n.format("gui.edit.recipe.brewing.complete.inputTag.label"), this);
 		this.recipeInputTagInput.setRequired();
 		this.recipeInputTagInput.setDefaultText(this.addition.inputTag == null ? "{}" : this.addition.inputTag.toString());
+		
+		this.recipeInputExtendedTagInput = new GuiComponentNBTInput(I18n.format("gui.edit.recipe.brewing.complete.inputExtendedTag.label"), this);
+		this.recipeInputExtendedTagInput.setDefaultText(this.addition.inputExtendedTag == null ? "{}" : this.addition.inputExtendedTag.toString());
+		
+		this.recipeInputPoweredTagInput = new GuiComponentNBTInput(I18n.format("gui.edit.recipe.brewing.complete.inputPoweredTag.label"), this);
+		this.recipeInputPoweredTagInput.setDefaultText(this.addition.inputPoweredTag == null ? "{}" : this.addition.inputPoweredTag.toString());
 		
 		this.recipeOutputTagInput = new GuiComponentNBTInput(I18n.format("gui.edit.recipe.brewing.complete.outputTag.label"), this);
 		this.recipeOutputTagInput.setRequired();
@@ -150,6 +159,8 @@ public class GuiEditRecipeBrewingComplete extends GuiEdit {
 		this.components.add(this.recipeAllowLingeringInput);
 		
 		this.advancedComponents.add(this.recipeInputTagInput);
+		this.advancedComponents.add(this.recipeInputExtendedTagInput);
+		this.advancedComponents.add(this.recipeInputPoweredTagInput);
 	}
 	
 	@Override
@@ -183,6 +194,8 @@ public class GuiEditRecipeBrewingComplete extends GuiEdit {
 		
 		this.addition.ingredient = this.recipeIngredientInput.getIngredient();
 		this.addition.inputTag = this.recipeInputTagInput.getTag();
+		this.addition.inputExtendedTag = Optional.ofNullable(this.recipeInputExtendedTagInput.getTag()).orElse(new NBTTagCompound());
+		this.addition.inputPoweredTag = Optional.ofNullable(this.recipeInputPoweredTagInput.getTag()).orElse(new NBTTagCompound());
 		this.addition.outputTag = this.recipeOutputTagInput.getTag();
 		this.addition.outputExtendedTag = (this.recipeAllowExtendedInput.getBoolean() && this.recipeOutputExtendedTagInput.getTag() != null) ? this.recipeOutputExtendedTagInput.getTag() : new NBTTagCompound();
 		this.addition.outputPoweredTag = (this.recipeAllowPoweredInput.getBoolean() && this.recipeOutputPoweredTagInput.getTag() != null) ? this.recipeOutputPoweredTagInput.getTag() : new NBTTagCompound();
@@ -214,11 +227,13 @@ public class GuiEditRecipeBrewingComplete extends GuiEdit {
 	protected void copyFromOther() {
 		this.recipeIngredientInput.setDefaultIngredient(this.copyFrom.ingredient);
 		this.recipeInputTagInput.setDefaultText(this.copyFrom.inputTag == null ? "{}" : this.copyFrom.inputTag.toString());
+		this.recipeInputExtendedTagInput.setDefaultText(this.copyFrom.inputExtendedTag == null ? "{}" : this.copyFrom.inputExtendedTag.toString());
+		this.recipeInputPoweredTagInput.setDefaultText(this.copyFrom.inputPoweredTag == null ? "{}" : this.copyFrom.inputPoweredTag.toString());
 		this.recipeOutputTagInput.setDefaultText(this.copyFrom.outputTag == null ? "{}" : this.copyFrom.outputTag.toString());
 		this.recipeOutputExtendedTagInput.setDefaultText(this.copyFrom.outputExtendedTag == null ? "{}" : this.copyFrom.outputExtendedTag.toString());
 		this.recipeOutputPoweredTagInput.setDefaultText(this.copyFrom.outputPoweredTag == null ? "{}" : this.copyFrom.outputPoweredTag.toString());
-		this.recipeAllowExtendedInput.setDefaultBoolean(this.copyFrom.outputExtendedTag == null || this.copyFrom.outputExtendedTag.hasNoTags());
-		this.recipeAllowExtendedInput.setDefaultBoolean(this.copyFrom.outputPoweredTag == null || this.copyFrom.outputPoweredTag.hasNoTags());
+		this.recipeAllowExtendedInput.setDefaultBoolean(this.copyFrom.outputExtendedTag != null && !this.copyFrom.outputExtendedTag.hasNoTags());
+		this.recipeAllowPoweredInput.setDefaultBoolean(this.copyFrom.outputPoweredTag != null && !this.copyFrom.outputPoweredTag.hasNoTags());
 		this.recipeAllowMundaneInput.setDefaultBoolean(this.copyFrom.allowMundane);
 		this.recipeAllowSplashInput.setDefaultBoolean(this.copyFrom.allowSplash);
 		this.recipeAllowLingeringInput.setDefaultBoolean(this.copyFrom.allowLingering);

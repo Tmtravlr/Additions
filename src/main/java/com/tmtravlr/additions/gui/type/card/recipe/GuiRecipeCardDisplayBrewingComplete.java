@@ -135,7 +135,7 @@ public class GuiRecipeCardDisplayBrewingComplete implements IGuiRecipeCardDispla
 	}
 	
 	private void createDisplayRecipes() {
-		this.cachedDisplayRecipes.add(new DisplayRecipe(this.recipe.ingredient, this.stackWithPotion(Items.POTIONITEM, PotionTypes.AWKWARD), this.stackWithTag(Items.POTIONITEM, this.recipe.outputTag)));
+		this.cachedDisplayRecipes.add(new DisplayRecipe(this.recipe.ingredient, this.stackWithTag(Items.POTIONITEM, this.recipe.inputTag), this.stackWithTag(Items.POTIONITEM, this.recipe.outputTag)));
 		
 		if (this.recipe.allowMundane) {
 			this.cachedDisplayRecipes.add(new DisplayRecipe(this.recipe.ingredient, this.stackWithPotion(Items.POTIONITEM, PotionTypes.WATER), this.stackWithPotion(Items.POTIONITEM, PotionTypes.MUNDANE)));
@@ -147,6 +147,10 @@ public class GuiRecipeCardDisplayBrewingComplete implements IGuiRecipeCardDispla
 			if (this.recipe.outputPoweredTag != null && !this.recipe.outputPoweredTag.hasNoTags()) {
 				this.cachedDisplayRecipes.add(new DisplayRecipe(RecipeAddedBrewingComplete.INGREDIENT_REDSTONE, this.stackWithTag(Items.POTIONITEM, this.recipe.outputPoweredTag), this.stackWithTag(Items.POTIONITEM, this.recipe.outputExtendedTag)));
 			}
+			
+			if (this.recipe.inputExtendedTag != null && !this.recipe.inputExtendedTag.hasNoTags()) {
+				this.cachedDisplayRecipes.add(new DisplayRecipe(this.recipe.ingredient, this.stackWithTag(Items.POTIONITEM, this.recipe.inputExtendedTag), this.stackWithTag(Items.POTIONITEM, this.recipe.outputExtendedTag)));
+			}
 		}
 		
 		if (this.recipe.outputPoweredTag != null && !this.recipe.outputPoweredTag.hasNoTags()) {
@@ -155,10 +159,14 @@ public class GuiRecipeCardDisplayBrewingComplete implements IGuiRecipeCardDispla
 			if (this.recipe.outputExtendedTag != null && !this.recipe.outputExtendedTag.hasNoTags()) {
 				this.cachedDisplayRecipes.add(new DisplayRecipe(RecipeAddedBrewingComplete.INGREDIENT_GLOWSTONE, this.stackWithTag(Items.POTIONITEM, this.recipe.outputExtendedTag), this.stackWithTag(Items.POTIONITEM, this.recipe.outputPoweredTag)));
 			}
+			
+			if (this.recipe.inputPoweredTag != null && !this.recipe.inputPoweredTag.hasNoTags()) {
+				this.cachedDisplayRecipes.add(new DisplayRecipe(this.recipe.ingredient, this.stackWithTag(Items.POTIONITEM, this.recipe.inputPoweredTag), this.stackWithTag(Items.POTIONITEM, this.recipe.outputPoweredTag)));
+			}
 		}
 		
 		if (this.recipe.allowSplash) {
-			this.cachedDisplayRecipes.add(new DisplayRecipe(this.recipe.ingredient, this.stackWithPotion(Items.SPLASH_POTION, PotionTypes.AWKWARD), this.stackWithTag(Items.SPLASH_POTION, this.recipe.outputTag)));
+			this.cachedDisplayRecipes.add(new DisplayRecipe(this.recipe.ingredient, this.stackWithTag(Items.SPLASH_POTION, this.recipe.inputTag), this.stackWithTag(Items.SPLASH_POTION, this.recipe.outputTag)));
 			this.cachedDisplayRecipes.add(new DisplayRecipe(RecipeAddedBrewingComplete.INGREDIENT_GUNPOWDER, this.stackWithTag(Items.POTIONITEM, this.recipe.outputTag), this.stackWithTag(Items.SPLASH_POTION, this.recipe.outputTag)));
 			
 			if (this.recipe.allowMundane) {
@@ -172,6 +180,10 @@ public class GuiRecipeCardDisplayBrewingComplete implements IGuiRecipeCardDispla
 				if (this.recipe.outputPoweredTag != null && !this.recipe.outputPoweredTag.hasNoTags()) {
 					this.cachedDisplayRecipes.add(new DisplayRecipe(RecipeAddedBrewingComplete.INGREDIENT_REDSTONE, this.stackWithTag(Items.SPLASH_POTION, this.recipe.outputPoweredTag), this.stackWithTag(Items.SPLASH_POTION, this.recipe.outputExtendedTag)));
 				}
+				
+				if (this.recipe.inputExtendedTag != null && !this.recipe.inputExtendedTag.hasNoTags()) {
+					this.cachedDisplayRecipes.add(new DisplayRecipe(this.recipe.ingredient, this.stackWithTag(Items.SPLASH_POTION, this.recipe.inputExtendedTag), this.stackWithTag(Items.SPLASH_POTION, this.recipe.outputExtendedTag)));
+				}
 			}
 			
 			if (this.recipe.outputPoweredTag != null && !this.recipe.outputPoweredTag.hasNoTags()) {
@@ -181,11 +193,15 @@ public class GuiRecipeCardDisplayBrewingComplete implements IGuiRecipeCardDispla
 				if (this.recipe.outputExtendedTag != null && !this.recipe.outputExtendedTag.hasNoTags()) {
 					this.cachedDisplayRecipes.add(new DisplayRecipe(RecipeAddedBrewingComplete.INGREDIENT_GLOWSTONE, this.stackWithTag(Items.SPLASH_POTION, this.recipe.outputExtendedTag), this.stackWithTag(Items.SPLASH_POTION, this.recipe.outputPoweredTag)));
 				}
+				
+				if (this.recipe.inputPoweredTag != null && !this.recipe.inputPoweredTag.hasNoTags()) {
+					this.cachedDisplayRecipes.add(new DisplayRecipe(this.recipe.ingredient, this.stackWithTag(Items.SPLASH_POTION, this.recipe.inputPoweredTag), this.stackWithTag(Items.SPLASH_POTION, this.recipe.outputPoweredTag)));
+				}
 			}
 		}
 		
 		if (this.recipe.allowLingering) {
-			this.cachedDisplayRecipes.add(new DisplayRecipe(this.recipe.ingredient, this.stackWithPotion(Items.LINGERING_POTION, PotionTypes.AWKWARD), this.stackWithTag(Items.LINGERING_POTION, this.recipe.getLingeringTag(this.recipe.outputTag))));
+			this.cachedDisplayRecipes.add(new DisplayRecipe(this.recipe.ingredient, this.stackWithTag(Items.LINGERING_POTION, this.recipe.inputTag), this.stackWithTag(Items.LINGERING_POTION, this.recipe.getLingeringTag(this.recipe.outputTag))));
 			this.cachedDisplayRecipes.add(new DisplayRecipe(new IngredientOreNBT(new ItemStack(Items.DRAGON_BREATH)), this.stackWithTag(Items.SPLASH_POTION, this.recipe.outputTag), this.stackWithTag(Items.LINGERING_POTION, this.recipe.getLingeringTag(this.recipe.outputTag))));
 			
 			if (this.recipe.allowMundane) {
@@ -199,6 +215,10 @@ public class GuiRecipeCardDisplayBrewingComplete implements IGuiRecipeCardDispla
 				if (this.recipe.outputPoweredTag != null && !this.recipe.outputPoweredTag.hasNoTags()) {
 					this.cachedDisplayRecipes.add(new DisplayRecipe(RecipeAddedBrewingComplete.INGREDIENT_REDSTONE, this.stackWithTag(Items.LINGERING_POTION, this.recipe.getLingeringTag(this.recipe.outputPoweredTag)), this.stackWithTag(Items.LINGERING_POTION, this.recipe.getLingeringTag(this.recipe.outputExtendedTag))));
 				}
+				
+				if (this.recipe.inputExtendedTag != null && !this.recipe.inputExtendedTag.hasNoTags()) {
+					this.cachedDisplayRecipes.add(new DisplayRecipe(this.recipe.ingredient, this.stackWithTag(Items.LINGERING_POTION, this.recipe.getLingeringTag(this.recipe.inputExtendedTag)), this.stackWithTag(Items.LINGERING_POTION, this.recipe.getLingeringTag(this.recipe.outputExtendedTag))));
+				}
 			}
 			
 			if (this.recipe.outputPoweredTag != null && !this.recipe.outputPoweredTag.hasNoTags()) {
@@ -207,6 +227,10 @@ public class GuiRecipeCardDisplayBrewingComplete implements IGuiRecipeCardDispla
 				
 				if (this.recipe.outputExtendedTag != null && !this.recipe.outputExtendedTag.hasNoTags()) {
 					this.cachedDisplayRecipes.add(new DisplayRecipe(RecipeAddedBrewingComplete.INGREDIENT_GLOWSTONE, this.stackWithTag(Items.LINGERING_POTION, this.recipe.getLingeringTag(this.recipe.outputExtendedTag)), this.stackWithTag(Items.LINGERING_POTION, this.recipe.getLingeringTag(this.recipe.outputPoweredTag))));
+				}
+				
+				if (this.recipe.inputPoweredTag != null && !this.recipe.inputPoweredTag.hasNoTags()) {
+					this.cachedDisplayRecipes.add(new DisplayRecipe(this.recipe.ingredient, this.stackWithTag(Items.LINGERING_POTION, this.recipe.getLingeringTag(this.recipe.inputPoweredTag)), this.stackWithTag(Items.LINGERING_POTION, this.recipe.getLingeringTag(this.recipe.outputPoweredTag))));
 				}
 			}
 		}

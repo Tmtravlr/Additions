@@ -20,7 +20,6 @@ import net.minecraft.nbt.NBTException;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.potion.PotionType;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
@@ -48,6 +47,8 @@ public class RecipeAddedBrewingComplete extends AbstractBrewingRecipe<Ingredient
 	public ResourceLocation id;
 	public IngredientOreNBT ingredient = IngredientOreNBT.EMPTY;
 	public NBTTagCompound inputTag = TAG_AWKWARD_POTION;
+	public NBTTagCompound inputExtendedTag = new NBTTagCompound();
+	public NBTTagCompound inputPoweredTag = new NBTTagCompound();
 	public NBTTagCompound outputTag = new NBTTagCompound();
 	public NBTTagCompound outputExtendedTag = new NBTTagCompound();
 	public NBTTagCompound outputPoweredTag = new NBTTagCompound();
@@ -93,34 +94,38 @@ public class RecipeAddedBrewingComplete extends AbstractBrewingRecipe<Ingredient
     	ItemStack output = ItemStack.EMPTY;
     	
     	if (isIngredient(ingredient) && isInput(input)) {
-	    	boolean tagMatchesNormal = NBTUtil.areNBTEquals(input.getTagCompound(), input.getItem() == Items.LINGERING_POTION ? this.getLingeringTag(outputTag) : outputTag, true);
-	    	boolean tagMatchesExtended = !outputExtendedTag.hasNoTags() && NBTUtil.areNBTEquals(input.getTagCompound(), input.getItem() == Items.LINGERING_POTION ? this.getLingeringTag(outputExtendedTag) : outputExtendedTag, true);
-	    	boolean tagMatchesPowered = !outputPoweredTag.hasNoTags() && NBTUtil.areNBTEquals(input.getTagCompound(), input.getItem() == Items.LINGERING_POTION ? this.getLingeringTag(outputPoweredTag) : outputPoweredTag, true);
+	    	boolean tagMatchesNormal = NBTUtil.areNBTEquals(input.getTagCompound(), this.getNormalOrLingeringTag(input, outputTag), true);
+	    	boolean tagMatchesExtended = !outputExtendedTag.hasNoTags() && NBTUtil.areNBTEquals(input.getTagCompound(), this.getNormalOrLingeringTag(input, outputExtendedTag), true);
+	    	boolean tagMatchesPowered = !outputPoweredTag.hasNoTags() && NBTUtil.areNBTEquals(input.getTagCompound(), this.getNormalOrLingeringTag(input, outputPoweredTag), true);
 	    	boolean tagMatchesAny = tagMatchesNormal || tagMatchesExtended || tagMatchesPowered;
     	
 	    	if (this.ingredient.apply(ingredient)) {
-	    		PotionType potionType = PotionUtils.getPotionFromItem(input);
-	    		
-	    		if (allowMundane && potionType == PotionTypes.WATER) {
+	    		if (allowMundane && PotionUtils.getPotionFromItem(input) == PotionTypes.WATER) {
 	    			output = input.copy();
 	    			output.setTagCompound(new NBTTagCompound());
 	    			PotionUtils.addPotionToItemStack(output, PotionTypes.MUNDANE);
-	    		} else if (potionType == PotionTypes.AWKWARD) {
+	    		} else if (!this.inputTag.hasNoTags() && NBTUtil.areNBTEquals(input.getTagCompound(), this.getNormalOrLingeringTag(input, inputTag), true)) {
 	    			output = input.copy();
-	    			output.setTagCompound(outputTag.copy());
+	    			output.setTagCompound(this.getNormalOrLingeringTag(input, outputTag.copy()));
+	    		} else if (!this.inputExtendedTag.hasNoTags() && NBTUtil.areNBTEquals(input.getTagCompound(), this.getNormalOrLingeringTag(input, inputExtendedTag), true)) {
+	    			output = input.copy();
+	    			output.setTagCompound(this.getNormalOrLingeringTag(input, outputExtendedTag.copy()));
+	    		} else if (!this.inputPoweredTag.hasNoTags() && NBTUtil.areNBTEquals(input.getTagCompound(), this.getNormalOrLingeringTag(input, inputPoweredTag), true)) {
+	    			output = input.copy();
+	    			output.setTagCompound(this.getNormalOrLingeringTag(input, outputPoweredTag.copy()));
 	    		}
 	    	} else if (allowSplash && INGREDIENT_GUNPOWDER.apply(ingredient) && input.getItem() == Items.POTIONITEM && tagMatchesAny) {
     			output = new ItemStack(Items.SPLASH_POTION, input.getCount(), input.getItemDamage());
-    			output.setTagCompound(input.getTagCompound());
+    			output.setTagCompound(input.getTagCompound().copy());
 	    	} else if ( allowLingering && ingredient.getItem() == Items.DRAGON_BREATH && input.getItem() == Items.SPLASH_POTION && tagMatchesAny) {
     			output = new ItemStack(Items.LINGERING_POTION, input.getCount(), input.getItemDamage());
-    			output.setTagCompound(this.getLingeringTag(input.getTagCompound()));
+    			output.setTagCompound(this.getLingeringTag(input.getTagCompound().copy()));
 	    	} else if (INGREDIENT_REDSTONE.apply(ingredient) && !outputExtendedTag.hasNoTags() && ! tagMatchesExtended && (tagMatchesNormal || tagMatchesPowered)) {
 	    		output = input.copy();
-    			output.setTagCompound(input.getItem() == Items.LINGERING_POTION ? this.getLingeringTag(outputExtendedTag.copy()) : outputExtendedTag.copy());
+    			output.setTagCompound(this.getNormalOrLingeringTag(input, outputExtendedTag.copy()));
 	    	} else if (INGREDIENT_GLOWSTONE.apply(ingredient) && !outputPoweredTag.hasNoTags() && ! tagMatchesPowered && (tagMatchesNormal || tagMatchesExtended)) {
 	    		output = input.copy();
-    			output.setTagCompound(input.getItem() == Items.LINGERING_POTION ? this.getLingeringTag(outputPoweredTag.copy()) : outputPoweredTag.copy());
+    			output.setTagCompound(this.getNormalOrLingeringTag(input, outputPoweredTag.copy()));
 	    	}
     	}
     	
@@ -147,6 +152,10 @@ public class RecipeAddedBrewingComplete extends AbstractBrewingRecipe<Ingredient
     	
     	return lingeringTag;
     }
+    
+    private NBTTagCompound getNormalOrLingeringTag(ItemStack stack, NBTTagCompound tag) {
+    	return stack.getItem() == Items.LINGERING_POTION ? this.getLingeringTag(tag) : tag;
+    }
 	
 	public static class Serializer extends IRecipeAdded.Serializer<RecipeAddedBrewingComplete> {
 		
@@ -154,6 +163,7 @@ public class RecipeAddedBrewingComplete extends AbstractBrewingRecipe<Ingredient
 			super(TYPE, RecipeAddedBrewingComplete.class);
 		}
 
+		@Override
 		public JsonObject serialize(RecipeAddedBrewingComplete recipeAdded, JsonSerializationContext context) {
 			JsonObject json = new JsonObject();
 			
@@ -175,6 +185,20 @@ public class RecipeAddedBrewingComplete extends AbstractBrewingRecipe<Ingredient
 			
 			if (!recipeAdded.outputPoweredTag.hasNoTags()) {
 				json.addProperty("output_powered_tag", recipeAdded.outputPoweredTag.toString());
+			}
+			
+			if (recipeAdded.inputTag.hasNoTags()) {
+				throw new IllegalArgumentException("Expected an input tag for complete brewing recipe " + recipeAdded.id);
+			}
+			
+			json.addProperty("input_tag", recipeAdded.inputTag.toString());
+			
+			if (!recipeAdded.inputExtendedTag.hasNoTags()) {
+				json.addProperty("input_extended_tag", recipeAdded.inputExtendedTag.toString());
+			}
+			
+			if (!recipeAdded.inputPoweredTag.hasNoTags()) {
+				json.addProperty("input_powered_tag", recipeAdded.inputPoweredTag.toString());
 			}
 			
 			if (!recipeAdded.allowMundane) {
@@ -202,6 +226,36 @@ public class RecipeAddedBrewingComplete extends AbstractBrewingRecipe<Ingredient
 				throw new JsonParseException("Expected an ingredient for brewing recipe");
 			}
 			
+			if (json.has("input_tag")) {
+				try {
+					recipeAdded.inputTag = JsonToNBT.getTagFromJson(JsonUtils.getString(json, "input_tag"));
+	            } catch (NBTException nbtexception) {
+	                throw new JsonSyntaxException("Problem getting input potion tag for brewing recipe", nbtexception);
+	            }
+			} else {
+				recipeAdded.inputTag = TAG_AWKWARD_POTION;
+			}
+			
+			if (json.has("input_extended_tag")) {
+				try {
+					recipeAdded.inputExtendedTag = JsonToNBT.getTagFromJson(JsonUtils.getString(json, "input_extended_tag"));
+	            } catch (NBTException nbtexception) {
+	                throw new JsonSyntaxException("Problem getting input extended potion tag for brewing recipe", nbtexception);
+	            }
+			} else {
+				recipeAdded.inputExtendedTag = new NBTTagCompound();
+			}
+			
+			if (json.has("input_powered_tag")) {
+				try {
+					recipeAdded.inputPoweredTag = JsonToNBT.getTagFromJson(JsonUtils.getString(json, "input_powered_tag"));
+	            } catch (NBTException nbtexception) {
+	                throw new JsonSyntaxException("Problem getting input powered potion tag for brewing recipe", nbtexception);
+	            }
+			} else {
+				recipeAdded.inputPoweredTag = new NBTTagCompound();
+			}
+			
 			try {
 				recipeAdded.outputTag = JsonToNBT.getTagFromJson(JsonUtils.getString(json, "output_tag"));
             } catch (NBTException nbtexception) {
@@ -214,6 +268,8 @@ public class RecipeAddedBrewingComplete extends AbstractBrewingRecipe<Ingredient
 	            } catch (NBTException nbtexception) {
 	                throw new JsonSyntaxException("Problem getting extended potion tag for brewing recipe", nbtexception);
 	            }
+			} else {
+				recipeAdded.outputExtendedTag = new NBTTagCompound();
 			}
 			
 			if (json.has("output_powered_tag")) {
@@ -222,6 +278,8 @@ public class RecipeAddedBrewingComplete extends AbstractBrewingRecipe<Ingredient
 	            } catch (NBTException nbtexception) {
 	                throw new JsonSyntaxException("Problem getting powered potion tag for brewing recipe", nbtexception);
 	            }
+			} else {
+				recipeAdded.outputPoweredTag = new NBTTagCompound();
 			}
 
 			recipeAdded.allowMundane = JsonUtils.getBoolean(json, "allow_mundane", true);

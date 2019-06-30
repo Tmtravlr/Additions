@@ -20,6 +20,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
 
 /**
@@ -35,6 +36,16 @@ public interface IBlockAdded {
 	public void setDisplayName(String displayName);
 	
 	public void setBlockMaterial(Material blockMaterial);
+	
+	public void setPlaceSound(SoundEvent sound);
+	
+	public void setBreakSound(SoundEvent sound);
+	
+	public void setHitSound(SoundEvent sound);
+	
+	public void setStepSound(SoundEvent sound);
+	
+	public void setFallSound(SoundEvent sound);
 	
 	public void setBlockMapColor(@Nullable MapColor mapColor);
 	
@@ -66,6 +77,16 @@ public interface IBlockAdded {
 	public String getDisplayName();
 	
 	public Material getBlockMaterial();
+	
+	public SoundEvent getPlaceSound();
+	
+	public SoundEvent getBreakSound();
+	
+	public SoundEvent getHitSound();
+	
+	public SoundEvent getStepSound();
+	
+	public SoundEvent getFallSound();
 	
 	@Nullable
 	public MapColor getBlockMapColor();
@@ -157,6 +178,26 @@ public interface IBlockAdded {
 			
 			json.addProperty("name", blockAddedObj.getDisplayName());
 			json.add("material", OtherSerializers.BlockMaterialSerializer.serialize(blockAddedObj.getBlockMaterial()));
+			
+			if (blockAddedObj.getPlaceSound() != null) {
+				json.add("place_sound", OtherSerializers.SoundEventSerializer.serialize(blockAddedObj.getPlaceSound()));
+			}
+			
+			if (blockAddedObj.getBreakSound() != null) {
+				json.add("break_sound", OtherSerializers.SoundEventSerializer.serialize(blockAddedObj.getBreakSound()));
+			}
+			
+			if (blockAddedObj.getHitSound() != null) {
+				json.add("hit_sound", OtherSerializers.SoundEventSerializer.serialize(blockAddedObj.getHitSound()));
+			}
+			
+			if (blockAddedObj.getStepSound() != null) {
+				json.add("step_sound", OtherSerializers.SoundEventSerializer.serialize(blockAddedObj.getStepSound()));
+			}
+			
+			if (blockAddedObj.getFallSound() != null) {
+				json.add("fall_sound", OtherSerializers.SoundEventSerializer.serialize(blockAddedObj.getFallSound()));
+			}
 			
 			if (blockAddedObj.getBlockMapColor() != null) {
 				json.add("map_color", OtherSerializers.BlockMapColorSerializer.serialize(blockAddedObj.getBlockMapColor()));
@@ -302,13 +343,35 @@ public interface IBlockAdded {
 			postDeserialize(json, (T) blockAddedObj);
 		}
 		
-		public void postDeserialize(JsonObject json, T blockAdded) {}
+		public void postDeserialize(JsonObject json, T blockAdded) {
+			this.postDeserializeDefaults(json, blockAdded);
+		}
 		
 		public void postDeserializeDefaults(JsonObject json, T blockAdded) {
         	
         	IItemAdded itemAdded = blockAdded.getItemBlock();
         	if (itemAdded != null) {
         		ItemAddedManager.Serializer.postDeserialize(JsonUtils.getJsonObject(json, "item_block"), itemAdded);
+        	}
+        	
+        	if (json.has("place_sound")) {
+        		blockAdded.setPlaceSound(OtherSerializers.SoundEventSerializer.deserialize(json, "place_sound"));
+        	}
+        	
+        	if (json.has("break_sound")) {
+        		blockAdded.setBreakSound(OtherSerializers.SoundEventSerializer.deserialize(json, "break_sound"));
+        	}
+        	
+        	if (json.has("hit_sound")) {
+        		blockAdded.setHitSound(OtherSerializers.SoundEventSerializer.deserialize(json, "hit_sound"));
+        	}
+        	
+        	if (json.has("step_sound")) {
+        		blockAdded.setStepSound(OtherSerializers.SoundEventSerializer.deserialize(json, "step_sound"));
+        	}
+        	
+        	if (json.has("fall_sound")) {
+        		blockAdded.setFallSound(OtherSerializers.SoundEventSerializer.deserialize(json, "fall_sound"));
         	}
         }
     }
