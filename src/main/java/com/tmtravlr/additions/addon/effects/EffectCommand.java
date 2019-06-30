@@ -8,6 +8,7 @@ import com.google.gson.JsonSerializationContext;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.lootoverhaul.commands.CommandSenderGeneric;
 
+import net.minecraft.command.CommandSenderWrapper;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
@@ -26,12 +27,13 @@ public class EffectCommand extends Effect {
 
 	public String command = "";
 	public String commandSenderName = "@";
+	public boolean hideFeedback = true;
 	public float chance = 1;
 
 	@Override
 	public void affectEntity(@Nullable Entity cause, Entity entity) {
 		if (entity.world.getMinecraftServer() != null && entity.world.rand.nextFloat() <= this.chance) {
-			entity.world.getMinecraftServer().commandManager.executeCommand(entity, this.command);
+			entity.world.getMinecraftServer().commandManager.executeCommand(CommandSenderWrapper.create(entity).withEntity(entity, entity.getPositionVector()).withSendCommandFeedback(!this.hideFeedback), this.command);
 		}
 	}
 
@@ -62,6 +64,10 @@ public class EffectCommand extends Effect {
 				json.addProperty("command_sender_name", effect.commandSenderName);
 			}
 			
+			if (!effect.hideFeedback) {
+				json.addProperty("hide_feedback", false);
+			}
+			
 			if (effect.chance < 1) {
 				json.addProperty("chance", effect.chance);
 			}
@@ -75,6 +81,7 @@ public class EffectCommand extends Effect {
 			
 			effect.command = JsonUtils.getString(json, "command", "");
 			effect.commandSenderName = JsonUtils.getString(json, "command_sender_name", "@");
+			effect.hideFeedback = JsonUtils.getBoolean(json, "hide_feedback", true);
 			effect.chance = JsonUtils.getFloat(json, "chance", 1);
 			
 			return effect;

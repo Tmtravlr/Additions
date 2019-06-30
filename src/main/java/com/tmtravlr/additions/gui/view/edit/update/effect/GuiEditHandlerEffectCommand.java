@@ -9,6 +9,7 @@ import com.tmtravlr.additions.api.gui.IGuiEffectEditHandler;
 import com.tmtravlr.additions.gui.message.GuiMessageBox;
 import com.tmtravlr.additions.gui.view.components.GuiComponentDisplayText;
 import com.tmtravlr.additions.gui.view.components.IGuiViewComponent;
+import com.tmtravlr.additions.gui.view.components.input.GuiComponentBooleanInput;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentFloatInput;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentStringInput;
 import com.tmtravlr.additions.gui.view.edit.GuiEdit;
@@ -28,6 +29,7 @@ public class GuiEditHandlerEffectCommand implements IGuiEffectEditHandler {
 	private GuiComponentDisplayText description;
 	private GuiComponentStringInput commandInput;
 	private GuiComponentStringInput commandNameInput;
+	private GuiComponentBooleanInput hideFeedbackInput;
 	private GuiComponentFloatInput chanceInput;
 
 	@Override
@@ -49,18 +51,21 @@ public class GuiEditHandlerEffectCommand implements IGuiEffectEditHandler {
 		this.commandNameInput.setInfo(new TextComponentTranslation("gui.edit.effect.command.commandSenderName.info"));
 		this.commandNameInput.setDefaultText(effectCommand != null ? effectCommand.commandSenderName : "@");
 		
+		this.hideFeedbackInput = new GuiComponentBooleanInput(I18n.format("gui.edit.effect.command.hideFeedback.label"), editScreen);
+		this.hideFeedbackInput.setDefaultBoolean(effectCommand != null ? effectCommand.hideFeedback : true);
+		
 		this.chanceInput = new GuiComponentFloatInput(I18n.format("gui.edit.effect.chance.label"), editScreen, false);
 		this.chanceInput.setInfo(new TextComponentTranslation("gui.edit.effect.chance.info"));
 		this.chanceInput.setMinimum(0);
 		this.chanceInput.setMaximum(1);
 		this.chanceInput.setDefaultFloat(effectCommand != null ? effectCommand.chance : 1);
 		
-		return Arrays.asList(this.description, this.commandInput, this.commandNameInput, this.chanceInput);
+		return Arrays.asList(this.description, this.commandInput, this.commandNameInput, this.hideFeedbackInput, this.chanceInput);
 	}
 
 	@Override
 	public Effect createEffect() {
-		if (this.editScreen == null || this.commandInput == null || this.commandNameInput == null || this.chanceInput == null) {
+		if (this.editScreen == null || this.commandInput == null || this.commandNameInput == null || this.hideFeedbackInput  == null || this.chanceInput == null) {
 			return null;
 		}
 		
@@ -73,6 +78,7 @@ public class GuiEditHandlerEffectCommand implements IGuiEffectEditHandler {
 		
 		effect.command = this.commandInput.getText();
 		effect.commandSenderName = this.commandNameInput.getText();
+		effect.hideFeedback = this.hideFeedbackInput.getBoolean();
 		effect.chance = this.chanceInput.getFloat();
 		
 		return effect;

@@ -38,7 +38,7 @@ public class EffectCauseItemInHand extends EffectCauseItem {
 	}
 	
 	public boolean applies(EnumHand hand, ItemStack stack) {
-		return this.itemMatches(stack) && this.handType == HandType.BOTH || hand == EnumHand.MAIN_HAND && this.handType == HandType.MAINHAND || hand == EnumHand.OFF_HAND && this.handType == HandType.OFFHAND;
+		return this.itemMatches(stack) && (this.handType == HandType.BOTH || hand == EnumHand.MAIN_HAND && this.handType == HandType.MAINHAND || hand == EnumHand.OFF_HAND && this.handType == HandType.OFFHAND);
 	}
 
 	public static class Serializer extends EffectCause.Serializer<EffectCauseItemInHand> {

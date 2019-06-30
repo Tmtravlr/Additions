@@ -876,6 +876,7 @@ gui.edit.effect.potion.problem.noCustom.message=You must create a customized pot
 gui.edit.effect.command.command.label=Command
 gui.edit.effect.command.commandSenderName.label=Command Sender Name
 gui.edit.effect.command.commandSenderName.info=Name of the command sender if not run by a mob.
+gui.edit.effect.command.hideFeedback.label=Hide Command Feedback
 gui.edit.effect.command.problem.noCommand.message=You must enter a command!
 
 gui.edit.effect.lootTable.lootTable.label=Loot Table
