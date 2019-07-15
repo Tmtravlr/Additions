@@ -3,7 +3,6 @@ package com.tmtravlr.additions.gui.view.edit.texture;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,10 +11,11 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.ClientConfigLoader;
+import com.tmtravlr.additions.ConfigLoader;
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.items.IItemAdded;
 import com.tmtravlr.additions.gui.message.GuiMessageBox;
-import com.tmtravlr.additions.gui.message.GuiMessageBoxRefreshingResources;
+import com.tmtravlr.additions.gui.message.GuiMessageBoxReloadingResources;
 import com.tmtravlr.additions.gui.message.GuiMessageBoxSelectItemAnimation;
 import com.tmtravlr.additions.gui.message.GuiMessageBoxTwoButton;
 import com.tmtravlr.additions.gui.view.GuiView;
@@ -31,7 +31,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
 
 /**
  * Lets you select a texture for a simple item.
@@ -192,10 +191,10 @@ public class GuiEditItemTexture extends GuiEdit {
 					
 				};
 				
-				if (this.isNew) {
+				if (this.isNew || ConfigLoader.skipReloadingResources.getBoolean()) {
 					this.mc.displayGuiScreen(successScreen);
 				} else {
-					this.mc.displayGuiScreen(new GuiMessageBoxRefreshingResources(successScreen));
+					this.mc.displayGuiScreen(new GuiMessageBoxReloadingResources(successScreen));
 				}
 			} catch (IOException e) {
 				//Unable to load images

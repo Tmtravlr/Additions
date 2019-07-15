@@ -20,7 +20,6 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.GuiScrollingList;
 
 /**
@@ -193,7 +192,6 @@ public class GuiComponentDropdownInput<T> extends Gui implements IGuiViewCompone
 	protected GuiScrollingDropdown createScrollingDropdown(int dropdownHeight, boolean above) {
 		return new GuiScrollingDropdown(this, this.selections, dropdownHeight, above);
 	}
-	
 	
 	/**
 	 * Screen for the dropdown list input. Has a search bar, and a scrolling list of whatever the dropdown displays.

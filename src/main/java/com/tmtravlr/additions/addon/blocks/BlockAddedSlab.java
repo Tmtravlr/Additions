@@ -44,6 +44,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.translation.I18n;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -82,6 +83,7 @@ public class BlockAddedSlab extends BlockSlab implements IBlockAdded {
 	private boolean canPistonsPush = true;
 	private int xpDroppedMin = 0;
 	private int xpDroppedMax = 0;
+	private Boolean droppedFromExplosions;
 	private SoundEvent placeSound = null;
 	private SoundEvent breakSound = null;
 	private SoundEvent hitSound = null;
@@ -224,6 +226,11 @@ public class BlockAddedSlab extends BlockSlab implements IBlockAdded {
 	}
 	
 	@Override
+	public void setDroppedFromExplosions(Boolean droppedFromExplosions) {
+		this.droppedFromExplosions = droppedFromExplosions;
+	}
+	
+	@Override
 	public IItemAddedBlock getItemBlock() {
 		return this.itemBlock;
 	}
@@ -321,6 +328,11 @@ public class BlockAddedSlab extends BlockSlab implements IBlockAdded {
 	@Override
 	public int getXpDroppedMin() {
 		return this.xpDroppedMin;
+	}
+	
+	@Override
+	public Boolean getDroppedFromExplosions() {
+		return this.droppedFromExplosions;
 	}
 	
 	@Override
@@ -506,6 +518,11 @@ public class BlockAddedSlab extends BlockSlab implements IBlockAdded {
 			super.getDrops(drops, blockAccess, pos, state, fortune);
 		}
 	}
+	
+	@Override
+	public boolean canDropFromExplosion(Explosion explosion) {
+        return this.droppedFromExplosions == null || this.droppedFromExplosions;
+    }
 	
 	@Override
 	public IBlockState getStateFromMeta(int meta) {

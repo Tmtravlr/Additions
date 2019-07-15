@@ -2,7 +2,6 @@ package com.tmtravlr.additions.gui.view.edit.item;
 
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.items.ItemAddedClub;
-import com.tmtravlr.additions.addon.items.ItemAddedSword;
 
 import net.minecraft.client.gui.GuiScreen;
 
@@ -44,6 +43,7 @@ public class GuiEditItemClub extends GuiEditItemTool<ItemAddedClub> {
 		
 		this.advancedComponents.add(this.itemTooltipInput);
 		this.advancedComponents.add(this.itemOreDictInput);
+		this.advancedComponents.add(this.itemIsBeaconPaymentInput);
 		this.advancedComponents.add(this.itemBurnTimeInput);
 		this.advancedComponents.add(this.itemContainerInput);
 		this.advancedComponents.add(this.itemApplyVanillaAttributesInput);

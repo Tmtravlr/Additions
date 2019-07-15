@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+import com.tmtravlr.additions.addon.blocks.IBlockAdded;
 import com.tmtravlr.additions.addon.effects.Effect;
 import com.tmtravlr.additions.addon.effects.EffectCancelNormal;
 import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemAttack;
@@ -51,6 +52,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
@@ -290,6 +292,13 @@ public class CommonEventHandler {
 		
 		if (cancelEvent) {
 			event.setCanceled(true);
+		}
+	}
+	
+	@SubscribeEvent(priority = EventPriority.HIGHEST)
+	public static void onBlockExploded(BlockEvent.HarvestDropsEvent event) {
+		if (event.getDropChance() < 1 && event.getDropChance() >= 0 && event.getState().getBlock() instanceof IBlockAdded && Boolean.TRUE.equals(((IBlockAdded)event.getState().getBlock()).getDroppedFromExplosions())) {
+			event.setDropChance(1.0f);
 		}
 	}
 	

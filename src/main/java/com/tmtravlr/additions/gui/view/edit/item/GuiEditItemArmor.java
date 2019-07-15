@@ -94,6 +94,7 @@ public class GuiEditItemArmor extends GuiEditItem<ItemAddedArmor> {
 		
 		this.advancedComponents.add(this.itemTooltipInput);
 		this.advancedComponents.add(this.itemOreDictInput);
+		this.advancedComponents.add(this.itemIsBeaconPaymentInput);
 		this.advancedComponents.add(this.itemBurnTimeInput);
 		this.advancedComponents.add(this.itemContainerInput);
 		this.advancedComponents.add(this.itemApplyVanillaAttributesInput);

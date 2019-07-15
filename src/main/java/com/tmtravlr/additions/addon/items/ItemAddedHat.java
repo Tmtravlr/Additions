@@ -44,6 +44,7 @@ public class ItemAddedHat extends ItemArmor implements IItemAdded {
 	public List<String> oreDictEntries = new ArrayList<>();
 	public boolean shines = false;
 	public int burnTime = -1;
+	public boolean isBeaconPayment = false;
 	public Multimap<EntityEquipmentSlot, AttributeModifier> attributeModifiers = HashMultimap.create();
 
 	public boolean hasScreenOverlay;
@@ -72,6 +73,11 @@ public class ItemAddedHat extends ItemArmor implements IItemAdded {
 	@Override
 	public void setBurnTime(int burnTime) {
 		this.burnTime = burnTime;
+	}
+	
+	@Override
+	public void setIsBeaconPayment(boolean isBeaconPayment) {
+		this.isBeaconPayment = isBeaconPayment;
 	}
 	
 	@Override
@@ -108,6 +114,11 @@ public class ItemAddedHat extends ItemArmor implements IItemAdded {
 	public int getBurnTime() {
 		return this.burnTime;
 	}
+	
+	@Override
+	public boolean getIsBeaconPayment() {
+		return this.isBeaconPayment;
+	}
 
 	@Override
 	public Multimap<EntityEquipmentSlot, AttributeModifier> getAttributeModifiers() {
@@ -129,6 +140,11 @@ public class ItemAddedHat extends ItemArmor implements IItemAdded {
 	public int getItemBurnTime(ItemStack stack) {
 		return this.burnTime;
 	}
+	
+	@Override
+	public boolean isBeaconPayment(ItemStack stack) {
+        return this.isBeaconPayment;
+    }
 
 	@Override
     @SideOnly(Side.CLIENT)
@@ -183,9 +199,9 @@ public class ItemAddedHat extends ItemArmor implements IItemAdded {
 	        Tessellator tessellator = Tessellator.getInstance();
 	        BufferBuilder bufferbuilder = tessellator.getBuffer();
 	        bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-	        bufferbuilder.pos(0.0D, (double)resolution.getScaledHeight(), -90.0D).tex(0.0D, 1.0D).endVertex();
-	        bufferbuilder.pos((double)resolution.getScaledWidth(), (double)resolution.getScaledHeight(), -90.0D).tex(1.0D, 1.0D).endVertex();
-	        bufferbuilder.pos((double)resolution.getScaledWidth(), 0.0D, -90.0D).tex(1.0D, 0.0D).endVertex();
+	        bufferbuilder.pos(0.0D, resolution.getScaledHeight(), -90.0D).tex(0.0D, 1.0D).endVertex();
+	        bufferbuilder.pos(resolution.getScaledWidth(), resolution.getScaledHeight(), -90.0D).tex(1.0D, 1.0D).endVertex();
+	        bufferbuilder.pos(resolution.getScaledWidth(), 0.0D, -90.0D).tex(1.0D, 0.0D).endVertex();
 	        bufferbuilder.pos(0.0D, 0.0D, -90.0D).tex(0.0D, 0.0D).endVertex();
 	        tessellator.draw();
 	        GlStateManager.depthMask(true);

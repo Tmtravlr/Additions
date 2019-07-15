@@ -1,16 +1,5 @@
 package com.tmtravlr.additions.addon.items;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
-import com.tmtravlr.additions.AdditionsMod;
-
-import net.minecraft.item.Item;
-import net.minecraft.util.JsonUtils;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,19 +14,18 @@ import com.google.gson.JsonSerializationContext;
 import com.tmtravlr.additions.AdditionsMod;
 
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemRecord;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -56,6 +44,7 @@ public class ItemAddedRecord extends ItemRecord implements IItemAdded {
 	public List<String> oreDictEntries = new ArrayList<>();
 	public boolean shines = false;
 	public int burnTime = -1;
+	public boolean isBeaconPayment = false;
 	public Multimap<EntityEquipmentSlot, AttributeModifier> attributeModifiers = HashMultimap.create();
 
 	private SoundEvent music;
@@ -108,6 +97,11 @@ public class ItemAddedRecord extends ItemRecord implements IItemAdded {
 	}
 	
 	@Override
+	public void setIsBeaconPayment(boolean isBeaconPayment) {
+		this.isBeaconPayment = isBeaconPayment;
+	}
+	
+	@Override
 	public void setDisplayName(String name) {
 		this.displayName = name;
 	}
@@ -145,6 +139,11 @@ public class ItemAddedRecord extends ItemRecord implements IItemAdded {
 	public int getBurnTime() {
 		return this.burnTime;
 	}
+	
+	@Override
+	public boolean getIsBeaconPayment() {
+		return this.isBeaconPayment;
+	}
 
 	@Override
 	public Multimap<EntityEquipmentSlot, AttributeModifier> getAttributeModifiers() {
@@ -161,6 +160,11 @@ public class ItemAddedRecord extends ItemRecord implements IItemAdded {
 	public int getItemBurnTime(ItemStack stack) {
 		return this.burnTime;
 	}
+	
+	@Override
+	public boolean isBeaconPayment(ItemStack stack) {
+        return this.isBeaconPayment;
+    }
 
 	@Override
     @SideOnly(Side.CLIENT)

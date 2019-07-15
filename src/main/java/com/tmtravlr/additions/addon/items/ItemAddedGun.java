@@ -64,6 +64,7 @@ public class ItemAddedGun extends ItemBow implements IItemAdded {
 	public List<String> oreDictEntries = new ArrayList<>();
 	public boolean shines = false;
 	public int burnTime = -1;
+	public boolean isBeaconPayment = false;
 	public Multimap<EntityEquipmentSlot, AttributeModifier> attributeModifiers = HashMultimap.create();
 	
 	public int enchantability = 1;
@@ -106,6 +107,11 @@ public class ItemAddedGun extends ItemBow implements IItemAdded {
 	public void setBurnTime(int burnTime) {
 		this.burnTime = burnTime;
 	}
+	
+	@Override
+	public void setIsBeaconPayment(boolean isBeaconPayment) {
+		this.isBeaconPayment = isBeaconPayment;
+	}
 
 	@Override
 	public void setAttributeModifiers(Multimap<EntityEquipmentSlot, AttributeModifier> attributeModifierList) {
@@ -136,6 +142,11 @@ public class ItemAddedGun extends ItemBow implements IItemAdded {
 	public int getBurnTime() {
 		return this.burnTime;
 	}
+	
+	@Override
+	public boolean getIsBeaconPayment() {
+		return this.isBeaconPayment;
+	}
 
 	@Override
 	public Multimap<EntityEquipmentSlot, AttributeModifier> getAttributeModifiers() {
@@ -152,6 +163,11 @@ public class ItemAddedGun extends ItemBow implements IItemAdded {
 	public int getItemBurnTime(ItemStack stack) {
 		return this.burnTime;
 	}
+	
+	@Override
+	public boolean isBeaconPayment(ItemStack stack) {
+        return this.isBeaconPayment;
+    }
 
 	@Override
     @SideOnly(Side.CLIENT)

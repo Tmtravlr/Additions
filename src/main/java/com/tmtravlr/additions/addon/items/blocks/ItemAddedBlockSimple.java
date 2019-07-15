@@ -40,6 +40,7 @@ public class ItemAddedBlockSimple extends ItemBlock implements IItemAddedBlock {
 	public List<String> oreDictEntries = new ArrayList<>();
 	public boolean shines = false;
 	public int burnTime = -1;
+	public boolean isBeaconPayment = false;
 	public Multimap<EntityEquipmentSlot, AttributeModifier> attributeModifiers = HashMultimap.create();
 
 	public ItemAddedBlockSimple() {
@@ -69,6 +70,11 @@ public class ItemAddedBlockSimple extends ItemBlock implements IItemAddedBlock {
 	@Override
 	public void setBurnTime(int burnTime) {
 		this.burnTime = burnTime;
+	}
+	
+	@Override
+	public void setIsBeaconPayment(boolean isBeaconPayment) {
+		this.isBeaconPayment = isBeaconPayment;
 	}
 	
 	@Override
@@ -105,6 +111,11 @@ public class ItemAddedBlockSimple extends ItemBlock implements IItemAddedBlock {
 	public int getBurnTime() {
 		return this.burnTime;
 	}
+	
+	@Override
+	public boolean getIsBeaconPayment() {
+		return this.isBeaconPayment;
+	}
 
 	@Override
 	public Multimap<EntityEquipmentSlot, AttributeModifier> getAttributeModifiers() {
@@ -121,6 +132,11 @@ public class ItemAddedBlockSimple extends ItemBlock implements IItemAddedBlock {
 	public int getItemBurnTime(ItemStack stack) {
 		return this.burnTime;
 	}
+	
+	@Override
+	public boolean isBeaconPayment(ItemStack stack) {
+        return this.isBeaconPayment;
+    }
 
 	@Override
     @SideOnly(Side.CLIENT)

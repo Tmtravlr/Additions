@@ -4,8 +4,8 @@ import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.items.ItemAddedShield;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentBooleanInput;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentFloatInput;
-import com.tmtravlr.additions.gui.view.components.input.GuiComponentIntegerInput;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentIngredientOreNBTInput;
+import com.tmtravlr.additions.gui.view.components.input.GuiComponentIntegerInput;
 import com.tmtravlr.additions.gui.view.components.input.dropdown.GuiComponentDropdownInputSoundEvent;
 import com.tmtravlr.additions.gui.view.edit.texture.GuiEditItemTexture;
 import com.tmtravlr.additions.util.models.ItemModelManager;
@@ -141,6 +141,7 @@ public class GuiEditItemShield extends GuiEditItem<ItemAddedShield> {
 		this.advancedComponents.add(this.itemBashHitSoundInput);
 		this.advancedComponents.add(this.itemTooltipInput);
 		this.advancedComponents.add(this.itemOreDictInput);
+		this.advancedComponents.add(this.itemIsBeaconPaymentInput);
 		this.advancedComponents.add(this.itemBurnTimeInput);
 		this.advancedComponents.add(this.itemContainerInput);
 		this.advancedComponents.add(this.itemAttributesInput);

@@ -1,19 +1,9 @@
 package com.tmtravlr.additions.gui.view.edit.item;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.items.ItemAddedArrow;
-import com.tmtravlr.additions.addon.items.ItemAddedThrowable;
-import com.tmtravlr.additions.gui.view.components.input.GuiComponentBooleanInput;
-import com.tmtravlr.additions.gui.view.components.input.GuiComponentFloatInput;
-import com.tmtravlr.additions.gui.view.components.input.dropdown.GuiComponentDropdownInputSoundEvent;
-import com.tmtravlr.additions.gui.view.components.input.suggestion.GuiComponentSuggestionInput;
 
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.init.SoundEvents;
 
 /**
  * Page for adding a new arrow or editing an existing one.
@@ -64,6 +54,7 @@ public class GuiEditItemArrow extends GuiEditItemBaseProjectile<ItemAddedArrow> 
 		this.advancedComponents.add(this.itemHitSoundInput);
 		this.advancedComponents.add(this.itemTooltipInput);
 		this.advancedComponents.add(this.itemOreDictInput);
+		this.advancedComponents.add(this.itemIsBeaconPaymentInput);
 		this.advancedComponents.add(this.itemBurnTimeInput);
 		this.advancedComponents.add(this.itemContainerInput);
 		this.advancedComponents.add(this.itemAttributesInput);

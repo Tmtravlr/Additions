@@ -71,6 +71,8 @@ public interface IBlockAdded {
 	
 	public void setXpDroppedMax(int xpMax);
 	
+	public void setDroppedFromExplosions(Boolean droppedFromExplosions);
+	
 	@Nullable
 	public IItemAddedBlock getItemBlock();
 	
@@ -121,6 +123,8 @@ public interface IBlockAdded {
 	public int getXpDroppedMin();
 	
 	public int getXpDroppedMax();
+	
+	public Boolean getDroppedFromExplosions();
 	
 	public default void registerModels() {
 		AdditionsMod.proxy.registerBlockRender(this.getAsBlock());
@@ -276,6 +280,10 @@ public interface IBlockAdded {
 				json.addProperty("xp_dropped_max", blockAddedObj.getXpDroppedMax());
 			}
 			
+			if (blockAddedObj.getDroppedFromExplosions() != null) {
+				json.addProperty("dropped_from_explosions", blockAddedObj.getDroppedFromExplosions());
+			}
+			
 			return json;
         }
 
@@ -331,6 +339,10 @@ public interface IBlockAdded {
 			blockAdded.setCanPistonsPush(JsonUtils.getBoolean(json, "can_pistons_push", true));
 			blockAdded.setXpDroppedMin(JsonUtils.getInt(json, "xp_dropped_min", 0));
 			blockAdded.setXpDroppedMax(JsonUtils.getInt(json, "xp_dropped_max", 0));
+			
+			if (json.has("dropped_by_explosions")) {
+				blockAdded.setDroppedFromExplosions(JsonUtils.getBoolean(json, "dropped_by_explosions"));
+			}
         	
         	return blockAdded;
         }

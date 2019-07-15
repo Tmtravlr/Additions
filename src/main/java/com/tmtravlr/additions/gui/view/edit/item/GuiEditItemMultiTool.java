@@ -1,16 +1,14 @@
 package com.tmtravlr.additions.gui.view.edit.item;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.items.ItemAddedMultiTool;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentFloatInput;
-import com.tmtravlr.additions.gui.view.components.input.GuiComponentIntegerInput;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentIngredientOreNBTInput;
+import com.tmtravlr.additions.gui.view.components.input.GuiComponentIntegerInput;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentListInput;
-import com.tmtravlr.additions.gui.view.components.input.suggestion.GuiComponentSuggestionInput;
 import com.tmtravlr.additions.gui.view.components.input.suggestion.GuiComponentSuggestionInputToolType;
 import com.tmtravlr.additions.gui.view.edit.texture.GuiEditItemTexture;
 import com.tmtravlr.additions.util.models.ItemModelManager;
@@ -139,6 +137,7 @@ public class GuiEditItemMultiTool extends GuiEditItem<ItemAddedMultiTool> {
 		this.advancedComponents.add(this.itemHarvestDepthInput);
 		this.advancedComponents.add(this.itemTooltipInput);
 		this.advancedComponents.add(this.itemOreDictInput);
+		this.advancedComponents.add(this.itemIsBeaconPaymentInput);
 		this.advancedComponents.add(this.itemBurnTimeInput);
 		this.advancedComponents.add(this.itemContainerInput);
 		this.advancedComponents.add(this.itemAttributesInput);

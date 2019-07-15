@@ -45,6 +45,7 @@ public abstract class GuiEditBlockDrop extends GuiEditUpdate {
 	protected GuiComponentBooleanInput dropSilkTouchableInput;
 	protected GuiComponentIntegerInput dropXpMinInput;
 	protected GuiComponentIntegerInput dropXpMaxInput;
+	protected GuiComponentDropdownInput<ExplosionDropTypeSelection> explosionDropTypeInput;
 
 	public GuiEditBlockDrop(GuiScreen parentScreen, LootTableAdded lootTable, IBlockAdded block, Addon addon) {
 		super(parentScreen, I18n.format("gui.edit.blockDrop.title"));
@@ -101,6 +102,11 @@ public abstract class GuiEditBlockDrop extends GuiEditUpdate {
 		this.dropXpMaxInput.setDefaultInteger(this.block.getXpDroppedMax());
 		this.dropXpMaxInput.setHidden(true);
 		
+		this.explosionDropTypeInput = new GuiComponentDropdownInput<ExplosionDropTypeSelection>(I18n.format("gui.edit.block.drop.explosion.label"), this);
+		this.explosionDropTypeInput.setSelections(ExplosionDropTypeSelection.values());
+		this.explosionDropTypeInput.setDefaultSelected(ExplosionDropTypeSelection.getFromBlock(this.block));
+		this.explosionDropTypeInput.disallowDelete();
+		
 		this.dropTypeInput = new GuiComponentDropdownInput<DropTypeSelection>(I18n.format("gui.edit.blockDrop.type.label"), this) {
 			
 			@Override
@@ -133,6 +139,7 @@ public abstract class GuiEditBlockDrop extends GuiEditUpdate {
 		this.components.add(this.dropSilkTouchableInput);
 		this.components.add(this.dropXpMinInput);
 		this.components.add(this.dropXpMaxInput);
+		this.components.add(this.explosionDropTypeInput);
 	}
 
 	@Override
@@ -144,6 +151,7 @@ public abstract class GuiEditBlockDrop extends GuiEditUpdate {
 		this.updatePresetInLootTable();
 		this.block.setXpDroppedMin(this.dropXpMinInput.getInteger());
 		this.block.setXpDroppedMax(this.dropXpMaxInput.getInteger());
+		this.explosionDropTypeInput.getSelected().setToBlock(this.block);
         
         if (this.parentScreen instanceof GuiView) {
         	((GuiView) this.parentScreen).refreshView();
@@ -159,22 +167,27 @@ public abstract class GuiEditBlockDrop extends GuiEditUpdate {
 	protected void handleDropTypeSelected(DropTypeSelection oldSelection, DropTypeSelection newSelection) {
 		if (oldSelection == DropTypeSelection.DROP_TYPE_NOTHING) {
 			this.dropMessageNothing.setHidden(true);
-			this.dropXpMinInput.setHidden(true);
-			this.dropXpMaxInput.setHidden(true);
 		} else if (oldSelection == DropTypeSelection.DROP_TYPE_CUSTOM) {
 			this.dropMessageCustom.setHidden(true);
 		} else if (oldSelection == DropTypeSelection.DROP_TYPE_ITSELF) {
 			this.dropMessageItself.setHidden(true);
 			this.dropXpMinInput.setHidden(true);
 			this.dropXpMaxInput.setHidden(true);
+			this.explosionDropTypeInput.setHidden(true);
 		} else if (oldSelection == DropTypeSelection.DROP_TYPE_LOOT_TABLE) {
 			this.dropOtherLootTableInput.setHidden(true);
+			this.dropXpMinInput.setHidden(true);
+			this.dropXpMaxInput.setHidden(true);
+			this.explosionDropTypeInput.setHidden(true);
 		} else if (oldSelection == DropTypeSelection.DROP_TYPE_ITEM) {
 			this.dropItemInput.setHidden(true);
 			this.dropItemMinInput.setHidden(true);
 			this.dropItemMaxInput.setHidden(true);
 			this.dropFortunableInput.setHidden(true);
 			this.dropSilkTouchableInput.setHidden(true);
+			this.dropXpMinInput.setHidden(true);
+			this.dropXpMaxInput.setHidden(true);
+			this.explosionDropTypeInput.setHidden(true);
 		}
 		
 		if (newSelection == DropTypeSelection.DROP_TYPE_NOTHING) {
@@ -183,12 +196,15 @@ public abstract class GuiEditBlockDrop extends GuiEditUpdate {
 			this.dropMessageCustom.setHidden(false);
 			this.dropXpMinInput.setHidden(false);
 			this.dropXpMaxInput.setHidden(false);
+			this.explosionDropTypeInput.setHidden(false);
 		} else if (newSelection == DropTypeSelection.DROP_TYPE_ITSELF) {
 			this.dropMessageItself.setHidden(false);
+			this.explosionDropTypeInput.setHidden(false);
 		} else if (newSelection == DropTypeSelection.DROP_TYPE_LOOT_TABLE) {
 			this.dropOtherLootTableInput.setHidden(false);
 			this.dropXpMinInput.setHidden(false);
 			this.dropXpMaxInput.setHidden(false);
+			this.explosionDropTypeInput.setHidden(false);
 		} else if (newSelection == DropTypeSelection.DROP_TYPE_ITEM) {
 			this.dropItemInput.setHidden(false);
 			this.dropItemMinInput.setHidden(false);
@@ -197,6 +213,7 @@ public abstract class GuiEditBlockDrop extends GuiEditUpdate {
 			this.dropSilkTouchableInput.setHidden(false);
 			this.dropXpMinInput.setHidden(false);
 			this.dropXpMaxInput.setHidden(false);
+			this.explosionDropTypeInput.setHidden(false);
 		}
 	}
 	
@@ -281,6 +298,31 @@ public abstract class GuiEditBlockDrop extends GuiEditUpdate {
 		
 		public String getLabel() {
 			return this.label;
+		}
+	}
+	
+	protected enum ExplosionDropTypeSelection {
+		EXPLOSION_DROP_TYPE_NORMAL(I18n.format("gui.edit.block.drop.explosion.option.normal")),
+		EXPLOSION_DROP_TYPE_NEVER(I18n.format("gui.edit.block.drop.explosion.option.never")),
+		EXPLOSION_DROP_TYPE_ALWAYS(I18n.format("gui.edit.block.drop.explosion.option.always"));
+		
+		private String label;
+		
+		private ExplosionDropTypeSelection(String label) {
+			this.label = label;
+		}
+		
+		@Override
+		public String toString() {
+			return this.label;
+		}
+		
+		public void setToBlock(IBlockAdded block) {
+			block.setDroppedFromExplosions(this == EXPLOSION_DROP_TYPE_NORMAL ? null : this == EXPLOSION_DROP_TYPE_ALWAYS ? true : false);
+		}
+		
+		public static ExplosionDropTypeSelection getFromBlock(IBlockAdded block) {
+			return block.getDroppedFromExplosions() == null ? EXPLOSION_DROP_TYPE_NORMAL : block.getDroppedFromExplosions() ? EXPLOSION_DROP_TYPE_ALWAYS : EXPLOSION_DROP_TYPE_NEVER;
 		}
 	}
 

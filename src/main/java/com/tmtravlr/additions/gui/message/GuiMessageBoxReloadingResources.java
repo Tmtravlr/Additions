@@ -13,11 +13,11 @@ import net.minecraft.util.text.TextComponentTranslation;
  * @author Tmtravlr (Rebeca Rey)
  * @since September 2017 
  */
-public class GuiMessageBoxRefreshingResources extends GuiMessageBox {
+public class GuiMessageBoxReloadingResources extends GuiMessageBox {
 	
 	private int delay = 20;
 
-	public GuiMessageBoxRefreshingResources(GuiScreen parentScreen) {
+	public GuiMessageBoxReloadingResources(GuiScreen parentScreen) {
 		super(parentScreen, I18n.format("gui.popup.reloadResources.title"), new TextComponentTranslation("gui.popup.reloadResources.message"), "");
 	}
 

@@ -1,7 +1,6 @@
 package com.tmtravlr.additions.gui.view.edit.item;
 
 import com.tmtravlr.additions.addon.Addon;
-import com.tmtravlr.additions.addon.items.ItemAddedPickaxe;
 import com.tmtravlr.additions.addon.items.ItemAddedShovel;
 
 import net.minecraft.client.gui.GuiScreen;
@@ -44,6 +43,7 @@ public class GuiEditItemShovel extends GuiEditItemTool<ItemAddedShovel> {
 		
 		this.advancedComponents.add(this.itemTooltipInput);
 		this.advancedComponents.add(this.itemOreDictInput);
+		this.advancedComponents.add(this.itemIsBeaconPaymentInput);
 		this.advancedComponents.add(this.itemBurnTimeInput);
 		this.advancedComponents.add(this.itemContainerInput);
 		this.advancedComponents.add(this.itemApplyVanillaAttributesInput);

@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.lwjgl.input.Mouse;
 
+import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.gui.view.components.GuiComponentShowAdvanced;
 import com.tmtravlr.additions.gui.view.components.IGuiViewComponent;
 import com.tmtravlr.additions.util.client.CommonGuiUtils;
@@ -144,17 +145,17 @@ public abstract class GuiView extends GuiScreen {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         
         bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-        bufferbuilder.pos(0.0D, 30.0D, 0.0D).tex(0.0D, (double)(30.0F / 32.0F)).color(64, 64, 64, 255).endVertex();
-        bufferbuilder.pos((double)this.width, 30.0D, 0.0D).tex((double)((float)this.width / 32.0F), (double)(30.0F / 32.0F)).color(64, 64, 64, 255).endVertex();
-        bufferbuilder.pos((double)this.width, 0.0D, 0.0D).tex((double)((float)this.width / 32.0F), 0.0D).color(64, 64, 64, 255).endVertex();
+        bufferbuilder.pos(0.0D, 30.0D, 0.0D).tex(0.0D, 30.0F / 32.0F).color(64, 64, 64, 255).endVertex();
+        bufferbuilder.pos(this.width, 30.0D, 0.0D).tex(this.width / 32.0F, 30.0F / 32.0F).color(64, 64, 64, 255).endVertex();
+        bufferbuilder.pos(this.width, 0.0D, 0.0D).tex(this.width / 32.0F, 0.0D).color(64, 64, 64, 255).endVertex();
         bufferbuilder.pos(0.0D, 0.0D, 0.0D).tex(0.0D, 0.0D).color(64, 64, 64, 255).endVertex();
         tessellator.draw();
         
         bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-        bufferbuilder.pos(0.0D, (double)this.height, 0.0D).tex(0.0D, (double)(40.0F / 32.0F)).color(64, 64, 64, 255).endVertex();
-        bufferbuilder.pos((double)this.width, (double)this.height, 0.0D).tex((double)((float)this.width / 32.0F), (double)(40.0F / 32.0F)).color(64, 64, 64, 255).endVertex();
-        bufferbuilder.pos((double)this.width, (double)this.height - 40.0D, 0.0D).tex((double)((float)this.width / 32.0F), 0.0D).color(64, 64, 64, 255).endVertex();
-        bufferbuilder.pos(0.0D, (double)this.height - 40.0D, 0.0D).tex(0.0D, 0.0D).color(64, 64, 64, 255).endVertex();
+        bufferbuilder.pos(0.0D, this.height, 0.0D).tex(0.0D, 40.0F / 32.0F).color(64, 64, 64, 255).endVertex();
+        bufferbuilder.pos(this.width, this.height, 0.0D).tex(this.width / 32.0F, 40.0F / 32.0F).color(64, 64, 64, 255).endVertex();
+        bufferbuilder.pos(this.width, this.height - 40.0D, 0.0D).tex(this.width / 32.0F, 0.0D).color(64, 64, 64, 255).endVertex();
+        bufferbuilder.pos(0.0D, this.height - 40.0D, 0.0D).tex(0.0D, 0.0D).color(64, 64, 64, 255).endVertex();
         tessellator.draw();
     }
 	
@@ -204,21 +205,25 @@ public abstract class GuiView extends GuiScreen {
     }
     
     public void renderItemStack(ItemStack stack, int x, int y, int mouseX, int mouseY, boolean showTooltip, boolean showOverlay) {
-        RenderHelper.enableGUIStandardItemLighting();
-        GlStateManager.enableLighting();
-        GlStateManager.enableDepth();
-        GlStateManager.enableRescaleNormal();
-    	this.mc.getRenderItem().renderItemAndEffectIntoGUI((EntityLivingBase)null, stack, x, y);
-    	if (showOverlay) {
-            this.mc.getRenderItem().renderItemOverlays(this.fontRenderer, stack, x, y);
+    	try {
+	        RenderHelper.enableGUIStandardItemLighting();
+	        GlStateManager.enableLighting();
+	        GlStateManager.enableDepth();
+	        GlStateManager.enableRescaleNormal();
+	    	this.mc.getRenderItem().renderItemAndEffectIntoGUI((EntityLivingBase)null, stack, x, y);
+	    	if (showOverlay) {
+	            this.mc.getRenderItem().renderItemOverlays(this.fontRenderer, stack, x, y);
+	    	}
+	    	if (showTooltip && CommonGuiUtils.isMouseWithin(mouseX, mouseY, x, y, 16, 16)) {
+	    		this.renderItemStackTooltip(stack, mouseX, mouseY);
+	    	}
+			RenderHelper.disableStandardItemLighting();
+	        GlStateManager.disableRescaleNormal();
+	        GlStateManager.disableLighting();
+	        GlStateManager.disableDepth();
+    	} catch (Exception e) {
+    		AdditionsMod.logger.warn("Caught exception while trying to render an item stack: " + stack, e);
     	}
-    	if (showTooltip && CommonGuiUtils.isMouseWithin(mouseX, mouseY, x, y, 16, 16)) {
-    		this.renderItemStackTooltip(stack, mouseX, mouseY);
-    	}
-		RenderHelper.disableStandardItemLighting();
-        GlStateManager.disableRescaleNormal();
-        GlStateManager.disableLighting();
-        GlStateManager.disableDepth();
     }
     
     public void renderItemStackTooltip(ItemStack stack, int x, int y) {

@@ -1,6 +1,5 @@
 package com.tmtravlr.additions.addon.items;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,16 +9,11 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.effects.Effect;
-import com.tmtravlr.additions.addon.effects.EffectManager;
-import com.tmtravlr.additions.addon.recipes.IngredientOreNBT;
 import com.tmtravlr.additions.type.AdditionTypeEffect;
-import com.tmtravlr.additions.util.OtherSerializers;
 
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
@@ -54,6 +48,7 @@ public class ItemAddedFood extends ItemFood implements IItemAdded {
 	public List<String> oreDictEntries = new ArrayList<>();
 	public boolean shines = false;
 	public int burnTime = -1;
+	public boolean isBeaconPayment = false;
 	public Multimap<EntityEquipmentSlot, AttributeModifier> attributeModifiers = HashMultimap.create();
 	
 	public int eatTime = 32;
@@ -124,6 +119,11 @@ public class ItemAddedFood extends ItemFood implements IItemAdded {
 	}
 	
 	@Override
+	public void setIsBeaconPayment(boolean isBeaconPayment) {
+		this.isBeaconPayment = isBeaconPayment;
+	}
+	
+	@Override
 	public void setDisplayName(String name) {
 		this.displayName = name;
 	}
@@ -157,6 +157,11 @@ public class ItemAddedFood extends ItemFood implements IItemAdded {
 	public int getBurnTime() {
 		return this.burnTime;
 	}
+	
+	@Override
+	public boolean getIsBeaconPayment() {
+		return this.isBeaconPayment;
+	}
 
 	@Override
 	public Multimap<EntityEquipmentSlot, AttributeModifier> getAttributeModifiers() {
@@ -178,6 +183,11 @@ public class ItemAddedFood extends ItemFood implements IItemAdded {
 	public int getItemBurnTime(ItemStack stack) {
 		return this.burnTime;
 	}
+	
+	@Override
+	public boolean isBeaconPayment(ItemStack stack) {
+        return this.isBeaconPayment;
+    }
 
 	@Override
     @SideOnly(Side.CLIENT)

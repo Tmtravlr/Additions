@@ -73,6 +73,7 @@ public class BlockAddedStairs extends BlockStairs implements IBlockAdded {
 	private boolean canPistonsPush = true;
 	private int xpDroppedMin = 0;
 	private int xpDroppedMax = 0;
+	private Boolean droppedFromExplosions;
 	private SoundEvent placeSound = null;
 	private SoundEvent breakSound = null;
 	private SoundEvent hitSound = null;
@@ -213,6 +214,11 @@ public class BlockAddedStairs extends BlockStairs implements IBlockAdded {
 	}
 	
 	@Override
+	public void setDroppedFromExplosions(Boolean droppedFromExplosions) {
+		this.droppedFromExplosions = droppedFromExplosions;
+	}
+	
+	@Override
 	public IItemAddedBlock getItemBlock() {
 		return this.itemBlock;
 	}
@@ -310,6 +316,11 @@ public class BlockAddedStairs extends BlockStairs implements IBlockAdded {
 	@Override
 	public int getXpDroppedMin() {
 		return this.xpDroppedMin;
+	}
+	
+	@Override
+	public Boolean getDroppedFromExplosions() {
+		return this.droppedFromExplosions;
 	}
 	
 	@Override
@@ -487,6 +498,11 @@ public class BlockAddedStairs extends BlockStairs implements IBlockAdded {
 			super.getDrops(drops, blockAccess, pos, state, fortune);
 		}
 	}
+	
+	@Override
+	public boolean canDropFromExplosion(Explosion explosion) {
+        return this.droppedFromExplosions == null || this.droppedFromExplosions;
+    }
 	
     @Override
 	protected BlockStateContainer createBlockState() {

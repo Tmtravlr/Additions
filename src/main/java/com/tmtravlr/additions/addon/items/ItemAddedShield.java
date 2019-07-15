@@ -64,6 +64,7 @@ public class ItemAddedShield extends ItemShield implements IItemAdded {
 	public List<String> oreDictEntries = new ArrayList<>();
 	public boolean shines = false;
 	public int burnTime = -1;
+	public boolean isBeaconPayment = false;
 	public Multimap<EntityEquipmentSlot, AttributeModifier> attributeModifiers = HashMultimap.create();
 	
 	public int enchantability = 1;
@@ -92,6 +93,11 @@ public class ItemAddedShield extends ItemShield implements IItemAdded {
 	@Override
 	public void setBurnTime(int burnTime) {
 		this.burnTime = burnTime;
+	}
+	
+	@Override
+	public void setIsBeaconPayment(boolean isBeaconPayment) {
+		this.isBeaconPayment = isBeaconPayment;
 	}
 	
 	@Override
@@ -128,6 +134,11 @@ public class ItemAddedShield extends ItemShield implements IItemAdded {
 	public int getBurnTime() {
 		return this.burnTime;
 	}
+	
+	@Override
+	public boolean getIsBeaconPayment() {
+		return this.isBeaconPayment;
+	}
 
 	@Override
 	public Multimap<EntityEquipmentSlot, AttributeModifier> getAttributeModifiers() {
@@ -144,6 +155,11 @@ public class ItemAddedShield extends ItemShield implements IItemAdded {
 	public int getItemBurnTime(ItemStack stack) {
 		return this.burnTime;
 	}
+	
+	@Override
+	public boolean isBeaconPayment(ItemStack stack) {
+        return this.isBeaconPayment;
+    }
 
 	@Override
     @SideOnly(Side.CLIENT)
@@ -224,7 +240,7 @@ public class ItemAddedShield extends ItemShield implements IItemAdded {
 	
 	public float getTotalBashSpeed(ItemStack stack) {
 		int efficiency = Math.min(EnchantmentHelper.getEnchantmentLevel(Enchantments.EFFICIENCY, stack), 5);
-		return ((float)this.bashCooldown - ((float)(efficiency*this.bashCooldown)*this.efficiencyMultiplier / 5f));
+		return (this.bashCooldown - (efficiency*this.bashCooldown*this.efficiencyMultiplier / 5f));
 	}
 	
 	public static boolean canEntityBashAttack(EntityLivingBase attacker) {
@@ -306,9 +322,9 @@ public class ItemAddedShield extends ItemShield implements IItemAdded {
         		
         		if (knockback > 0) {
                     if (attacked instanceof EntityLivingBase) {
-                        ((EntityLivingBase)attacked).knockBack(attacker, (float)knockback * 0.5F, (double)MathHelper.sin(attacker.rotationYaw * 0.017453292F), (double)(-MathHelper.cos(attacker.rotationYaw * 0.017453292F)));
+                        ((EntityLivingBase)attacked).knockBack(attacker, knockback * 0.5F, MathHelper.sin(attacker.rotationYaw * 0.017453292F), (-MathHelper.cos(attacker.rotationYaw * 0.017453292F)));
                     } else {
-                    	attacked.addVelocity((double)(-MathHelper.sin(attacker.rotationYaw * 0.017453292F) * (float)knockback * 0.5F), 0.1D, (double)(MathHelper.cos(attacker.rotationYaw * 0.017453292F) * (float)knockback * 0.5F));
+                    	attacked.addVelocity(-MathHelper.sin(attacker.rotationYaw * 0.017453292F) * knockback * 0.5F, 0.1D, MathHelper.cos(attacker.rotationYaw * 0.017453292F) * knockback * 0.5F);
                     }
 
                     attacker.motionX *= 0.6D;
@@ -369,8 +385,8 @@ public class ItemAddedShield extends ItemShield implements IItemAdded {
 
                     if (attacker.world instanceof WorldServer && healthLost > 2.0F)
                     {
-                        int heartsLost = (int)((double)healthLost * 0.5D);
-                        ((WorldServer)attacker.world).spawnParticle(EnumParticleTypes.DAMAGE_INDICATOR, attacked.posX, attacked.posY + (double)(attacked.height * 0.5F), attacked.posZ, heartsLost, 0.1D, 0.0D, 0.1D, 0.2D);
+                        int heartsLost = (int)(healthLost * 0.5D);
+                        ((WorldServer)attacker.world).spawnParticle(EnumParticleTypes.DAMAGE_INDICATOR, attacked.posX, attacked.posY + attacked.height * 0.5F, attacked.posZ, heartsLost, 0.1D, 0.0D, 0.1D, 0.2D);
                     }
                 }
 

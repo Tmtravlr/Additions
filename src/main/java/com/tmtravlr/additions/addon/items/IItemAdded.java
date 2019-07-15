@@ -34,6 +34,8 @@ public interface IItemAdded {
 	
 	public void setBurnTime(int burnTime);
 	
+	public void setIsBeaconPayment(boolean isBeaconPayment);
+	
 	public void setAttributeModifiers(Multimap<EntityEquipmentSlot, AttributeModifier> attributeModifierList);
 	
 	public List<String> getTooltip();
@@ -45,6 +47,8 @@ public interface IItemAdded {
 	public boolean getAlwaysShines();
 	
 	public int getBurnTime();
+	
+	public boolean getIsBeaconPayment();
 	
 	public Multimap<EntityEquipmentSlot, AttributeModifier> getAttributeModifiers();
 
@@ -112,15 +116,19 @@ public interface IItemAdded {
 				json.addProperty("shines", true);
 			}
 			
-			if(itemAddedObj.getBurnTime() != -1) {
+			if (itemAddedObj.getBurnTime() != -1) {
 				json.addProperty("burn_time", itemAddedObj.getBurnTime());
+			}
+			
+			if (itemAddedObj.getIsBeaconPayment()) {
+				json.addProperty("is_beacon_payment", true);
 			}
 			
 			if (!itemAddedObj.getTooltip().isEmpty()) {
 				json.add("tooltip", OtherSerializers.StringListSerializer.serialize(itemAddedObj.getTooltip()));
 			}
 			
-			if(itemAdded.getContainerItem() != null) {
+			if (itemAdded.getContainerItem() != null) {
 				json.addProperty("container", Item.REGISTRY.getNameForObject(itemAdded.getContainerItem()).toString());
 			}
 			
@@ -146,6 +154,7 @@ public interface IItemAdded {
         	itemAdded.setDisplayName(JsonUtils.getString(json, "name"));
         	itemAdded.setAlwaysShines(JsonUtils.getBoolean(json, "shines", false));
         	itemAdded.setBurnTime(JsonUtils.getInt(json, "burn_time", -1));
+        	itemAdded.setIsBeaconPayment(JsonUtils.getBoolean(json, "is_beacon_payment", false));
         	
         	if (json.has("tooltip")) {
         		itemAdded.setTooltip(OtherSerializers.StringListSerializer.deserialize(json.get("tooltip"), "tooltip"));

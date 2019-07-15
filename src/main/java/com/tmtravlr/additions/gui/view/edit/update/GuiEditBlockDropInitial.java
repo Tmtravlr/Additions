@@ -5,7 +5,6 @@ import com.tmtravlr.additions.addon.blocks.IBlockAdded;
 import com.tmtravlr.additions.addon.loottables.LootTableAdded;
 import com.tmtravlr.additions.addon.loottables.LootTablePreset;
 import com.tmtravlr.additions.gui.message.GuiMessageBoxTwoButton;
-import com.tmtravlr.additions.gui.view.components.input.GuiComponentBlockDropInput;
 import com.tmtravlr.additions.gui.view.edit.GuiEdit;
 import com.tmtravlr.additions.type.AdditionTypeBlock;
 import com.tmtravlr.additions.type.AdditionTypeLootTable;

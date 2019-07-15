@@ -41,6 +41,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.translation.I18n;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -71,6 +72,12 @@ public class BlockAddedFalling extends BlockFalling implements IBlockAdded, IBlo
 	private boolean canPistonsPush = true;
 	private int xpDroppedMin = 0;
 	private int xpDroppedMax = 0;
+	private Boolean droppedFromExplosions;
+	private SoundEvent placeSound = null;
+	private SoundEvent breakSound = null;
+	private SoundEvent hitSound = null;
+	private SoundEvent stepSound = null;
+	private SoundEvent fallSound = null;
 	private boolean hasCollisionBox = true;
 	private boolean sameCollisionBoundingBox = true;
 	private float boundingBoxMinX = 0;
@@ -85,11 +92,6 @@ public class BlockAddedFalling extends BlockFalling implements IBlockAdded, IBlo
 	private float collisionBoxMaxX = 1;
 	private float collisionBoxMaxY = 1;
 	private float collisionBoxMaxZ = 1;
-	private SoundEvent placeSound = null;
-	private SoundEvent breakSound = null;
-	private SoundEvent hitSound = null;
-	private SoundEvent stepSound = null;
-	private SoundEvent fallSound = null;
 
 	public BlockAddedFalling() {
 		super(Material.ROCK);
@@ -222,6 +224,11 @@ public class BlockAddedFalling extends BlockFalling implements IBlockAdded, IBlo
 	@Override
 	public void setXpDroppedMax(int xpDroppedMax) {
 		this.xpDroppedMax = xpDroppedMax;
+	}
+	
+	@Override
+	public void setDroppedFromExplosions(Boolean droppedFromExplosions) {
+		this.droppedFromExplosions = droppedFromExplosions;
 	}
 	
 	@Override
@@ -392,6 +399,11 @@ public class BlockAddedFalling extends BlockFalling implements IBlockAdded, IBlo
 	@Override
 	public int getXpDroppedMin() {
 		return this.xpDroppedMin;
+	}
+	
+	@Override
+	public Boolean getDroppedFromExplosions() {
+		return this.droppedFromExplosions;
 	}
 	
 	@Override
@@ -709,6 +721,11 @@ public class BlockAddedFalling extends BlockFalling implements IBlockAdded, IBlo
 			super.getDrops(drops, blockAccess, pos, state, fortune);
 		}
 	}
+	
+	@Override
+	public boolean canDropFromExplosion(Explosion explosion) {
+        return this.droppedFromExplosions == null || this.droppedFromExplosions;
+    }
 	
     @Override
 	protected BlockStateContainer createBlockState() {

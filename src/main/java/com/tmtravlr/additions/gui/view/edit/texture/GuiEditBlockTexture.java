@@ -9,10 +9,11 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.ClientConfigLoader;
+import com.tmtravlr.additions.ConfigLoader;
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.blocks.IBlockAdded;
 import com.tmtravlr.additions.gui.message.GuiMessageBox;
-import com.tmtravlr.additions.gui.message.GuiMessageBoxRefreshingResources;
+import com.tmtravlr.additions.gui.message.GuiMessageBoxReloadingResources;
 import com.tmtravlr.additions.gui.message.GuiMessageBoxSelectBlockAnimation;
 import com.tmtravlr.additions.gui.message.GuiMessageBoxTwoButton;
 import com.tmtravlr.additions.gui.view.GuiView;
@@ -152,10 +153,11 @@ public class GuiEditBlockTexture extends GuiEdit {
 					}
 					
 				};
-				if (this.isNew) {
+				
+				if (this.isNew || ConfigLoader.skipReloadingResources.getBoolean()) {
 					this.mc.displayGuiScreen(successScreen);
 				} else {
-					this.mc.displayGuiScreen(new GuiMessageBoxRefreshingResources(successScreen));
+					this.mc.displayGuiScreen(new GuiMessageBoxReloadingResources(successScreen));
 				}
 			} catch (IOException e) {
 				//Unable to load images

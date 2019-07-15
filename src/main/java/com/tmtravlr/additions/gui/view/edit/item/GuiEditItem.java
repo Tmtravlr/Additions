@@ -1,11 +1,8 @@
 package com.tmtravlr.additions.gui.view.edit.item;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import com.google.common.base.Predicate;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.tmtravlr.additions.AdditionsMod;
@@ -13,7 +10,6 @@ import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.items.IItemAdded;
 import com.tmtravlr.additions.gui.message.GuiMessageBox;
 import com.tmtravlr.additions.gui.message.GuiMessageBoxNeedsRestart;
-import com.tmtravlr.additions.gui.message.GuiMessageBoxTwoButton;
 import com.tmtravlr.additions.gui.view.GuiView;
 import com.tmtravlr.additions.gui.view.components.GuiComponentButton;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentAttributeModifierInput;
@@ -22,7 +18,6 @@ import com.tmtravlr.additions.gui.view.components.input.GuiComponentIntegerInput
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentListInput;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentStringInput;
 import com.tmtravlr.additions.gui.view.components.input.dropdown.GuiComponentDropdownInputItem;
-import com.tmtravlr.additions.gui.view.components.input.suggestion.GuiComponentSuggestionInput;
 import com.tmtravlr.additions.gui.view.components.input.suggestion.GuiComponentSuggestionInputOreDict;
 import com.tmtravlr.additions.gui.view.edit.GuiEdit;
 import com.tmtravlr.additions.gui.view.edit.texture.GuiEditItemTexture;
@@ -33,7 +28,6 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
@@ -59,6 +53,7 @@ public abstract class GuiEditItem<T extends IItemAdded> extends GuiEdit {
     protected GuiComponentIntegerInput itemStackSizeInput;
     protected GuiComponentBooleanInput itemShinesInput;
     protected GuiComponentIntegerInput itemBurnTimeInput;
+    protected GuiComponentBooleanInput itemIsBeaconPaymentInput;
     protected GuiComponentListInput<GuiComponentStringInput> itemTooltipInput;
 	protected GuiComponentButton itemTextureButton;
 	protected GuiComponentListInput<GuiComponentSuggestionInputOreDict> itemOreDictInput;
@@ -105,6 +100,9 @@ public abstract class GuiEditItem<T extends IItemAdded> extends GuiEdit {
 		this.itemBurnTimeInput.setMaximum(Integer.MAX_VALUE);
 		this.itemBurnTimeInput.setInfo(new TextComponentTranslation("gui.edit.item.burnTime.info"));
 		this.itemBurnTimeInput.setDefaultInteger(Math.max(this.item.getBurnTime(), 0));
+		
+		this.itemIsBeaconPaymentInput = new GuiComponentBooleanInput(I18n.format("gui.edit.item.isBeaconPayment.label"), this);
+		this.itemIsBeaconPaymentInput.setDefaultBoolean(this.item.getIsBeaconPayment());
 		
 		this.itemTooltipInput = new GuiComponentListInput<GuiComponentStringInput>(I18n.format("gui.edit.item.itemTooltip.label"), this) {
 
@@ -185,6 +183,7 @@ public abstract class GuiEditItem<T extends IItemAdded> extends GuiEdit {
 		this.item.getAsItem().setMaxStackSize(this.itemStackSizeInput.getInteger());
 		this.item.setAlwaysShines(this.itemShinesInput.getBoolean());
 		this.item.setBurnTime(this.itemBurnTimeInput.getInteger() == 0 ? -1 : this.itemBurnTimeInput.getInteger());
+		this.item.setIsBeaconPayment(this.itemIsBeaconPaymentInput.getBoolean());
 		
 		List<String> tooltips = new ArrayList<>();
 		this.itemTooltipInput.getComponents().forEach(stringInput -> tooltips.add(stringInput.getText()));
@@ -245,6 +244,7 @@ public abstract class GuiEditItem<T extends IItemAdded> extends GuiEdit {
 		this.itemStackSizeInput.setDefaultInteger(this.copyFrom.getAsItem().getItemStackLimit());
 		this.itemShinesInput.setDefaultBoolean(this.copyFrom.getAlwaysShines());
 		this.itemBurnTimeInput.setDefaultInteger(Math.max(this.copyFrom.getBurnTime(), 0));
+		this.itemIsBeaconPaymentInput.setDefaultBoolean(this.copyFrom.getIsBeaconPayment());
 		
 		this.itemTooltipInput.removeAllComponents();
 		this.copyFrom.getTooltip().forEach(toAdd -> {

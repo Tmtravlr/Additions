@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.items.ItemAddedRecord;
 import com.tmtravlr.additions.gui.message.GuiMessageBox;
-import com.tmtravlr.additions.gui.view.components.input.GuiComponentBooleanInput;
-import com.tmtravlr.additions.gui.view.components.input.GuiComponentFloatInput;
-import com.tmtravlr.additions.gui.view.components.input.GuiComponentIntegerInput;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentStringInput;
 import com.tmtravlr.additions.gui.view.components.input.suggestion.GuiComponentSuggestionInput;
 
@@ -78,6 +75,7 @@ public class GuiEditItemRecord extends GuiEditItem<ItemAddedRecord> {
 		
 		this.advancedComponents.add(this.itemTooltipInput);
 		this.advancedComponents.add(this.itemOreDictInput);
+		this.advancedComponents.add(this.itemIsBeaconPaymentInput);
 		this.advancedComponents.add(this.itemBurnTimeInput);
 		this.advancedComponents.add(this.itemContainerInput);
 		this.advancedComponents.add(this.itemAttributesInput);
