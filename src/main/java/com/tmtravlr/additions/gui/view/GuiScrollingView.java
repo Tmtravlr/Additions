@@ -2,16 +2,12 @@ package com.tmtravlr.additions.gui.view;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import com.tmtravlr.additions.gui.GuiScrollingListAnyHeight;
 import com.tmtravlr.additions.gui.view.components.IGuiViewComponent;
 
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.client.GuiScrollingList;
 
 /**
  * Scrolling list for all the View screens.
@@ -22,7 +18,8 @@ import net.minecraftforge.fml.client.GuiScrollingList;
 public class GuiScrollingView extends GuiScrollingListAnyHeight {
 	
 	private GuiView parent;
-	private ArrayList<IGuiViewComponent> components = new ArrayList<>();
+	private List<IGuiViewComponent> components = new ArrayList<>();
+	private List<IGuiViewComponent> visibleComponents = new ArrayList<>();
 	private int listSize = 0;
 
 	public GuiScrollingView(GuiView parent) {
@@ -61,11 +58,19 @@ public class GuiScrollingView extends GuiScrollingListAnyHeight {
 	protected boolean isSelected(int index) {
 		return false;
 	}
+	
+	@Override
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		this.visibleComponents.clear();
+		super.drawScreen(mouseX, mouseY, partialTicks);
+	}
 
 	@Override
 	protected void drawSlot(int slot, int right, int top, int buffer, Tessellator tess) {
 		IGuiViewComponent component = components.get(slot);
+		
 		if (component != null && !component.isHidden()) {
+			this.visibleComponents.add(component);
 			int drawLeft = this.left;
 			int drawRight = right;
 			int componentHeight = component.getHeight(drawLeft, drawRight);
@@ -98,29 +103,23 @@ public class GuiScrollingView extends GuiScrollingListAnyHeight {
 	}
 	
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-		for (IGuiViewComponent component : components) {
-			if (!component.isHidden()) {
-				component.onMouseClicked(mouseX, mouseY, mouseButton);
-			}
+		for (IGuiViewComponent component : this.visibleComponents) {
+			component.onMouseClicked(mouseX, mouseY, mouseButton);
 		}
 	}
 	
 	public void onKeyTyped(char keyTyped, int keyCode) throws IOException {
-		for (IGuiViewComponent component : components) {
-			if (!component.isHidden()) {
-				component.onKeyTyped(keyTyped, keyCode);
-			}
+		for (IGuiViewComponent component : this.visibleComponents) {
+			component.onKeyTyped(keyTyped, keyCode);
 		}
 	}
 	
 	@Override 
 	public void handleMouseInput(int mouseX, int mouseY) throws IOException {
 		boolean scrollEditArea = true;
-		for (IGuiViewComponent component : components) {
-			if (!component.isHidden()) {
-				if (component.onHandleMouseInput(mouseX, mouseY)) {
-					scrollEditArea = false;
-				}
+		for (IGuiViewComponent component : this.visibleComponents) {
+			if (component.onHandleMouseInput(mouseX, mouseY)) {
+				scrollEditArea = false;
 			}
 		}
 		if (scrollEditArea) {

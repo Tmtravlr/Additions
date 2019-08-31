@@ -1,61 +1,128 @@
 package com.tmtravlr.additions.addon.blocks;
 
+import com.google.gson.JsonObject;
+
+import net.minecraft.block.Block;
+import net.minecraft.util.JsonUtils;
+import net.minecraft.util.math.AxisAlignedBB;
+
 public interface IBlockAddedModifiableBoundingBox {
 	
 	public void setHasCollisionBox(boolean hasCollisionBox);
 	
 	public void setHasSameCollisionBoundingBox(boolean sameCollisionBoundingBox);
 	
-	public void setBoundingBoxMinX(float boundingBoxMinX);
+	public void setBoundingBox(AxisAlignedBB boundingBox);
 	
-	public void setBoundingBoxMinY(float boundingBoxMinY);
-	
-	public void setBoundingBoxMinZ(float boundingBoxMinZ);
-	
-	public void setBoundingBoxMaxX(float boundingBoxMaxX);
-	
-	public void setBoundingBoxMaxY(float boundingBoxMaxY);
-	
-	public void setBoundingBoxMaxZ(float boundingBoxMaxZ);
-	
-	public void setCollisionBoxMinX(float collisionBoxMinX);
-	
-	public void setCollisionBoxMinY(float collisionBoxMinY);
-	
-	public void setCollisionBoxMinZ(float collisionBoxMinZ);
-	
-	public void setCollisionBoxMaxX(float collisionBoxMaxX);
-	
-	public void setCollisionBoxMaxY(float collisionBoxMaxY);
-	
-	public void setCollisionBoxMaxZ(float collisionBoxMaxZ);
+	public void setCollisionBox(AxisAlignedBB collisionBox);
 	
 	public boolean hasCollisionBox();
 	
 	public boolean hasSameCollisionBoundingBox();
 	
-	public float getBoundingBoxMinX();
+	public AxisAlignedBB getBoundingBox();
 	
-	public float getBoundingBoxMinY();
+	public AxisAlignedBB getCollisionBox();
 	
-	public float getBoundingBoxMinZ();
+	public default AxisAlignedBB getDefaultBoundingBox() {
+		return Block.FULL_BLOCK_AABB;
+	}
 	
-	public float getBoundingBoxMaxX();
+	public default AxisAlignedBB getDefaultCollisionBox() {
+		return getDefaultBoundingBox();
+	}
 	
-	public float getBoundingBoxMaxY();
-	
-	public float getBoundingBoxMaxZ();
-	
-	public float getCollisionBoxMinX();
-	
-	public float getCollisionBoxMinY();
-	
-	public float getCollisionBoxMinZ();
-	
-	public float getCollisionBoxMaxX();
-	
-	public float getCollisionBoxMaxY();
-	
-	public float getCollisionBoxMaxZ();
+	public static class Serializer {
+		
+		public static void serialize(JsonObject json, IBlockAddedModifiableBoundingBox blockAdded) {
+			if (!blockAdded.hasCollisionBox()) {
+				json.addProperty("has_collision_box", false);
+			}
+			
+			if (!blockAdded.hasSameCollisionBoundingBox()) {
+				json.addProperty("same_collision_bounding_box", false);
+			}
+			
+			if (blockAdded.getBoundingBox().minX != blockAdded.getDefaultBoundingBox().minX) {
+				json.addProperty("bounding_box_min_x", blockAdded.getBoundingBox().minX);
+			}
+			
+			if (blockAdded.getBoundingBox().minY != blockAdded.getDefaultBoundingBox().minY) {
+				json.addProperty("bounding_box_min_y", blockAdded.getBoundingBox().minY);
+			}
+			
+			if (blockAdded.getBoundingBox().minZ != blockAdded.getDefaultBoundingBox().minZ) {
+				json.addProperty("bounding_box_min_z", blockAdded.getBoundingBox().minZ);
+			}
+			
+			if (blockAdded.getBoundingBox().maxX != blockAdded.getDefaultBoundingBox().maxX) {
+				json.addProperty("bounding_box_max_x", blockAdded.getBoundingBox().maxX);
+			}
+			
+			if (blockAdded.getBoundingBox().maxY != blockAdded.getDefaultBoundingBox().maxY) {
+				json.addProperty("bounding_box_max_y", blockAdded.getBoundingBox().maxY);
+			}
+			
+			if (blockAdded.getBoundingBox().maxZ != blockAdded.getDefaultBoundingBox().maxZ) {
+				json.addProperty("bounding_box_max_z", blockAdded.getBoundingBox().maxZ);
+			}
+			
+			if (blockAdded.getCollisionBox().minX != blockAdded.getDefaultCollisionBox().minX) {
+				json.addProperty("collision_box_min_x", blockAdded.getCollisionBox().minX);
+			}
+			
+			if (blockAdded.getCollisionBox().minY != blockAdded.getDefaultCollisionBox().minY) {
+				json.addProperty("collision_box_min_y", blockAdded.getCollisionBox().minY);
+			}
+			
+			if (blockAdded.getCollisionBox().minZ != blockAdded.getDefaultCollisionBox().minZ) {
+				json.addProperty("collision_box_min_z", blockAdded.getCollisionBox().minZ);
+			}
+			
+			if (blockAdded.getCollisionBox().maxX != blockAdded.getDefaultCollisionBox().maxX) {
+				json.addProperty("collision_box_max_x", blockAdded.getCollisionBox().maxX);
+			}
+			
+			if (blockAdded.getCollisionBox().maxY != blockAdded.getDefaultCollisionBox().maxY) {
+				json.addProperty("collision_box_max_y", blockAdded.getCollisionBox().maxY);
+			}
+			
+			if (blockAdded.getCollisionBox().maxZ != blockAdded.getDefaultCollisionBox().maxZ) {
+				json.addProperty("collision_box_max_z", blockAdded.getCollisionBox().maxZ);
+			}
+		}
+		
+		public static void deserialize(JsonObject json, IBlockAddedModifiableBoundingBox blockAdded) {
+			blockAdded.setHasCollisionBox(JsonUtils.getBoolean(json, "has_collision_box", true));
+			blockAdded.setHasSameCollisionBoundingBox(JsonUtils.getBoolean(json, "same_collision_bounding_box", true));
+			
+			float minX = JsonUtils.getFloat(json, "bounding_box_min_x", (float) blockAdded.getDefaultBoundingBox().minX);
+			float minY = JsonUtils.getFloat(json, "bounding_box_min_y", (float) blockAdded.getDefaultBoundingBox().minY);
+			float minZ = JsonUtils.getFloat(json, "bounding_box_min_z", (float) blockAdded.getDefaultBoundingBox().minZ);
+			
+			blockAdded.setBoundingBox(new AxisAlignedBB(
+					minX, 
+					minY, 
+					minZ,
+					Math.max(JsonUtils.getFloat(json, "bounding_box_max_x", (float) blockAdded.getDefaultBoundingBox().maxX), minX),
+					Math.max(JsonUtils.getFloat(json, "bounding_box_max_y", (float) blockAdded.getDefaultBoundingBox().maxY), minY),
+					Math.max(JsonUtils.getFloat(json, "bounding_box_max_z", (float) blockAdded.getDefaultBoundingBox().maxZ), minZ)
+			));
+			
+			minX = JsonUtils.getFloat(json, "collision_box_min_x", (float) blockAdded.getDefaultCollisionBox().minX);
+			minY = JsonUtils.getFloat(json, "collision_box_min_y", (float) blockAdded.getDefaultCollisionBox().minY);
+			minZ = JsonUtils.getFloat(json, "collision_box_min_z", (float) blockAdded.getDefaultCollisionBox().minZ);
+			
+			blockAdded.setCollisionBox(new AxisAlignedBB(
+					minX, 
+					minY, 
+					minZ,
+					Math.max(JsonUtils.getFloat(json, "collision_box_max_x", (float) blockAdded.getDefaultCollisionBox().maxX), minX),
+					Math.max(JsonUtils.getFloat(json, "collision_box_max_y", (float) blockAdded.getDefaultCollisionBox().maxY), minY),
+					Math.max(JsonUtils.getFloat(json, "collision_box_max_z", (float) blockAdded.getDefaultCollisionBox().maxZ), minZ)
+			));
+		}
+		
+	}
 
 }

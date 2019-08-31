@@ -19,11 +19,10 @@ import net.minecraft.util.ResourceLocation;
 public class CommonGuiUtils {
 
 	public static final ResourceLocation GUI_TEXTURES = new ResourceLocation("additions:textures/gui/additions_gui_textures.png");
+	public static final int ADDITION_BUTTON_COLOR = 0xBB2A2A2A;
 	
 	private static final Minecraft MC = Minecraft.getMinecraft();
 	private static final String DOTS = "...";
-	
-	public static final int ADDITION_BUTTON_COLOR = 0xbb2a2a2a;
 	
 	public static boolean isMouseWithin(int mouseX, int mouseY, int x, int y, int width, int height) {
 		return mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height;

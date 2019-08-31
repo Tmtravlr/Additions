@@ -4,10 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -18,8 +15,11 @@ import com.tmtravlr.additions.ConfigLoader;
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.AddonLoader;
 import com.tmtravlr.additions.addon.functions.FunctionAdded;
+import com.tmtravlr.additions.util.ProblemNotifier;
 
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -104,6 +104,7 @@ public class AdditionTypeFunction extends AdditionType<FunctionAdded> {
 					filePaths = AddonLoader.getAddonFilePaths(addon.addonFolder, FOLDER_NAME);
 				} catch (IOException e) {
 					AdditionsMod.logger.error("Error loading function files for addon " + addon.id + ". The functions will not load.", e);
+					ProblemNotifier.addProblemNotification(new TextComponentTranslation("gui.view.addon.functions.title", addon.id), new TextComponentString(e.getMessage()));
 				}
 				
 				for (String filePath : filePaths) {
@@ -130,9 +131,11 @@ public class AdditionTypeFunction extends AdditionType<FunctionAdded> {
 							this.loadedFunctions.put(addon, new FunctionAdded(location, AddonLoader.readAddonFileLines(addon.addonFolder, filePath)));
 						} catch (IOException e) {
 							AdditionsMod.logger.error("Error loading function " + location + "  for addon " + addon.id + ". It will be skipped.", e);
+							ProblemNotifier.addProblemNotification(ProblemNotifier.createLabelFromPath(addon.addonFolder, filePath), new TextComponentString(e.getMessage()));
 						}
 					} else {
 						AdditionsMod.logger.error("Addon function " + filePath + " can't be directly in the functions folder. It must be inside another folder (the domain).");
+						ProblemNotifier.addProblemNotification(ProblemNotifier.createLabelFromPath(addon.addonFolder, filePath), new TextComponentTranslation("gui.notification.problem.directlyInFolder", "functions"));
 					}
 				}
 			}

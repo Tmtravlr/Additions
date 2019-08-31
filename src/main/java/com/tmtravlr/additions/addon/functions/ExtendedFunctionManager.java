@@ -9,7 +9,7 @@ import com.google.common.base.Functions;
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.AddonLoader;
 import com.tmtravlr.additions.type.AdditionTypeFunction;
-import com.tmtravlr.additions.type.AdditionTypeLootTable;
+import com.tmtravlr.additions.util.ProblemNotifier;
 
 import net.minecraft.advancements.FunctionManager;
 import net.minecraft.command.FunctionObject;
@@ -41,6 +41,8 @@ public class ExtendedFunctionManager extends FunctionManager {
 		if (this.server != null) {
 			super.reload();
 			this.reloadAddonFunctions();
+		
+			ProblemNotifier.onReload(server);
 		}
 	}
 	
@@ -82,19 +84,23 @@ public class ExtendedFunctionManager extends FunctionManager {
 				if (function != null) {
 					ICommandSender sender = new ICommandSender() {
 				        
-				        public String getName() {
+				        @Override
+						public String getName() {
 				            return addon.name;
 				        }
 				        
-				        public boolean canUseCommand(int permLevel, String commandName) {
+				        @Override
+						public boolean canUseCommand(int permLevel, String commandName) {
 				            return permLevel <= 2;
 				        }
 				        
-				        public World getEntityWorld() {
+				        @Override
+						public World getEntityWorld() {
 				            return ExtendedFunctionManager.this.server.worlds[0];
 				        }
 				        
-				        public MinecraftServer getServer() {
+				        @Override
+						public MinecraftServer getServer() {
 				            return ExtendedFunctionManager.this.server;
 				        }
 				    };

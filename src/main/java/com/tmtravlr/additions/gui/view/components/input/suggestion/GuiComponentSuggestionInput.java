@@ -8,18 +8,17 @@ import java.util.stream.Collectors;
 
 import org.lwjgl.input.Mouse;
 
+import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.gui.GuiScreenOverlay;
 import com.tmtravlr.additions.gui.view.components.IGuiViewComponent;
 import com.tmtravlr.additions.gui.view.edit.GuiEdit;
 import com.tmtravlr.additions.util.client.CommonGuiUtils;
 
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.client.GuiScrollingList;
 
@@ -335,15 +334,19 @@ public class GuiComponentSuggestionInput extends GuiTextField implements IGuiVie
 		
 		@Override
 		public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-			
-			Gui.drawRect(this.left - 1, this.top - 1, this.left + this.listWidth + 1, this.top + this.listHeight + 1, 0xFFA0A0A0);
+
+			CommonGuiUtils.drawOutline(this.left - 1, this.top - 1, this.listWidth + 2, this.listHeight + 2, 0xFFA0A0A0);
 			
 			if (this.newFilter != null) {
 				this.suggestionDisplay = suggestions.stream().filter(s -> s == null ? false : s.toLowerCase().contains(this.newFilter.toLowerCase())).collect(Collectors.toList());
 				this.newFilter = null;
 			}
 			
-			super.drawScreen(mouseX, mouseY, partialTicks);
+			try {
+				super.drawScreen(mouseX, mouseY, partialTicks);
+			} catch (IllegalStateException e) {
+				AdditionsMod.logger.error("Failed to draw scrolling list", e);
+			}
 		}
 		
 		public boolean isHovering() {

@@ -62,7 +62,7 @@ public class BlockAddedFacing extends BlockAddedSimple {
     
     @Override
     public boolean isTopSolid(IBlockState state) {
-    	AxisAlignedBB boundingBox = this.rotateBoundingBox(new AxisAlignedBB(this.getBoundingBoxMinX(), this.getBoundingBoxMinY(), this.getBoundingBoxMinZ(), this.getBoundingBoxMaxX(), this.getBoundingBoxMaxY(), this.getBoundingBoxMaxZ()), state);
+    	AxisAlignedBB boundingBox = this.rotateBoundingBox(new AxisAlignedBB(this.getBoundingBox().minX, this.getBoundingBox().minY, this.getBoundingBox().minZ, this.getBoundingBox().maxX, this.getBoundingBox().maxY, this.getBoundingBox().maxZ), state);
         return state.getMaterial().isOpaque() && boundingBox.maxY == 1 && boundingBox.minX == 0 && boundingBox.minZ == 0 && boundingBox.maxX == 1 && boundingBox.maxZ == 1;
     }
     
@@ -133,19 +133,19 @@ public class BlockAddedFacing extends BlockAddedSimple {
             	return state.withProperty(BlockDirectional.FACING, facing.getOpposite());
         }
     }
-    
-    private AxisAlignedBB rotateBoundingBox(AxisAlignedBB original, IBlockState state) {
+	
+	protected AxisAlignedBB rotateBoundingBox(AxisAlignedBB original, IBlockState state) {
     	switch(state.getValue(BlockDirectional.FACING)) {
-    	case WEST:
-    		return new AxisAlignedBB(original.minZ, original.minY, 1 - original.maxX, original.maxZ, original.maxY, 1 - original.minX);
-    	case SOUTH:
-    		return new AxisAlignedBB(1 - original.maxX, original.minY, 1 - original.maxZ, 1 - original.minX, original.maxY, 1 - original.minZ);
     	case EAST:
-    		return new AxisAlignedBB(1 - original.maxZ, original.minY, original.minX, 1 - original.minZ, original.maxY, original.maxX);
-    	case DOWN:
-    		return new AxisAlignedBB(original.minX, original.minZ, 1 - original.maxY, original.maxX, original.maxZ, 1 - original.minY);
+    		return new AxisAlignedBB(1 - original.minX, original.minY, 1 - original.minZ, 1 - original.maxX, original.maxY, 1 - original.maxZ);
+    	case NORTH:
+    		return new AxisAlignedBB(1 - original.minZ, original.minY, original.minX, 1 - original.maxZ, original.maxY, original.maxX);
+    	case SOUTH:
+    		return new AxisAlignedBB(original.minZ, original.minY, 1 - original.minX, original.maxZ, original.maxY, 1 - original.maxX);
     	case UP:
-    		return new AxisAlignedBB(original.minX, 1 - original.maxZ, original.minY, original.maxX, 1 - original.minZ, original.maxY);
+    		return new AxisAlignedBB(1 - original.minZ, 1 - original.minX, original.minY, 1 - original.maxZ, 1 - original.maxX, original.maxY);
+    	case DOWN:
+    		return new AxisAlignedBB(1 - original.minZ, original.minX, 1 - original.minY, 1 - original.maxZ, original.maxX, 1 - original.maxY);
     	default:
     		return original;
     	}
@@ -161,61 +161,7 @@ public class BlockAddedFacing extends BlockAddedSimple {
 		public JsonObject serialize(BlockAddedFacing blockAdded, JsonSerializationContext context) {
 			JsonObject json = super.serialize(blockAdded, context);
 			
-			if (!blockAdded.hasCollisionBox()) {
-				json.addProperty("has_collision_box", false);
-			}
-			
-			if (!blockAdded.hasSameCollisionBoundingBox()) {
-				json.addProperty("same_collision_bounding_box", false);
-			}
-			
-			if (blockAdded.getBoundingBoxMinX() != 0) {
-				json.addProperty("bounding_box_min_x", blockAdded.getBoundingBoxMinX());
-			}
-			
-			if (blockAdded.getBoundingBoxMinY() != 0) {
-				json.addProperty("bounding_box_min_y", blockAdded.getBoundingBoxMinY());
-			}
-			
-			if (blockAdded.getBoundingBoxMinZ() != 0) {
-				json.addProperty("bounding_box_min_z", blockAdded.getBoundingBoxMinZ());
-			}
-			
-			if (blockAdded.getBoundingBoxMaxX() != 1) {
-				json.addProperty("bounding_box_max_x", blockAdded.getBoundingBoxMaxX());
-			}
-			
-			if (blockAdded.getBoundingBoxMaxY() != 1) {
-				json.addProperty("bounding_box_max_y", blockAdded.getBoundingBoxMaxY());
-			}
-			
-			if (blockAdded.getBoundingBoxMaxZ() != 1) {
-				json.addProperty("bounding_box_max_z", blockAdded.getBoundingBoxMaxZ());
-			}
-			
-			if (blockAdded.getCollisionBoxMinX() != 0) {
-				json.addProperty("collision_box_min_x", blockAdded.getCollisionBoxMinX());
-			}
-			
-			if (blockAdded.getCollisionBoxMinY() != 0) {
-				json.addProperty("collision_box_min_y", blockAdded.getCollisionBoxMinY());
-			}
-			
-			if (blockAdded.getCollisionBoxMinZ() != 0) {
-				json.addProperty("collision_box_min_z", blockAdded.getCollisionBoxMinZ());
-			}
-			
-			if (blockAdded.getCollisionBoxMaxX() != 1) {
-				json.addProperty("collision_box_max_x", blockAdded.getCollisionBoxMaxX());
-			}
-			
-			if (blockAdded.getCollisionBoxMaxY() != 1) {
-				json.addProperty("collision_box_max_y", blockAdded.getCollisionBoxMaxY());
-			}
-			
-			if (blockAdded.getCollisionBoxMaxZ() != 1) {
-				json.addProperty("collision_box_max_z", blockAdded.getCollisionBoxMaxZ());
-			}
+			IBlockAddedModifiableBoundingBox.Serializer.serialize(json, blockAdded);
 			
 			if (blockAdded.canFaceVertically) {
 				json.addProperty("can_face_vertically", true);
@@ -228,21 +174,8 @@ public class BlockAddedFacing extends BlockAddedSimple {
 		public BlockAddedFacing deserialize(JsonObject json, JsonDeserializationContext context) {
 			BlockAddedFacing blockAdded = new BlockAddedFacing();
 			super.deserializeDefaults(json, context, blockAdded);
+			IBlockAddedModifiableBoundingBox.Serializer.deserialize(json, blockAdded);
 			
-			blockAdded.setHasCollisionBox(JsonUtils.getBoolean(json, "has_collision_box", true));
-			blockAdded.setHasSameCollisionBoundingBox(JsonUtils.getBoolean(json, "same_collision_bounding_box", true));
-			blockAdded.setBoundingBoxMinX(JsonUtils.getFloat(json, "bounding_box_min_x", 0));
-			blockAdded.setBoundingBoxMinY(JsonUtils.getFloat(json, "bounding_box_min_y", 0));
-			blockAdded.setBoundingBoxMinZ(JsonUtils.getFloat(json, "bounding_box_min_z", 0));
-			blockAdded.setBoundingBoxMaxX(Math.max(JsonUtils.getFloat(json, "bounding_box_max_x", 1), blockAdded.getBoundingBoxMinX()));
-			blockAdded.setBoundingBoxMaxY(Math.max(JsonUtils.getFloat(json, "bounding_box_max_y", 1), blockAdded.getBoundingBoxMinY()));
-			blockAdded.setBoundingBoxMaxZ(Math.max(JsonUtils.getFloat(json, "bounding_box_max_z", 1), blockAdded.getBoundingBoxMinZ()));
-			blockAdded.setCollisionBoxMinX(JsonUtils.getFloat(json, "collision_box_min_x", 0));
-			blockAdded.setCollisionBoxMinY(JsonUtils.getFloat(json, "collision_box_min_y", 0));
-			blockAdded.setCollisionBoxMinZ(JsonUtils.getFloat(json, "collision_box_min_z", 0));
-			blockAdded.setCollisionBoxMaxX(Math.max(JsonUtils.getFloat(json, "collision_box_max_x", 1), blockAdded.getCollisionBoxMinX()));
-			blockAdded.setCollisionBoxMaxY(Math.max(JsonUtils.getFloat(json, "collision_box_max_y", 1), blockAdded.getCollisionBoxMinY()));
-			blockAdded.setCollisionBoxMaxZ(Math.max(JsonUtils.getFloat(json, "collision_box_max_z", 1), blockAdded.getCollisionBoxMinZ()));
 			blockAdded.canFaceVertically = JsonUtils.getBoolean(json, "can_face_vertically", false);
 			
 			return blockAdded;

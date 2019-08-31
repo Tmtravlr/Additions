@@ -22,9 +22,12 @@ import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.AddonLoader;
 import com.tmtravlr.additions.addon.items.IItemAdded;
 import com.tmtravlr.additions.addon.items.ItemAddedManager;
+import com.tmtravlr.additions.util.ProblemNotifier;
 
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
@@ -66,6 +69,7 @@ public class AdditionTypeItem extends AdditionType<IItemAdded> {
 				filePaths = AddonLoader.getAddonFilePaths(addon.addonFolder, FOLDER_NAME);
 			} catch (IOException e) {
 				AdditionsMod.logger.error("Error loading item files for addon " + addon.id + ". The items will not load.", e);
+				ProblemNotifier.addProblemNotification(new TextComponentTranslation("gui.view.addon.items.title", addon.id), new TextComponentString(e.getMessage()));
 			}
 			
 			for (String filePath : filePaths) {
@@ -96,6 +100,7 @@ public class AdditionTypeItem extends AdditionType<IItemAdded> {
 					}
 				} catch (IOException | JsonParseException e) {
 					AdditionsMod.logger.error("Error loading item " + filePath + " for addon " + addon.id + ". The item will not load.", e);
+					ProblemNotifier.addProblemNotification(ProblemNotifier.createLabelFromPath(addon.addonFolder, filePath), new TextComponentString(e.getMessage()));
 				}
 			}
 		}

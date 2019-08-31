@@ -17,8 +17,11 @@ import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.AddonLoader;
 import com.tmtravlr.additions.addon.creativetabs.CreativeTabAdded;
+import com.tmtravlr.additions.util.ProblemNotifier;
 
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -53,6 +56,7 @@ public class AdditionTypeCreativeTab extends AdditionType<CreativeTabAdded> {
 				filePaths = AddonLoader.getAddonFilePaths(addon.addonFolder, FOLDER_NAME);
 			} catch (IOException e) {
 				AdditionsMod.logger.error("Error loading creative tab files for addon " + addon.id + ". The creative tabs will not load.", e);
+				ProblemNotifier.addProblemNotification(new TextComponentTranslation("gui.view.addon.creativeTabs.title", addon.id), new TextComponentString(e.getMessage()));
 			}
 			
 			for (String filePath : filePaths) {
@@ -74,6 +78,7 @@ public class AdditionTypeCreativeTab extends AdditionType<CreativeTabAdded> {
 					this.loadedCreativeTabs.put(addon, tabAdded);
 				} catch (IOException | JsonParseException e) {
 					AdditionsMod.logger.error("Error loading creative tab " + filePath + " for addon " + addon.id + ". The creative tab will not load.", e);
+					ProblemNotifier.addProblemNotification(ProblemNotifier.createLabelFromPath(addon.addonFolder, filePath), new TextComponentString(e.getMessage()));
 				}
 			}
 		}

@@ -24,8 +24,11 @@ import com.tmtravlr.additions.addon.loottables.ExtendedLootTableManager;
 import com.tmtravlr.additions.addon.loottables.LootTableAdded;
 import com.tmtravlr.additions.addon.loottables.LootTablePreset;
 import com.tmtravlr.additions.addon.loottables.LootTablePresetManager;
+import com.tmtravlr.additions.util.ProblemNotifier;
 
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.storage.loot.LootTable;
 import net.minecraft.world.storage.loot.LootTableManager;
 import net.minecraftforge.common.ForgeHooks;
@@ -117,6 +120,7 @@ public class AdditionTypeLootTable extends AdditionType<LootTableAdded> {
 				filePaths = AddonLoader.getAddonFilePaths(addon.addonFolder, FOLDER_NAME);
 			} catch (IOException e) {
 				AdditionsMod.logger.error("Error loading loot table files for addon " + addon.id + ". The loot tables will not load.", e);
+				ProblemNotifier.addProblemNotification(new TextComponentTranslation("gui.view.addon.lootTables.title", addon.id), new TextComponentString(e.getMessage()));
 			}
 			
 			for (String filePath : filePaths) {
@@ -143,8 +147,13 @@ public class AdditionTypeLootTable extends AdditionType<LootTableAdded> {
 					try {
 						String fileString = AddonLoader.readAddonFile(addon.addonFolder, filePath);
 						preset = GSON.fromJson(fileString, LootTablePreset.class);
+						
+						if (preset != null) {
+							preset.id = location;
+						}
 					} catch (IOException | JsonParseException e) {
 						AdditionsMod.logger.error("Error loading preset loot table " + filePath + " for addon " + addon.id + ". The loot table preset will not load", e);
+						ProblemNotifier.addProblemNotification(ProblemNotifier.createLabelFromPath(addon.addonFolder, filePath), new TextComponentString(e.getMessage()));
 					}
 					
 					LootTableAdded lootTable = new LootTableAdded(location, preset);
@@ -152,6 +161,7 @@ public class AdditionTypeLootTable extends AdditionType<LootTableAdded> {
 					this.lootTableLocations.put(addon, lootTable);
 				} else {
 					AdditionsMod.logger.error("Addon loot table " + filePath + " can't be directly in the loot_tables folder. It must be inside another folder.");
+					ProblemNotifier.addProblemNotification(ProblemNotifier.createLabelFromPath(addon.addonFolder, filePath), new TextComponentTranslation("gui.notification.problem.directlyInFolder", "loot_tables"));
 				}
 			}
 		}
@@ -189,8 +199,10 @@ public class AdditionTypeLootTable extends AdditionType<LootTableAdded> {
 					}
 	            } catch (JsonParseException e) {
 	            	AdditionsMod.logger.warn("Parsing error loading extra loot table {} for addon {}", extrasLocation, addon.id, e);
+					ProblemNotifier.addProblemNotification(ProblemNotifier.createLabelFromPath(addon.addonFolder, filePath), new TextComponentString(e.getMessage()));
 	            } catch (IOException ioexception) {
 	            	AdditionsMod.logger.error("Couldn't load addon extra loot table {} from {} for addon {}", extrasLocation, filePath, addon.id, ioexception);
+					ProblemNotifier.addProblemNotification(ProblemNotifier.createLabelFromPath(addon.addonFolder, filePath), new TextComponentString(ioexception.getMessage()));
 				}
 			}
 		}

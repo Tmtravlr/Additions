@@ -19,9 +19,10 @@ import com.google.gson.JsonParseException;
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.AddonLoader;
 import com.tmtravlr.additions.type.AdditionTypeLootTable;
-import com.tmtravlr.additions.type.AdditionTypeStructure;
+import com.tmtravlr.additions.util.ProblemNotifier;
 
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.storage.loot.LootTable;
 import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraft.world.storage.loot.LootTableManager;
@@ -42,11 +43,13 @@ public class ExtendedLootTableManager extends LootTableManager {
 		this.reloadLootTables();
 	}
 
-    public LootTable getLootTableFromLocation(ResourceLocation location) {
+    @Override
+	public LootTable getLootTableFromLocation(ResourceLocation location) {
         return this.registeredLootTables.getUnchecked(location);
     }
 
-    public void reloadLootTables() {
+    @Override
+	public void reloadLootTables() {
     	AdditionTypeLootTable.INSTANCE.reloadAllLootTables(AddonLoader.addonsLoaded);
     	
     	if (this.baseFolder != null) {
@@ -59,6 +62,7 @@ public class ExtendedLootTableManager extends LootTableManager {
     }
 	
 	private class Loader extends CacheLoader<ResourceLocation, LootTable> {
+		@Override
 		public LootTable load(ResourceLocation location) throws Exception {
 	        if (location.getResourcePath().contains(".")) {
 	        	LOGGER.warn("Invalid loot table name '{}' (can't contain periods)", location);
@@ -77,7 +81,7 @@ public class ExtendedLootTableManager extends LootTableManager {
 
 	            if (loottable == null) {
 	                loottable = LootTable.EMPTY_LOOT_TABLE;
-	                LOGGER.warn("Couldn't find resource table {}", (Object)location);
+	                LOGGER.warn("Couldn't find resource table {}", location);
 	            }
 
 	            return loottable;
@@ -99,6 +103,7 @@ public class ExtendedLootTableManager extends LootTableManager {
 	                        s = Files.toString(file1, StandardCharsets.UTF_8);
 	                    } catch (IOException ioexception) {
 	                    	LOGGER.warn("Couldn't load loot table {} from {}", location, file1, ioexception);
+	        				ProblemNotifier.addProblemNotification(ProblemNotifier.createLabelFromFile(file1), new TextComponentString(ioexception.getMessage()));
 	                        return LootTable.EMPTY_LOOT_TABLE;
 	                    }
 
@@ -106,6 +111,7 @@ public class ExtendedLootTableManager extends LootTableManager {
 	                        return net.minecraftforge.common.ForgeHooks.loadLootTable(LOOT_TABLE_GSON, location, s, true, ExtendedLootTableManager.this);
 	                    } catch (IllegalArgumentException | JsonParseException jsonparseexception) {
 	                    	LOGGER.error("Couldn't load loot table {} from {}", location, file1, jsonparseexception);
+	        				ProblemNotifier.addProblemNotification(ProblemNotifier.createLabelFromFile(file1), new TextComponentString(jsonparseexception.getMessage()));
 	                        return LootTable.EMPTY_LOOT_TABLE;
 	                    }
 	                } else {
@@ -140,8 +146,10 @@ public class ExtendedLootTableManager extends LootTableManager {
 					}
 	            } catch (JsonParseException e) {
 	            	LOGGER.warn("Parsing error loading loot table {} for addon {}", location, addonToGetLootTableFor.id, e);
+    				ProblemNotifier.addProblemNotification(ProblemNotifier.createLabelFromPath(addonToGetLootTableFor.addonFolder, filePath), new TextComponentString(e.getMessage()));
 	            } catch (IOException ioexception) {
 	            	LOGGER.error("Couldn't load addon loot table {} from {} for addon {}", location, filePath, addonToGetLootTableFor.id, ioexception);
+    				ProblemNotifier.addProblemNotification(ProblemNotifier.createLabelFromPath(addonToGetLootTableFor.addonFolder, filePath), new TextComponentString(ioexception.getMessage()));
 				}
 			}
 			

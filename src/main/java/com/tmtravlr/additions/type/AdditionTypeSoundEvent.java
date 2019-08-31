@@ -22,6 +22,7 @@ import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.AddonLoader;
 import com.tmtravlr.additions.addon.sounds.SoundEventAdded;
+import com.tmtravlr.additions.util.ProblemNotifier;
 import com.tmtravlr.additions.util.client.SoundsJsonSerializer;
 
 import net.minecraft.client.audio.SoundHandler;
@@ -29,6 +30,8 @@ import net.minecraft.client.audio.SoundList;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -88,6 +91,7 @@ public class AdditionTypeSoundEvent extends AdditionType<SoundEventAdded> {
 				}
 			} catch (IOException e) {
 				AdditionsMod.logger.error("Error loading sound events for addon " + addon.id + ". The sound events will not load.", e);
+				ProblemNotifier.addProblemNotification(new TextComponentTranslation("gui.view.addon.soundEvents.title", addon.id), new TextComponentString(e.getMessage()));
 			}
 		}
 	}
@@ -202,6 +206,7 @@ public class AdditionTypeSoundEvent extends AdditionType<SoundEventAdded> {
 			}
 		} catch (IOException | JsonParseException e) {
 			AdditionsMod.logger.warn("Error loading sounds.json for addon " + addon.id + ".", e);
+			ProblemNotifier.addProblemNotification(ProblemNotifier.createLabelFromFile(soundsJsonFile), new TextComponentString(e.getMessage()));
         }
 		
 		return soundListMap;

@@ -1,19 +1,15 @@
 package com.tmtravlr.additions.gui.view.components.input.suggestion;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.tmtravlr.additions.ConfigLoader;
 import com.tmtravlr.additions.gui.view.edit.GuiEdit;
 
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.OreDictionary;
@@ -61,17 +57,24 @@ public class GuiComponentSuggestionInputOreDict extends GuiComponentSuggestionIn
 			protected void drawSlot(int slot, int right, int top, int slotBuffer, Tessellator tess) {
 				if (!this.suggestionDisplay.isEmpty()) {
 					String oreToDisplay = this.suggestionDisplay.get(slot);
+					
 					if (oreToDisplay != null) {
-						ItemStack displayStack = this.getDisplayStack(oreToDisplay).copy();
-						if (displayStack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
-							displayStack.setItemDamage(0);
+						int textOffset = 5;
+						
+						if (ConfigLoader.renderItemsInLists.getBoolean(true)) {
+							ItemStack displayStack = this.getDisplayStack(oreToDisplay).copy();
+							if (displayStack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
+								displayStack.setItemDamage(0);
+							}
+							
+							int itemX = this.left + 5;
+							int itemY = top - 1;
+							textOffset = 25;
+	
+							this.parentInput.editScreen.renderItemStack(displayStack, itemX, itemY, 0, 0, false, true);
 						}
 						
-						int itemX = this.left + 5;
-						int itemY = top - 1;
-
-						this.parentInput.editScreen.renderItemStack(displayStack, itemX, itemY, 0, 0, false, true);
-						this.parentInput.editScreen.getFontRenderer().drawString(oreToDisplay, this.left + 25, top + 2, 0xFFFFFF);
+						this.parentInput.editScreen.getFontRenderer().drawString(oreToDisplay, this.left + textOffset, top + 2, 0xFFFFFF);
 					}
 				} else {
 					this.parentInput.editScreen.getFontRenderer().drawString(I18n.format("gui.dropdown.nothingToShow"), this.left + 5, top + 2, 0x888888);

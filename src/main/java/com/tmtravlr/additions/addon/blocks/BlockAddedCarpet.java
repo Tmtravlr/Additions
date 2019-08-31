@@ -33,6 +33,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BlockAddedCarpet extends BlockAddedSimple {
 
 	public static final ResourceLocation TYPE = new ResourceLocation(AdditionsMod.MOD_ID, "carpet");
+	public static final AxisAlignedBB CARPET_DEFAULT_BB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.0625D, 1.0D);
 	
 	public boolean placeOnWalls;
 	public boolean placeOnCeiling;
@@ -40,7 +41,12 @@ public class BlockAddedCarpet extends BlockAddedSimple {
 
 	public BlockAddedCarpet() {
 		this.setDefaultState(this.blockState.getBaseState().withProperty(BlockLiquid.LEVEL, Integer.valueOf(0)).withProperty(BlockDirectional.FACING, EnumFacing.UP));
-		this.setBoundingBoxMaxY(0.0625F);
+		this.getBoundingBox().setMaxY(0.0625F);
+	}
+
+	@Override
+	public AxisAlignedBB getDefaultBoundingBox() {
+		return CARPET_DEFAULT_BB;
 	}
 	
 	@Override
@@ -149,21 +155,6 @@ public class BlockAddedCarpet extends BlockAddedSimple {
             world.setBlockToAir(pos);
         }
     }
-
-    @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-    	return this.rotateBoundingBox(super.getBoundingBox(state, source, pos), state);
-    }
-    
-    @Override
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
-    	AxisAlignedBB boundingBox = super.getCollisionBoundingBox(state, world, pos);
-    	
-    	if (boundingBox != Block.NULL_AABB && !this.hasSameCollisionBoundingBox()) {
-    		boundingBox = this.rotateBoundingBox(boundingBox, state);
-    	}
-    	return boundingBox;
-    }
     
     @Override
     public boolean canPlaceTorchOnTop(IBlockState state, IBlockAccess world, BlockPos pos) {
@@ -173,8 +164,7 @@ public class BlockAddedCarpet extends BlockAddedSimple {
     
     @Override
     public boolean isTopSolid(IBlockState state) {
-    	AxisAlignedBB boundingBox = this.rotateBoundingBox(new AxisAlignedBB(this.getBoundingBoxMinX(), this.getBoundingBoxMinY(), this.getBoundingBoxMinZ(), this.getBoundingBoxMaxX(), this.getBoundingBoxMaxY(), this.getBoundingBoxMaxZ()), state);
-        return state.getMaterial().isOpaque() && boundingBox.maxY == 1 && boundingBox.minX == 0 && boundingBox.minZ == 0 && boundingBox.maxX == 1 && boundingBox.maxZ == 1;
+    	 return state.getMaterial().isOpaque() && this.getBoundingBox().maxY == 1 && this.getBoundingBox().minX == 0 && this.getBoundingBox().minZ == 0 && this.getBoundingBox().maxX == 1 && this.getBoundingBox().maxZ == 1;
     }
     
     @Override
@@ -206,23 +196,6 @@ public class BlockAddedCarpet extends BlockAddedSimple {
     public boolean doesSideBlockRendering(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing face) {
         return this.getBlockFaceShape(world, state, pos, face) == BlockFaceShape.SOLID;
     }
-    
-    private AxisAlignedBB rotateBoundingBox(AxisAlignedBB original, IBlockState state) {
-    	switch(state.getValue(BlockDirectional.FACING)) {
-    	case NORTH:
-    		return new AxisAlignedBB(original.minX, original.minZ, 1 - original.maxY, original.maxX, original.maxZ, 1 - original.minY);
-    	case EAST:
-    		return new AxisAlignedBB(original.minY, 1 - original.maxX, original.minZ, original.maxY, 1 - original.minX, original.maxZ);
-    	case SOUTH:
-    		return new AxisAlignedBB(original.minX, 1 - original.maxZ, original.minY, original.maxX, 1 - original.minZ, original.maxY);
-    	case WEST:
-    		return new AxisAlignedBB(1 - original.maxY, original.minX, original.minZ, 1 - original.minY, original.maxX, original.maxZ);
-    	case DOWN:
-    		return new AxisAlignedBB(original.minX, 1 - original.maxY, original.minZ, original.maxX, 1 - original.minY, original.maxZ);
-    	default:
-    		return original;
-    	}
-    }
 
 	public static class Serializer extends IBlockAdded.Serializer<BlockAddedCarpet> {
 		
@@ -234,61 +207,7 @@ public class BlockAddedCarpet extends BlockAddedSimple {
 		public JsonObject serialize(BlockAddedCarpet blockAdded, JsonSerializationContext context) {
 			JsonObject json = super.serialize(blockAdded, context);
 			
-			if (!blockAdded.hasCollisionBox()) {
-				json.addProperty("has_collision_box", false);
-			}
-			
-			if (!blockAdded.hasSameCollisionBoundingBox()) {
-				json.addProperty("same_collision_bounding_box", false);
-			}
-			
-			if (blockAdded.getBoundingBoxMinX() != 0) {
-				json.addProperty("bounding_box_min_x", blockAdded.getBoundingBoxMinX());
-			}
-			
-			if (blockAdded.getBoundingBoxMinY() != 0) {
-				json.addProperty("bounding_box_min_y", blockAdded.getBoundingBoxMinY());
-			}
-			
-			if (blockAdded.getBoundingBoxMinZ() != 0) {
-				json.addProperty("bounding_box_min_z", blockAdded.getBoundingBoxMinZ());
-			}
-			
-			if (blockAdded.getBoundingBoxMaxX() != 1) {
-				json.addProperty("bounding_box_max_x", blockAdded.getBoundingBoxMaxX());
-			}
-			
-			if (blockAdded.getBoundingBoxMaxY() != 0.0625F) {
-				json.addProperty("bounding_box_max_y", blockAdded.getBoundingBoxMaxY());
-			}
-			
-			if (blockAdded.getBoundingBoxMaxZ() != 1) {
-				json.addProperty("bounding_box_max_z", blockAdded.getBoundingBoxMaxZ());
-			}
-			
-			if (blockAdded.getCollisionBoxMinX() != 0) {
-				json.addProperty("collision_box_min_x", blockAdded.getCollisionBoxMinX());
-			}
-			
-			if (blockAdded.getCollisionBoxMinY() != 0) {
-				json.addProperty("collision_box_min_y", blockAdded.getCollisionBoxMinY());
-			}
-			
-			if (blockAdded.getCollisionBoxMinZ() != 0) {
-				json.addProperty("collision_box_min_z", blockAdded.getCollisionBoxMinZ());
-			}
-			
-			if (blockAdded.getCollisionBoxMaxX() != 1) {
-				json.addProperty("collision_box_max_x", blockAdded.getCollisionBoxMaxX());
-			}
-			
-			if (blockAdded.getCollisionBoxMaxY() != 0.0625F) {
-				json.addProperty("collision_box_max_y", blockAdded.getCollisionBoxMaxY());
-			}
-			
-			if (blockAdded.getCollisionBoxMaxZ() != 1) {
-				json.addProperty("collision_box_max_z", blockAdded.getCollisionBoxMaxZ());
-			}
+			IBlockAddedModifiableBoundingBox.Serializer.serialize(json, blockAdded);
 			
 			if (blockAdded.placeOnWalls) {
 				json.addProperty("place_on_walls", true);
@@ -309,21 +228,8 @@ public class BlockAddedCarpet extends BlockAddedSimple {
 		public BlockAddedCarpet deserialize(JsonObject json, JsonDeserializationContext context) {
 			BlockAddedCarpet blockAdded = new BlockAddedCarpet();
 			super.deserializeDefaults(json, context, blockAdded);
-
-			blockAdded.setHasCollisionBox(JsonUtils.getBoolean(json, "has_collision_box", true));
-			blockAdded.setHasSameCollisionBoundingBox(JsonUtils.getBoolean(json, "same_collision_bounding_box", true));
-			blockAdded.setBoundingBoxMinX(JsonUtils.getFloat(json, "bounding_box_min_x", 0));
-			blockAdded.setBoundingBoxMinY(JsonUtils.getFloat(json, "bounding_box_min_y", 0));
-			blockAdded.setBoundingBoxMinZ(JsonUtils.getFloat(json, "bounding_box_min_z", 0));
-			blockAdded.setBoundingBoxMaxX(Math.max(JsonUtils.getFloat(json, "bounding_box_max_x", 1), blockAdded.getBoundingBoxMinX()));
-			blockAdded.setBoundingBoxMaxY(Math.max(JsonUtils.getFloat(json, "bounding_box_max_y", 0.0625F), blockAdded.getBoundingBoxMinY()));
-			blockAdded.setBoundingBoxMaxZ(Math.max(JsonUtils.getFloat(json, "bounding_box_max_z", 1), blockAdded.getBoundingBoxMinZ()));
-			blockAdded.setCollisionBoxMinX(JsonUtils.getFloat(json, "collision_box_min_x", 0));
-			blockAdded.setCollisionBoxMinY(JsonUtils.getFloat(json, "collision_box_min_y", 0));
-			blockAdded.setCollisionBoxMinZ(JsonUtils.getFloat(json, "collision_box_min_z", 0));
-			blockAdded.setCollisionBoxMaxX(Math.max(JsonUtils.getFloat(json, "collision_box_max_x", 1), blockAdded.getCollisionBoxMinX()));
-			blockAdded.setCollisionBoxMaxY(Math.max(JsonUtils.getFloat(json, "collision_box_max_y", 0.0625F), blockAdded.getCollisionBoxMinY()));
-			blockAdded.setCollisionBoxMaxZ(Math.max(JsonUtils.getFloat(json, "collision_box_max_z", 1), blockAdded.getCollisionBoxMinZ()));
+			IBlockAddedModifiableBoundingBox.Serializer.deserialize(json, blockAdded);
+			
 			blockAdded.placeOnWalls = JsonUtils.getBoolean(json, "place_on_walls", false);
 			blockAdded.placeOnCeiling = JsonUtils.getBoolean(json, "place_on_ceiling", false);
 			blockAdded.needsSupport = JsonUtils.getBoolean(json, "needs_support", true);

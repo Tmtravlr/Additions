@@ -2,13 +2,9 @@ package com.tmtravlr.additions.type;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
-
-import org.apache.commons.io.FileUtils;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -17,11 +13,14 @@ import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.AddonLoader;
 import com.tmtravlr.additions.addon.advancements.AdvancementAdded;
+import com.tmtravlr.additions.util.ProblemNotifier;
 
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementManager;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -84,6 +83,7 @@ public class AdditionTypeAdvancement extends AdditionType<AdvancementAdded> {
 				filePaths = AddonLoader.getAddonFilePaths(addon.addonFolder, FOLDER_NAME);
 			} catch (IOException e) {
 				AdditionsMod.logger.error("Error loading advancement files for addon " + addon.id + ". The advancements will not load.", e);
+				ProblemNotifier.addProblemNotification(new TextComponentTranslation("gui.view.addon.advancements.title", addon.id), new TextComponentString(e.getMessage()));
 			}
 			
 			for (String filePath : filePaths) {
@@ -107,13 +107,15 @@ public class AdditionTypeAdvancement extends AdditionType<AdvancementAdded> {
 					ResourceLocation location = new ResourceLocation(locationStrings[0], locationPath);
 					
 					try {
-						Advancement.Builder builder = (Advancement.Builder)JsonUtils.gsonDeserialize(AdvancementManager.GSON, AddonLoader.readAddonFile(addon.addonFolder, filePath), Advancement.Builder.class);
+						Advancement.Builder builder = JsonUtils.gsonDeserialize(AdvancementManager.GSON, AddonLoader.readAddonFile(addon.addonFolder, filePath), Advancement.Builder.class);
 						this.advancementsLoaded.put(addon, new AdvancementAdded(location, builder));
 					} catch (IOException | JsonParseException e) {
 						AdditionsMod.logger.error("Error loading advancement " + location + " for addon " + addon.id + ". It will be skipped.", e);
+						ProblemNotifier.addProblemNotification(ProblemNotifier.createLabelFromPath(addon.addonFolder, filePath), new TextComponentString(e.getMessage()));
 					}
 				} else {
 					AdditionsMod.logger.error("Addon advancement " + filePath + " can't be directly in the advancements folder. It must be inside another folder.");
+					ProblemNotifier.addProblemNotification(ProblemNotifier.createLabelFromPath(addon.addonFolder, filePath), new TextComponentTranslation("gui.notification.problem.directlyInFolder", "functions"));
 				}
 			}
 		}

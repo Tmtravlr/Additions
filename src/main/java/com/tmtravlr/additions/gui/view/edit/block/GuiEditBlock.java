@@ -73,6 +73,7 @@ public abstract class GuiEditBlock<T extends IBlockAdded> extends GuiEdit {
 	protected GuiComponentSuggestionInputToolType blockHarvestToolInput;
 	protected GuiComponentListInput<GuiComponentSuggestionInputToolType> blockEffectiveToolsInput;
 	protected GuiComponentIntegerInput blockOpacityInput;
+	protected GuiComponentBooleanInput blockTransparentInput;
 	protected GuiComponentIntegerInput blockLightLevelInput;
 	protected GuiComponentIntegerInput blockFlammabilityInput;
 	protected GuiComponentIntegerInput blockFireSpreadSpeedInput;
@@ -177,8 +178,21 @@ public abstract class GuiEditBlock<T extends IBlockAdded> extends GuiEdit {
 		this.blockOpacityInput = new GuiComponentIntegerInput(I18n.format("gui.edit.block.opacity.label"), this, false);
 		this.blockOpacityInput.setInfo(new TextComponentTranslation("gui.edit.block.opacity.info"));
 		this.blockOpacityInput.setMinimum(0);
-		this.blockOpacityInput.setMaximum(15);
+		this.blockOpacityInput.setMaximum(14);
+		this.blockOpacityInput.setHidden(true);
 		this.blockOpacityInput.setDefaultInteger(this.block.getOpacity());
+		
+		this.blockTransparentInput = new GuiComponentBooleanInput(I18n.format("gui.edit.block.transparent.label"), this) {
+			
+			@Override
+			public void setDefaultBoolean(boolean input) {
+				GuiEditBlock.this.blockOpacityInput.setHidden(!input);
+				super.setDefaultBoolean(input);
+			}
+			
+		};
+		this.blockTransparentInput.setInfo(new TextComponentTranslation("gui.edit.block.transparent.info"));
+		this.blockTransparentInput.setDefaultBoolean(this.block.getOpacity() > 15);
 		
 		this.blockLightLevelInput = new GuiComponentIntegerInput(I18n.format("gui.edit.block.lightLevel.label"), this, false);
 		this.blockLightLevelInput.setInfo(new TextComponentTranslation("gui.edit.block.lightLevel.info"));
@@ -335,11 +349,18 @@ public abstract class GuiEditBlock<T extends IBlockAdded> extends GuiEdit {
 		this.block.setHarvestLevel(this.blockHarvestLevelInput.getInteger());
 		this.block.setHarvestTool(this.blockHarvestToolInput.getText());
 		this.block.setEffectiveTools(this.blockEffectiveToolsInput.getComponents().stream().map(GuiComponentSuggestionInputToolType::getText).collect(Collectors.toList()));
-		this.block.getAsBlock().setLightOpacity(this.blockOpacityInput.getInteger());
+		
+		if (!this.blockTransparentInput.getBoolean()) {
+			this.block.getAsBlock().setLightOpacity(15);
+		} else {
+			this.block.getAsBlock().setLightOpacity(this.blockOpacityInput.getInteger());
+		}
+		
 		this.block.getAsBlock().setLightLevel(this.blockLightLevelInput.getInteger() / 15F);
 		
 		int flammability = this.blockFlammabilityInput.getInteger();
 		int fireSpreadSpeed = this.blockFireSpreadSpeedInput.getInteger();
+		
 		if (!this.isNew || flammability > 0 || fireSpreadSpeed > 0) {
 			Blocks.FIRE.setFireInfo(this.block.getAsBlock(), fireSpreadSpeed, flammability);
 		}
@@ -374,11 +395,13 @@ public abstract class GuiEditBlock<T extends IBlockAdded> extends GuiEdit {
 			itemBlock.getAsItem().setContainerItem(this.itemBlockContainerInput.getSelected());
 			
 			Multimap<EntityEquipmentSlot, AttributeModifier> attributeModifiers = HashMultimap.create();
+			
 			if (!this.itemBlockAttributesInput.getComponents().isEmpty()) {
 				for (GuiComponentAttributeModifierInput modifierInput : this.itemBlockAttributesInput.getComponents()) {
 					attributeModifiers.put(modifierInput.getSlot(), modifierInput.getAttributeModifier());
 				}
 			}
+			
 			itemBlock.setAttributeModifiers(attributeModifiers);
 			
 			if (this.isNew) {
@@ -441,6 +464,7 @@ public abstract class GuiEditBlock<T extends IBlockAdded> extends GuiEdit {
 		});
 		
 		this.blockOpacityInput.setDefaultInteger(this.copyFrom.getOpacity());
+		this.blockTransparentInput.setDefaultBoolean(this.copyFrom.getOpacity() < 15);
 	    this.blockLightLevelInput.setDefaultInteger(this.copyFrom.getLightLevel());
 	    this.blockFlammabilityInput.setDefaultInteger(Blocks.FIRE.getFlammability(this.copyFrom.getAsBlock()));
 	    this.blockFireSpreadSpeedInput.setDefaultInteger(Blocks.FIRE.getEncouragement(this.copyFrom.getAsBlock()));

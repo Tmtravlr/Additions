@@ -9,12 +9,11 @@ import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 
-import com.google.common.collect.Multimap;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.AddonLoader;
-import com.tmtravlr.additions.type.AdditionTypeLootTable;
 import com.tmtravlr.additions.type.AdditionTypeStructure;
+import com.tmtravlr.additions.util.ProblemNotifier;
 
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
@@ -22,6 +21,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.datafix.DataFixer;
 import net.minecraft.util.datafix.FixTypes;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.gen.structure.template.Template;
 import net.minecraft.world.gen.structure.template.TemplateManager;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -90,6 +90,7 @@ public class ExtendedStructureManager extends TemplateManager {
         		this.loadedAddonStructures.put(location, structure);
             } catch (Throwable e) {
                 AdditionsMod.logger.warn("Couldn't load structure " + location + " from addon " + addonToGetStructureFor.id, e);
+				ProblemNotifier.addProblemNotification(ProblemNotifier.createLabelFromFile(structureFile), new TextComponentString(e.getMessage()));
             } finally {
                 IOUtils.closeQuietly(inputStream);
             }

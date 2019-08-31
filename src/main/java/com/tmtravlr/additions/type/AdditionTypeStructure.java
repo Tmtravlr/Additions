@@ -2,7 +2,6 @@ package com.tmtravlr.additions.type;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -14,8 +13,11 @@ import com.google.common.collect.Multimap;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.AddonLoader;
+import com.tmtravlr.additions.util.ProblemNotifier;
 
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -82,6 +84,7 @@ public class AdditionTypeStructure extends AdditionType<ResourceLocation> {
 				filePaths = AddonLoader.getAddonFilePaths(addon.addonFolder, FOLDER_NAME);
 			} catch (IOException e) {
 				AdditionsMod.logger.error("Error loading structure files for addon " + addon.id + ". The structures will not load.", e);
+				ProblemNotifier.addProblemNotification(new TextComponentTranslation("gui.view.addon.structures.title", addon.id), new TextComponentString(e.getMessage()));
 			}
 			
 			for (String filePath : filePaths) {
@@ -107,6 +110,7 @@ public class AdditionTypeStructure extends AdditionType<ResourceLocation> {
 					this.structureLocations.put(addon, location);
 				} else {
 					AdditionsMod.logger.error("Addon structure " + filePath + " can't be directly in the structures folder. It must be inside another folder.");
+					ProblemNotifier.addProblemNotification(ProblemNotifier.createLabelFromPath(addon.addonFolder, filePath), new TextComponentTranslation("gui.notification.problem.directlyInFolder", "structure"));
 				}
 			}
 		}

@@ -13,15 +13,16 @@ import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
-import com.google.gson.JsonSyntaxException;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.AddonLoader;
 import com.tmtravlr.additions.addon.recipes.IRecipeAdded;
 import com.tmtravlr.additions.addon.recipes.RecipeAddedCraftingDyeItem;
 import com.tmtravlr.additions.addon.recipes.RecipeAddedManager;
+import com.tmtravlr.additions.util.ProblemNotifier;
 
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -81,6 +82,7 @@ public class AdditionTypeRecipe extends AdditionType<IRecipeAdded> {
 					}
 				} catch (IOException | JsonParseException e) {
 					AdditionsMod.logger.error("Error loading recipe " + filePath + " for addon " + addon.id + ". The recipe will not load.", e);
+					ProblemNotifier.addProblemNotification(ProblemNotifier.createLabelFromPath(addon.addonFolder, filePath), new TextComponentString(e.getMessage()));
 				}
 			}
 		}

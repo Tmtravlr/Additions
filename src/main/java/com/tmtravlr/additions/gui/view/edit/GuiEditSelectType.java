@@ -35,12 +35,10 @@ public abstract class GuiEditSelectType<T> extends GuiEdit {
 		super(parentScreen, title);
 		this.addon = addon;
 	}
-	
+
 	@Override
-	public void initGui() {
-		super.initGui();
-		
-		this.buttonList.removeIf(button -> button.id == BUTTON_SAVE);
+	public void addButtons() {
+		this.buttonList.add(new GuiButton(BUTTON_BACK, this.width - 70, this.height - 30, 60, 20, I18n.format("gui.buttons.back")));
 	}
 	
 	@Override

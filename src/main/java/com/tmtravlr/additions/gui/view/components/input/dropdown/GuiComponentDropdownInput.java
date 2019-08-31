@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import org.lwjgl.input.Mouse;
 
+import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.gui.GuiScreenOverlay;
 import com.tmtravlr.additions.gui.view.components.IGuiViewComponent;
 import com.tmtravlr.additions.gui.view.edit.GuiEdit;
@@ -353,9 +354,8 @@ public class GuiComponentDropdownInput<T> extends Gui implements IGuiViewCompone
 		
 		@Override
 		public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-			
-			Gui.drawRect(this.left - 1, this.top - 1, this.left + this.listWidth + 1, this.top + this.listHeight + 1, 0xFFA0A0A0);
-			
+
+			CommonGuiUtils.drawOutline(this.left - 1, this.top - 1, this.listWidth + 2, this.listHeight + 2, 0xFFA0A0A0);
 			
 			if (!this.parentInput.filter.getText().equals(prevFilter)) {
 				String filter = this.parentInput.filter.getText();
@@ -363,8 +363,11 @@ public class GuiComponentDropdownInput<T> extends Gui implements IGuiViewCompone
 				this.prevFilter = filter;
 			}
 			
-			
-			super.drawScreen(mouseX, mouseY, partialTicks);
+			try {
+				super.drawScreen(mouseX, mouseY, partialTicks);
+			} catch (IllegalArgumentException e) {
+				AdditionsMod.logger.error("Failed to draw scrolling list", e);
+			}
 		}
 	}
 }

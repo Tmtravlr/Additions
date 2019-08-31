@@ -26,6 +26,7 @@ import com.tmtravlr.additions.network.PacketHandlerServer;
 import com.tmtravlr.additions.type.AdditionTypeEffect;
 import com.tmtravlr.additions.type.AdditionTypeLootTable;
 import com.tmtravlr.additions.type.AdditionTypeRecipe;
+import com.tmtravlr.additions.util.ProblemNotifier;
 import com.tmtravlr.lootoverhaul.loot.ExtraLootManager.LoadLootTableExtrasEvent;
 
 import io.netty.buffer.Unpooled;
@@ -51,9 +52,11 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
 
@@ -64,6 +67,13 @@ public class CommonEventHandler {
 	public static void onWorldLoad(WorldEvent.Load event) {
 		if (ConfigLoader.replaceManagers.getBoolean(true) && event.getWorld() instanceof WorldServer) {
 			AddonStructureManager.replaceStructureManager((WorldServer) event.getWorld());
+		}
+	}
+	
+	@SubscribeEvent
+	public static void onPlayerJoin(PlayerLoggedInEvent event) {
+		if (FMLCommonHandler.instance().getMinecraftServerInstance() != null) {
+			ProblemNotifier.showProblemsIngame(FMLCommonHandler.instance().getMinecraftServerInstance());
 		}
 	}
 	

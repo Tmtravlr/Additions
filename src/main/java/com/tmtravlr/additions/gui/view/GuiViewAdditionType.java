@@ -12,7 +12,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
 /**
@@ -126,8 +125,8 @@ public abstract class GuiViewAdditionType extends GuiView {
 			}
 			
 			if (mouseX >= this.x && mouseX <= this.x + this.width && mouseY >= this.y && mouseY < this.y + height ) {
-				this.viewScreen.drawRect(this.x + 1, this.y, this.x + this.width - 1, this.y + height, 0xFF102123);
-				this.viewScreen.drawRect(this.x + 3, this.y + 2, this.x + this.width - 3, this.y + height - 2, 0xFF1C393C);
+				this.viewScreen.drawRect(this.x + 1, this.y, this.x + this.width - 1, this.y + height, 0x442D5C60);
+				this.viewScreen.drawRect(this.x + 3, this.y + 2, this.x + this.width - 3, this.y + height - 2, 0x992D5C60);
 				this.viewScreen.drawRect(this.x + 5, this.y + 4, this.x + this.width - 5, this.y + height - 4, 0xFF2D5C60);
 			}
 			

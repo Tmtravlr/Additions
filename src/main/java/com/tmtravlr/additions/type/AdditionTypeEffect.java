@@ -35,8 +35,11 @@ import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemRightClickBlock
 import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemRightClickEntity;
 import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemUsing;
 import com.tmtravlr.additions.addon.effects.cause.EffectCauseManager;
+import com.tmtravlr.additions.util.ProblemNotifier;
 
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -87,6 +90,7 @@ public class AdditionTypeEffect extends AdditionType<EffectList> {
 				filePaths = AddonLoader.getAddonFilePaths(addon.addonFolder, FOLDER_NAME);
 			} catch (IOException e) {
 				AdditionsMod.logger.error("Error loading effect files for addon " + addon.id + ". The effects will not load.", e);
+				ProblemNotifier.addProblemNotification(new TextComponentTranslation("gui.view.addon.effects.title", addon.id), new TextComponentString(e.getMessage()));
 			}
 			
 			for (String filePath : filePaths) {
@@ -108,6 +112,7 @@ public class AdditionTypeEffect extends AdditionType<EffectList> {
 					}
 				} catch (IOException | JsonParseException e) {
 					AdditionsMod.logger.error("Error loading effect " + filePath + " for addon " + addon.id + ". The effect will not load.", e);
+					ProblemNotifier.addProblemNotification(ProblemNotifier.createLabelFromPath(addon.addonFolder, filePath), new TextComponentString(e.getMessage()));
 				}
 			}
 		}

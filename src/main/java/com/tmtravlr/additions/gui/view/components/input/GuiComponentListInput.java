@@ -3,6 +3,7 @@ package com.tmtravlr.additions.gui.view.components.input;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import com.tmtravlr.additions.gui.view.components.IGuiViewComponent;
@@ -137,6 +138,22 @@ public abstract class GuiComponentListInput<T extends IGuiViewComponent> impleme
 			this.components.add(index, blankComponent);
 			this.recreateComponentList();
 			this.componentList.setScrollDistance(this.componentList.getScrollDistance() + blankComponent.getHeight(this.x, this.x + this.width));
+			this.editScreen.notifyHasChanges();
+		}
+	}
+	
+	public void moveComponentUp(int index) {
+		if (index >= 1 && index < this.components.size()) {
+			Collections.swap(this.components, index, index - 1);
+			this.recreateComponentList();
+			this.editScreen.notifyHasChanges();
+		}
+	}
+	
+	public void moveComponentDown(int index) {
+		if (index >= 0 && index < this.components.size() - 1) {
+			Collections.swap(this.components, index, index + 1);
+			this.recreateComponentList();
 			this.editScreen.notifyHasChanges();
 		}
 	}

@@ -22,6 +22,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.client.config.GuiUtils;
 
 /**
@@ -122,11 +123,45 @@ public abstract class GuiView extends GuiScreen {
 		this.drawPostRender();
 	}
 	
+	@Override
+	public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+		if (mouseY > TITLE_HEIGHT && mouseY < this.height - BUTTON_FOOTER_HEIGHT) {
+			this.editArea.onMouseClicked(mouseX, mouseY, mouseButton);
+		}
+		
+		this.editArea.mouseClicked(mouseX, mouseY, mouseButton);
+		super.mouseClicked(mouseX, mouseY, mouseButton);
+	}
+	
+	@Override
+	public void keyTyped(char keyTyped, int keyCode) throws IOException {
+		this.editArea.onKeyTyped(keyTyped, keyCode);
+
+    	if (keyCode != 1) {
+    		super.keyTyped(keyTyped, keyCode);
+    	}
+	}
+
+    @Override
+    public void handleMouseInput() throws IOException {
+    	super.handleMouseInput();
+    	
+        int mouseX = Mouse.getEventX() * this.width / this.mc.displayWidth;
+        int mouseY = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
+        
+    	this.editArea.handleMouseInput(mouseX, mouseY);
+    }
+    
+    @Override
+	public void handleComponentHover(ITextComponent component, int x, int y) {
+    	super.handleComponentHover(component, x, y);
+    }
+	
 	protected void addButtons() {
 		this.buttonList.add(new GuiButton(BUTTON_BACK, this.width - 70, this.height - 30, 60, 20, I18n.format("gui.buttons.back")));
 	}
 	
-	protected void addPostRender(Runnable runnable) {
+	public void addPostRender(Runnable runnable) {
 		this.postRender.add(runnable);
 	}
 	
@@ -157,35 +192,6 @@ public abstract class GuiView extends GuiScreen {
         bufferbuilder.pos(this.width, this.height - 40.0D, 0.0D).tex(this.width / 32.0F, 0.0D).color(64, 64, 64, 255).endVertex();
         bufferbuilder.pos(0.0D, this.height - 40.0D, 0.0D).tex(0.0D, 0.0D).color(64, 64, 64, 255).endVertex();
         tessellator.draw();
-    }
-	
-	@Override
-	public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-		if (mouseY > TITLE_HEIGHT && mouseY < this.height - BUTTON_FOOTER_HEIGHT) {
-			this.editArea.onMouseClicked(mouseX, mouseY, mouseButton);
-		}
-		
-		this.editArea.mouseClicked(mouseX, mouseY, mouseButton);
-		super.mouseClicked(mouseX, mouseY, mouseButton);
-	}
-	
-	@Override
-	public void keyTyped(char keyTyped, int keyCode) throws IOException {
-		this.editArea.onKeyTyped(keyTyped, keyCode);
-
-    	if (keyCode != 1) {
-    		super.keyTyped(keyTyped, keyCode);
-    	}
-	}
-
-    @Override
-    public void handleMouseInput() throws IOException {
-    	super.handleMouseInput();
-    	
-        int mouseX = Mouse.getEventX() * this.width / this.mc.displayWidth;
-        int mouseY = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
-        
-    	this.editArea.handleMouseInput(mouseX, mouseY);
     }
     
     public FontRenderer getFontRenderer() {

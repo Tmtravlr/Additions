@@ -23,6 +23,7 @@ import com.tmtravlr.additions.network.PacketHandlerServer;
 import com.tmtravlr.additions.network.SToCMessage;
 import com.tmtravlr.additions.type.AdditionTypeManager;
 import com.tmtravlr.additions.type.attribute.AttributeTypeManager;
+import com.tmtravlr.additions.util.ProblemNotifier;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.CraftingHelper;
@@ -79,6 +80,7 @@ public class AdditionsMod {
 		networkWrapper.registerMessage(PacketHandlerServer.class, CToSMessage.class, 0, Side.SERVER);
 		networkWrapper.registerMessage(PacketHandlerClient.class, SToCMessage.class, 1, Side.CLIENT);
 		
+        ProblemNotifier.initializeProblemFolder(event);
         ConfigLoader.loadConfigFile(event);
         if (event.getSide() == Side.CLIENT) {
         	ClientConfigLoader.loadInternalConfigFile(event);

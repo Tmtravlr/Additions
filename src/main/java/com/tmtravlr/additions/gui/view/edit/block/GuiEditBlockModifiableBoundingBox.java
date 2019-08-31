@@ -8,6 +8,7 @@ import com.tmtravlr.additions.gui.view.components.input.GuiComponentFloatInput;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.TextComponentTranslation;
 
 /**
@@ -44,62 +45,62 @@ public abstract class GuiEditBlockModifiableBoundingBox<T extends IBlockAdded & 
 		this.blockBoundingBoxMinXInput = new GuiComponentFloatInput(I18n.format("gui.edit.block.boundingBoxMinX.label"), this, false);
 		this.blockBoundingBoxMinXInput.setMinimum(0);
 		this.blockBoundingBoxMinXInput.setMaximum(1);
-		this.blockBoundingBoxMinXInput.setDefaultFloat(this.block.getBoundingBoxMinX());
+		this.blockBoundingBoxMinXInput.setDefaultFloat((float) this.block.getBoundingBox().minX);
 		
 		this.blockBoundingBoxMinYInput = new GuiComponentFloatInput(I18n.format("gui.edit.block.boundingBoxMinY.label"), this, false);
 		this.blockBoundingBoxMinYInput.setMinimum(0);
 		this.blockBoundingBoxMinYInput.setMaximum(1);
-		this.blockBoundingBoxMinYInput.setDefaultFloat(this.block.getBoundingBoxMinY());
+		this.blockBoundingBoxMinYInput.setDefaultFloat((float) this.block.getBoundingBox().minY);
 		
 		this.blockBoundingBoxMinZInput = new GuiComponentFloatInput(I18n.format("gui.edit.block.boundingBoxMinZ.label"), this, false);
 		this.blockBoundingBoxMinZInput.setMinimum(0);
 		this.blockBoundingBoxMinZInput.setMaximum(1);
-		this.blockBoundingBoxMinZInput.setDefaultFloat(this.block.getBoundingBoxMinZ());
+		this.blockBoundingBoxMinZInput.setDefaultFloat((float) this.block.getBoundingBox().minZ);
 		
 		this.blockBoundingBoxMaxXInput = new GuiComponentFloatInput(I18n.format("gui.edit.block.boundingBoxMaxX.label"), this, false);
 		this.blockBoundingBoxMaxXInput.setMinimum(0);
 		this.blockBoundingBoxMaxXInput.setMaximum(1);
-		this.blockBoundingBoxMaxXInput.setDefaultFloat(this.block.getBoundingBoxMaxX());
+		this.blockBoundingBoxMaxXInput.setDefaultFloat((float) this.block.getBoundingBox().maxX);
 		
 		this.blockBoundingBoxMaxYInput = new GuiComponentFloatInput(I18n.format("gui.edit.block.boundingBoxMaxY.label"), this, false);
 		this.blockBoundingBoxMaxYInput.setMinimum(0);
 		this.blockBoundingBoxMaxYInput.setMaximum(1);
-		this.blockBoundingBoxMaxYInput.setDefaultFloat(this.block.getBoundingBoxMaxY());
+		this.blockBoundingBoxMaxYInput.setDefaultFloat((float) this.block.getBoundingBox().maxY);
 		
 		this.blockBoundingBoxMaxZInput = new GuiComponentFloatInput(I18n.format("gui.edit.block.boundingBoxMaxZ.label"), this, false);
 		this.blockBoundingBoxMaxZInput.setMinimum(0);
 		this.blockBoundingBoxMaxZInput.setMaximum(1);
-		this.blockBoundingBoxMaxZInput.setDefaultFloat(this.block.getBoundingBoxMaxZ());
+		this.blockBoundingBoxMaxZInput.setDefaultFloat((float) this.block.getBoundingBox().maxZ);
 	    
 		this.blockCollisionBoxMinXInput = new GuiComponentFloatInput(I18n.format("gui.edit.block.collisionBoxMinX.label"), this, false);
 		this.blockCollisionBoxMinXInput.setMinimum(0);
 		this.blockCollisionBoxMinXInput.setMaximum(1);
-		this.blockCollisionBoxMinXInput.setDefaultFloat(this.block.getCollisionBoxMinX());
+		this.blockCollisionBoxMinXInput.setDefaultFloat((float) this.block.getCollisionBox().minX);
 	    
 		this.blockCollisionBoxMinYInput = new GuiComponentFloatInput(I18n.format("gui.edit.block.collisionBoxMinY.label"), this, false);
 		this.blockCollisionBoxMinYInput.setMinimum(0);
 		this.blockCollisionBoxMinYInput.setMaximum(1);
-		this.blockCollisionBoxMinYInput.setDefaultFloat(this.block.getCollisionBoxMinY());
+		this.blockCollisionBoxMinYInput.setDefaultFloat((float) this.block.getCollisionBox().minY);
 	    
 		this.blockCollisionBoxMinZInput = new GuiComponentFloatInput(I18n.format("gui.edit.block.collisionBoxMinZ.label"), this, false);
 		this.blockCollisionBoxMinZInput.setMinimum(0);
 		this.blockCollisionBoxMinZInput.setMaximum(1);
-		this.blockCollisionBoxMinZInput.setDefaultFloat(this.block.getCollisionBoxMinZ());
+		this.blockCollisionBoxMinZInput.setDefaultFloat((float) this.block.getCollisionBox().minZ);
 	    
 		this.blockCollisionBoxMaxXInput = new GuiComponentFloatInput(I18n.format("gui.edit.block.collisionBoxMaxX.label"), this, false);
 		this.blockCollisionBoxMaxXInput.setMinimum(0);
 		this.blockCollisionBoxMaxXInput.setMaximum(1);
-		this.blockCollisionBoxMaxXInput.setDefaultFloat(this.block.getCollisionBoxMaxX());
+		this.blockCollisionBoxMaxXInput.setDefaultFloat((float) this.block.getCollisionBox().maxX);
 	    
 		this.blockCollisionBoxMaxYInput = new GuiComponentFloatInput(I18n.format("gui.edit.block.collisionBoxMaxY.label"), this, false);
 		this.blockCollisionBoxMaxYInput.setMinimum(0);
 		this.blockCollisionBoxMaxYInput.setMaximum(1);
-		this.blockCollisionBoxMaxYInput.setDefaultFloat(this.block.getCollisionBoxMaxY());
+		this.blockCollisionBoxMaxYInput.setDefaultFloat((float) this.block.getCollisionBox().maxY);
 	    
 		this.blockCollisionBoxMaxZInput = new GuiComponentFloatInput(I18n.format("gui.edit.block.collisionBoxMaxZ.label"), this, false);
 		this.blockCollisionBoxMaxZInput.setMinimum(0);
 		this.blockCollisionBoxMaxZInput.setMaximum(1);
-		this.blockCollisionBoxMaxZInput.setDefaultFloat(this.block.getCollisionBoxMaxZ());
+		this.blockCollisionBoxMaxZInput.setDefaultFloat((float) this.block.getCollisionBox().maxZ);
 		
 		this.blockHasCollisionBoxInput = new GuiComponentBooleanInput(I18n.format("gui.edit.block.hasCollisionBox.label"), this) {
 			
@@ -153,18 +154,22 @@ public abstract class GuiEditBlockModifiableBoundingBox<T extends IBlockAdded & 
 	public void saveObject() {
 		this.block.setHasCollisionBox(this.blockHasCollisionBoxInput.getBoolean());
 		this.block.setHasSameCollisionBoundingBox(this.blockSameCollisionBoundingBoxInput.getBoolean());
-		this.block.setBoundingBoxMinX(this.blockBoundingBoxMinXInput.getFloat());
-		this.block.setBoundingBoxMinY(this.blockBoundingBoxMinYInput.getFloat());
-		this.block.setBoundingBoxMinZ(this.blockBoundingBoxMinZInput.getFloat());
-		this.block.setBoundingBoxMaxX(Math.max(this.blockBoundingBoxMaxXInput.getFloat(), this.block.getBoundingBoxMinX()));
-		this.block.setBoundingBoxMaxY(Math.max(this.blockBoundingBoxMaxYInput.getFloat(), this.block.getBoundingBoxMinY()));
-		this.block.setBoundingBoxMaxZ(Math.max(this.blockBoundingBoxMaxZInput.getFloat(), this.block.getBoundingBoxMinZ()));
-		this.block.setCollisionBoxMinX(this.blockCollisionBoxMinXInput.getFloat());
-		this.block.setCollisionBoxMinY(this.blockCollisionBoxMinYInput.getFloat());
-		this.block.setCollisionBoxMinZ(this.blockCollisionBoxMinZInput.getFloat());
-		this.block.setCollisionBoxMaxX(Math.max(this.blockCollisionBoxMaxXInput.getFloat(), this.block.getCollisionBoxMinX()));
-		this.block.setCollisionBoxMaxY(Math.max(this.blockCollisionBoxMaxYInput.getFloat(), this.block.getCollisionBoxMinY()));
-		this.block.setCollisionBoxMaxZ(Math.max(this.blockCollisionBoxMaxZInput.getFloat(), this.block.getCollisionBoxMinZ()));
+		this.block.setBoundingBox(new AxisAlignedBB(
+				this.blockBoundingBoxMinXInput.getFloat(), 
+				this.blockBoundingBoxMinYInput.getFloat(), 
+				this.blockBoundingBoxMinZInput.getFloat(), 
+				Math.max(this.blockBoundingBoxMaxXInput.getFloat(), this.blockBoundingBoxMinXInput.getFloat()),
+				Math.max(this.blockBoundingBoxMaxYInput.getFloat(), this.blockBoundingBoxMinYInput.getFloat()),
+				Math.max(this.blockBoundingBoxMaxZInput.getFloat(), this.blockBoundingBoxMinZInput.getFloat())
+		));
+		this.block.setCollisionBox(new AxisAlignedBB(
+				this.blockCollisionBoxMinXInput.getFloat(),
+				this.blockCollisionBoxMinYInput.getFloat(),
+				this.blockCollisionBoxMinZInput.getFloat(),
+				Math.max(this.blockCollisionBoxMaxXInput.getFloat(), this.blockCollisionBoxMinXInput.getFloat()),
+				Math.max(this.blockCollisionBoxMaxYInput.getFloat(), this.blockCollisionBoxMinYInput.getFloat()),
+				Math.max(this.blockCollisionBoxMaxZInput.getFloat(), this.blockCollisionBoxMinZInput.getFloat())
+		));
 
 		super.saveObject();
 	}
@@ -173,18 +178,18 @@ public abstract class GuiEditBlockModifiableBoundingBox<T extends IBlockAdded & 
 	protected void copyFromOther() {
 	    this.blockHasCollisionBoxInput.setDefaultBoolean(this.copyFrom.hasCollisionBox());
 	    this.blockSameCollisionBoundingBoxInput.setDefaultBoolean(this.copyFrom.hasSameCollisionBoundingBox());
-	    this.blockBoundingBoxMinXInput.setDefaultFloat(this.copyFrom.getBoundingBoxMinX());
-	    this.blockBoundingBoxMinYInput.setDefaultFloat(this.copyFrom.getBoundingBoxMinY());
-	    this.blockBoundingBoxMinZInput.setDefaultFloat(this.copyFrom.getBoundingBoxMinZ());
-	    this.blockBoundingBoxMinXInput.setDefaultFloat(this.copyFrom.getBoundingBoxMinX());
-	    this.blockBoundingBoxMaxYInput.setDefaultFloat(this.copyFrom.getBoundingBoxMaxY());
-	    this.blockBoundingBoxMaxZInput.setDefaultFloat(this.copyFrom.getBoundingBoxMaxZ());
-	    this.blockCollisionBoxMinXInput.setDefaultFloat(this.copyFrom.getCollisionBoxMinX());
-	    this.blockCollisionBoxMinYInput.setDefaultFloat(this.copyFrom.getCollisionBoxMinY());
-	    this.blockCollisionBoxMinZInput.setDefaultFloat(this.copyFrom.getCollisionBoxMinZ());
-	    this.blockCollisionBoxMinXInput.setDefaultFloat(this.copyFrom.getCollisionBoxMinX());
-	    this.blockCollisionBoxMaxYInput.setDefaultFloat(this.copyFrom.getCollisionBoxMaxY());
-	    this.blockCollisionBoxMaxZInput.setDefaultFloat(this.copyFrom.getCollisionBoxMaxZ());
+	    this.blockBoundingBoxMinXInput.setDefaultFloat((float) this.copyFrom.getBoundingBox().minX);
+	    this.blockBoundingBoxMinYInput.setDefaultFloat((float) this.copyFrom.getBoundingBox().minY);
+	    this.blockBoundingBoxMinZInput.setDefaultFloat((float) this.copyFrom.getBoundingBox().minZ);
+	    this.blockBoundingBoxMinXInput.setDefaultFloat((float) this.copyFrom.getBoundingBox().minX);
+	    this.blockBoundingBoxMaxYInput.setDefaultFloat((float) this.copyFrom.getBoundingBox().maxY);
+	    this.blockBoundingBoxMaxZInput.setDefaultFloat((float) this.copyFrom.getBoundingBox().maxZ);
+	    this.blockCollisionBoxMinXInput.setDefaultFloat((float) this.copyFrom.getCollisionBox().minX);
+	    this.blockCollisionBoxMinYInput.setDefaultFloat((float) this.copyFrom.getCollisionBox().minY);
+	    this.blockCollisionBoxMinZInput.setDefaultFloat((float) this.copyFrom.getCollisionBox().minZ);
+	    this.blockCollisionBoxMinXInput.setDefaultFloat((float) this.copyFrom.getCollisionBox().minX);
+	    this.blockCollisionBoxMaxYInput.setDefaultFloat((float) this.copyFrom.getCollisionBox().maxY);
+	    this.blockCollisionBoxMaxZInput.setDefaultFloat((float) this.copyFrom.getCollisionBox().maxZ);
 		
 		super.copyFromOther();
 	}

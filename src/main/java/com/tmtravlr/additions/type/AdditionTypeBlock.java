@@ -25,11 +25,14 @@ import com.tmtravlr.additions.addon.blocks.IBlockAdded;
 import com.tmtravlr.additions.addon.items.IItemAdded;
 import com.tmtravlr.additions.addon.items.ItemAddedManager;
 import com.tmtravlr.additions.addon.items.blocks.IItemAddedBlock;
+import com.tmtravlr.additions.util.ProblemNotifier;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
@@ -72,6 +75,7 @@ public class AdditionTypeBlock extends AdditionType<IBlockAdded> {
 				filePaths = AddonLoader.getAddonFilePaths(addon.addonFolder, FOLDER_NAME);
 			} catch (IOException e) {
 				AdditionsMod.logger.error("Error loading block files for addon " + addon.id + ". The blocks will not load.", e);
+				ProblemNotifier.addProblemNotification(new TextComponentTranslation("gui.view.addon.blocks.title", addon.id), new TextComponentString(e.getMessage()));
 			}
 			
 			for (String filePath : filePaths) {
@@ -115,6 +119,7 @@ public class AdditionTypeBlock extends AdditionType<IBlockAdded> {
 					}
 				} catch (IOException | JsonParseException e) {
 					AdditionsMod.logger.error("Error loading block " + filePath + " for addon " + addon.id + ". The block will not load.", e);
+					ProblemNotifier.addProblemNotification(ProblemNotifier.createLabelFromPath(addon.addonFolder, filePath), new TextComponentString(e.getMessage()));
 				}
 			}
 		}

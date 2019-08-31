@@ -8,6 +8,7 @@ import com.google.gson.JsonSerializationContext;
 import com.tmtravlr.additions.AdditionsMod;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -36,6 +37,11 @@ public class ItemAddedClub extends ItemAddedSimple implements IItemAddedTool {
 	
 	public boolean applyVanillaAttributes = true;
 	private Item.ToolMaterial material = Item.ToolMaterial.WOOD;
+	
+	public ItemAddedClub() {
+		super();
+		this.setCreativeTab(CreativeTabs.COMBAT);
+	}
 	
 	@Override
 	public void setToolMaterial(Item.ToolMaterial material) {

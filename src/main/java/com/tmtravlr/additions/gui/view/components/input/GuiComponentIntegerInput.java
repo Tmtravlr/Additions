@@ -7,18 +7,14 @@ import org.lwjgl.input.Mouse;
 
 import com.google.common.base.Predicate;
 import com.tmtravlr.additions.AdditionsMod;
-import com.tmtravlr.additions.gui.view.GuiView;
 import com.tmtravlr.additions.gui.view.components.IGuiViewComponent;
 import com.tmtravlr.additions.gui.view.edit.GuiEdit;
 import com.tmtravlr.additions.util.client.CommonGuiUtils;
 
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.fml.client.config.GuiUtils;
 
 /**
  * Extension of the vanilla text field, for an int input.
@@ -218,6 +214,7 @@ public class GuiComponentIntegerInput extends GuiTextField implements IGuiViewCo
 	
 	public void setDefaultInteger(int integer) {
 		this.setInteger(integer);
+		this.checkLimits();
 	}
 	
 	protected void setInteger(int integer) {

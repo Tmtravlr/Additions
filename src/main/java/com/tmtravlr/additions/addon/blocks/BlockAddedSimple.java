@@ -32,7 +32,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.JsonUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -79,18 +78,8 @@ public class BlockAddedSimple extends Block implements IBlockAdded, IBlockAddedM
 	private SoundEvent fallSound = null;
 	private boolean hasCollisionBox = true;
 	private boolean sameCollisionBoundingBox = true;
-	private float boundingBoxMinX = 0;
-	private float boundingBoxMinY = 0;
-	private float boundingBoxMinZ = 0;
-	private float boundingBoxMaxX = 1;
-	private float boundingBoxMaxY = 1;
-	private float boundingBoxMaxZ = 1;
-	private float collisionBoxMinX = 0;
-	private float collisionBoxMinY = 0;
-	private float collisionBoxMinZ = 0;
-	private float collisionBoxMaxX = 1;
-	private float collisionBoxMaxY = 1;
-	private float collisionBoxMaxZ = 1;
+	private AxisAlignedBB boundingBox = new AxisAlignedBB(0, 0, 0, 1, 1, 1);
+	private AxisAlignedBB collisionBox = new AxisAlignedBB(0, 0, 0, 1, 1, 1);
 
 	public BlockAddedSimple() {
 		super(Material.ROCK);
@@ -241,63 +230,13 @@ public class BlockAddedSimple extends Block implements IBlockAdded, IBlockAddedM
 	}
 	
 	@Override
-	public void setBoundingBoxMinX(float boundingBoxMinX) {
-		this.boundingBoxMinX = boundingBoxMinX;
+	public void setBoundingBox(AxisAlignedBB boundingBox) {
+		this.boundingBox = boundingBox;
 	}
 	
 	@Override
-	public void setBoundingBoxMinY(float boundingBoxMinY) {
-		this.boundingBoxMinY = boundingBoxMinY;
-	}
-	
-	@Override
-	public void setBoundingBoxMinZ(float boundingBoxMinZ) {
-		this.boundingBoxMinZ = boundingBoxMinZ;
-	}
-	
-	@Override
-	public void setBoundingBoxMaxX(float boundingBoxMaxX) {
-		this.boundingBoxMaxX = boundingBoxMaxX;
-	}
-	
-	@Override
-	public void setBoundingBoxMaxY(float boundingBoxMaxY) {
-		this.boundingBoxMaxY = boundingBoxMaxY;
-	}
-	
-	@Override
-	public void setBoundingBoxMaxZ(float boundingBoxMaxZ) {
-		this.boundingBoxMaxZ = boundingBoxMaxZ;
-	}
-	
-	@Override
-	public void setCollisionBoxMinX(float collisionBoxMinX) {
-		this.collisionBoxMinX = collisionBoxMinX;
-	}
-	
-	@Override
-	public void setCollisionBoxMinY(float collisionBoxMinY) {
-		this.collisionBoxMinY = collisionBoxMinY;
-	}
-	
-	@Override
-	public void setCollisionBoxMinZ(float collisionBoxMinZ) {
-		this.collisionBoxMinZ = collisionBoxMinZ;
-	}
-	
-	@Override
-	public void setCollisionBoxMaxX(float collisionBoxMaxX) {
-		this.collisionBoxMaxX = collisionBoxMaxX;
-	}
-	
-	@Override
-	public void setCollisionBoxMaxY(float collisionBoxMaxY) {
-		this.collisionBoxMaxY = collisionBoxMaxY;
-	}
-	
-	@Override
-	public void setCollisionBoxMaxZ(float collisionBoxMaxZ) {
-		this.collisionBoxMaxZ = collisionBoxMaxZ;
+	public void setCollisionBox(AxisAlignedBB collisionBox) {
+		this.collisionBox = collisionBox;
 	}
 	
 	@Override
@@ -436,68 +375,18 @@ public class BlockAddedSimple extends Block implements IBlockAdded, IBlockAddedM
 	}
 	
 	@Override
-	public float getBoundingBoxMinX() {
-		return this.boundingBoxMinX;
+	public AxisAlignedBB getBoundingBox() {
+		return this.boundingBox;
 	}
 	
 	@Override
-	public float getBoundingBoxMinY() {
-		return this.boundingBoxMinY;
-	}
-	
-	@Override
-	public float getBoundingBoxMinZ() {
-		return this.boundingBoxMinZ;
-	}
-	
-	@Override
-	public float getBoundingBoxMaxX() {
-		return this.boundingBoxMaxX;
-	}
-	
-	@Override
-	public float getBoundingBoxMaxY() {
-		return this.boundingBoxMaxY;
-	}
-	
-	@Override
-	public float getBoundingBoxMaxZ() {
-		return this.boundingBoxMaxZ;
-	}
-	
-	@Override
-	public float getCollisionBoxMinX() {
-		return this.collisionBoxMinX;
-	}
-	
-	@Override
-	public float getCollisionBoxMinY() {
-		return this.collisionBoxMinY;
-	}
-	
-	@Override
-	public float getCollisionBoxMinZ() {
-		return this.collisionBoxMinZ;
-	}
-	
-	@Override
-	public float getCollisionBoxMaxX() {
-		return this.collisionBoxMaxX;
-	}
-	
-	@Override
-	public float getCollisionBoxMaxY() {
-		return this.collisionBoxMaxY;
-	}
-	
-	@Override
-	public float getCollisionBoxMaxZ() {
-		return this.collisionBoxMaxZ;
+	public AxisAlignedBB getCollisionBox() {
+		return this.collisionBox;
 	}
 	
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {
-        return this.lightOpacity >= 15 && this.boundingBoxMinX == 0 && this.boundingBoxMinY == 0 && this.boundingBoxMinZ == 0 && this.boundingBoxMaxX == 1 && this.boundingBoxMaxY == 1 && this.boundingBoxMaxZ == 1;
+        return this.lightOpacity >= 15 && this.boundingBox.minX == 0 && this.boundingBox.minY == 0 && this.boundingBox.minZ == 0 && this.boundingBox.maxX == 1 && this.boundingBox.maxY == 1 && this.boundingBox.maxZ == 1;
     }
 	
 	@Override
@@ -616,7 +505,7 @@ public class BlockAddedSimple extends Block implements IBlockAdded, IBlockAddedM
 
     @Override
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-        return new AxisAlignedBB(this.boundingBoxMinX, this.boundingBoxMinY, this.boundingBoxMinZ, this.boundingBoxMaxX, this.boundingBoxMaxY, this.boundingBoxMaxZ);
+        return new AxisAlignedBB(this.boundingBox.minX, this.boundingBox.minY, this.boundingBox.minZ, this.boundingBox.maxX, this.boundingBox.maxY, this.boundingBox.maxZ);
     }
     
     @Override
@@ -624,19 +513,19 @@ public class BlockAddedSimple extends Block implements IBlockAdded, IBlockAddedM
     	if (!this.hasCollisionBox) {
     		return Block.NULL_AABB;
     	} else if (!this.sameCollisionBoundingBox) {
-    		return new AxisAlignedBB(this.collisionBoxMinX, this.collisionBoxMinY, this.collisionBoxMinZ, this.collisionBoxMaxX, this.collisionBoxMaxY, this.collisionBoxMaxZ);
+    		return new AxisAlignedBB(this.collisionBox.minX, this.collisionBox.minY, this.collisionBox.minZ, this.collisionBox.maxX, this.collisionBox.maxY, this.collisionBox.maxZ);
     	}
         return blockState.getBoundingBox(worldIn, pos);
     }
     
     @Override
     public boolean canPlaceTorchOnTop(IBlockState state, IBlockAccess world, BlockPos pos) {
-    	return this.boundingBoxMaxY == 1 && this.boundingBoxMinX <= 0.45 && this.boundingBoxMinZ <= 0.45 && this.boundingBoxMaxX >= 0.55 && this.boundingBoxMaxZ >= 0.55;
+    	return this.boundingBox.maxY == 1 && this.boundingBox.minX <= 0.45 && this.boundingBox.minZ <= 0.45 && this.boundingBox.maxX >= 0.55 && this.boundingBox.maxZ >= 0.55;
     }
     
     @Override
     public boolean isTopSolid(IBlockState state) {
-        return state.getMaterial().isOpaque() && this.boundingBoxMaxY == 1 && this.boundingBoxMinX <= 0 && this.boundingBoxMinZ <= 0 && this.boundingBoxMaxX >= 1 && this.boundingBoxMaxZ >= 1;
+        return state.getMaterial().isOpaque() && this.boundingBox.maxY == 1 && this.boundingBox.minX <= 0 && this.boundingBox.minZ <= 0 && this.boundingBox.maxX >= 1 && this.boundingBox.maxZ >= 1;
     }
     
     @Override
@@ -647,20 +536,25 @@ public class BlockAddedSimple extends Block implements IBlockAdded, IBlockAddedM
 	    	boolean solid = false;
 	    	
 	    	if (face == EnumFacing.UP) {
-	    		solid = this.boundingBoxMaxY == 1 && this.boundingBoxMinX <= 0 && this.boundingBoxMinZ <= 0 && this.boundingBoxMaxX >= 1 && this.boundingBoxMaxZ >= 1;
+	    		solid = this.boundingBox.maxY == 1 && this.boundingBox.minX <= 0 && this.boundingBox.minZ <= 0 && this.boundingBox.maxX >= 1 && this.boundingBox.maxZ >= 1;
 	    	} else if (face == EnumFacing.DOWN) {
-	    		solid = this.boundingBoxMinY == 0 && this.boundingBoxMinX <= 0 && this.boundingBoxMinZ <= 0 && this.boundingBoxMaxX >= 1 && this.boundingBoxMaxZ >= 1;
+	    		solid = this.boundingBox.minY == 0 && this.boundingBox.minX <= 0 && this.boundingBox.minZ <= 0 && this.boundingBox.maxX >= 1 && this.boundingBox.maxZ >= 1;
 	    	} else if (face == EnumFacing.EAST) {
-	    		solid = this.boundingBoxMaxX == 1 && this.boundingBoxMinY <= 0 && this.boundingBoxMinZ <= 0 && this.boundingBoxMaxY >= 1 && this.boundingBoxMaxZ >= 1;
+	    		solid = this.boundingBox.maxX == 1 && this.boundingBox.minY <= 0 && this.boundingBox.minZ <= 0 && this.boundingBox.maxY >= 1 && this.boundingBox.maxZ >= 1;
 	    	} else if (face == EnumFacing.WEST) {
-	    		solid = this.boundingBoxMinX == 0 && this.boundingBoxMinY <= 0 && this.boundingBoxMinZ <= 0 && this.boundingBoxMaxY >= 1 && this.boundingBoxMaxZ >= 1;
+	    		solid = this.boundingBox.minX == 0 && this.boundingBox.minY <= 0 && this.boundingBox.minZ <= 0 && this.boundingBox.maxY >= 1 && this.boundingBox.maxZ >= 1;
 	    	} else if (face == EnumFacing.SOUTH) {
-	    		solid = this.boundingBoxMaxZ == 1 && this.boundingBoxMinY <= 0 && this.boundingBoxMinX <= 0 && this.boundingBoxMaxY >= 1 && this.boundingBoxMaxX >= 1;
+	    		solid = this.boundingBox.maxZ == 1 && this.boundingBox.minY <= 0 && this.boundingBox.minX <= 0 && this.boundingBox.maxY >= 1 && this.boundingBox.maxX >= 1;
 	    	} else if (face == EnumFacing.NORTH) {
-	    		solid = this.boundingBoxMinZ == 0 && this.boundingBoxMinY <= 0 && this.boundingBoxMinX <= 0 && this.boundingBoxMaxY >= 1 && this.boundingBoxMaxX >= 1;
+	    		solid = this.boundingBox.minZ == 0 && this.boundingBox.minY <= 0 && this.boundingBox.minX <= 0 && this.boundingBox.maxY >= 1 && this.boundingBox.maxX >= 1;
 	    	}
 	    	return solid ? BlockFaceShape.SOLID : BlockFaceShape.UNDEFINED;
     	}
+    }
+    
+    @Override
+    public boolean isPassable(IBlockAccess world, BlockPos pos) {
+        return !this.hasCollisionBox || super.isPassable(world, pos);
     }
     
     @Override
@@ -768,61 +662,7 @@ public class BlockAddedSimple extends Block implements IBlockAdded, IBlockAddedM
 		public JsonObject serialize(BlockAddedSimple blockAdded, JsonSerializationContext context) {
 			JsonObject json = super.serialize(blockAdded, context);
 			
-			if (!blockAdded.hasCollisionBox()) {
-				json.addProperty("has_collision_box", false);
-			}
-			
-			if (!blockAdded.hasSameCollisionBoundingBox()) {
-				json.addProperty("same_collision_bounding_box", false);
-			}
-			
-			if (blockAdded.getBoundingBoxMinX() != 0) {
-				json.addProperty("bounding_box_min_x", blockAdded.getBoundingBoxMinX());
-			}
-			
-			if (blockAdded.getBoundingBoxMinY() != 0) {
-				json.addProperty("bounding_box_min_y", blockAdded.getBoundingBoxMinY());
-			}
-			
-			if (blockAdded.getBoundingBoxMinZ() != 0) {
-				json.addProperty("bounding_box_min_z", blockAdded.getBoundingBoxMinZ());
-			}
-			
-			if (blockAdded.getBoundingBoxMaxX() != 1) {
-				json.addProperty("bounding_box_max_x", blockAdded.getBoundingBoxMaxX());
-			}
-			
-			if (blockAdded.getBoundingBoxMaxY() != 1) {
-				json.addProperty("bounding_box_max_y", blockAdded.getBoundingBoxMaxY());
-			}
-			
-			if (blockAdded.getBoundingBoxMaxZ() != 1) {
-				json.addProperty("bounding_box_max_z", blockAdded.getBoundingBoxMaxZ());
-			}
-			
-			if (blockAdded.getCollisionBoxMinX() != 0) {
-				json.addProperty("collision_box_min_x", blockAdded.getCollisionBoxMinX());
-			}
-			
-			if (blockAdded.getCollisionBoxMinY() != 0) {
-				json.addProperty("collision_box_min_y", blockAdded.getCollisionBoxMinY());
-			}
-			
-			if (blockAdded.getCollisionBoxMinZ() != 0) {
-				json.addProperty("collision_box_min_z", blockAdded.getCollisionBoxMinZ());
-			}
-			
-			if (blockAdded.getCollisionBoxMaxX() != 1) {
-				json.addProperty("collision_box_max_x", blockAdded.getCollisionBoxMaxX());
-			}
-			
-			if (blockAdded.getCollisionBoxMaxY() != 1) {
-				json.addProperty("collision_box_max_y", blockAdded.getCollisionBoxMaxY());
-			}
-			
-			if (blockAdded.getCollisionBoxMaxZ() != 1) {
-				json.addProperty("collision_box_max_z", blockAdded.getCollisionBoxMaxZ());
-			}
+			IBlockAddedModifiableBoundingBox.Serializer.serialize(json, blockAdded);
 			
 			return json;
 		}
@@ -831,21 +671,7 @@ public class BlockAddedSimple extends Block implements IBlockAdded, IBlockAddedM
 		public BlockAddedSimple deserialize(JsonObject json, JsonDeserializationContext context) {
 			BlockAddedSimple blockAdded = new BlockAddedSimple();
 			super.deserializeDefaults(json, context, blockAdded);
-			
-			blockAdded.setHasCollisionBox(JsonUtils.getBoolean(json, "has_collision_box", true));
-			blockAdded.setHasSameCollisionBoundingBox(JsonUtils.getBoolean(json, "same_collision_bounding_box", true));
-			blockAdded.setBoundingBoxMinX(JsonUtils.getFloat(json, "bounding_box_min_x", 0));
-			blockAdded.setBoundingBoxMinY(JsonUtils.getFloat(json, "bounding_box_min_y", 0));
-			blockAdded.setBoundingBoxMinZ(JsonUtils.getFloat(json, "bounding_box_min_z", 0));
-			blockAdded.setBoundingBoxMaxX(Math.max(JsonUtils.getFloat(json, "bounding_box_max_x", 1), blockAdded.getBoundingBoxMinX()));
-			blockAdded.setBoundingBoxMaxY(Math.max(JsonUtils.getFloat(json, "bounding_box_max_y", 1), blockAdded.getBoundingBoxMinY()));
-			blockAdded.setBoundingBoxMaxZ(Math.max(JsonUtils.getFloat(json, "bounding_box_max_z", 1), blockAdded.getBoundingBoxMinZ()));
-			blockAdded.setCollisionBoxMinX(JsonUtils.getFloat(json, "collision_box_min_x", 0));
-			blockAdded.setCollisionBoxMinY(JsonUtils.getFloat(json, "collision_box_min_y", 0));
-			blockAdded.setCollisionBoxMinZ(JsonUtils.getFloat(json, "collision_box_min_z", 0));
-			blockAdded.setCollisionBoxMaxX(Math.max(JsonUtils.getFloat(json, "collision_box_max_x", 1), blockAdded.getCollisionBoxMinX()));
-			blockAdded.setCollisionBoxMaxY(Math.max(JsonUtils.getFloat(json, "collision_box_max_y", 1), blockAdded.getCollisionBoxMinY()));
-			blockAdded.setCollisionBoxMaxZ(Math.max(JsonUtils.getFloat(json, "collision_box_max_z", 1), blockAdded.getCollisionBoxMinZ()));
+			IBlockAddedModifiableBoundingBox.Serializer.deserialize(json, blockAdded);
 			
 			return blockAdded;
 		}

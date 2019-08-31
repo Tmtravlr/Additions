@@ -2,6 +2,7 @@ package com.tmtravlr.additions.gui.view.components.input.dropdown;
 
 import java.util.ArrayList;
 
+import com.tmtravlr.additions.ConfigLoader;
 import com.tmtravlr.additions.gui.view.edit.GuiEdit;
 import com.tmtravlr.additions.util.client.CommonGuiUtils;
 
@@ -55,15 +56,22 @@ public class GuiComponentDropdownInputPotionType extends GuiComponentDropdownInp
 			protected void drawSlot(int slot, int right, int top, int slotBuffer, Tessellator tess) {
 				if (!this.selectionDisplay.isEmpty()) {
 					PotionType toDisplay = this.selectionDisplay.get(slot);
+					
 					if (toDisplay != null) {
-						ItemStack stackToDisplay = new ItemStack(Items.POTIONITEM);
-						PotionUtils.addPotionToItemStack(stackToDisplay, toDisplay);
+						int textOffset = 5;
 						
-						int itemX = this.left + 5;
-						int itemY = top - 1;
-
-						this.parentInput.editScreen.renderItemStack(stackToDisplay, itemX, itemY, 0, 0, false);
-						this.parentInput.editScreen.getFontRenderer().drawString(this.parentInput.getSelectionName(toDisplay), this.left + 25, top + 2, 0xFFFFFF);
+						if (ConfigLoader.renderItemsInLists.getBoolean(true)) {
+							ItemStack stackToDisplay = new ItemStack(Items.POTIONITEM);
+							PotionUtils.addPotionToItemStack(stackToDisplay, toDisplay);
+							
+							int itemX = this.left + 5;
+							int itemY = top - 1;
+							textOffset = 25;
+	
+							this.parentInput.editScreen.renderItemStack(stackToDisplay, itemX, itemY, 0, 0, false);
+						}
+						
+						this.parentInput.editScreen.getFontRenderer().drawString(this.parentInput.getSelectionName(toDisplay), this.left + textOffset, top + 2, 0xFFFFFF);
 					}
 				} else {
 					this.parentInput.editScreen.getFontRenderer().drawString(I18n.format("gui.dropdown.nothingToShow"), this.left + 5, top + 2, 0x888888);

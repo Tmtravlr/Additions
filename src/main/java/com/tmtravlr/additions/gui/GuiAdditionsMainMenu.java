@@ -5,10 +5,14 @@ import java.util.ArrayList;
 
 import org.lwjgl.input.Mouse;
 
+import com.tmtravlr.additions.ConfigLoader;
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.AddonLoader;
+import com.tmtravlr.additions.gui.message.GuiMessageBoxTwoButton;
 import com.tmtravlr.additions.gui.view.GuiViewAddon;
+import com.tmtravlr.additions.gui.view.GuiViewProblemNotifications;
 import com.tmtravlr.additions.gui.view.edit.GuiEditAddon;
+import com.tmtravlr.additions.util.ProblemNotifier;
 import com.tmtravlr.additions.util.client.CommonGuiUtils;
 
 import net.minecraft.client.gui.FontRenderer;
@@ -28,7 +32,8 @@ public class GuiAdditionsMainMenu extends GuiScreen {
 	
     private static final ResourceLocation TITLE_TEXTURE = new ResourceLocation("additions:textures/gui/additions_title_big.png");
 
-	private static final int BUTTON_DONE = 0;
+    private static final int BUTTON_DONE = 0;
+	private static final int BUTTON_PROBLEMS = 1;
 	
 	private GuiScreen parentScreen;
 	
@@ -41,10 +46,6 @@ public class GuiAdditionsMainMenu extends GuiScreen {
 		this.parentScreen = parentScreen;
 	}
 	
-	/**
-     * Adds the buttons (and other controls) to the screen in question. Called when the GUI is displayed and when the
-     * window resizes, the buttonList is cleared beforehand.
-     */
 	@Override
     public void initGui() {
 		this.addonsToDisplay = new ArrayList<>(AddonLoader.addonsLoaded);
@@ -59,11 +60,11 @@ public class GuiAdditionsMainMenu extends GuiScreen {
 		this.addonList = new GuiScrollingAddonList(this, addonsToDisplay, 260, listHeight, minY, 32);
 		
 		this.buttonList.add(new GuiButton(BUTTON_DONE, this.width / 2 - 100, this.height - 30, 200, 20, I18n.format("gui.done")));
+		if (ConfigLoader.showProblemNotificationsMainMenu.getBoolean() && ProblemNotifier.hasProblems()) {
+			this.buttonList.add(new GuiSideButtonViewProblems(BUTTON_PROBLEMS, this.width - 18, this.height / 2, this));
+		}
     }
 	
-	/**
-     * Draws the screen and all the components in it.
-     */
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         this.drawDefaultBackground();
@@ -80,14 +81,20 @@ public class GuiAdditionsMainMenu extends GuiScreen {
         
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
+    
+    @Override
+    public void updateScreen() {
+    	if (ConfigLoader.showProblemNotificationsMainMenu.getBoolean() && ProblemNotifier.showInAdditionsMenu()) {
+    		this.showProblemNotifications();
+    	}
+    }
 	
-	/**
-     * Called by the controls from the buttonList when activated. (Mouse pressed for buttons)
-     */
     @Override
     protected void actionPerformed(GuiButton button) {
-    	if(button.id == BUTTON_DONE) {
+    	if (button.id == BUTTON_DONE) {
     		this.mc.displayGuiScreen(this.parentScreen);
+    	} else if (button.id == BUTTON_PROBLEMS) {
+    		this.showProblemNotifications();
     	}
     }
 
@@ -110,5 +117,9 @@ public class GuiAdditionsMainMenu extends GuiScreen {
     
     public FontRenderer getFontRenderer() {
     	return this.fontRenderer;
+    }
+    
+    private void showProblemNotifications() {
+    	this.mc.displayGuiScreen(new GuiMessageBoxTwoButton(this, new GuiViewProblemNotifications(this, I18n.format("gui.notification.title")), I18n.format("gui.notification.title"), ProblemNotifier.notificationProblemCount, I18n.format("gui.buttons.back"), I18n.format("gui.notification.button.view")));
     }
 }

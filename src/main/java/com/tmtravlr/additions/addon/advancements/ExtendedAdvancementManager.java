@@ -1,10 +1,8 @@
 package com.tmtravlr.additions.addon.advancements;
 
 import java.io.BufferedReader;
-import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
-import java.io.Reader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -18,7 +16,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
@@ -27,11 +24,11 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Logger;
 
-import com.google.common.collect.Maps;
 import com.google.gson.JsonParseException;
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.AddonLoader;
 import com.tmtravlr.additions.type.AdditionTypeAdvancement;
+import com.tmtravlr.additions.util.ProblemNotifier;
 
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementList;
@@ -40,6 +37,7 @@ import net.minecraft.advancements.AdvancementTreeNode;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 /**
@@ -100,7 +98,7 @@ public class ExtendedAdvancementManager extends AdvancementManager {
                 ResourceLocation resourcelocation = new ResourceLocation(astring[0], astring[1]);
 
                 try {
-                    Advancement.Builder advancement$builder = (Advancement.Builder)JsonUtils.gsonDeserialize(GSON, FileUtils.readFileToString(file1, StandardCharsets.UTF_8), Advancement.Builder.class);
+                    Advancement.Builder advancement$builder = JsonUtils.gsonDeserialize(GSON, FileUtils.readFileToString(file1, StandardCharsets.UTF_8), Advancement.Builder.class);
 
                     if (advancement$builder == null) {
                         LOGGER.error("Couldn't load custom advancement " + resourcelocation + " from " + file1 + " as it's empty or null");
@@ -108,10 +106,12 @@ public class ExtendedAdvancementManager extends AdvancementManager {
                         map.put(resourcelocation, advancement$builder);
                     }
                 } catch (IllegalArgumentException | JsonParseException jsonparseexception) {
-                    LOGGER.error("Parsing error loading custom advancement " + resourcelocation, (Throwable)jsonparseexception);
+                    LOGGER.error("Parsing error loading custom advancement " + resourcelocation, jsonparseexception);
+    				ProblemNotifier.addProblemNotification(ProblemNotifier.createLabelFromFile(file1), new TextComponentString(jsonparseexception.getMessage()));
                     this.hasErrored = true;
                 } catch (IOException ioexception) {
-                    LOGGER.error("Couldn't read custom advancement " + resourcelocation + " from " + file1, (Throwable)ioexception);
+                    LOGGER.error("Couldn't read custom advancement " + resourcelocation + " from " + file1, ioexception);
+    				ProblemNotifier.addProblemNotification(ProblemNotifier.createLabelFromFile(file1), new TextComponentString(ioexception.getMessage()));
                     this.hasErrored = true;
                 }
             }
@@ -175,16 +175,16 @@ public class ExtendedAdvancementManager extends AdvancementManager {
 
                             try {
                                 bufferedreader = Files.newBufferedReader(path1);
-                                Advancement.Builder advancement$builder = (Advancement.Builder)JsonUtils.fromJson(GSON, bufferedreader, Advancement.Builder.class);
+                                Advancement.Builder advancement$builder = JsonUtils.fromJson(GSON, bufferedreader, Advancement.Builder.class);
                                 map.put(resourcelocation, advancement$builder);
                             } catch (JsonParseException jsonparseexception) {
-                                LOGGER.error("Parsing error loading built-in advancement " + resourcelocation, (Throwable)jsonparseexception);
+                                LOGGER.error("Parsing error loading built-in advancement " + resourcelocation, jsonparseexception);
                                 this.hasErrored = true;
                             } catch (IOException ioexception) {
-                                LOGGER.error("Couldn't read advancement " + resourcelocation + " from " + path1, (Throwable)ioexception);
+                                LOGGER.error("Couldn't read advancement " + resourcelocation + " from " + path1, ioexception);
                                 this.hasErrored = true;
                             } finally {
-                                IOUtils.closeQuietly((Reader)bufferedreader);
+                                IOUtils.closeQuietly(bufferedreader);
                             }
                         }
                     }
@@ -196,11 +196,11 @@ public class ExtendedAdvancementManager extends AdvancementManager {
             LOGGER.error("Couldn't find .mcassetsroot");
             this.hasErrored = true;
         } catch (IOException | URISyntaxException urisyntaxexception) {
-            LOGGER.error("Couldn't get a list of all built-in advancement files", (Throwable)urisyntaxexception);
+            LOGGER.error("Couldn't get a list of all built-in advancement files", urisyntaxexception);
             this.hasErrored = true;
             return;
         } finally {
-            IOUtils.closeQuietly((Closeable)filesystem);
+            IOUtils.closeQuietly(filesystem);
         }
     }
 }

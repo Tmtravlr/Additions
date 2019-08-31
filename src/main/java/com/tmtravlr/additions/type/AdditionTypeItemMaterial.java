@@ -23,10 +23,13 @@ import com.tmtravlr.additions.addon.items.ItemAddedMultiTool;
 import com.tmtravlr.additions.addon.items.materials.ArmorMaterialAdded;
 import com.tmtravlr.additions.addon.items.materials.ItemMaterialAdded;
 import com.tmtravlr.additions.addon.items.materials.ToolMaterialAdded;
+import com.tmtravlr.additions.util.ProblemNotifier;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -76,6 +79,7 @@ public class AdditionTypeItemMaterial extends AdditionType<ItemMaterialAdded> {
 				filePaths = AddonLoader.getAddonFilePaths(addon.addonFolder, FOLDER_NAME);
 			} catch (IOException e) {
 				AdditionsMod.logger.error("Error loading item material files for addon " + addon.id + ". The item materials will not load.", e);
+				ProblemNotifier.addProblemNotification(new TextComponentTranslation("gui.view.addon.itemMaterials.title", addon.id), new TextComponentString(e.getMessage()));
 			}
 			
 			for (String filePath : filePaths) {
@@ -97,6 +101,7 @@ public class AdditionTypeItemMaterial extends AdditionType<ItemMaterialAdded> {
 					this.loadedItemMaterials.put(addon, material);
 				} catch (IOException | JsonParseException e) {
 					AdditionsMod.logger.error("Error loading item material " + filePath + " for addon " + addon.id + ". The item material will not load.", e);
+					ProblemNotifier.addProblemNotification(ProblemNotifier.createLabelFromPath(addon.addonFolder, filePath), new TextComponentString(e.getMessage()));
 				}
 			}
 		}

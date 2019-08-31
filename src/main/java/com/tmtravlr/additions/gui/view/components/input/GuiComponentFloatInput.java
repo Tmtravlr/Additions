@@ -13,11 +13,8 @@ import com.tmtravlr.additions.util.client.CommonGuiUtils;
 
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.fml.client.config.GuiUtils;
 
 /**
  * Extension of the vanilla text field, for a float input.
@@ -218,6 +215,7 @@ public class GuiComponentFloatInput extends GuiTextField implements IGuiViewComp
 	
 	public void setDefaultFloat(float toSet) {
 		this.setFloat(toSet);
+		this.checkLimits();
 	}
 	
 	private void setFloat(float toSet) {

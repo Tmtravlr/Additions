@@ -3,7 +3,6 @@ package com.tmtravlr.additions.gui.view.components.helpers;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.lwjgl.input.Mouse;
 
@@ -11,7 +10,6 @@ import com.tmtravlr.additions.gui.GuiScreenOverlay;
 import com.tmtravlr.additions.gui.view.GuiView;
 import com.tmtravlr.additions.util.client.CommonGuiUtils;
 
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.text.ITextComponent;
@@ -153,7 +151,7 @@ public abstract class GuiDropdownMenu extends GuiScreenOverlay {
 		
 		@Override
 		public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-			Gui.drawRect(this.left - 1, this.top - 1, this.left + this.listWidth + 1, this.top + this.listHeight + 1, 0xFFA0A0A0);
+			CommonGuiUtils.drawOutline(this.left - 1, this.top - 1, this.listWidth + 2, this.listHeight + 2, 0xFFA0A0A0);
 			super.drawScreen(mouseX, mouseY, partialTicks);
 		}
 	}
