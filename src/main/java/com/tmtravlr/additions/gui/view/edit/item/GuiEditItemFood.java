@@ -144,7 +144,7 @@ public class GuiEditItemFood extends GuiEditItem<ItemAddedFood> {
 	public void saveObject() {
 		
 		int hunger = this.itemHungerInput.getInteger();
-		float saturation = this.itemSaturationInput.getFloat() / (2*hunger);
+		float saturation = hunger == 0 ? 0 : this.itemSaturationInput.getFloat() / (2*hunger);
 		boolean wolvesEat = this.itemWolvesEatInput.getBoolean();
 		boolean alwaysEdible = this.itemAlwaysEdibleInput.getBoolean();
 		

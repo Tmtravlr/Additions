@@ -12,6 +12,7 @@ import org.apache.commons.io.FileUtils;
 
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.blocks.IBlockAdded;
+import com.tmtravlr.additions.util.models.ItemModelManager.ItemBlockModelType;
 
 public class BlockModelManager {
 
@@ -19,17 +20,20 @@ public class BlockModelManager {
 	public static final String ANIMATION_FILE_POSTFIX = ".png.mcmeta";
 	public static final String MODEL_FILE_POSTFIX = ".json";
 	
-	public static final String MODEL_SLAB_FULL_ENDING = "_full";
-	public static final String MODEL_SLAB_TOP_ENDING = "_top";
-	public static final String MODEL_SLAB_VERTICAL_ENDING = "_vertical";
+	public static final String MODEL_FULL_ENDING = "_full";
+	public static final String MODEL_TOP_ENDING = "_top";
+	public static final String MODEL_VERTICAL_ENDING = "_vertical";
+	public static final String MODEL_INNER_ENDING = "_inner";
+	public static final String MODEL_OUTER_ENDING = "_outer";
+	public static final String MODEL_POST_ENDING = "_post";
+	public static final String MODEL_SIDE_ENDING = "_side";
+	public static final String MODEL_SIDE_ALT_ENDING = "_side_alt";
+	public static final String MODEL_NO_SIDE_ENDING = "_noside";
+	public static final String MODEL_NO_SIDE_ALT_ENDING = "_noside_alt";
+	public static final String MODEL_INVENTORY_ENDING = "_inventory";
 	
-	public static final String MODEL_STAIRS_INNER_ENDING = "_inner";
-	public static final String MODEL_STAIRS_OUTER_ENDING = "_outer";
-	
-	public static final String TEXTURE_FACING_SIDE_ENDING = "_side";
-	public static final String TEXTURE_FACING_TOP_ENDING = "_top";
-
-	public static final String TEXTURE_PILLAR_TOP_ENDING = "_top";
+	public static final String TEXTURE_SIDE_ENDING = "_side";
+	public static final String TEXTURE_TOP_ENDING = "_top";
 	
 	public static void saveBlockTexture(Addon addon, IBlockAdded block, File texture, BlockModelType type) throws IOException {
 		File blockStateFolder = getBlockStateFolder(addon);
@@ -41,32 +45,56 @@ public class BlockModelManager {
 		
 		switch (type) {
 		case SLAB:
-			blockStateFileContents = BlockModelGenerator.getBlockStateSlab(block.getId());
-			modelFileContents.put(block.getId() + MODEL_SLAB_FULL_ENDING, BlockModelGenerator.getBlockModelSimple(block.getId()));
+			blockStateFileContents = BlockStateGenerator.getBlockStateSlab(block.getId());
+			modelFileContents.put(block.getId() + MODEL_FULL_ENDING, BlockModelGenerator.getBlockModelSimple(block.getId()));
 			modelFileContents.put(block.getId(), BlockModelGenerator.getBlockModelSlabBottom(block.getId()));
-			modelFileContents.put(block.getId() + MODEL_SLAB_TOP_ENDING, BlockModelGenerator.getBlockModelSlabTop(block.getId()));
-			modelFileContents.put(block.getId() + MODEL_SLAB_VERTICAL_ENDING, BlockModelGenerator.getBlockModelSlabVertical(block.getId()));
+			modelFileContents.put(block.getId() + MODEL_TOP_ENDING, BlockModelGenerator.getBlockModelSlabTop(block.getId()));
+			modelFileContents.put(block.getId() + MODEL_VERTICAL_ENDING, BlockModelGenerator.getBlockModelSlabVertical(block.getId()));
 			break;
 		case STAIRS:
-			blockStateFileContents = BlockModelGenerator.getBlockStateStairs(block.getId());
+			blockStateFileContents = BlockStateGenerator.getBlockStateStairs(block.getId());
 			modelFileContents.put(block.getId(), BlockModelGenerator.getBlockModelStairs(block.getId()));
-			modelFileContents.put(block.getId() + MODEL_STAIRS_INNER_ENDING, BlockModelGenerator.getBlockModelStairsInner(block.getId()));
-			modelFileContents.put(block.getId() + MODEL_STAIRS_OUTER_ENDING, BlockModelGenerator.getBlockModelStairsOuter(block.getId()));
+			modelFileContents.put(block.getId() + MODEL_INNER_ENDING, BlockModelGenerator.getBlockModelStairsInner(block.getId()));
+			modelFileContents.put(block.getId() + MODEL_OUTER_ENDING, BlockModelGenerator.getBlockModelStairsOuter(block.getId()));
 			break;
 		case TILE:
-			blockStateFileContents = BlockModelGenerator.getBlockStateCarpet(block.getId());
+			blockStateFileContents = BlockStateGenerator.getBlockStateCarpet(block.getId());
 			modelFileContents.put(block.getId(), BlockModelGenerator.getBlockModelCarpetBottom(block.getId()));
 			break;
 		case FACING:
-			blockStateFileContents = BlockModelGenerator.getBlockStateFacing(block.getId());
+			blockStateFileContents = BlockStateGenerator.getBlockStateFacing(block.getId());
 			modelFileContents.put(block.getId(), BlockModelGenerator.getBlockModelFacing(block.getId()));
 			break;
 		case PILLAR:
-			blockStateFileContents = BlockModelGenerator.getBlockStatePillar(block.getId());
+			blockStateFileContents = BlockStateGenerator.getBlockStatePillar(block.getId());
 			modelFileContents.put(block.getId(), BlockModelGenerator.getBlockModelPillar(block.getId()));
 			break;
+		case LADDER:
+			blockStateFileContents = BlockStateGenerator.getBlockStateLadder(block.getId());
+			modelFileContents.put(block.getId(), BlockModelGenerator.getBlockModelLadder(block.getId()));
+			break;
+		case PANE:
+			blockStateFileContents = BlockStateGenerator.getBlockStatePane(block.getId());
+			modelFileContents.put(block.getId() + MODEL_POST_ENDING, BlockModelGenerator.getBlockModelPanePost(block.getId()));
+			modelFileContents.put(block.getId() + MODEL_SIDE_ENDING, BlockModelGenerator.getBlockModelPaneSide(block.getId()));
+			modelFileContents.put(block.getId() + MODEL_SIDE_ALT_ENDING, BlockModelGenerator.getBlockModelPaneSideAlt(block.getId()));
+			modelFileContents.put(block.getId() + MODEL_NO_SIDE_ENDING, BlockModelGenerator.getBlockModelPaneNoSide(block.getId()));
+			modelFileContents.put(block.getId() + MODEL_NO_SIDE_ALT_ENDING, BlockModelGenerator.getBlockModelPaneNoSideAlt(block.getId()));
+			break;
+		case FENCE:
+			blockStateFileContents = BlockStateGenerator.getBlockStateFence(block.getId());
+			modelFileContents.put(block.getId() + MODEL_POST_ENDING, BlockModelGenerator.getBlockModelFencePost(block.getId()));
+			modelFileContents.put(block.getId() + MODEL_SIDE_ENDING, BlockModelGenerator.getBlockModelFenceSide(block.getId()));
+			modelFileContents.put(block.getId() + MODEL_INVENTORY_ENDING, BlockModelGenerator.getBlockModelFenceInventory(block.getId()));
+			break;
+		case WALL:
+			blockStateFileContents = BlockStateGenerator.getBlockStateWall(block.getId());
+			modelFileContents.put(block.getId() + MODEL_POST_ENDING, BlockModelGenerator.getBlockModelWallPost(block.getId()));
+			modelFileContents.put(block.getId() + MODEL_SIDE_ENDING, BlockModelGenerator.getBlockModelWallSide(block.getId()));
+			modelFileContents.put(block.getId() + MODEL_INVENTORY_ENDING, BlockModelGenerator.getBlockModelWallInventory(block.getId()));
+			break;
 		default:
-			blockStateFileContents = BlockModelGenerator.getBlockStateSimple(block.getId());
+			blockStateFileContents = BlockStateGenerator.getBlockStateSimple(block.getId());
 			modelFileContents.put(block.getId(), BlockModelGenerator.getBlockModelSimple(block.getId()));
 		}
 		
@@ -82,7 +110,7 @@ public class BlockModelManager {
 		File textureFile = new File(textureFolder, block.getId() + TEXTURE_FILE_POSTFIX);
 		FileUtils.copyFile(texture, textureFile);
 		
-		ItemModelManager.saveItemBlockModel(addon, block);
+		ItemModelManager.saveItemBlockModel(addon, block, type.getItemBlockType());
 	}
 	
 	public static void saveBlockTextureWithEnding(Addon addon, IBlockAdded block, File texture, String textureEnding) throws IOException {
@@ -163,20 +191,35 @@ public class BlockModelManager {
 		TILE,
 		FACING,
 		PILLAR,
-		BARS,
-		WALL,
-		FENCE,
+		PANE(ItemBlockModelType.SIMPLE),
+		WALL(ItemBlockModelType.INVENTORY),
+		FENCE(ItemBlockModelType.INVENTORY),
 		FENCE_GATE,
 		DOOR,
 		TRAPDOOR,
 		LAMP,
 		BUTTON,
 		PRESSURE_PLATE,
-		LEVER,
-		LADDER,
-		PLANT,
+		LEVER(ItemBlockModelType.SIMPLE),
+		LADDER(ItemBlockModelType.SIMPLE),
+		VINE(ItemBlockModelType.SIMPLE),
+		PLANT(ItemBlockModelType.SIMPLE),
 		CAKE,
 		FURNACE,
-		WORKBENCH
+		WORKBENCH;
+		
+		private final ItemBlockModelType itemBlockType;
+		
+		BlockModelType() {
+			this.itemBlockType = ItemBlockModelType.BLOCK;
+		}
+		
+		BlockModelType(ItemBlockModelType type) {
+			this.itemBlockType = type;
+		}
+		
+		public ItemBlockModelType getItemBlockType() {
+			return this.itemBlockType;
+		}
 	}
 }

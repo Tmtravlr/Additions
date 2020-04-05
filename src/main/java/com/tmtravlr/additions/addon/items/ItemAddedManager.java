@@ -16,6 +16,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.JsonSyntaxException;
+import com.tmtravlr.additions.addon.items.blocks.ItemAddedBlockLadder;
 import com.tmtravlr.additions.addon.items.blocks.ItemAddedBlockSimple;
 import com.tmtravlr.additions.addon.items.blocks.ItemAddedBlockSlab;
 import com.tmtravlr.additions.api.gui.IGuiItemAddedFactory;
@@ -58,6 +59,7 @@ public class ItemAddedManager {
 	    registerItemType(new ItemAddedProjectile.Serializer());
 	    registerItemType(new ItemAddedBlockSimple.Serializer());
 	    registerItemType(new ItemAddedBlockSlab.Serializer());
+	    registerItemType(new ItemAddedBlockLadder.Serializer());
 	}
 	
 	public static void registerItemType(IItemAdded.Serializer <? extends IItemAdded > itemSerializer) {

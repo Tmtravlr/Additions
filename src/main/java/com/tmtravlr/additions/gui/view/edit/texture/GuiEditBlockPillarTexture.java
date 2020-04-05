@@ -45,9 +45,9 @@ public class GuiEditBlockPillarTexture extends GuiEditBlockTexture {
 	public void initComponents() {
 		this.blockTextureMessage = new GuiComponentDisplayText(this, new TextComponentTranslation("gui.edit.texture.block.message.plural", this.block.getDisplayName()));
 		
-		this.baseTextureMessage = new GuiComponentDisplayText(this, new TextComponentTranslation("gui.edit.texture.block.pillar.side.message", this.block.getDisplayName()));
+		this.baseTextureMessage = new GuiComponentDisplayText(this, new TextComponentTranslation("gui.edit.texture.block.facing.side.message", this.block.getDisplayName()));
 		
-		this.baseTextureFileInput = new GuiComponentFileInput(this, I18n.format("gui.edit.texture.block.pillar.side.label"), this.addon, new FileNameExtensionFilter("PNG File", "png")) {
+		this.baseTextureFileInput = new GuiComponentFileInput(this, I18n.format("gui.edit.texture.block.facing.side.label"), this.addon, new FileNameExtensionFilter("PNG File", "png")) {
 			
 			@Override
 			protected void setFileDialogueFolder(File folder) {
@@ -84,7 +84,7 @@ public class GuiEditBlockPillarTexture extends GuiEditBlockTexture {
 
 			@Override
 			protected boolean validateFileChosen(File fileChosen) {
-				return GuiEditBlockPillarTexture.this.checkTexture(fileChosen, BlockModelManager.TEXTURE_PILLAR_TOP_ENDING);
+				return GuiEditBlockPillarTexture.this.checkTexture(fileChosen, BlockModelManager.TEXTURE_TOP_ENDING);
 			}
 		};
 		if (this.isNew) {
@@ -106,7 +106,7 @@ public class GuiEditBlockPillarTexture extends GuiEditBlockTexture {
 	@Override
 	protected boolean checkFiles() {
 		if (this.baseTextureFileInput.getFile() == null) {
-			this.mc.displayGuiScreen(new GuiMessageBox(this, I18n.format("gui.edit.texture.problem.title"), new TextComponentTranslation("gui.edit.texture.problem.noTexture.specific.message", I18n.format("gui.edit.texture.block.facing.front.label")), I18n.format("gui.buttons.back")));
+			this.mc.displayGuiScreen(new GuiMessageBox(this, I18n.format("gui.edit.texture.problem.title"), new TextComponentTranslation("gui.edit.texture.problem.noTexture.specific.message", I18n.format("gui.edit.texture.block.facing.side.label")), I18n.format("gui.buttons.back")));
 			return false;
 		}
 		
@@ -121,7 +121,7 @@ public class GuiEditBlockPillarTexture extends GuiEditBlockTexture {
 	@Override
 	protected void saveFiles() throws IOException {
 		super.saveFiles();
-		BlockModelManager.saveBlockTextureWithEnding(this.addon, this.block, this.topTextureFileInput.getFile(), BlockModelManager.TEXTURE_FACING_TOP_ENDING);
+		BlockModelManager.saveBlockTextureWithEnding(this.addon, this.block, this.topTextureFileInput.getFile(), BlockModelManager.TEXTURE_TOP_ENDING);
 	}
 
 }

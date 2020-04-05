@@ -1,17 +1,11 @@
 package com.tmtravlr.additions.addon.items.materials;
 
-import java.lang.reflect.Type;
-
 import javax.annotation.Nonnull;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
 import com.google.gson.JsonSyntaxException;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.util.OtherSerializers;
@@ -21,15 +15,10 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.JsonUtils;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.oredict.OreDictionary;
 
 /**
  * Represents an added item material, for tools and armor
@@ -87,18 +76,22 @@ public class ArmorMaterialAdded extends ItemMaterialAdded {
     	}
     }
     
-    public String getId() {
+    @Override
+	public String getId() {
     	return this.armorMaterial.name().replace('$', '.').toLowerCase();
     }
     
-    public ItemArmor.ArmorMaterial getArmorMaterial() {
+    @Override
+	public ItemArmor.ArmorMaterial getArmorMaterial() {
     	return this.armorMaterial;
     }
 	
+	@Override
 	public int getEnchantability() {
 		return this.armorMaterial.getEnchantability();
 	}
 	
+	@Override
 	public ItemStack getRepairStack() {
 		return this.armorMaterial.getRepairItemStack();
 	}
@@ -156,8 +149,6 @@ public class ArmorMaterialAdded extends ItemMaterialAdded {
         }
         
         public static ArmorMaterialAdded deserialize(JsonObject json, String materialId, JsonDeserializationContext context) throws JsonParseException {
-            Item repairItem = null;
-            int repairMeta = 0;
             SoundEvent equipSound = SoundEvents.ITEM_ARMOR_EQUIP_GENERIC;
             
             int enchantability = JsonUtils.getInt(json, "enchantability");
@@ -167,14 +158,6 @@ public class ArmorMaterialAdded extends ItemMaterialAdded {
             int chestplateArmor = JsonUtils.getInt(json, "chestplate_armor");
             int leggingsArmor = JsonUtils.getInt(json, "leggings_armor");
             int bootsArmor = JsonUtils.getInt(json, "boots_armor");
-            
-            if (json.has("repair_item")) {
-            	repairItem = JsonUtils.getItem(json, "repair_item");
-            }
-            
-            if (json.has("repair_meta")) {
-            	repairMeta = JsonUtils.getInt(json, "repair_meta");
-            }
             
 		    if (json.has("equip_sound")) {
 		    	equipSound = OtherSerializers.SoundEventSerializer.deserialize(json, "equip_sound");
@@ -191,12 +174,25 @@ public class ArmorMaterialAdded extends ItemMaterialAdded {
 		    ItemArmor.ArmorMaterial armorMaterial = EnumHelper.addArmorMaterial(name.toUpperCase(), "", baseArmorDurability, new int[]{bootsArmor, leggingsArmor, chestplateArmor, helmetArmor}, enchantability, equipSound, toughness);
 		    
 		    ArmorMaterialAdded newMaterial = new ArmorMaterialAdded(armorMaterial);
-		    
-		    if (repairItem != null) {
-		    	newMaterial.setRepairStack(new ItemStack(repairItem, 1, repairMeta));
-		    }
 
             return newMaterial;
+        }
+        
+        public static void postDeserialize(JsonObject json, ArmorMaterialAdded material) {
+            Item repairItem = null;
+            int repairMeta = 0;
+            
+            if (json.has("repair_item")) {
+            	repairItem = JsonUtils.getItem(json, "repair_item");
+            }
+            
+            if (json.has("repair_meta")) {
+            	repairMeta = JsonUtils.getInt(json, "repair_meta");
+            }
+		    
+		    if (repairItem != null) {
+		    	material.setRepairStack(new ItemStack(repairItem, 1, repairMeta));
+		    }
         }
     }
 }

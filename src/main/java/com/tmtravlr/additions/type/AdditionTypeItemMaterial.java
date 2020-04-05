@@ -5,7 +5,10 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
@@ -14,6 +17,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.Addon;
@@ -30,6 +34,7 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -54,6 +59,9 @@ public class AdditionTypeItemMaterial extends AdditionType<ItemMaterialAdded> {
 	
 	private Multimap<Addon, ItemMaterialAdded> loadedItemMaterials = HashMultimap.create();
 	private List<ItemMaterialAdded> vanillaItemMaterials = new ArrayList<>();
+	
+	// Can't load things like repair materials right away, since the items they need may not have loaded yet
+	private Map<ItemMaterialAdded, JsonObject> materialsToPostDeserialize = new HashMap<>();
 
 	@Override
 	public void loadPreInit(List<Addon> addons, FMLPreInitializationEvent event) {
@@ -96,7 +104,9 @@ public class AdditionTypeItemMaterial extends AdditionType<ItemMaterialAdded> {
 					}
 					
 					ItemMaterialAdded.setNextMaterialId(materialId);
-					ItemMaterialAdded material = GSON.fromJson(fileString, ItemMaterialAdded.class);
+					JsonObject materialJson = GSON.fromJson(fileString, JsonObject.class);
+					ItemMaterialAdded material = GSON.fromJson(materialJson, ItemMaterialAdded.class);
+					this.materialsToPostDeserialize.put(material, materialJson);
 					
 					this.loadedItemMaterials.put(addon, material);
 				} catch (IOException | JsonParseException e) {
@@ -105,6 +115,22 @@ public class AdditionTypeItemMaterial extends AdditionType<ItemMaterialAdded> {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void loadInit(List<Addon> addons, FMLInitializationEvent event) {
+		AdditionsMod.logger.info("Initializing addon item materials.");
+		
+		for (Entry<ItemMaterialAdded, JsonObject> itemEntry : this.materialsToPostDeserialize.entrySet()) {
+			try {
+				ItemMaterialAdded.Serializer.postDeserialize(itemEntry.getValue(), itemEntry.getKey());
+			} catch (JsonParseException e) {
+				AdditionsMod.logger.error("There was a problem initializing item material " + itemEntry.getKey().getId()  + ". If things continue, the game will probably majorly break, so it should stop loading here.");
+				throw e; 
+			}
+		}
+		
+		this.materialsToPostDeserialize.clear();
 	}
 	
 	@Override

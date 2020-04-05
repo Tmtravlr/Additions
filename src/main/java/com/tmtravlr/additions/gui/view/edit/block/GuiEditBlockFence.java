@@ -1,26 +1,28 @@
 package com.tmtravlr.additions.gui.view.edit.block;
 
 import com.tmtravlr.additions.addon.Addon;
-import com.tmtravlr.additions.addon.blocks.BlockAddedFalling;
+import com.tmtravlr.additions.addon.blocks.BlockAddedFence;
 import com.tmtravlr.additions.addon.items.blocks.ItemAddedBlockSimple;
+import com.tmtravlr.additions.gui.view.edit.texture.GuiEditBlockTexture;
+import com.tmtravlr.additions.util.models.BlockModelManager;
 
 import net.minecraft.client.gui.GuiScreen;
 
 /**
- * Page for adding a new falling block or editing an existing one.
+ * Page for adding a new fence block or editing an existing one.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since May 2019
+ * @since April 2020
  */
-public class GuiEditBlockFalling extends GuiEditBlockModifiableBoundingBox<BlockAddedFalling> {
+public class GuiEditBlockFence extends GuiEditBlock<BlockAddedFence> {
     
-	public GuiEditBlockFalling(GuiScreen parentScreen, String title, Addon addon, BlockAddedFalling block) {
+	public GuiEditBlockFence(GuiScreen parentScreen, String title, Addon addon, BlockAddedFence block) {
 		super(parentScreen, title, addon);
 		
 		this.isNew = block == null;
 		
 		if (this.isNew) {
-			this.block = new BlockAddedFalling();
+			this.block = new BlockAddedFence();
 			this.block.setItemBlock(new ItemAddedBlockSimple());
 		} else {
 			this.block = block;
@@ -61,20 +63,6 @@ public class GuiEditBlockFalling extends GuiEditBlockModifiableBoundingBox<Block
 		this.advancedComponents.add(this.blockCanPistonsPushInput);
 		this.advancedComponents.add(this.blockMapColorInput);
 		this.advancedComponents.add(this.blockBeaconColorMultiplierInput);
-		this.advancedComponents.add(this.blockBoundingBoxMinXInput);
-		this.advancedComponents.add(this.blockBoundingBoxMinYInput);
-		this.advancedComponents.add(this.blockBoundingBoxMinZInput);
-		this.advancedComponents.add(this.blockBoundingBoxMaxXInput);
-		this.advancedComponents.add(this.blockBoundingBoxMaxYInput);
-		this.advancedComponents.add(this.blockBoundingBoxMaxZInput);
-		this.advancedComponents.add(this.blockSameCollisionBoundingBoxInput);
-		this.advancedComponents.add(this.blockHasCollisionBoxInput);
-		this.advancedComponents.add(this.blockCollisionBoxMinXInput);
-		this.advancedComponents.add(this.blockCollisionBoxMinYInput);
-		this.advancedComponents.add(this.blockCollisionBoxMinZInput);
-		this.advancedComponents.add(this.blockCollisionBoxMaxXInput);
-		this.advancedComponents.add(this.blockCollisionBoxMaxYInput);
-		this.advancedComponents.add(this.blockCollisionBoxMaxZInput);
 		this.advancedComponents.add(this.blockPlaceSoundInput);
 		this.advancedComponents.add(this.blockBreakSoundInput);
 		this.advancedComponents.add(this.blockHitSoundInput);
@@ -88,4 +76,9 @@ public class GuiEditBlockFalling extends GuiEditBlockModifiableBoundingBox<Block
 		this.advancedComponents.add(this.itemBlockContainerInput);
 		this.advancedComponents.add(this.itemBlockAttributesInput);
 	}
+    
+    @Override
+	protected GuiScreen getTextureDialogue(GuiScreen nextScreen) {
+    	return new GuiEditBlockTexture(nextScreen, this.addon, this.block, this.isNew, BlockModelManager.BlockModelType.FENCE);
+    }
 }

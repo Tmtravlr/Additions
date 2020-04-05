@@ -202,6 +202,8 @@ type.effect.damageItem.description=Damage the item, if it is damageable. Only wo
 
 attribute.modifier.noEffect=No Effect
 
+gui.buttons.yes=Yes
+gui.buttons.no=No
 gui.buttons.back=Back
 gui.buttons.cancel=Cancel
 gui.buttons.close=Close
@@ -653,10 +655,12 @@ gui.edit.block.resistance.info=How well this block resists explosions. For examp
 gui.edit.block.harvestLevel.label=Harvest Level
 gui.edit.block.harvestLevel.info=What level of tools is needed to harvest this block. For example, stone is 1, iron is 2, diamond ore is 3, and obsidian is 4. 0 means anything.
 gui.edit.block.harvestTool.label=Harvest Tool
-gui.edit.block.harvestTool.info=What tool type is required to dig this block (like pickaxe for stone). Leave blank if you can dig it by hand.
+gui.edit.block.harvestTool.info=What tool type is required to dig this block (like pickaxe for stone). Leave blank if you can dig it by hand. However, some block materials are forced to require a tool, so leaving it blank won't work: stone, metal, anvil, snow, and snow_layer.
 gui.edit.block.effectiveTools.label=Effective Tools
 gui.edit.block.transparent.label=Transparent
-gui.edit.block.transparent.info=Can light pass through this block, or is the texture transparent?
+gui.edit.block.transparent.info=Can light pass through this block?
+gui.edit.block.semiTransparent.label=Semi-Transparent
+gui.edit.block.semiTransparent.info=Does this block's texture have semi-transparent parts like stained glass or ice?
 gui.edit.block.opacity.label=Opacity
 gui.edit.block.opacity.info=How much light is blocked going through this block. For example, glass is 0, ice is 3.
 gui.edit.block.lightLevel.label=Light Level
@@ -703,7 +707,7 @@ gui.edit.block.drop.explosion.label=Dropped from Explosions
 gui.edit.block.drop.explosion.option.normal=Normal (Based on explosion)
 gui.edit.block.drop.explosion.option.never=Never
 gui.edit.block.drop.explosion.option.always=Always
-gui.edit.block.problem.title=Problem Creating Item
+gui.edit.block.problem.title=Problem Creating Block
 gui.edit.block.problem.duplicate=A block or item with id '%s' already exists!
 gui.edit.block.problem.noId=The Block Id cannot be blank.
 gui.edit.block.problem.noName=The Block Name cannot be blank.
@@ -732,6 +736,24 @@ gui.edit.block.facing.canFaceVertically.label=Can Face Vertically
 gui.edit.block.facing.canFaceVertically.info=If true, this block can be placed facing up and down.
 
 gui.edit.block.pillar.title=Create new Log/Pillar Block
+
+gui.edit.block.ladder.title=Create new Ladder Block
+gui.edit.block.ladder.needsSupport.label=Needs Support
+gui.edit.block.ladder.needsSupport.info=Does this ladder need support, or can it be placed anywhere?
+gui.edit.block.ladder.supportBack.label=Support Behind
+gui.edit.block.ladder.supportTop.label=Support Above
+gui.edit.block.ladder.supportTop.info=Can this ladder be placed below itself or solid blocks? Good for blocks like ropes hanging from the ceiling.
+gui.edit.block.ladder.supportBottom.label=Support Below
+gui.edit.block.ladder.supportBottom.info=Can this ladder be placed above itself or solid blocks? Good for blocks like scaffolding.
+gui.edit.block.ladder.placeDownward.label=Auto Place Downward
+gui.edit.block.ladder.placeDownward.info=If you right click this ladder on itself and are not sneaking, should it automatically place at the bottom of the stack of ladders?
+gui.edit.block.ladder.problem.needsSupport=Needs Support is true, but there are no support types selected! (behind, above, or below)
+
+gui.edit.block.pane.title=Create new Pane/Bars Block
+
+gui.edit.block.fence.title=Create new Fence Block
+
+gui.edit.block.wall.title=Create new Wall Block
 
 gui.edit.creativeTab.title=Create New Creative Tab
 gui.edit.creativeTab.id.label=Tab Id
@@ -1049,6 +1071,10 @@ gui.edit.texture.block.title=Texturize your Block!
 gui.edit.texture.block.message=Select a texture for %s, which should be a png file. If you want a custom model, however, you will have to create that yourself!
 gui.edit.texture.block.message.plural=Select textures for %s, which should be png files. If you want a custom model, however, you will have to create that yourself!
 gui.edit.texture.block.label=Block Texture
+gui.edit.texture.block.problem.semiTransparent.title=Semi-Transparent Texture
+gui.edit.texture.block.problem.semiTransparent.message=Looks like the texture you selected is semi-transparent (translucent). Would you like to set the block as semi-transparent too so it renders correctly?
+gui.edit.texture.block.problem.transparent.title=Transparent Texture
+gui.edit.texture.block.problem.transparent.message=Looks like the texture you selected has transparent parts. Would you like to set the block as transparent too so it renders correctly?
 
 gui.edit.texture.block.facing.front.message=Select a texture for the front of %s.
 gui.edit.texture.block.facing.front.label=Front Texture
@@ -1057,7 +1083,5 @@ gui.edit.texture.block.facing.side.label=Side Texture
 gui.edit.texture.block.facing.top.message=Select a texture for the top and bottom of %s.
 gui.edit.texture.block.facing.top.label=Top/Bottom Texture
 
-gui.edit.texture.block.pillar.side.message=Select a texture for the sides of %s.
-gui.edit.texture.block.pillar.side.label=Side Texture
-gui.edit.texture.block.pillar.top.message=Select a texture for the top and bottom of %s.
-gui.edit.texture.block.pillar.top.label=Top/Bottom Texture
+gui.edit.texture.block.pane.face.message=Select a texture for the face of %s.
+gui.edit.texture.block.pane.face.label=Face Texture

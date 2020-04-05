@@ -143,7 +143,7 @@ public abstract class GuiEditBlockModifiableBoundingBox<T extends IBlockAdded & 
 	}
 	
 	@Override
-	public void onToggleShowAdvanced(boolean showAdvanced) {
+	protected void onToggleShowAdvanced(boolean showAdvanced) {
 		if (showAdvanced) {
 			this.blockHasCollisionBoxInput.setDefaultBoolean(this.blockHasCollisionBoxInput.getBoolean());
 			this.blockSameCollisionBoundingBoxInput.setDefaultBoolean(this.blockSameCollisionBoundingBoxInput.getBoolean());

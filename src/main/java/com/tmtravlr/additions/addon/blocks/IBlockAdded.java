@@ -67,6 +67,8 @@ public interface IBlockAdded {
 	
 	public void setCanPistonsPush(boolean canPistonsPush);
 	
+	public void setSemiTransparent(boolean semiTransparent);
+	
 	public void setXpDroppedMin(int xpMin);
 	
 	public void setXpDroppedMax(int xpMax);
@@ -117,6 +119,8 @@ public interface IBlockAdded {
 	public float getResistance();
 	
 	public int getOpacity();
+	
+	public boolean isSemiTransparent();
 	
 	public int getLightLevel();
 	
@@ -272,6 +276,10 @@ public interface IBlockAdded {
 				json.addProperty("can_pistons_push", false);
 			}
 			
+			if (blockAddedObj.isSemiTransparent()) {
+				json.addProperty("semi_transparent", true);
+			}
+			
 			if (blockAddedObj.getXpDroppedMin() != 0) {
 				json.addProperty("xp_dropped_min", blockAddedObj.getXpDroppedMin());
 			}
@@ -337,6 +345,7 @@ public interface IBlockAdded {
 			blockAdded.setIsSlime(JsonUtils.getBoolean(json, "is_slime", false));
 			blockAdded.setIsBeaconBase(JsonUtils.getBoolean(json, "is_beacon_base", false));
 			blockAdded.setCanPistonsPush(JsonUtils.getBoolean(json, "can_pistons_push", true));
+			blockAdded.setSemiTransparent(JsonUtils.getBoolean(json, "semi_transparent", false));
 			blockAdded.setXpDroppedMin(JsonUtils.getInt(json, "xp_dropped_min", 0));
 			blockAdded.setXpDroppedMax(JsonUtils.getInt(json, "xp_dropped_max", 0));
 			

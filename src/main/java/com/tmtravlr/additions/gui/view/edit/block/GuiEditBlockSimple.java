@@ -39,6 +39,7 @@ public class GuiEditBlockSimple extends GuiEditBlockModifiableBoundingBox<BlockA
 		this.components.add(this.blockNameInput);
 		this.components.add(this.blockMaterialInput);
 		this.components.add(this.blockTransparentInput);
+		this.components.add(this.blockSemiTransparentInput);
 		this.components.add(this.blockOpacityInput);
 		this.components.add(this.blockHardnessInput);
 		this.components.add(this.blockResistanceInput);

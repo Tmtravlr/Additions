@@ -75,6 +75,26 @@ public class ItemModelManager {
 		}
 	}
 	
+	public static void saveItemBlockModel(Addon addon, IBlockAdded block, ItemBlockModelType type) throws IOException {
+		if (block.getItemBlock() != null) {
+			String modelFileContents;
+			
+			switch (type) {
+			case SIMPLE:
+				modelFileContents = ItemModelGenerator.getSimpleItemBlockModel(block.getId());
+				break;
+			case INVENTORY:
+				modelFileContents = ItemModelGenerator.getItemBlockModel(block.getId() + BlockModelManager.MODEL_INVENTORY_ENDING);
+				break;
+			default:
+				modelFileContents = ItemModelGenerator.getItemBlockModel(block.getId());
+			}
+			
+			File modelFile = new File(getItemModelFolder(addon), block.getItemBlock().getId() + MODEL_FILE_POSTFIX);
+			FileUtils.writeStringToFile(modelFile, modelFileContents, StandardCharsets.UTF_8);
+		}
+	}
+	
 	public static void deleteItemTexture(Addon addon, IItemAdded item, boolean isColorLayer) {
 		File textureFolder = getItemTextureFolder(addon);
 		File textureFile = new File(textureFolder, item.getId() + (isColorLayer ? TEXTURE_COLOR_ENDING : TEXTURE_BASE_ENDING) + TEXTURE_FILE_POSTFIX);
@@ -202,13 +222,6 @@ public class ItemModelManager {
 		return textureFile.exists();
 	}
 	
-	public static void saveItemBlockModel(Addon addon, IBlockAdded block) throws IOException {
-		if (block.getItemBlock() != null) {
-			File modelFile = new File(getItemModelFolder(addon), block.getItemBlock().getId() + MODEL_FILE_POSTFIX);
-			FileUtils.writeStringToFile(modelFile, ItemModelGenerator.getItemBlockModel(block.getAsBlock().getRegistryName()), StandardCharsets.UTF_8);
-		}
-	}
-	
 	public static String getItemModelName(IItemAdded item) {
 		return item.getId() + MODEL_FILE_POSTFIX;
 	}
@@ -268,5 +281,11 @@ public class ItemModelManager {
 		HAT,
 		BOW,
 		GUN
+	}
+
+	public static enum ItemBlockModelType {
+		BLOCK,
+		SIMPLE,
+		INVENTORY
 	}
 }

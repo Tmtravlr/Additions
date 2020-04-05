@@ -118,5 +118,15 @@ public abstract class ItemMaterialAdded {
 
             return materialAdded;
         }
+		
+		public static void postDeserialize(JsonElement jsonElement, ItemMaterialAdded materialAdded) {
+			JsonObject json = JsonUtils.getJsonObject(jsonElement, "item_material");
+			
+			if (materialAdded.isArmorMaterial()) {
+				ArmorMaterialAdded.Serializer.postDeserialize(json, materialAdded.getArmorMaterialAdded());
+			} else if (materialAdded.isToolMaterial()) {
+				ToolMaterialAdded.Serializer.postDeserialize(json, materialAdded.getToolMaterialAdded());
+			}
+		}
     }
 }

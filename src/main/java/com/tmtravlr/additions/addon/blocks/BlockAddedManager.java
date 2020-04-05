@@ -41,6 +41,10 @@ public class BlockAddedManager {
 	    registerBlockType(new BlockAddedCarpet.Serializer());
 	    registerBlockType(new BlockAddedFacing.Serializer());
 	    registerBlockType(new BlockAddedPillar.Serializer());
+	    registerBlockType(new BlockAddedLadder.Serializer());
+	    registerBlockType(new BlockAddedPane.Serializer());
+	    registerBlockType(new BlockAddedFence.Serializer());
+	    registerBlockType(new BlockAddedWall.Serializer());
 	}
 	
 	public static void registerBlockType(IBlockAdded.Serializer <? extends IBlockAdded > blockSerializer) {

@@ -43,6 +43,24 @@ public class BlockAddedCarpet extends BlockAddedSimple {
 		this.setDefaultState(this.blockState.getBaseState().withProperty(BlockLiquid.LEVEL, Integer.valueOf(0)).withProperty(BlockDirectional.FACING, EnumFacing.UP));
 		this.getBoundingBox().setMaxY(0.0625F);
 	}
+	
+	@Override
+	public AxisAlignedBB modifyBoundingBoxForState(AxisAlignedBB original, IBlockState state) {
+    	switch(state.getValue(BlockDirectional.FACING)) {
+    	case EAST:
+    		return new AxisAlignedBB(original.minY, 1 - original.minX, 1 - original.minZ, original.maxY, 1 - original.maxX, 1 - original.maxZ);
+    	case WEST:
+    		return new AxisAlignedBB(1 - original.maxY, 1 - original.minX, original.minZ, 1 - original.minY, 1 - original.maxX, original.maxZ);
+    	case NORTH:
+    		return new AxisAlignedBB(1 - original.minZ, 1 - original.minX, 1 - original.minY, 1 - original.maxZ, 1 - original.maxX, 1 - original.maxY);
+    	case SOUTH:
+    		return new AxisAlignedBB(original.minZ, 1 - original.minX, original.minY, original.maxZ, 1 - original.maxX, original.maxY);
+    	case DOWN:
+    		return new AxisAlignedBB(original.minZ, 1 - original.minY, 1 - original.minX, original.maxZ, 1 - original.maxY, 1 - original.maxX);
+    	default:
+    		return new AxisAlignedBB(original.minZ, original.minY, original.minX, original.maxZ, original.maxY, original.maxX);
+    	}
+    }
 
 	@Override
 	public AxisAlignedBB getDefaultBoundingBox() {
@@ -154,47 +172,6 @@ public class BlockAddedCarpet extends BlockAddedSimple {
             this.dropBlockAsItem(world, pos, state, 0);
             world.setBlockToAir(pos);
         }
-    }
-    
-    @Override
-    public boolean canPlaceTorchOnTop(IBlockState state, IBlockAccess world, BlockPos pos) {
-    	AxisAlignedBB boundingBox = this.getBoundingBox(state, world, pos);
-    	return boundingBox.maxY == 1 && boundingBox.minX <= 0.45 && boundingBox.minZ <= 0.45 && boundingBox.maxX >= 0.55 && boundingBox.maxZ >= 0.55;
-    }
-    
-    @Override
-    public boolean isTopSolid(IBlockState state) {
-    	 return state.getMaterial().isOpaque() && this.getBoundingBox().maxY == 1 && this.getBoundingBox().minX == 0 && this.getBoundingBox().minZ == 0 && this.getBoundingBox().maxX == 1 && this.getBoundingBox().maxZ == 1;
-    }
-    
-    @Override
-    public BlockFaceShape getBlockFaceShape(IBlockAccess world, IBlockState state, BlockPos pos, EnumFacing face) {
-    	if (!this.isNormalCube(state, world, pos)) {
-    		return BlockFaceShape.UNDEFINED;
-    	} else {
-    		AxisAlignedBB boundingBox = this.getBoundingBox(state, world, pos);
-	    	boolean solid = false;
-	    	
-	    	if (face == EnumFacing.UP) {
-	    		solid = boundingBox.maxY == 1 && boundingBox.minX <= 0 && boundingBox.minZ <= 0 && boundingBox.maxX >= 1 && boundingBox.maxZ >= 1;
-	    	} else if (face == EnumFacing.DOWN) {
-	    		solid = boundingBox.minY == 0 && boundingBox.minX <= 0 && boundingBox.minZ <= 0 && boundingBox.maxX >= 1 && boundingBox.maxZ >= 1;
-	    	} else if (face == EnumFacing.EAST) {
-	    		solid = boundingBox.maxX == 1 && boundingBox.minY <= 0 && boundingBox.minZ <= 0 && boundingBox.maxY >= 1 && boundingBox.maxZ >= 1;
-	    	} else if (face == EnumFacing.WEST) {
-	    		solid = boundingBox.minX == 0 && boundingBox.minY <= 0 && boundingBox.minZ <= 0 && boundingBox.maxY >= 1 && boundingBox.maxZ >= 1;
-	    	} else if (face == EnumFacing.SOUTH) {
-	    		solid = boundingBox.maxZ == 1 && boundingBox.minY <= 0 && boundingBox.minX <= 0 && boundingBox.maxY >= 1 && boundingBox.maxX >= 1;
-	    	} else if (face == EnumFacing.NORTH) {
-	    		solid = boundingBox.minZ == 0 && boundingBox.minY <= 0 && boundingBox.minX <= 0 && boundingBox.maxY >= 1 && boundingBox.maxX >= 1;
-	    	}
-	    	return solid ? BlockFaceShape.SOLID : BlockFaceShape.UNDEFINED;
-    	}
-    }
-
-    @Override
-    public boolean doesSideBlockRendering(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing face) {
-        return this.getBlockFaceShape(world, state, pos, face) == BlockFaceShape.SOLID;
     }
 
 	public static class Serializer extends IBlockAdded.Serializer<BlockAddedCarpet> {

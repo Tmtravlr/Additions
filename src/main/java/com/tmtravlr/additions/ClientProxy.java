@@ -11,7 +11,7 @@ import com.tmtravlr.additions.addon.entities.EntityAddedProjectile;
 import com.tmtravlr.additions.addon.entities.renderers.RenderAddedProjectile;
 import com.tmtravlr.additions.addon.items.IItemAdded;
 import com.tmtravlr.additions.addon.items.ItemAddedShield;
-import com.tmtravlr.additions.gui.GuiFactoryRegistration;
+import com.tmtravlr.additions.gui.registration.GuiFactoryRegistration;
 import com.tmtravlr.additions.network.CToSMessage;
 import com.tmtravlr.additions.network.PacketHandlerServer;
 import com.tmtravlr.additions.util.client.AddonLoadingException;
@@ -53,7 +53,7 @@ public class ClientProxy extends CommonProxy {
 	
 	@Override
 	public void registerEntityRenderers() {
-		Minecraft.getMinecraft().getRenderManager().entityRenderMap.put(EntityAddedProjectile.class, new RenderAddedProjectile(Minecraft.getMinecraft().getRenderManager(), Minecraft.getMinecraft().getRenderItem()));
+		MC.getRenderManager().entityRenderMap.put(EntityAddedProjectile.class, new RenderAddedProjectile(MC.getRenderManager(), MC.getRenderItem()));
 	}
 	
 	@Override
@@ -148,7 +148,7 @@ public class ClientProxy extends CommonProxy {
 	
 	@Override
 	public void refreshResources() {
-		Minecraft.getMinecraft().refreshResources();
+		MC.refreshResources();
 	}
 	
 	private void getDefaultResourcePacks() {

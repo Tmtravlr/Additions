@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
@@ -167,6 +168,8 @@ public class AddonLoader {
 				ZipEntry entry = zipFile.getEntry(zipPath);
 				
 				exists = entry != null;
+			} catch (ZipException e) {
+				// Ignore, since this means it isn't a zipped file.
 			}
 			
 			return exists;

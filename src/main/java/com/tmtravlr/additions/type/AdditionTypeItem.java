@@ -77,7 +77,7 @@ public class AdditionTypeItem extends AdditionType<IItemAdded> {
 					String fileString = AddonLoader.readAddonFile(addon.addonFolder, filePath);
 					JsonObject itemJson = GSON.fromJson(fileString, JsonObject.class);
 					IItemAdded itemAdded = GSON.fromJson(itemJson, IItemAdded.class);
-					itemsToPostDeserialize.put(itemAdded, itemJson);
+					this.itemsToPostDeserialize.put(itemAdded, itemJson);
 					
 					Item item = itemAdded.getAsItem();
 					

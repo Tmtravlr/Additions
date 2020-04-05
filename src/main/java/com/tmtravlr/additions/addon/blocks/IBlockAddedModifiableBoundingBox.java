@@ -3,10 +3,11 @@ package com.tmtravlr.additions.addon.blocks;
 import com.google.gson.JsonObject;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.math.AxisAlignedBB;
 
-public interface IBlockAddedModifiableBoundingBox {
+public interface IBlockAddedModifiableBoundingBox extends IBlockAdded {
 	
 	public void setHasCollisionBox(boolean hasCollisionBox);
 	
@@ -30,6 +31,10 @@ public interface IBlockAddedModifiableBoundingBox {
 	
 	public default AxisAlignedBB getDefaultCollisionBox() {
 		return getDefaultBoundingBox();
+	}
+	
+	public default AxisAlignedBB modifyBoundingBoxForState(AxisAlignedBB box, IBlockState state) {
+		return box;
 	}
 	
 	public static class Serializer {

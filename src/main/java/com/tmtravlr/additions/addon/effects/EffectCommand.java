@@ -14,6 +14,7 @@ import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 /**
@@ -33,7 +34,14 @@ public class EffectCommand extends Effect {
 	@Override
 	public void affectEntity(@Nullable Entity cause, Entity entity) {
 		if (entity.world.getMinecraftServer() != null && entity.world.rand.nextFloat() <= this.chance) {
-			entity.world.getMinecraftServer().commandManager.executeCommand(CommandSenderWrapper.create(entity).withEntity(entity, entity.getPositionVector()).withSendCommandFeedback(!this.hideFeedback), this.command);
+			entity.world.getMinecraftServer().commandManager.executeCommand(new CommandSenderWrapper(entity, entity.getPositionVector(), entity.getPosition(), 2, entity, !this.hideFeedback) {
+				
+				@Override
+				public boolean canUseCommand(int permLevel, String commandName) {
+					return true;
+				}
+				
+			}, this.command);
 		}
 	}
 

@@ -12,6 +12,7 @@ import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.AbstractHorse;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 public class AttributeTypeManager {
 
@@ -54,18 +55,8 @@ public class AttributeTypeManager {
 		knownAttributes.add(SharedMonsterAttributes.ARMOR);
 		knownAttributes.add(SharedMonsterAttributes.ARMOR_TOUGHNESS);
 		knownAttributes.add(SharedMonsterAttributes.LUCK);
-		knownAttributes.add(new AbstractHorse(null) {
-			protected void updateHorseSlots() {} //Caused crashes because it wasn't checking for a null world
-			
-			public IAttribute getJumpStrengthAttribute() {
-				return JUMP_STRENGTH;
-			}
-		}.getJumpStrengthAttribute());
-		knownAttributes.add(new EntityZombie(null) {
-			public IAttribute getReinforcementsAttribute() {
-				return SPAWN_REINFORCEMENTS_CHANCE;
-			}
-		}.getReinforcementsAttribute());
+		knownAttributes.add(ObfuscationReflectionHelper.getPrivateValue(AbstractHorse.class, null, "field_110271_bv", "JUMP_STRENGTH"));
+		knownAttributes.add(ObfuscationReflectionHelper.getPrivateValue(EntityZombie.class, null, "field_110186_bp", "SPAWN_REINFORCEMENTS_CHANCE"));
 	}
 	
 	public static void addAttribute(IAttribute attribute) {

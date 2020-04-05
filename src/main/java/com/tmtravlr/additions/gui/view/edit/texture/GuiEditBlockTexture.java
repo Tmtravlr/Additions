@@ -20,6 +20,8 @@ import com.tmtravlr.additions.gui.view.GuiView;
 import com.tmtravlr.additions.gui.view.components.GuiComponentDisplayText;
 import com.tmtravlr.additions.gui.view.components.input.GuiComponentFileInput;
 import com.tmtravlr.additions.gui.view.edit.GuiEdit;
+import com.tmtravlr.additions.gui.view.edit.block.GuiEditBlock;
+import com.tmtravlr.additions.type.AdditionTypeBlock;
 import com.tmtravlr.additions.util.client.CommonGuiUtils;
 import com.tmtravlr.additions.util.models.BlockModelManager;
 import com.tmtravlr.additions.util.models.ItemModelManager;
@@ -197,6 +199,7 @@ public class GuiEditBlockTexture extends GuiEdit {
 			}
 			int imageWidth = image.getTileWidth();
 			int imageHeight = image.getTileHeight();
+			
 			if ((imageWidth & (imageWidth - 1)) != 0 || ((imageHeight & (imageHeight - 1)) != 0 && imageHeight % imageWidth != 0)) {
 				//Wrong image dimensions
 				this.mc.displayGuiScreen(new GuiMessageBox(this, I18n.format("gui.edit.texture.problem.wrongDimensions.title"), new TextComponentTranslation("gui.edit.texture.problem.wrongDimensions.notSidesx2.message"), I18n.format("gui.buttons.back")));
@@ -211,11 +214,18 @@ public class GuiEditBlockTexture extends GuiEdit {
 				}
 				return false;
 			} else {
+				//Check for transparency/semi-transparency
+				GuiScreen nextScreen = warnAboutAlpha(image);
+			
 				if (imageWidth != imageHeight) {
 					//Animation
-					this.mc.displayGuiScreen(new GuiMessageBoxSelectBlockAnimation(this, this.addon, this.block, textureEnding));
+					nextScreen = new GuiMessageBoxSelectBlockAnimation(nextScreen == null ? this : nextScreen, this.addon, this.block, textureEnding);
 				} else {
 					BlockModelManager.deleteTextureAnimation(this.addon, this.block, textureEnding);
+				}
+				
+				if (nextScreen != null) {
+					this.mc.displayGuiScreen(nextScreen);
 				}
 				
 				return true;
@@ -227,6 +237,116 @@ public class GuiEditBlockTexture extends GuiEdit {
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * Checks for partial or full alpha in the image and creates a warning screen
+	 * that can automatically set the opacity/semi-transparency
+	 */
+	private GuiScreen warnAboutAlpha(BufferedImage image) {
+		GuiScreen warningScreen = null;
+		
+		if (!this.isBlockSemiTransparent()) {
+			boolean hasSemiTransparent = false;
+			
+			for (int x = 0; x < image.getTileWidth() && !hasSemiTransparent; x++) {
+				for (int y = 0; y < image.getTileHeight() && !hasSemiTransparent; y++) {
+					int alpha = image.getRGB(x, y) & 0xFF000000;
+					
+					if (alpha != 0 && alpha != 0xFF000000) {
+						hasSemiTransparent = true;
+					}
+				}
+			}
+			
+			if (hasSemiTransparent) {
+				warningScreen = new GuiMessageBoxTwoButton(this, this, I18n.format("gui.edit.texture.block.problem.semiTransparent.title"), new TextComponentTranslation("gui.edit.texture.block.problem.semiTransparent.message"), I18n.format("gui.buttons.no"), I18n.format("gui.buttons.yes")) {
+					
+					@Override
+				    protected void onSecondButtonClicked() {
+						GuiEditBlockTexture.this.setBlockSemiTransparent();
+				    	super.onSecondButtonClicked();
+				    }
+					
+				};
+			}
+		}
+		
+		if (warningScreen == null && !this.isBlockTransparent()) {
+			boolean hasEmptySpace = false;
+			
+			for (int x = 0; x < image.getTileWidth() && !hasEmptySpace; x++) {
+				for (int y = 0; y < image.getTileHeight() && !hasEmptySpace; y++) {
+					int alpha = image.getRGB(x, y) & 0xFF000000;
+					
+					if (alpha == 0) {
+						hasEmptySpace = true;
+					}
+				}
+			}
+			
+			if (hasEmptySpace) {
+				warningScreen = new GuiMessageBoxTwoButton(this, this, I18n.format("gui.edit.texture.block.problem.transparent.title"), new TextComponentTranslation("gui.edit.texture.block.problem.transparent.message"), I18n.format("gui.buttons.no"), I18n.format("gui.buttons.yes")) {
+						
+					@Override
+				    protected void onSecondButtonClicked() {
+						GuiEditBlockTexture.this.setBlockTransparent();
+				    	super.onSecondButtonClicked();
+				    }
+					
+				};
+			}
+		}
+		
+		return warningScreen;
+	}
+	
+	private boolean isBlockSemiTransparent() {
+		boolean semiTransparent = true;
+		
+		if (this.isNew) {
+			semiTransparent = block.isSemiTransparent();
+		} else if (this.parentScreen instanceof GuiEditBlock) {
+			semiTransparent = ((GuiEditBlock)this.parentScreen).isSemiTransparent();
+		}
+		
+		return semiTransparent;
+	}
+	
+	private boolean isBlockTransparent() {
+		boolean transparent = true;
+		
+		if (this.isNew) {
+			transparent = block.getOpacity() < 15;
+		} else if (this.parentScreen instanceof GuiEditBlock) {
+			transparent = ((GuiEditBlock)this.parentScreen).isTransparent();
+		}
+		
+		return transparent;
+	}
+	
+	private void setBlockSemiTransparent() {
+		if (this.isNew) {
+			this.block.setSemiTransparent(true);
+			
+			if (this.block.getOpacity() == 15) {
+				this.block.getAsBlock().setLightOpacity(0);
+			}
+			
+			AdditionTypeBlock.INSTANCE.saveAddition(addon, this.block);
+		} else if (this.parentScreen instanceof GuiEditBlock) {
+			((GuiEditBlock)this.parentScreen).setSemiTransparent();
+		}
+	}
+	
+	private void setBlockTransparent() {
+		if (this.isNew) {
+			this.block.getAsBlock().setLightOpacity(0);
+			
+			AdditionTypeBlock.INSTANCE.saveAddition(addon, this.block);
+		} else if (this.parentScreen instanceof GuiEditBlock) {
+			((GuiEditBlock)this.parentScreen).setTransparent();
+		}
 	}
 
 }

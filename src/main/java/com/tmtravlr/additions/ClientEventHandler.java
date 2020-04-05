@@ -8,13 +8,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
-@Mod.EventBusSubscriber(modid = AdditionsMod.MOD_ID, value = Side.CLIENT)
+@EventBusSubscriber(modid = AdditionsMod.MOD_ID, value = Side.CLIENT)
 public class ClientEventHandler {
 	
 	private static final int ADDITIONS_BUTTON = 29384;

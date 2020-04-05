@@ -72,6 +72,7 @@ public abstract class GuiEditBlock<T extends IBlockAdded> extends GuiEdit {
 	protected GuiComponentIntegerInput blockHarvestLevelInput;
 	protected GuiComponentSuggestionInputToolType blockHarvestToolInput;
 	protected GuiComponentListInput<GuiComponentSuggestionInputToolType> blockEffectiveToolsInput;
+	protected GuiComponentBooleanInput blockSemiTransparentInput;
 	protected GuiComponentIntegerInput blockOpacityInput;
 	protected GuiComponentBooleanInput blockTransparentInput;
 	protected GuiComponentIntegerInput blockLightLevelInput;
@@ -175,6 +176,11 @@ public abstract class GuiEditBlock<T extends IBlockAdded> extends GuiEdit {
 			this.blockEffectiveToolsInput.addDefaultComponent(suggestionInput);
 		});
 		
+		this.blockSemiTransparentInput = new GuiComponentBooleanInput(I18n.format("gui.edit.block.semiTransparent.label"), this);
+		this.blockSemiTransparentInput.setInfo(new TextComponentTranslation("gui.edit.block.semiTransparent.info"));
+		this.blockSemiTransparentInput.setHidden(true);
+		this.blockSemiTransparentInput.setDefaultBoolean(this.block.isSemiTransparent());
+		
 		this.blockOpacityInput = new GuiComponentIntegerInput(I18n.format("gui.edit.block.opacity.label"), this, false);
 		this.blockOpacityInput.setInfo(new TextComponentTranslation("gui.edit.block.opacity.info"));
 		this.blockOpacityInput.setMinimum(0);
@@ -186,13 +192,14 @@ public abstract class GuiEditBlock<T extends IBlockAdded> extends GuiEdit {
 			
 			@Override
 			public void setDefaultBoolean(boolean input) {
+				GuiEditBlock.this.blockSemiTransparentInput.setHidden(!input);
 				GuiEditBlock.this.blockOpacityInput.setHidden(!input);
 				super.setDefaultBoolean(input);
 			}
 			
 		};
 		this.blockTransparentInput.setInfo(new TextComponentTranslation("gui.edit.block.transparent.info"));
-		this.blockTransparentInput.setDefaultBoolean(this.block.getOpacity() > 15);
+		this.blockTransparentInput.setDefaultBoolean(this.block.getOpacity() < 15);
 		
 		this.blockLightLevelInput = new GuiComponentIntegerInput(I18n.format("gui.edit.block.lightLevel.label"), this, false);
 		this.blockLightLevelInput.setInfo(new TextComponentTranslation("gui.edit.block.lightLevel.info"));
@@ -352,8 +359,10 @@ public abstract class GuiEditBlock<T extends IBlockAdded> extends GuiEdit {
 		
 		if (!this.blockTransparentInput.getBoolean()) {
 			this.block.getAsBlock().setLightOpacity(15);
+			this.block.setSemiTransparent(false);
 		} else {
 			this.block.getAsBlock().setLightOpacity(this.blockOpacityInput.getInteger());
+			this.block.setSemiTransparent(this.blockSemiTransparentInput.getBoolean());
 		}
 		
 		this.block.getAsBlock().setLightLevel(this.blockLightLevelInput.getInteger() / 15F);
@@ -446,13 +455,38 @@ public abstract class GuiEditBlock<T extends IBlockAdded> extends GuiEdit {
 			this.copyFromOther();
 		}
 	}
+    
+    public boolean isSemiTransparent() {
+    	return this.blockSemiTransparentInput.getBoolean();
+    }
+    
+    public boolean isTransparent() {
+    	return this.blockTransparentInput.getBoolean();
+    }
+    
+    public void setSemiTransparent() {
+    	this.blockSemiTransparentInput.setDefaultBoolean(true);
+    	
+    	if (!this.blockTransparentInput.getBoolean()) {
+    		this.blockOpacityInput.setDefaultInteger(0);
+    	}
+    	
+    	this.blockTransparentInput.setDefaultBoolean(true);
+    	this.notifyHasChanges();
+    }
+    
+    public void setTransparent() {
+		this.blockOpacityInput.setDefaultInteger(0);
+    	this.blockTransparentInput.setDefaultBoolean(true);
+    	this.notifyHasChanges();
+    }
 	
 	protected void copyFromOther() {
 		this.blockNameInput.setDefaultText(this.copyFrom.getDisplayName());
 	    this.blockMaterialInput.setDefaultMaterialSelected(this.copyFrom.getBlockMaterial());
 	    this.blockMapColorInput.setDefaultMapColorSelected(this.copyFrom.getBlockMapColor());
 	    this.blockHardnessInput.setDefaultFloat(this.copyFrom.getHardness());
-	    this.blockResistanceInput.setDefaultFloat(this.copyFrom.getResistance());
+	    this.blockResistanceInput.setDefaultFloat(this.copyFrom.getResistance() / 3);
 	    this.blockHarvestLevelInput.setDefaultInteger(this.copyFrom.getHarvestLevel());
 	    this.blockHarvestToolInput.setDefaultText(this.copyFrom.getHarvestTool());
 	    
@@ -462,7 +496,8 @@ public abstract class GuiEditBlock<T extends IBlockAdded> extends GuiEdit {
 			suggestionInput.setDefaultText(type);
 			this.blockEffectiveToolsInput.addDefaultComponent(suggestionInput);
 		});
-		
+
+		this.blockSemiTransparentInput.setDefaultBoolean(this.copyFrom.isSemiTransparent());
 		this.blockOpacityInput.setDefaultInteger(this.copyFrom.getOpacity());
 		this.blockTransparentInput.setDefaultBoolean(this.copyFrom.getOpacity() < 15);
 	    this.blockLightLevelInput.setDefaultInteger(this.copyFrom.getLightLevel());

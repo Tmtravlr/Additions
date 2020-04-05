@@ -1,34 +1,19 @@
 package com.tmtravlr.additions.addon.items.materials;
 
-import java.lang.reflect.Type;
-
 import javax.annotation.Nonnull;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
 import com.google.gson.JsonSyntaxException;
 import com.tmtravlr.additions.AdditionsMod;
-import com.tmtravlr.additions.util.OtherSerializers;
 
-import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.JsonUtils;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import net.minecraftforge.oredict.OreDictionary;
 
 /**
  * Represents an added item material, for tools and armor
@@ -86,18 +71,22 @@ public class ToolMaterialAdded extends ItemMaterialAdded {
     	}
     }
     
-    public String getId() {
+    @Override
+	public String getId() {
     	return this.toolMaterial.name().replace('$', '.').toLowerCase();
     }
     
-    public Item.ToolMaterial getToolMaterial() {
+    @Override
+	public Item.ToolMaterial getToolMaterial() {
     	return this.toolMaterial;
     }
 	
+	@Override
 	public int getEnchantability() {
 		return this.toolMaterial.getEnchantability();
 	}
 	
+	@Override
 	public ItemStack getRepairStack() {
 		return this.toolMaterial.getRepairItemStack();
 	}
@@ -138,22 +127,11 @@ public class ToolMaterialAdded extends ItemMaterialAdded {
         }
         
         public static ToolMaterialAdded deserialize(JsonObject json, String materialId, JsonDeserializationContext context) throws JsonParseException {
-            Item repairItem = null;
-            int repairMeta = 0;
-            
             int enchantability = JsonUtils.getInt(json, "enchantability");
             int harvestLevel = JsonUtils.getInt(json, "harvest_level");
             int baseToolDurability = JsonUtils.getInt(json, "base_tool_durability");
             float efficiency = JsonUtils.getFloat(json, "efficiency");
             float baseAttackDamage = JsonUtils.getFloat(json, "base_attack_damage");
-            
-            if (json.has("repair_item")) {
-            	repairItem = JsonUtils.getItem(json, "repair_item");
-            }
-            
-            if (json.has("repair_meta")) {
-            	repairMeta = JsonUtils.getInt(json, "repair_meta");
-            }
 		    
             if (materialId.isEmpty()) {
 		    	throw new JsonSyntaxException("Trying to deserialize an item material without having an id.");
@@ -164,12 +142,25 @@ public class ToolMaterialAdded extends ItemMaterialAdded {
 		    Item.ToolMaterial toolMaterial = EnumHelper.addToolMaterial(name.toUpperCase(), harvestLevel, baseToolDurability, efficiency, baseAttackDamage, enchantability);
 		    
 		    ToolMaterialAdded newMaterial = new ToolMaterialAdded(toolMaterial);
-		    
-		    if (repairItem != null) {
-		    	newMaterial.setRepairStack(new ItemStack(repairItem, 1, repairMeta));
-		    }
 
             return newMaterial;
+        }
+        
+        public static void postDeserialize(JsonObject json, ToolMaterialAdded material) {
+            Item repairItem = null;
+            int repairMeta = 0;
+            
+            if (json.has("repair_item")) {
+            	repairItem = JsonUtils.getItem(json, "repair_item");
+            }
+            
+            if (json.has("repair_meta")) {
+            	repairMeta = JsonUtils.getInt(json, "repair_meta");
+            }
+		    
+		    if (repairItem != null) {
+		    	material.setRepairStack(new ItemStack(repairItem, 1, repairMeta));
+		    }
         }
     }
 }

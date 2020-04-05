@@ -227,9 +227,20 @@ public class ItemModelGenerator {
 		return ModelGenerator.GSON.toJson(json);
 	}
 	
-	public static String getItemBlockModel(ResourceLocation blockName) {
+	public static String getItemBlockModel(String blockId) {
 		JsonObject json = new JsonObject();
-		json.addProperty("parent", blockName.getResourceDomain() + ":block/" + blockName.getResourcePath());
+		json.addProperty("parent", AdditionsMod.MOD_ID + ":block/" + blockId);
+		
+		return ModelGenerator.GSON.toJson(json);
+	}
+	
+	public static String getSimpleItemBlockModel(String blockId) {
+		JsonObject json = new JsonObject();
+		
+		json.addProperty("parent", "item/generated");
+		json.add("textures", JsonGenerator.createJsonObject(
+				new JsonElementPair("layer0", AdditionsMod.MOD_ID + ":blocks/" + blockId)
+		));
 		
 		return ModelGenerator.GSON.toJson(json);
 	}

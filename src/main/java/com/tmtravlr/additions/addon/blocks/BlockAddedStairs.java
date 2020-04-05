@@ -71,6 +71,7 @@ public class BlockAddedStairs extends BlockStairs implements IBlockAdded {
 	private boolean isSlime = false;
 	private boolean isBeaconBase = false;
 	private boolean canPistonsPush = true;
+	private boolean semiTransparent = false;
 	private int xpDroppedMin = 0;
 	private int xpDroppedMax = 0;
 	private Boolean droppedFromExplosions;
@@ -85,6 +86,8 @@ public class BlockAddedStairs extends BlockStairs implements IBlockAdded {
 		this.setDefaultState(this.blockState.getBaseState().withProperty(BlockLiquid.LEVEL, Integer.valueOf(0)));
 		this.setBlockMapColor(null);
 		this.lightOpacity = 15;
+		this.translucent = true;
+		this.useNeighborBrightness = true;
 	}
 	
 	@Override
@@ -100,7 +103,6 @@ public class BlockAddedStairs extends BlockStairs implements IBlockAdded {
 	@Override
 	public void setBlockMaterial(Material material) {
 		ObfuscationReflectionHelper.setPrivateValue(Block.class, this, material, "field_149764_J", "blockMaterial");
-        this.translucent = !material.blocksLight();
         this.updateSoundType();
 	}
 
@@ -201,6 +203,11 @@ public class BlockAddedStairs extends BlockStairs implements IBlockAdded {
 	@Override
 	public void setCanPistonsPush(boolean canPistonsPush) {
 		this.canPistonsPush = canPistonsPush;
+	}
+	
+	@Override
+	public void setSemiTransparent(boolean semiTransparent) {
+		this.semiTransparent = semiTransparent;
 	}
 	
 	@Override
@@ -309,6 +316,11 @@ public class BlockAddedStairs extends BlockStairs implements IBlockAdded {
 	}
 	
 	@Override
+	public boolean isSemiTransparent() {
+		return this.semiTransparent;
+	}
+	
+	@Override
 	public int getXpDroppedMax() {
 		return this.xpDroppedMax;
 	}
@@ -346,162 +358,100 @@ public class BlockAddedStairs extends BlockStairs implements IBlockAdded {
 	@Override
 	@SideOnly(Side.CLIENT)
     public BlockRenderLayer getBlockLayer() {
-        return this.lightOpacity >= 15 ? BlockRenderLayer.SOLID : BlockRenderLayer.TRANSLUCENT;
+        return CommonBlockMethods.getBlockLayer(this);
     }
 	
 	@Override
 	public String getLocalizedName() {
-		return I18n.canTranslate(this.displayName) ?  I18n.translateToLocal(this.displayName) : this.displayName;
+		return CommonBlockMethods.getLocalizedName(this);
 	}
 	
 	@Override
 	public MapColor getMapColor(IBlockState state, IBlockAccess world, BlockPos pos) {
-		if (this.blockMapColor == null) {
-			return this.blockMaterial.getMaterialMapColor();
-		}
-		
-        return this.blockMapColor;
+		return CommonBlockMethods.getMapColor(this);
     }
 	
     @Override
     public String getHarvestTool(IBlockState state) {
-        return this.harvestTool.isEmpty() ? null : this.harvestTool;
+        return CommonBlockMethods.getHarvestTool(this);
     }
 
     @Override
     public int getHarvestLevel(IBlockState state) {
-        return this.harvestLevel;
+        return CommonBlockMethods.getHarvestLevel(this);
     }
 
     @Override
     public boolean isToolEffective(String type, IBlockState state) {
-        return this.effectiveTools.isEmpty() && this.harvestTool.isEmpty() || this.effectiveTools.contains(type);
+        return CommonBlockMethods.isToolEffective(this, type);
     }
     
     @Override
     public float getEnchantPowerBonus(World world, BlockPos pos) {
-        return this.bookshelfStrength;
+        return CommonBlockMethods.getEnchantPowerBonus(this);
     }
     
     @Override
     public float[] getBeaconColorMultiplier(IBlockState state, World world, BlockPos pos, BlockPos beaconPos) {
-        return this.beaconColorMultiplier == null || this.beaconColorMultiplier.length != 3 ? null : this.beaconColorMultiplier;
+        return CommonBlockMethods.getBeaconColorMultiplier(this);
     }
     
     @Override
     public boolean isStickyBlock(IBlockState state) {
-        return this.isSlime;
+        return CommonBlockMethods.isStickyBlock(this);
     }
 
     @Override
     public void onFallenUpon(World world, BlockPos pos, Entity entity, float fallDistance) {
-        if (!this.isSlime || entity.isSneaking()) {
+        if (!CommonBlockMethods.onFallenUpon(this, entity, fallDistance)) {
             super.onFallenUpon(world, pos, entity, fallDistance);
-        } else {
-            entity.fall(fallDistance, 0.0F);
         }
     }
 
     @Override
     public void onLanded(World world, Entity entity) {
-    	if (!this.isSlime || entity.isSneaking()) {
+    	if (!CommonBlockMethods.onLanded(this, entity)) {
             super.onLanded(world, entity);
-        } else if (entity.motionY < 0.0D) {
-            entity.motionY = -entity.motionY;
-
-            if (!(entity instanceof EntityLivingBase)) {
-                entity.motionY *= 0.8D;
-            }
         }
     }
 
     @Override
     public void onEntityWalk(World world, BlockPos pos, Entity entity) {
-        if (this.isSlime && Math.abs(entity.motionY) < 0.1D && !entity.isSneaking()) {
-            double motionMultiplier = 0.4D + Math.abs(entity.motionY) * 0.2D;
-            entity.motionX *= motionMultiplier;
-            entity.motionZ *= motionMultiplier;
-        }
-
+	    CommonBlockMethods.onEntityWalk(this, entity);
         super.onEntityWalk(world, pos, entity);
     }
     
     @Override
     public boolean isBeaconBase(IBlockAccess world, BlockPos pos, BlockPos beacon) {
-    	return this.isBeaconBase;
+    	return CommonBlockMethods.isBeaconBase(this);
     }
     
     @Override
     public EnumPushReaction getMobilityFlag(IBlockState state) {
-        return this.canPistonsPush ? this.blockMaterial.getMobilityFlag() : EnumPushReaction.BLOCK;
-    }
-    
-    @Override
-    public CreativeTabs getCreativeTabToDisplayOn() {
-    	return CreativeTabs.BUILDING_BLOCKS;
+        return CommonBlockMethods.getMobilityFlag(this);
     }
     
     @Override
     public int getExpDrop(IBlockState state, IBlockAccess world, BlockPos pos, int fortune) {
-    	int xpDropped = 0;
-    	
-    	if (this.xpDroppedMax > 0) {
-    		Random rand = world instanceof World ? ((World)world).rand : new Random();
-    		xpDropped = MathHelper.getInt(rand, this.xpDroppedMin, this.xpDroppedMax);
-    	}
-    	
-        return xpDropped;
+    	return CommonBlockMethods.getExpDrop(this, state, world, pos, fortune);
     }
     
 	@Override
 	public void getDrops(NonNullList<ItemStack> drops, IBlockAccess blockAccess, BlockPos pos, IBlockState state, int fortune) {
-		boolean doNormalDrops = true;
-		
-		if (blockAccess instanceof WorldServer) {
-			WorldServer world = (WorldServer) blockAccess;
-			ResourceLocation lootTableName = new ResourceLocation(this.getRegistryName().getResourceDomain(), "blocks/" + this.getRegistryName().getResourcePath());
-			
-			LootTable dropLootTable = world.getLootTableManager().getLootTableFromLocation(lootTableName);
-			
-			if (dropLootTable != LootTable.EMPTY_LOOT_TABLE) {
-				doNormalDrops = false;
-				EntityPlayer player = this.harvesters.get();
-				TileEntity tileEntity = world.getTileEntity(pos);
-				
-				LootContextExtendedBuilder contextBuilder = new LootContextExtendedBuilder(world);
-				contextBuilder.withPosition(pos).withBrokenState(state).withFortune(fortune);
-				if (tileEntity != null) {
-					contextBuilder.withBrokenTileEntity(tileEntity);
-				}
-				if (player != null) {
-					boolean silkTouch = EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, player.getHeldItemMainhand()) > 0;
-					contextBuilder.withLooter(player).withSilkTouch(silkTouch).withLuck(player.getLuck());
-				}
-				
-				NonNullList<ItemStack> separatedDrops = NonNullList.create();
-				for (ItemStack stack : dropLootTable.generateLootForPools(world.rand, contextBuilder.build())) {
-					if (stack != null) {
-						ItemStack singleStack = stack.copy();
-						singleStack.setCount(1);
-						
-						for (int i = 0; i < stack.getCount(); i++) {
-							separatedDrops.add(singleStack);
-						}
-					}
-				}
-				
-				drops.addAll(separatedDrops);
-			}
-		}
-		
-		if (doNormalDrops) {
+		if (!CommonBlockMethods.getDrops(this, drops, blockAccess, pos, state, fortune)) {
 			super.getDrops(drops, blockAccess, pos, state, fortune);
 		}
 	}
 	
 	@Override
 	public boolean canDropFromExplosion(Explosion explosion) {
-        return this.droppedFromExplosions == null || this.droppedFromExplosions;
+        return CommonBlockMethods.canDropFromExplosion(this);
+    }
+
+    
+    @Override
+    public CreativeTabs getCreativeTabToDisplayOn() {
+    	return CreativeTabs.BUILDING_BLOCKS;
     }
 	
     @Override
