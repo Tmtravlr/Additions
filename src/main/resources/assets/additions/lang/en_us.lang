@@ -5,6 +5,72 @@ death.attack.additions.thrown.player=%1$s was dispatched by %2$s using %3$s
 death.attack.additions.projectile=%1$s was shot by %2$s
 death.attack.additions.projectile.player=%1$s was shot by %2$s using %3$s
 
+commands.additions.damage.usage=/additions.damage <entity> <type> <amount> [options separated by commas (if type is 'custom')] [death message (if type is 'custom')]
+commands.additions.damage.notvaliddamage=The damage type '%s' is not valid
+commands.additions.damage.success=Applied %1$s hitpoints of %2$s damage to %3$s
+
+commands.additions.damageitem.usage=/additions.damageitem <entity|block>
+commands.additions.damageitem.block.usage=/additions.damageitem entity <entity> <slot> <amount>
+commands.additions.damageitem.entity.usage/additions.damageitem block <block> <x> <y> <z> <slot> <amount>
+commands.additions.damageitem.success=Damaged item in slot '%1$s' by %2$s
+
+commands.additions.throw.usage=/additions.throw <entity thrown> [speed] [inaccuracy] [entity thrown tag]
+commands.additions.throw.noThrower=There was no thrower! Must be executed by an entity.
+commands.additions.throw.noLightning=Lightning bolts can't be thrown! Sadly... =(
+commands.additions.throw.failure=%1$s failed to throw '%2$s'
+commands.additions.throw.success=%1$s successfully threw %2$s
+
+commands.additions.move.usage=/additions.move <global | relative | facing | toward>
+commands.additions.move.global.usage=/additions.move global <x speed> <y speed> <z speed>
+commands.additions.move.facing.usage=/additions.move relative <horizontal speed forward/back> [speed y] [horizontal speed right/left]
+commands.additions.move.facing.usage=/additions.move facing <speed forward/back> [speed up/down] [speed right/left]
+commands.additions.move.toward.usage=/additions.move toward <entity> <speed>
+commands.additions.move.noEntity=There was no entity! Must be executed by an entity.
+commands.additions.move.unknownType=Unknown movement type '%s'. Should be global, relative, facing, or toward.
+commands.additions.move.success=Successfully set %1$s's motion to %2$s
+
+commands.additions.explode.usage=/additions.explode (<entity> | <x> <y> <z>) <explosion size> <destroys terrain> <is fiery>
+commands.additions.explode.success=Created an explosion of size %1$s at %2$s
+
+commands.additions.mount.usage=/additions.mount <mount>
+commands.additions.mount.failure.noRider=Couldn't find a rider! Must be executed by an entity.
+commands.additions.mount.failure.self=Can't mount %s onto itself!
+commands.additions.mount.success=Mounted %1$s onto %2$s
+
+commands.additions.dismount.usage=/additions.dismount
+commands.additions.dismount.failure.noRider=Couldn't find a rider! Must be executed by an entity.
+commands.additions.dismount.failure.notRiding=%s isn't riding anything!
+commands.additions.dismount.success=Dismounted %s
+
+commands.additions.ejectpassengers.usage=/additions.ejectpassengers
+commands.additions.ejectpassengers.failure.noMount=Couldn't find a mount! Must be executed by an entity.
+commands.additions.ejectpassengers.failure.noPassengers=%s doesn't have any passengers!
+commands.additions.ejectpassengers.success=Ejected passengers from %s
+
+commands.additions.loot.usage=/additions.loot <loot table> [x] [y] [z] [seed]
+commands.additions.loot.failure.noItems=The loot table %s generated no items!
+commands.additions.loot.success=Generated loot table %1$s at %2$s
+
+commands.additions.structure.usage=/additions.structure <structure name> [x] [y] [z] [ignore entities] [rotation] [mirror type] [integrity] [seed]
+commands.additions.structure.failure.noStructure=Couldn't find a structure called %s!
+commands.additions.structure.failure.invalidRotation=The rotation '%s' is invalid. It can only be 0, 90, 180, or 270.
+commands.additions.structure.failure.invalidMirror=The mirror '%s' is invalid. It can only be left-right, front-back, or none.
+commands.additions.structure.success=Generated structure %1$s at %2$s
+
+commands.additions.entitydata.usage=/additions.entitydata <entity> <tag>
+
+commands.additions.condition.usage=/additions.condition {if:"/command test", then:"/command if true", else:"/command if false"} OR {if:["/this should be true", "/and this should also"], then:"/command if true", else:"/command if false"}
+commands.additions.condition.failure.parse=Unable to parse NBT: %s
+commands.additions.condition.failure.noConditions=There needs to be at least 1 condition command!
+commands.additions.condition.success.noThen=Condition was true, but there was no "then" command to run
+commands.additions.condition.success.noElse=Condition was false, but there was no "else" command to run
+commands.additions.condition.success.then=Condition was true, so ran the "then" command
+commands.additions.condition.success.else=Condition was false, so ran the "else" command
+
+commands.additions.grow.usage=/additions.grow <x> <y> <z> [grow fully]
+commands.additions.grow.failure.notGrowable=Block at %s is not growable
+commands.additions.grow.success=Successfully grew block at %s
+
 entity.additions_projectile.name=Projectile
 
 subtitles.block.cauldron.wash=Item is washed
@@ -579,6 +645,8 @@ gui.edit.item.shooter.scattering.label=Scattering
 gui.edit.item.shooter.shotCount.label=Shot Count
 gui.edit.item.shooter.firesVanillaArrows.label=Fires Vanilla Arrows
 gui.edit.item.shooter.alwaysInfinite.label=Always Infinite
+gui.edit.item.shooter.infinityRequiresAmmo.label=Infinity Requires Ammo
+gui.edit.item.shooter.infinityRequiresAmmo.info=Does this require at least one arrow (or whatever ammo it shoots) to be in your inventory for infinity to work?
 gui.edit.item.shooter.consumesOneAmmo.label=Consumes One Ammo
 gui.edit.item.shooter.consumesOneAmmo.info=If this shoots more than one projectile and doesn't have infinity, it will only consume one.
 gui.edit.item.shooter.shotSound.label=Shot Sound
@@ -653,7 +721,7 @@ gui.edit.block.hardness.info=How long it takes to break this block. -1 means unb
 gui.edit.block.resistance.label=Explosion Resistance
 gui.edit.block.resistance.info=How well this block resists explosions. For example, dirt is 0.0, wood and ores are 5.0, stone is 10.0, obsidian is 2000.0, and bedrock is 6000000.0.
 gui.edit.block.harvestLevel.label=Harvest Level
-gui.edit.block.harvestLevel.info=What level of tools is needed to harvest this block. For example, stone is 1, iron is 2, diamond ore is 3, and obsidian is 4. 0 means anything.
+gui.edit.block.harvestLevel.info=What level of tools is needed to harvest this block. For example, stone is 0, iron is 1, diamond ore is 2, and obsidian is 3. -1 means anything.
 gui.edit.block.harvestTool.label=Harvest Tool
 gui.edit.block.harvestTool.info=What tool type is required to dig this block (like pickaxe for stone). Leave blank if you can dig it by hand. However, some block materials are forced to require a tool, so leaving it blank won't work: stone, metal, anvil, snow, and snow_layer.
 gui.edit.block.effectiveTools.label=Effective Tools

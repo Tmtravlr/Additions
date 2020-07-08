@@ -81,6 +81,49 @@ public class BlockStateInfo {
 		CommandBase.convertArgToBlockStatePredicate(block, stateString.toString());
 	}
 	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((block == null) ? 0 : block.hashCode());
+		result = prime * result + ((blockState == null) ? 0 : blockState.hashCode());
+		result = prime * result + ((predicate == null) ? 0 : predicate.hashCode());
+		result = prime * result + ((stateMap == null) ? 0 : stateMap.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		BlockStateInfo other = (BlockStateInfo) obj;
+		if (block == null) {
+			if (other.block != null)
+				return false;
+		} else if (!block.equals(other.block))
+			return false;
+		if (blockState == null) {
+			if (other.blockState != null)
+				return false;
+		} else if (!blockState.equals(other.blockState))
+			return false;
+		if (predicate == null) {
+			if (other.predicate != null)
+				return false;
+		} else if (!predicate.equals(other.predicate))
+			return false;
+		if (stateMap == null) {
+			if (other.stateMap != null)
+				return false;
+		} else if (!stateMap.equals(other.stateMap))
+			return false;
+		return true;
+	}
+	
 	public static class Serializer {
 		
 		public static JsonElement serialize(BlockStateInfo info) {

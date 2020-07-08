@@ -137,7 +137,7 @@ public class ClientProxy extends CommonProxy {
 				if (resourcePack instanceof AbstractResourcePack) {
 					File packFile = ObfuscationReflectionHelper.getPrivateValue(AbstractResourcePack.class, (AbstractResourcePack)resourcePack, "field_110597_b", "resourcePackFile");
 					
-					if (packFile.equals(addon)) {
+					if (packFile != null && packFile.equals(addon)) {
 						packIterator.remove();
 						break;
 					}

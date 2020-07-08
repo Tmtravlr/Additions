@@ -354,6 +354,8 @@ public class EntityAddedProjectile extends EntityArrow implements IEntityAddedPr
         	this.setPiercesEntities(throwable.piercesEntities());
         	this.damageIgnoresSpeed = throwable.damageIgnoresSpeed();
         	this.hitSound = throwable.getHitSound();
+        } else {
+        	this.setGravity(0.03f);
         }
     }
     

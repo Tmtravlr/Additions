@@ -78,25 +78,30 @@ public class ExtendedStructureManager extends TemplateManager {
         	}
         }
         
-        File structureFile = new File(addonToGetStructureFor.addonFolder, "structures/" + location.getResourceDomain() + "/" + location.getResourcePath() + AdditionTypeStructure.FILE_POSTFIX);
-        Template structure = null;
+        //Lambdas need final things
+        final StructureWrapper structureWrapper = new StructureWrapper();
+        final Addon finalAddon = addonToGetStructureFor;
         
-        if (structureFile.exists()) {
-        	InputStream inputStream = null;
-            
-        	try {
-        		inputStream = new FileInputStream(structureFile);
-        		structure = this.readTemplateFromStream(inputStream);
-        		this.loadedAddonStructures.put(location, structure);
-            } catch (Throwable e) {
-                AdditionsMod.logger.warn("Couldn't load structure " + location + " from addon " + addonToGetStructureFor.id, e);
-				ProblemNotifier.addProblemNotification(ProblemNotifier.createLabelFromFile(structureFile), new TextComponentString(e.getMessage()));
-            } finally {
-                IOUtils.closeQuietly(inputStream);
-            }
-        }
+        try {
+        	AdditionTypeStructure.INSTANCE.useStructureInputStream(addonToGetStructureFor, location, (inputStream) -> {
+        		if (inputStream != null) {
+        	        try {
+        	        	structureWrapper.setStructure(this.readTemplateFromStream(inputStream));
+	            		this.loadedAddonStructures.put(location, structureWrapper.getStructure());
+        		    } catch (Throwable e) {
+        		        AdditionsMod.logger.warn("Couldn't load structure " + location + " from addon " + finalAddon.id, e);
+        		        File structureFile = AdditionTypeStructure.INSTANCE.getStructureFile(finalAddon, location);
+        				ProblemNotifier.addProblemNotification(structureFile.exists() ? ProblemNotifier.createLabelFromFile(structureFile) : new TextComponentString(location.toString()), new TextComponentString(e.getMessage()));
+        		    }
+            	}
+        	});
+	    } catch (Throwable e) {
+	        AdditionsMod.logger.warn("Couldn't load structure " + location + " from addon " + addonToGetStructureFor.id, e);
+	        File structureFile = AdditionTypeStructure.INSTANCE.getStructureFile(addonToGetStructureFor, location);
+			ProblemNotifier.addProblemNotification(structureFile.exists() ? ProblemNotifier.createLabelFromFile(structureFile) : new TextComponentString(location.toString()), new TextComponentString(e.getMessage()));
+	    }
         
-        return structure;
+        return structureWrapper.getStructure();
     }
 
     private Template readTemplateFromStream(InputStream stream) throws IOException {
@@ -109,5 +114,17 @@ public class ExtendedStructureManager extends TemplateManager {
         Template template = new Template();
         template.read(this.fixer.process(FixTypes.STRUCTURE, nbttagcompound));
         return template;
+    }
+    
+    private static class StructureWrapper extends Object {
+    	private Template structure = null;
+    	
+    	private void setStructure(Template structure) {
+    		this.structure = structure;
+    	}
+    	
+    	private Template getStructure() {
+    		return this.structure;
+    	}
     }
 }

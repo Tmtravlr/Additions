@@ -77,6 +77,7 @@ public class ItemAddedBow extends ItemBow implements IItemAdded {
 	public int shotCount = 1;
 	public boolean firesVanillaArrows = true;
 	public boolean alwaysInfinite = false;
+	public boolean infinityRequresAmmo = false;
 	public boolean consumesOneAmmo = false;
 	public float efficiencyMultiplier = 0;
 	public SoundEvent shotSound = SoundEvents.ENTITY_ARROW_SHOOT;
@@ -248,7 +249,7 @@ public class ItemAddedBow extends ItemBow implements IItemAdded {
 	            ItemStack ammoStack = this.findAmmo(player);
 
 	            int charge = this.getMaxItemUseDuration(bowStack) - timeLeft;
-	            charge = ForgeEventFactory.onArrowLoose(bowStack, world, player, charge, !ammoStack.isEmpty() || shouldUseInfinity);
+	            charge = ForgeEventFactory.onArrowLoose(bowStack, world, player, charge, !ammoStack.isEmpty() || (shouldUseInfinity && !infinityRequresAmmo));
 	            
 	            if (charge < 0) {
 	            	continue;
@@ -256,7 +257,7 @@ public class ItemAddedBow extends ItemBow implements IItemAdded {
 	
                 projectileVelocity = getProjectileVelocity(bowStack, charge);
 	
-	            if (!ammoStack.isEmpty() || shouldUseInfinity) {
+	            if (!ammoStack.isEmpty() || (shouldUseInfinity && !infinityRequresAmmo)) {
 	            	boolean useInfinity = player.capabilities.isCreativeMode || (shouldUseInfinity && this.isAmmoInfinite(ammoStack.getItem(), bowStack)) || ammoStack.isEmpty();
 	            	
 	                if (ammoStack.isEmpty()) {
@@ -333,7 +334,7 @@ public class ItemAddedBow extends ItemBow implements IItemAdded {
         	return customResult;
         }
         
-        if (hasAmmo || allowInfinity(player, bowStack)) {
+        if (hasAmmo || (!infinityRequresAmmo && allowInfinity(player, bowStack))) {
             player.setActiveHand(hand);
             return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, bowStack);
         } else {
@@ -484,7 +485,7 @@ public class ItemAddedBow extends ItemBow implements IItemAdded {
     		return entityProjectile.getAsEntity();
     	} else if (ammoStack.getItem() instanceof ItemArrow) {
             ItemArrow itemArrow = (ItemArrow) ammoStack.getItem();
-            EntityArrow entityArrow = itemArrow.createArrow(world, bowStack, shooter);
+            EntityArrow entityArrow = itemArrow.createArrow(world, ammoStack, shooter);
             entityArrow.shoot(shooter, shooter.rotationPitch, shooter.rotationYaw, 0.0F, arrowVelocity * 3.0F, this.scattering + 0.5f);
 
             if (arrowVelocity == 1.0F) {
@@ -580,6 +581,10 @@ public class ItemAddedBow extends ItemBow implements IItemAdded {
 				json.addProperty("always_infinite", true);
 			}
 			
+			if (itemAdded.infinityRequresAmmo) {
+				json.addProperty("infinity_requires_ammo", true);
+			}
+			
 			if (itemAdded.consumesOneAmmo) {
 				json.addProperty("consumes_one_ammo", true);
 			}
@@ -633,6 +638,7 @@ public class ItemAddedBow extends ItemBow implements IItemAdded {
 			
 			itemAdded.firesVanillaArrows = JsonUtils.getBoolean(json, "fires_vanilla_arrows", true);
 			itemAdded.alwaysInfinite = JsonUtils.getBoolean(json, "always_infinite", false);
+			itemAdded.infinityRequresAmmo = JsonUtils.getBoolean(json, "infinity_requires_ammo", false);
 			itemAdded.consumesOneAmmo = JsonUtils.getBoolean(json, "consumes_one_ammo", false);
 			itemAdded.efficiencyMultiplier = JsonUtils.getFloat(json, "efficiency_multiplier", 0);
 			

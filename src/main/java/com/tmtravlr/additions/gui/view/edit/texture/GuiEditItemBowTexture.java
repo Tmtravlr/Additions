@@ -210,17 +210,17 @@ public class GuiEditItemBowTexture extends GuiEditItemTexture {
 	@Override
 	protected boolean checkFiles() {
 		if (this.baseBowPulling0TextureFileInput.getFile() == null) {
-			this.mc.displayGuiScreen(new GuiMessageBox(this, I18n.format("gui.edit.texture.problem.title"), new TextComponentTranslation("gui.edit.texture.armor.problem.noTexture.specific.message", I18n.format("gui.edit.texture.bow.base0.label")), I18n.format("gui.buttons.back")));
+			this.mc.displayGuiScreen(new GuiMessageBox(this, I18n.format("gui.edit.texture.problem.title"), new TextComponentTranslation("gui.edit.texture.problem.noTexture.specific.message", I18n.format("gui.edit.texture.bow.base0.label")), I18n.format("gui.buttons.back")));
 			return false;
 		}
 		
 		if (this.baseBowPulling1TextureFileInput.getFile() == null) {
-			this.mc.displayGuiScreen(new GuiMessageBox(this, I18n.format("gui.edit.texture.problem.title"), new TextComponentTranslation("gui.edit.texture.armor.problem.noTexture.specific.message", I18n.format("gui.edit.texture.bow.base1.label")), I18n.format("gui.buttons.back")));
+			this.mc.displayGuiScreen(new GuiMessageBox(this, I18n.format("gui.edit.texture.problem.title"), new TextComponentTranslation("gui.edit.texture.problem.noTexture.specific.message", I18n.format("gui.edit.texture.bow.base1.label")), I18n.format("gui.buttons.back")));
 			return false;
 		}
 		
 		if (this.baseBowPulling2TextureFileInput.getFile() == null) {
-			this.mc.displayGuiScreen(new GuiMessageBox(this, I18n.format("gui.edit.texture.problem.title"), new TextComponentTranslation("gui.edit.texture.armor.problem.noTexture.specific.message", I18n.format("gui.edit.texture.bow.base2.label")), I18n.format("gui.buttons.back")));
+			this.mc.displayGuiScreen(new GuiMessageBox(this, I18n.format("gui.edit.texture.problem.title"), new TextComponentTranslation("gui.edit.texture.problem.noTexture.specific.message", I18n.format("gui.edit.texture.bow.base2.label")), I18n.format("gui.buttons.back")));
 			return false;
 		}
 		

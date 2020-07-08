@@ -37,6 +37,7 @@ public class GuiEditItemBow extends GuiEditItem<ItemAddedBow> {
 	private GuiComponentIntegerInput itemShotCountInput;
 	private GuiComponentBooleanInput itemFiresVanillaArrowsInput;
 	private GuiComponentBooleanInput itemAlwaysInfiniteInput;
+	private GuiComponentBooleanInput itemInfinityRequiresAmmo;
 	private GuiComponentBooleanInput itemConsumesOneAmmoInput;
 	private GuiComponentBooleanInput itemUseEfficiencyInput;
 	private GuiComponentFloatInput itemEfficiencyMultiplierInput;
@@ -118,6 +119,12 @@ public class GuiEditItemBow extends GuiEditItem<ItemAddedBow> {
 		this.itemAlwaysInfiniteInput = new GuiComponentBooleanInput(I18n.format("gui.edit.item.shooter.alwaysInfinite.label"), this);
 		if (!this.isNew) {
 			this.itemAlwaysInfiniteInput.setDefaultBoolean(this.item.alwaysInfinite);
+		}
+
+		this.itemInfinityRequiresAmmo = new GuiComponentBooleanInput(I18n.format("gui.edit.item.shooter.infinityRequiresAmmo.label"), this);
+		this.itemInfinityRequiresAmmo.setInfo(new TextComponentTranslation("gui.edit.item.shooter.infinityRequiresAmmo.info"));
+		if (!this.isNew) {
+			this.itemInfinityRequiresAmmo.setDefaultBoolean(this.item.infinityRequresAmmo);
 		}
 		
 		this.itemConsumesOneAmmoInput = new GuiComponentBooleanInput(I18n.format("gui.edit.item.shooter.consumesOneAmmo.label"), this);
@@ -206,8 +213,9 @@ public class GuiEditItemBow extends GuiEditItem<ItemAddedBow> {
 		if (!this.isNew) {
 			this.components.add(this.itemTextureButton);
 		}
-		
+
 		this.advancedComponents.add(this.itemFiresVanillaArrowsInput);
+		this.advancedComponents.add(this.itemInfinityRequiresAmmo);
 		this.advancedComponents.add(this.itemConsumesOneAmmoInput);
 		this.advancedComponents.add(this.itemAmmoItemsInput);
 		this.advancedComponents.add(this.itemShotEffectsInput);
@@ -235,6 +243,7 @@ public class GuiEditItemBow extends GuiEditItem<ItemAddedBow> {
 		this.item.shotCount = this.itemShotCountInput.getInteger();
 		this.item.firesVanillaArrows = this.itemFiresVanillaArrowsInput.getBoolean();
 		this.item.alwaysInfinite = this.itemAlwaysInfiniteInput.getBoolean();
+		this.item.infinityRequresAmmo = this.itemInfinityRequiresAmmo.getBoolean();
 		this.item.consumesOneAmmo = this.itemConsumesOneAmmoInput.getBoolean();
 		this.item.efficiencyMultiplier = this.itemUseEfficiencyInput.getBoolean() ? this.itemEfficiencyMultiplierInput.getFloat() : 0;
 		this.item.shotSound = this.itemShotSoundInput.getSelected();
@@ -258,6 +267,7 @@ public class GuiEditItemBow extends GuiEditItem<ItemAddedBow> {
 		this.itemShotCountInput.setDefaultInteger(this.copyFrom.shotCount);
 		this.itemFiresVanillaArrowsInput.setDefaultBoolean(this.copyFrom.firesVanillaArrows);
 		this.itemAlwaysInfiniteInput.setDefaultBoolean(this.copyFrom.alwaysInfinite);
+		this.itemInfinityRequiresAmmo.setDefaultBoolean(this.copyFrom.infinityRequresAmmo);
 		this.itemConsumesOneAmmoInput.setDefaultBoolean(this.copyFrom.consumesOneAmmo);
 		this.itemUseEfficiencyInput.setDefaultBoolean(this.copyFrom.efficiencyMultiplier == 0);
 		this.itemEfficiencyMultiplierInput.setDefaultFloat(this.copyFrom.efficiencyMultiplier == 0 ? 0.5f : this.copyFrom.efficiencyMultiplier);

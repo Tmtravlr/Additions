@@ -2,8 +2,12 @@ package com.tmtravlr.additions.type;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
@@ -117,7 +121,20 @@ public class AdditionTypeStructure extends AdditionType<ResourceLocation> {
 	}
 
 	public File getStructureFolder(Addon addon) {
-		return new File(addon.addonFolder, FOLDER_NAME + File.separator + "additions");
+		return new File(addon.addonFolder, FOLDER_NAME);
+	}
+	
+	public File getStructureFile(Addon addon, ResourceLocation location) {
+		return new File(this.getStructureFolder(addon), location.getResourceDomain() + File.separator + location.getResourcePath() + AdditionTypeStructure.FILE_POSTFIX);
+	}
+	
+	public Set<ResourceLocation> getAllStructuresAdded() {
+		return new HashSet<>(this.structureLocations.values());
+	}
+	
+	public void useStructureInputStream(Addon addon, ResourceLocation location, Consumer<InputStream> inputStreamHandler) throws IOException {
+		String structurePath = FOLDER_NAME + File.separator + location.getResourceDomain() + File.separator + location.getResourcePath() + AdditionTypeStructure.FILE_POSTFIX;
+		AddonLoader.useAddonFileInputStream(addon.addonFolder, structurePath, inputStreamHandler);
 	}
 
 	public void saveStructureFile(Addon addon, File structureFile) {
@@ -128,7 +145,7 @@ public class AdditionTypeStructure extends AdditionType<ResourceLocation> {
 			structureName = addon.id + "-" + structureName;
 		}
 		
-		File addonStructureFile = new File(structureFolder, structureName);
+		File addonStructureFile = new File(structureFolder, AdditionsMod.MOD_ID + File.separator + structureName);
 
 		try {
 			FileUtils.copyFile(structureFile, addonStructureFile);

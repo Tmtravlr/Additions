@@ -461,6 +461,11 @@ public class BlockAddedWall extends BlockWall implements IBlockAdded {
 	protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, new IProperty[] {BlockLiquid.LEVEL, UP, NORTH, EAST, WEST, SOUTH, VARIANT});
     }
+
+    @Override
+    public void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> items) {
+        items.add(new ItemStack(this));
+    }
 	
 	public static class Serializer extends IBlockAdded.Serializer<BlockAddedWall> {
 		

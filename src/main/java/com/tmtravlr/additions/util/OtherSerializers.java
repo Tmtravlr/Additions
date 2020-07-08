@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.StringJoiner;
 import java.util.UUID;
 
 import com.google.common.collect.HashMultimap;
@@ -17,8 +18,13 @@ import com.tmtravlr.additions.addon.blocks.mapcolors.BlockMapColorManager;
 import com.tmtravlr.additions.addon.blocks.materials.BlockMaterialManager;
 import com.tmtravlr.additions.type.attribute.AttributeTypeManager;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.command.InvalidBlockStateException;
+import net.minecraft.command.NumberInvalidException;
+import net.minecraft.command.server.CommandSetBlock;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
@@ -267,7 +273,7 @@ public class OtherSerializers {
 		public static JsonObject serialize(ItemStack itemStack) {
         	JsonObject json = new JsonObject();
         	
-        	ResourceLocation itemName = ForgeRegistries.ITEMS.getKey(itemStack.getItem());	
+        	ResourceLocation itemName = ForgeRegistries.ITEMS.getKey(itemStack.getItem());
         	
         	if (itemName == null) {
         		throw new IllegalArgumentException("Can't serialize unknown item " + itemStack);
@@ -367,6 +373,77 @@ public class OtherSerializers {
 			
 			return blockMapColor;
 		}
+	}
+	
+	public static class BlockStateSerializer {
+		
+		public static JsonObject serialize(IBlockState state) {
+			JsonObject json = new JsonObject();
+			
+			ResourceLocation blockName = state.getBlock().getRegistryName();
+        	
+        	if (blockName == null) {
+        		throw new IllegalArgumentException("Can't serialize unknown block " + state);
+        	}
+			
+			json.addProperty("block", blockName.toString());
+			
+			if (!state.getProperties().isEmpty()) {
+				JsonObject stateJson = new JsonObject();
+				
+				state.getProperties().forEach((property, comparable) -> {
+					stateJson.addProperty(String.valueOf(property), String.valueOf(comparable));
+				});
+				
+				json.add("state", stateJson);
+			}
+			
+			return json;
+		}
+		
+		public static IBlockState deserialize(JsonObject json, String elementName) {
+			String blockName = JsonUtils.getString(json, "block");
+			
+			Block block = Block.getBlockFromName(blockName);
+			
+			if (block == null) {
+				throw new JsonSyntaxException("Expected 'block' in '" + elementName + "' to be a block, was unknown string '" + blockName + "'");
+			}
+			
+			IBlockState state;
+			
+			if (json.has("state")) {
+				String stateString = "";
+				
+				if (JsonUtils.isNumber(json.get("state"))) {
+					stateString += JsonUtils.getInt(json, "state");
+				} else {
+					JsonObject stateJson = JsonUtils.getJsonObject(json, "state");
+					StringJoiner stateJoiner = new StringJoiner(",");
+					
+					stateJson.entrySet().forEach((entry) -> {
+						if (!entry.getValue().isJsonPrimitive() || !entry.getValue().getAsJsonPrimitive().isString()) {
+							throw new JsonSyntaxException("Expected " + entry.getKey() + " to be a string, was " + String.valueOf(entry.getValue()));
+						}
+						stateJoiner.add(entry.getKey() + "=" + entry.getValue().getAsJsonPrimitive().getAsString());
+					});
+					
+					stateString = stateJoiner.toString();
+				}
+				
+				try {
+					state = CommandSetBlock.convertArgToBlockState(block, stateString);
+				} catch (NumberInvalidException | InvalidBlockStateException e) {
+					e.printStackTrace();
+					throw new JsonSyntaxException("Unable to parse 'state' in '" + elementName + "' as block state: " + e.getMessage());
+				}
+			} else {
+				 state = block.getDefaultState();
+			}
+			
+			return state;
+		}
+		
 	}
 	
 }

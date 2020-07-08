@@ -154,7 +154,7 @@ public abstract class GuiEditBlock<T extends IBlockAdded> extends GuiEdit {
 		
 		this.blockHarvestLevelInput = new GuiComponentIntegerInput(I18n.format("gui.edit.block.harvestLevel.label"), this, false);
 		this.blockHarvestLevelInput.setInfo(new TextComponentTranslation("gui.edit.block.harvestLevel.info"));
-		this.blockHarvestLevelInput.setMinimum(0);
+		this.blockHarvestLevelInput.setMinimum(-1);
 		this.blockHarvestLevelInput.setDefaultInteger(this.block.getHarvestLevel());
 
 		this.blockHarvestToolInput = new GuiComponentSuggestionInputToolType(I18n.format("gui.edit.block.harvestTool.label"), this);

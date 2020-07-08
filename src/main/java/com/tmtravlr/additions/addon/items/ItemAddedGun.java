@@ -77,6 +77,7 @@ public class ItemAddedGun extends ItemBow implements IItemAdded {
 	public int shotCount = 1;
 	public boolean firesVanillaArrows = true;
 	public boolean alwaysInfinite = false;
+	public boolean infinityRequresAmmo = false;
 	public boolean consumesOneAmmo = false;
 	public float efficiencyMultiplier = 0;
 	public SoundEvent shotSound = SoundEvents.ENTITY_ARROW_SHOOT;
@@ -233,7 +234,7 @@ public class ItemAddedGun extends ItemBow implements IItemAdded {
         for (int i = 0; i < this.shotCount; i++) {
             ItemStack ammoStack = this.findAmmo(player);
 
-            if (!ammoStack.isEmpty() || shouldUseInfinity) {
+            if (!ammoStack.isEmpty() || (!infinityRequresAmmo && shouldUseInfinity)) {
             	boolean useInfinity = player.capabilities.isCreativeMode || (shouldUseInfinity && this.isAmmoInfinite(ammoStack.getItem(), gunStack)) || ammoStack.isEmpty();
             	
                 if (ammoStack.isEmpty()) {
@@ -426,7 +427,7 @@ public class ItemAddedGun extends ItemBow implements IItemAdded {
     		return entityProjectile.getAsEntity();
     	} else if (ammoStack.getItem() instanceof ItemArrow) {
             ItemArrow itemArrow = (ItemArrow) ammoStack.getItem();
-            EntityArrow entityArrow = itemArrow.createArrow(world, gunStack, shooter);
+            EntityArrow entityArrow = itemArrow.createArrow(world, ammoStack, shooter);
             entityArrow.shoot(shooter, shooter.rotationPitch, shooter.rotationYaw, 0, this.shotVelocity * 3f, this.scattering + 0.5f);
 
             entityArrow.setDamage(entityArrow.getDamage() + this.getProjectileDamage(gunStack));
@@ -520,6 +521,10 @@ public class ItemAddedGun extends ItemBow implements IItemAdded {
 				json.addProperty("always_infinite", true);
 			}
 			
+			if (itemAdded.infinityRequresAmmo) {
+				json.addProperty("infinity_requires_ammo", true);
+			}
+			
 			if (itemAdded.consumesOneAmmo) {
 				json.addProperty("consumes_one_ammo", true);
 			}
@@ -569,6 +574,7 @@ public class ItemAddedGun extends ItemBow implements IItemAdded {
 			
 			itemAdded.firesVanillaArrows = JsonUtils.getBoolean(json, "fires_vanilla_arrows", true);
 			itemAdded.alwaysInfinite = JsonUtils.getBoolean(json, "always_infinite", false);
+			itemAdded.infinityRequresAmmo = JsonUtils.getBoolean(json, "infinity_requires_ammo", false);
 			itemAdded.consumesOneAmmo = JsonUtils.getBoolean(json, "consumes_one_ammo", false);
 			itemAdded.efficiencyMultiplier = JsonUtils.getFloat(json, "efficiency_multiplier", 0);
 			

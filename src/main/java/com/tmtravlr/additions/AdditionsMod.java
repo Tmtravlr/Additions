@@ -17,6 +17,19 @@ import com.tmtravlr.additions.addon.loottables.LootTablePresetManager;
 import com.tmtravlr.additions.addon.recipes.IngredientOreNBT;
 import com.tmtravlr.additions.addon.recipes.RecipeAddedManager;
 import com.tmtravlr.additions.addon.structures.AddonStructureManager;
+import com.tmtravlr.additions.commands.CommandAdditionsCondition;
+import com.tmtravlr.additions.commands.CommandAdditionsDamage;
+import com.tmtravlr.additions.commands.CommandAdditionsDamageItem;
+import com.tmtravlr.additions.commands.CommandAdditionsDismount;
+import com.tmtravlr.additions.commands.CommandAdditionsEjectPassengers;
+import com.tmtravlr.additions.commands.CommandAdditionsEntityData;
+import com.tmtravlr.additions.commands.CommandAdditionsExplode;
+import com.tmtravlr.additions.commands.CommandAdditionsGrow;
+import com.tmtravlr.additions.commands.CommandAdditionsLoot;
+import com.tmtravlr.additions.commands.CommandAdditionsMount;
+import com.tmtravlr.additions.commands.CommandAdditionsMove;
+import com.tmtravlr.additions.commands.CommandAdditionsStructure;
+import com.tmtravlr.additions.commands.CommandAdditionsThrow;
 import com.tmtravlr.additions.network.CToSMessage;
 import com.tmtravlr.additions.network.PacketHandlerClient;
 import com.tmtravlr.additions.network.PacketHandlerServer;
@@ -124,6 +137,20 @@ public class AdditionsMod {
     @EventHandler
     public void serverStarting(FMLServerStartingEvent event) {
     	AddonLoader.loadAdditionsServerStarting(event);
+    	
+    	event.registerServerCommand(new CommandAdditionsDamage());
+    	event.registerServerCommand(new CommandAdditionsDamageItem());
+    	event.registerServerCommand(new CommandAdditionsThrow());
+    	event.registerServerCommand(new CommandAdditionsMove());
+    	event.registerServerCommand(new CommandAdditionsExplode());
+    	event.registerServerCommand(new CommandAdditionsMount());
+    	event.registerServerCommand(new CommandAdditionsDismount());
+    	event.registerServerCommand(new CommandAdditionsEjectPassengers());
+    	event.registerServerCommand(new CommandAdditionsLoot());
+    	event.registerServerCommand(new CommandAdditionsStructure());
+    	event.registerServerCommand(new CommandAdditionsEntityData());
+    	event.registerServerCommand(new CommandAdditionsCondition());
+    	event.registerServerCommand(new CommandAdditionsGrow());
     	
     	if (ConfigLoader.replaceManagers.getBoolean(true)) {
     		AddonFunctionManager.replaceFunctionManager(event.getServer());

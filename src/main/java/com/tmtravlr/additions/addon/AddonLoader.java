@@ -13,9 +13,11 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
@@ -71,8 +73,10 @@ public class AddonLoader {
 	public static final String LUCKY_BLOCK_LOCATION = "/addons/lucky_block";
     public static final String MODS_LOCATION = "/mods";
 	public static final Map<String, Addon> ADDONS_NAMED = new TreeMap<>();
+	public static final Map<File, Boolean> ADDON_FOLDERS = new HashMap<>();
 	
 	public static List<Addon> addonsLoaded = new ArrayList<>();
+	
 	public static File additionsFolder;
 	public static File luckyBlockFolder;
 	public static File modsFolder;
@@ -95,9 +99,11 @@ public class AddonLoader {
 			additionsFolder.mkdirs();
 		}
 		
-		loadAddonsFromFolder(additionsFolder, true);
-		loadAddonsFromFolder(luckyBlockFolder, false);
-		loadAddonsFromFolder(modsFolder, true);
+		ADDON_FOLDERS.put(additionsFolder, true);
+		ADDON_FOLDERS.put(luckyBlockFolder, false);
+		ADDON_FOLDERS.put(modsFolder, true);
+		
+		ADDON_FOLDERS.forEach(AddonLoader::loadAddonsFromFolder);
 		
 		//Check for missing dependencies
 		for (Addon addon : addonsLoaded) {
@@ -307,6 +313,37 @@ public class AddonLoader {
 		}
 		
 		return lines;
+	}
+	
+	/**
+	 * Gets the input stream for the file in the addon, and does something
+	 * with it (the consumer function).
+	 * 
+	 * @param addonFolder The addon's folder, or zip file
+	 * @param path The path of the file to read.
+	 */
+	public static void useAddonFileInputStream(File addonFolder, String path, Consumer<InputStream> inputStreamHandler) throws IOException {
+		if (addonFolder.isDirectory()) {
+			File file = new File(addonFolder, path);
+			
+			try (final InputStream inputStream = new FileInputStream(file)) {
+				inputStreamHandler.accept(inputStream);
+			}
+		} else {
+			try (final ZipFile zipFile = new ZipFile(addonFolder)) {
+				String zipPath = path;
+				
+				if (ZIP_SEPARATOR_DIFFERENT) {
+					zipPath = zipPath.replace(File.separatorChar, '/');
+				}
+				
+				ZipEntry entry = zipFile.getEntry(zipPath);
+				
+				if (entry != null) {
+					inputStreamHandler.accept(zipFile.getInputStream(entry));
+				}
+			}
+		}
 	}
 	
 	public static void saveAddon(Addon addon) {

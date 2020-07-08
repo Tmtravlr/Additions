@@ -15,7 +15,7 @@ public class EntityDamageSourceBash extends EntityDamageSource {
 	
 	@Override
     public ITextComponent getDeathMessage(EntityLivingBase killed) {
-        EntityLivingBase attacker = killed.getAttackingEntity();
+        EntityLivingBase attacker = this.getTrueSource() instanceof EntityLivingBase ? (EntityLivingBase) this.getTrueSource() : killed.getAttackingEntity();
         String deathMessage = "death.attack." + this.damageType;
         String deathMessagePlayer = deathMessage + ".player";
         return attacker != null ? new TextComponentTranslation(deathMessagePlayer, killed.getDisplayName(), attacker.getDisplayName()) : new TextComponentTranslation(deathMessage, killed.getDisplayName());
