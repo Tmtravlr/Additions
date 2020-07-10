@@ -1,9 +1,75 @@
 death.attack.additions.bash=%s 被打死了
-death.attack.additions.bash.player=%1$s被%2$s打死
-death.attack.additions.thrown=%1$s 被 %2$s 处理了
-death.attack.additions.thrown.player=%%2$s使用%3$s处理了1$s
-death.attack.additions.projectile=%1$s被%2$s射中
-death.attack.additions.projectile.player=%1$s是由%2$s用%3$s射死的
+death.attack.additions.bash.player=%1$s 被 %2$s 击杀
+death.attack.additions.thrown=%1$s 被 %2$s 击杀
+death.attack.additions.thrown.player=%1$s 被 %2$s 击杀,武器: %3$s
+death.attack.additions.projectile=%1$s 已被 %2$s 击毙
+death.attack.additions.projectile.player=%1$s 被 %2$s 击杀!,武器: %3$s
+
+commands.additions.damage.usage=/additions.damage <entity> <type> <amount> [options separated by commas (if type is 'custom')] [death message (if type is 'custom')]
+commands.additions.damage.notvaliddamage=损坏类型'%s'无效
+commands.additions.damage.success=对 %3 $s 施加了 %2 $s 伤害的 %1 $s 生命值
+
+commands.additions.damageitem.usage=/additions.damageitem <entity|block>
+commands.additions.damageitem.block.usage=/additions.damageitem entity <实体> <slot> <amount>
+commands.additions.damageitem.entity.usage=/additions.damageitem block <block> <x> <y> <z> <slot> <amount>
+commands.additions.damageitem.success=插槽“%1 $s”中的物品损坏了 %2 $s
+
+commands.additions.throw.usage=/additions.throw <entity thrown> [speed] [inaccuracy] [entity thrown tag]
+commands.additions.throw.noThrower=没有投掷者！ 必须由实体执行。
+commands.additions.throw.noLightning=不能扔雷电! 可悲的是... :(
+commands.additions.throw.failure=%1 $s 未能抛出 '%2 $s'
+commands.additions.throw.success=%1 $s 成功投掷 %2 $s
+
+commands.additions.move.usage=/additions.move <global | relative | facing | toward>
+commands.additions.move.global.usage=/additions.move global <x 速度> <y 速度> <z 速度>
+commands.additions.move.facing.usage=/additions.move relative <horizontal speed forward/back> [speed y] [horizontal speed right/left]
+commands.additions.move.facing.usage=/additions.move facing <speed forward/back> [speed up/down] [speed right/left]
+commands.additions.move.toward.usage=/additions.move toward <实体> <速度>
+commands.additions.move.noEntity=没有实体!必须由实体执行。
+commands.additions.move.unknownType=未知的移动类型'%s'。 应该是全局的,相对的,面向的或面向的。
+commands.additions.move.success=成功将 %1 $s 的动作设置为 %2 $s
+
+commands.additions.explode.usage=/additions.explode (<实体> | <x> <y> <z>) <爆炸大小> <破坏地形> <火焰>
+commands.additions.explode.success=在 %2 $s 处爆炸了 %1 $s
+
+commands.additions.mount.usage=/additions.mount <乘>
+commands.additions.mount.failure.noRider=找不到车手!必须由实体执行。
+commands.additions.mount.failure.self=无法将 %s 挂载到自己身上！
+commands.additions.mount.success=已将 %1 $s 安装到 %2 $s
+
+commands.additions.dismount.usage=/additions.dismount
+commands.additions.dismount.failure.noRider=找不到车手！ 必须由实体执行。
+commands.additions.dismount.failure.notRiding=%s 没有骑任何东西！
+commands.additions.dismount.success=%s 卸下
+
+commands.additions.ejectpassengers.usage=/additions.ejectpassengers
+commands.additions.ejectpassengers.failure.noMount=找不到坐骑!必须由实体执行.
+commands.additions.ejectpassengers.failure.noPassengers=%s 没有坐骑
+commands.additions.ejectpassengers.success=%s 抛出的坐骑
+
+commands.additions.loot.usage=/additions.loot <loot table> [x] [y] [z] [种子]
+commands.additions.loot.failure.noItems=战利品表 %s 没有生成任何物品！
+commands.additions.loot.success=在 %2 $s 生成了战利品表 %1 $s
+
+commands.additions.structure.usage=/additions.structure <结构名称> [x] [y] [z] [忽略实体] [旋转] [镜像类型] [完整性] [种子]
+commands.additions.structure.failure.noStructure=找不到名为 %s 的结构！
+commands.additions.structure.failure.invalidRotation=旋转“ %s ”无效。 只能是0、90、180或270度。
+commands.additions.structure.failure.invalidMirror=镜像' %s '无效。 它只能是左右，前后或无。
+commands.additions.structure.success=在 %2 $s 生成了结构 %1 $s
+
+commands.additions.entitydata.usage=/additions.entitydata <实体> <标签>
+
+commands.additions.condition.usage=/additions.condition {if:"/command test", then:"/command if true", else:"/command if false"} OR {if:["/this should be true", "/and this should also"], then:"/command if true", else:"/command if false"}
+commands.additions.condition.failure.parse=无法解析NBT: %s
+commands.additions.condition.failure.noConditions=至少需要1条条件命令！
+commands.additions.condition.success.noThen=条件为true，但是没有“ then”命令可以运行
+commands.additions.condition.success.noElse=条件为假，但没有“ else”命令可运行
+commands.additions.condition.success.then=条件为真，所以运行“ then”命令
+commands.additions.condition.success.else=条件为假，所以运行“ else”命令
+
+commands.additions.grow.usage=/additions.grow <x> <y> <z> [完全成长]
+commands.additions.grow.failure.notGrowable=无法阻止 %s 的人
+commands.additions.grow.success=%s 成功阻止了
 
 entity.additions_projectile.name=炮弹
 
@@ -85,7 +151,7 @@ type.block.fenceGate.description=栅栏门而已
 type.block.plant.title=植物
 type.block.plant.description=像植物一样的块。适用于花草。
 type.block.vine.title=藤蔓
-type.block.grass.description=能蔓延的方块
+type.block.vine.description=能蔓延的方块
 type.block.grass.title=草皮
 type.block.grass.description=可以像草方块一样蔓延的方块
 type.block.leaves.title=树叶
@@ -247,7 +313,7 @@ gui.loadingError.version= %s 版本
 gui.loadingError.version.any=任意版本
 gui.loadingError.dependancyCycle=在加载附加依赖项时发现一个循环.循环中的第一个加载项是 %s .
 
-gui.additions.main.byAuthor=(%2$s) By %1$s
+gui.additions.main.byAuthor=(%2$s) By %1$s  MOD翻译员:六芒猫    虎牙TV:六芒猫
 
 gui.warnDialogue.problem.title=哦豁!
 gui.warnDialogue.unsaved.title=未保存的更改
@@ -310,7 +376,7 @@ gui.popup.attributeModifier.problem.slotRequired.message=您需要指定一个�
 gui.popup.potionEffect.title=编辑药水效果
 gui.popup.potionEffect.potion.label=药水
 gui.popup.potionEffect.duration.label=持续时间
-gui.popup.potionEffect.duration.info药剂效果的持续时间以tick为单位，每秒20tick。
+gui.popup.potionEffect.duration.info=药水效果的持续时间以秒为单位，每秒20tick
 gui.popup.potionEffect.amplifier.label=增幅
 gui.popup.potionEffect.amplifier.info=药剂效应的增幅。0增幅是1级药剂，1是2级药剂，等等。
 gui.popup.potionEffect.particle.label=粒子类别
@@ -579,6 +645,8 @@ gui.edit.item.shooter.scattering.label=散射
 gui.edit.item.shooter.shotCount.label=数量
 gui.edit.item.shooter.firesVanillaArrows.label=发射原版箭
 gui.edit.item.shooter.alwaysInfinite.label=总是无限
+gui.edit.item.shooter.infinityRequiresAmmo.label=无限射击
+gui.edit.item.shooter.infinityRequiresAmmo.info=这是否需要至少一个箭头(或着弹药)在您的背包中才可以无限发射？
 gui.edit.item.shooter.consumesOneAmmo.label=消耗一个弹药
 gui.edit.item.shooter.consumesOneAmmo.info=如果它发射了不止一个弹丸并且没有无穷大，它将只消耗一个。
 gui.edit.item.shooter.shotSound.label=声音
@@ -628,7 +696,7 @@ gui.edit.itemMaterial.efficiency.info=这些工具能以多快的速度打破方
 gui.edit.itemMaterial.baseAttackDamage.label=攻击伤害系数
 gui.edit.itemMaterial.baseAttackDamage.info=这些工具的基础攻击伤害。木头/黄金为0.0，石头为1.0，铁为2.0，钻石为3.0。
 gui.edit.itemMaterial.baseArmorDurability.label=护甲耐久系数
-gui.edit.itemMaterial.baseArmorDurability.info该材料护甲的基本耐久性系数。皮5，铁15，钻石33。
+gui.edit.itemMaterial.baseArmorDurability.info=该材料护甲的基本耐久性系数。皮5，铁15，钻石33。
 gui.edit.itemMaterial.toughness.label=护甲韧性
 gui.edit.itemMaterial.helmetArmor.label=头盔护甲
 gui.edit.itemMaterial.chestplateArmor.label=胸甲护甲
@@ -851,7 +919,7 @@ gui.edit.recipe.brewing.complete.allowPowered.info=允许添加萤石
 gui.edit.recipe.brewing.complete.allowMundane.label=允许平凡
 gui.edit.recipe.brewing.complete.allowMundane.info=用水瓶冲泡原料会产生普通药水吗？
 gui.edit.recipe.brewing.complete.allowSplash.label=允许喷溅
-gui.edit.recipe.brewing.complete.allowLingering.label允许滞留
+gui.edit.recipe.brewing.complete.allowLingering.label=允许中途停住
 gui.edit.recipe.brewing.complete.problem.noInputTag.message=您必须有一个输入标签！
 gui.edit.recipe.brewing.complete.problem.noOutputTag.message=您必须有一个输出标签！
 
@@ -1054,18 +1122,18 @@ gui.edit.texture.hatOverlay.label=屏幕覆盖
 gui.edit.texture.hatOverlay.hasHatOverlay.input=有屏幕覆盖
 gui.edit.texture.hatOverlay.problem.wrongDimensions.notSquare.message=帽罩材质必须为方形。
 
-gui.edit.texutre.bow.base0.message=为开始拉弓时选择材质。
-gui.edit.texutre.bow.base0.label=材质0
-gui.edit.texutre.bow.color0.message=为开始拉弓时选择染色覆盖层。
-gui.edit.texutre.bow.color0.label=染色覆盖材质0
-gui.edit.texutre.bow.base1.message=选择一个材质，当弓拉到一半。
-gui.edit.texutre.bow.base1.label=材质1
-gui.edit.texutre.bow.color1.message=选择一个染色覆盖当弓拉到一半。
-gui.edit.texutre.bow.color1.label=染色覆盖材质1
-gui.edit.texutre.bow.base2.message=选择一个材质，当拉弓完成。
-gui.edit.texutre.bow.base2.label=材质2
-gui.edit.texutre.bow.color2.message=选择一个染色覆盖当拉弓完成。
-gui.edit.texutre.bow.color2.label=染色覆盖材质2
+gui.edit.texture.bow.base0.message=选择弓开始拉扯时的纹理。
+gui.edit.texture.bow.base0.label=普通纹理 0
+gui.edit.texture.bow.color0.message=选择弓开始拉扯时的颜色
+gui.edit.texture.bow.color0.label=拉扯颜色纹理 0
+gui.edit.texture.bow.base1.message=选择弓开始蓄力时的纹理
+gui.edit.texture.bow.base1.label=普通纹理 1
+gui.edit.texture.bow.color1.message=选择弓开始蓄力时的颜色
+gui.edit.texture.bow.color1.label=拉扯颜色纹理 1
+gui.edit.texture.bow.base2.message=选择弓完成蓄力时的纹理
+gui.edit.texture.bow.base2.label=普通纹理2
+gui.edit.texture.bow.color2.message=选择弓完成蓄力时的颜色
+gui.edit.texture.bow.color2.label=拉扯颜色纹理2
 
 gui.edit.texture.block.title=材质化你的方块！
 gui.edit.texture.block.message=为%s选择一个材质，该材质应该是PNG文件。但是，如果您想要一个自定义模型，您必须自己创建它！
