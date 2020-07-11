@@ -66,7 +66,7 @@ public class CommandAdditionsMove extends CommandBase {
 				
 			} else if ("relative".equals(movementType) || "facing".equals(movementType)) {
 				if (args.length < 2) {
-		            throw new WrongUsageException("commands.additions.move.facing.usage");
+		            throw new WrongUsageException("commands.additions.move." + movementType + ".usage");
 		        }
 				
 				Vec3d vecForward = entity.getLookVec();
@@ -126,7 +126,7 @@ public class CommandAdditionsMove extends CommandBase {
 	@Override
 	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
 		if (args.length == 1) {
-			return Arrays.asList("global", "relative", "facing", "toward");
+			return getListOfStringsMatchingLastWord(args, Arrays.asList("global", "relative", "facing", "toward"));
 		} else {
 			String movementType = args[0];
 			
