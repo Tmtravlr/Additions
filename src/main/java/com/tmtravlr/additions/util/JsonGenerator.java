@@ -13,6 +13,8 @@ import com.google.gson.JsonPrimitive;
  */
 public class JsonGenerator {
 
+	//TODO add a GsonBuilder to auto-decide pretty printing
+
 	public static JsonObject createJsonObject(JsonElementPair... elements) {
 		JsonObject json = new JsonObject();
 		

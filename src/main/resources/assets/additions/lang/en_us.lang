@@ -507,6 +507,9 @@ gui.view.addon.lootTables.none.message=There are no loot tables for %s
 gui.view.addon.soundEvents.label=View Sound Events Added (%s)
 gui.view.addon.soundEvents.title=Sound Events for %s
 gui.view.addon.soundEvents.none.message=There are no sound events for %s
+gui.view.addon.potionTypes.label=View Potion Types Added (%s)
+gui.view.addon.potionTypes.title=Potion Types for %s
+gui.view.addon.potionTypes.none.message=There are no potion types for %s
 
 gui.view.addon.locked.message=This addon is locked! If you want to make any changes to it, you will have to unlock it first.
 

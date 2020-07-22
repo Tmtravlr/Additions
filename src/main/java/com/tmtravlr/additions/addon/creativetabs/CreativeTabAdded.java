@@ -1,19 +1,9 @@
 package com.tmtravlr.additions.addon.creativetabs;
 
-import java.lang.reflect.Type;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
+import com.google.gson.*;
 import com.tmtravlr.additions.addon.items.IItemAddedProjectile;
 import com.tmtravlr.additions.addon.items.ItemAddedFood;
 import com.tmtravlr.additions.util.OtherSerializers;
-
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.PotionTypes;
@@ -24,6 +14,8 @@ import net.minecraft.util.JsonUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.lang.reflect.Type;
 
 /**
  * Represents an added creative tab
@@ -164,15 +156,17 @@ public class CreativeTabAdded extends CreativeTabs {
             if (json.has("tab_item") && json.get("tab_item").isJsonObject()) {
             	tabAdded.setCustomTabItemStack(OtherSerializers.ItemStackSerializer.deserialize(JsonUtils.getJsonObject(json, "tab_item")));
             }
-            
-            JsonArray itemArray = JsonUtils.getJsonArray(json, "items");
-            NonNullList<ItemStack> items = NonNullList.create();
-            
-            for(int i = 0; i < itemArray.size(); i++) {
-            	items.add(OtherSerializers.ItemStackSerializer.deserialize(JsonUtils.getJsonObject(itemArray.get(i), "member of items")));
-            }
-            
-            tabAdded.setDisplayItems(items);
+
+            if (json.has("items")) {
+				JsonArray itemArray = JsonUtils.getJsonArray(json, "items");
+				NonNullList<ItemStack> items = NonNullList.create();
+
+				for (int i = 0; i < itemArray.size(); i++) {
+					items.add(OtherSerializers.ItemStackSerializer.deserialize(JsonUtils.getJsonObject(itemArray.get(i), "member of items")));
+				}
+				tabAdded.setDisplayItems(items);
+			}
+
 
             return tabAdded;
         }

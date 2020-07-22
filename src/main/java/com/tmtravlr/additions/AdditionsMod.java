@@ -1,7 +1,5 @@
 package com.tmtravlr.additions;
 
-import org.apache.logging.log4j.Logger;
-
 import com.tmtravlr.additions.addon.AddonLoader;
 import com.tmtravlr.additions.addon.advancements.AddonAdvancementManager;
 import com.tmtravlr.additions.addon.blocks.BlockAddedManager;
@@ -17,19 +15,7 @@ import com.tmtravlr.additions.addon.loottables.LootTablePresetManager;
 import com.tmtravlr.additions.addon.recipes.IngredientOreNBT;
 import com.tmtravlr.additions.addon.recipes.RecipeAddedManager;
 import com.tmtravlr.additions.addon.structures.AddonStructureManager;
-import com.tmtravlr.additions.commands.CommandAdditionsCondition;
-import com.tmtravlr.additions.commands.CommandAdditionsDamage;
-import com.tmtravlr.additions.commands.CommandAdditionsDamageItem;
-import com.tmtravlr.additions.commands.CommandAdditionsDismount;
-import com.tmtravlr.additions.commands.CommandAdditionsEjectPassengers;
-import com.tmtravlr.additions.commands.CommandAdditionsEntityData;
-import com.tmtravlr.additions.commands.CommandAdditionsExplode;
-import com.tmtravlr.additions.commands.CommandAdditionsGrow;
-import com.tmtravlr.additions.commands.CommandAdditionsLoot;
-import com.tmtravlr.additions.commands.CommandAdditionsMount;
-import com.tmtravlr.additions.commands.CommandAdditionsMove;
-import com.tmtravlr.additions.commands.CommandAdditionsStructure;
-import com.tmtravlr.additions.commands.CommandAdditionsThrow;
+import com.tmtravlr.additions.commands.*;
 import com.tmtravlr.additions.network.CToSMessage;
 import com.tmtravlr.additions.network.PacketHandlerClient;
 import com.tmtravlr.additions.network.PacketHandlerServer;
@@ -37,7 +23,6 @@ import com.tmtravlr.additions.network.SToCMessage;
 import com.tmtravlr.additions.type.AdditionTypeManager;
 import com.tmtravlr.additions.type.attribute.AttributeTypeManager;
 import com.tmtravlr.additions.util.ProblemNotifier;
-
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IIngredientFactory;
@@ -45,15 +30,12 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
+import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Additions allows non-coders to add items, blocks, and many other things to the game through GUIs.

@@ -3,6 +3,9 @@ package com.tmtravlr.additions.gui;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import com.tmtravlr.additions.addon.potiontypes.PotionTypeAdded;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.input.Mouse;
 
 import com.tmtravlr.additions.ConfigLoader;
@@ -77,8 +80,7 @@ public class GuiAdditionsMainMenu extends GuiScreen {
         this.mc.getTextureManager().bindTexture(TITLE_TEXTURE);
         GlStateManager.enableBlend();
         this.drawModalRectWithCustomSizedTexture(midX - 160, 10, 0, 0, 320, 80, 320, 80);
-        
-        
+
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
     

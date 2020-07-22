@@ -19,6 +19,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @param <T> The type that is being added, for instance IItemAdded for items or CreativeTabAdded for creative tabs.
  */
 public abstract class AdditionType<T> {
+	public static final String JSON_POSTFIX = ".json";
 	
 	/**
 	 * Do the loading (from json files and such) during the pre init event.

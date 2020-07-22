@@ -1,13 +1,5 @@
 package com.tmtravlr.additions.type;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.io.FileUtils;
-
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
@@ -18,13 +10,19 @@ import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.AddonLoader;
 import com.tmtravlr.additions.addon.creativetabs.CreativeTabAdded;
 import com.tmtravlr.additions.util.ProblemNotifier;
-
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Added creative tabs
@@ -36,7 +34,7 @@ public class AdditionTypeCreativeTab extends AdditionType<CreativeTabAdded> {
 
 	public static final ResourceLocation NAME = new ResourceLocation(AdditionsMod.MOD_ID, "creative_tab");
 	public static final String FOLDER_NAME = "data" + File.separator + "creative_tabs";
-	public static final String FILE_POSTFIX = ".json";
+	public static final String FILE_POSTFIX = ".json"; //TODO set this to the JSON Postfix for all the types
 	public static final AdditionTypeCreativeTab INSTANCE = new AdditionTypeCreativeTab();
 	
 	private static final Gson GSON = new GsonBuilder()
@@ -70,12 +68,12 @@ public class AdditionTypeCreativeTab extends AdditionType<CreativeTabAdded> {
 					}
 					
 					if (tabId.endsWith(FILE_POSTFIX)) {
-						tabId = tabId.substring(0, tabId.length()-5);
+						tabId = tabId.substring(0, tabId.length() - 5); //TODO replace 5 with postfix length
+
+						tabAdded.setId(tabId);
+
+						this.loadedCreativeTabs.put(addon, tabAdded);
 					}
-					
-					tabAdded.setId(tabId);
-					
-					this.loadedCreativeTabs.put(addon, tabAdded);
 				} catch (IOException | JsonParseException e) {
 					AdditionsMod.logger.error("Error loading creative tab " + filePath + " for addon " + addon.id + ". The creative tab will not load.", e);
 					ProblemNotifier.addProblemNotification(ProblemNotifier.createLabelFromPath(addon.addonFolder, filePath), new TextComponentString(e.getMessage()));
