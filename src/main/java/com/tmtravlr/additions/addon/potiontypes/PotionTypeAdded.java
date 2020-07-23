@@ -2,24 +2,44 @@ package com.tmtravlr.additions.addon.potiontypes;
 
 import com.google.gson.*;
 import com.tmtravlr.additions.util.OtherSerializers;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.potion.PotionType;
+import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.JsonUtils;
 
 import java.lang.reflect.Type;
 
+/**
+ * An added potion type.
+ *
+ * A potion type is simply a list of potion effects as well as
+ * a unique potion group in-game (ex. Minecraft's potion of leaping
+ * contains a single effect: jump boost)
+ * @since July 2020
+ * @author sschr15
+ */
 public class PotionTypeAdded extends PotionType {
-    private final String baseName;
-    private final String splashName;
-    private final String lingeringName;
-    private final String arrowName;
+    public final String id;
+    private String baseName;
+    private String splashName;
+    private String lingeringName;
+    private String arrowName;
+    private ItemStack potionItemStack = ItemStack.EMPTY;
+    //TODO allow for custom color creation
 
-    public PotionTypeAdded(String baseName, String splashName, String lingeringName, String arrowName, PotionEffect... effects) {
+    public PotionTypeAdded(String id, String baseName, String splashName, String lingeringName, String arrowName, PotionEffect... effects) {
         super(effects);
+        this.id = id;
         this.baseName = baseName;
         this.splashName = splashName;
         this.lingeringName = lingeringName;
         this.arrowName = arrowName;
+    }
+
+    public int getEffectCount() {
+        return this.getEffects().size();
     }
 
     /**
@@ -43,11 +63,29 @@ public class PotionTypeAdded extends PotionType {
         }
     }
 
+    public String getBaseName() {
+        return baseName;
+    }
+
+    public ItemStack getPotionItemStack() {
+        if (this.potionItemStack.isEmpty()) this.potionItemStack = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), this);
+        return this.potionItemStack;
+    }
+
+    public void setNames(String baseName, String splashName, String lingeringName, String arrowName) {
+        this.baseName = baseName;
+        this.splashName = splashName;
+        this.lingeringName = lingeringName;
+        this.arrowName = arrowName;
+    }
+
     public static class Serializer implements JsonSerializer<PotionTypeAdded>, JsonDeserializer<PotionTypeAdded> {
 
         @Override
         public JsonElement serialize(PotionTypeAdded src, Type type, JsonSerializationContext context) {
             JsonObject json = new JsonObject();
+
+            json.addProperty("id", src.id);
 
             json.addProperty("base_name", src.baseName);
             json.addProperty("splash_name", src.splashName);
@@ -70,6 +108,7 @@ public class PotionTypeAdded extends PotionType {
         @Override
         public PotionTypeAdded deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context) throws JsonParseException {
             JsonObject json = JsonUtils.getJsonObject(jsonElement, "potion_type");
+            String id = JsonUtils.getString(json, "id");
             String baseName = JsonUtils.getString(json, "base_name");
             String splashName = JsonUtils.getString(json, "splash_name");
             String lingeringName = JsonUtils.getString(json, "lingering_name");
@@ -86,7 +125,7 @@ public class PotionTypeAdded extends PotionType {
                 effects = new PotionEffect[0];
             }
 
-            return new PotionTypeAdded(baseName, splashName, lingeringName, arrowName, effects);
+            return new PotionTypeAdded(id, baseName, splashName, lingeringName, arrowName, effects);
         }
     }
 }

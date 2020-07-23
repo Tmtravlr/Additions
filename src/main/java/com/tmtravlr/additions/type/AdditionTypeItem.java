@@ -1,16 +1,5 @@
 package com.tmtravlr.additions.type;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.apache.commons.io.FileUtils;
-
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
@@ -23,7 +12,6 @@ import com.tmtravlr.additions.addon.AddonLoader;
 import com.tmtravlr.additions.addon.items.IItemAdded;
 import com.tmtravlr.additions.addon.items.ItemAddedManager;
 import com.tmtravlr.additions.util.ProblemNotifier;
-
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
@@ -34,6 +22,16 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Added items
@@ -153,7 +151,7 @@ public class AdditionTypeItem extends AdditionType<IItemAdded> {
 		}
 		
 		File itemFolder = new File(addon.addonFolder, FOLDER_NAME);
-		
+		 //TODO become consistent
 		if (!itemFolder.isDirectory()) {
 			itemFolder.mkdir();
 		}

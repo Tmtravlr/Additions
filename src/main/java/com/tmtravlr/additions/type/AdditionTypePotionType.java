@@ -15,12 +15,20 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+/**
+ * Added potion types
+ * @since July 2020
+ * @author sschr15
+ */
 public class AdditionTypePotionType extends AdditionType<PotionTypeAdded> {
 
     public static final ResourceLocation NAME = new ResourceLocation(AdditionsMod.MOD_ID, "potion_type");
@@ -82,11 +90,33 @@ public class AdditionTypePotionType extends AdditionType<PotionTypeAdded> {
 
     @Override
     public void saveAddition(Addon addon, PotionTypeAdded addition) {
+        if (!this.loadedPotionTypes.containsEntry(addon, addition)) {
+            this.loadedPotionTypes.put(addon, addition);
+        }
 
+        File additionFolder = new File(addon.addonFolder, FOLDER_NAME);
+        if (!additionFolder.isDirectory()) additionFolder.mkdirs();
+
+        File additionFile = new File(additionFolder, addition.id + FILE_POSTFIX);
+
+        try {
+            String fileContents = GSON.toJson(addition);
+            FileUtils.write(additionFile, fileContents, StandardCharsets.UTF_8);
+        } catch (IOException | IllegalArgumentException e) {
+            AdditionsMod.logger.error("Error saving addon " + addon.name, e);
+        }
     }
 
     @Override
     public void deleteAddition(Addon addon, PotionTypeAdded addition) {
+        if (this.loadedPotionTypes.containsEntry(addon, addition)) {
+            this.loadedPotionTypes.remove(addon, addition);
+        }
 
+        File additionFolder = new File(addon.addonFolder, FOLDER_NAME);
+        File additionFile = new File(additionFolder, addition.id + FILE_POSTFIX);
+
+        additionFile.delete();
+        if (Objects.requireNonNull(additionFolder.listFiles()).length == 0) additionFolder.delete();
     }
 }
