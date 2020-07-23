@@ -32,7 +32,7 @@ public class GuiAdditionTypeButtonPotionType extends GuiAdditionTypeButtonColore
         CommonGuiUtils.playClickSound();
         this.viewScreen.mc.displayGuiScreen(new GuiViewPotionType(
                 this.viewScreen,
-                I18n.format("gui.view.addon.PotionTypes.title", this.addon.name),
+                I18n.format("gui.view.addon.potionTypes.title", this.addon.name),
                 this.addon
         ));
     }

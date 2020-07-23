@@ -6,16 +6,15 @@ import com.tmtravlr.additions.addon.potiontypes.PotionTypeAdded;
 import com.tmtravlr.additions.gui.message.GuiMessageBox;
 import com.tmtravlr.additions.gui.message.GuiMessageBoxNeedsRestart;
 import com.tmtravlr.additions.gui.view.components.GuiComponentDisplayText;
-import com.tmtravlr.additions.gui.view.components.input.GuiComponentColorInput;
-import com.tmtravlr.additions.gui.view.components.input.GuiComponentListInput;
-import com.tmtravlr.additions.gui.view.components.input.GuiComponentPotionEffectInput;
-import com.tmtravlr.additions.gui.view.components.input.GuiComponentStringInput;
+import com.tmtravlr.additions.gui.view.components.input.*;
 import com.tmtravlr.additions.type.AdditionTypePotionType;
+import com.tmtravlr.additions.util.GeneralUtils;
 import com.tmtravlr.additions.util.client.CommonGuiUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -41,6 +40,7 @@ public class GuiEditPotionType extends GuiEdit {
     private GuiComponentStringInput lingeringNameInput;
     private GuiComponentStringInput arrowNameInput;
 
+    private GuiComponentBooleanInput useUniqueColorInput;
     private GuiComponentColorInput potionColorInput; //TODO implement this
 
     public GuiEditPotionType(GuiScreen parentScreen, String title, Addon addon, @Nullable PotionTypeAdded type) {
@@ -68,6 +68,7 @@ public class GuiEditPotionType extends GuiEdit {
 
         this.baseNameInput = new GuiComponentStringInput(I18n.format("gui.edit.potionType.baseName.label"), this);
         this.baseNameInput.setRequired();
+        this.baseNameInput.setHasColorSelect();
         if (!this.isNew) this.baseNameInput.setDefaultText(this.addition.getBaseName());
 
         this.potionEffectListInput = new GuiComponentListInput<GuiComponentPotionEffectInput>(I18n.format("gui.edit.potionType.effects.label"), this) {
@@ -85,17 +86,24 @@ public class GuiEditPotionType extends GuiEdit {
         }
 
         if (this.copyFrom != null) {
-            this.copyFromOther(); //TODO apparently
+            this.copyFromOther();
         }
 
         // Advanced components
         this.inputInformation = new GuiComponentDisplayText(this, new TextComponentTranslation("gui.edit.potionType.inputInformation"));
 
         this.splashNameInput = new GuiComponentStringInput(I18n.format("gui.edit.potionType.splashName.label"), this);
+        this.splashNameInput.setHasColorSelect();
         this.lingeringNameInput = new GuiComponentStringInput(I18n.format("gui.edit.potionType.lingeringName.label"), this);
+        this.lingeringNameInput.setHasColorSelect();
         this.arrowNameInput = new GuiComponentStringInput(I18n.format("gui.edit.potionType.arrowName.label"), this);
         this.arrowNameInput.setInfo(new TextComponentTranslation("gui.edit.potionType.arrowName.info"));
+        this.arrowNameInput.setHasColorSelect();
 
+        this.useUniqueColorInput = new GuiComponentBooleanInput(I18n.format("gui.edit.potionType.potionColor.switch.label"), this);
+        // Reason for noinspection: readability. The suggested change was to `!this.isNew && this.addition.hasColor`
+        //noinspection SimplifiableConditionalExpression
+        this.useUniqueColorInput.setDefaultBoolean(this.isNew ? false : this.addition.hasColor());
         this.potionColorInput = new GuiComponentColorInput(I18n.format("gui.edit.potionType.potionColor.label"), this);
 
         // Add all components to the screen
@@ -107,9 +115,11 @@ public class GuiEditPotionType extends GuiEdit {
         this.advancedComponents.add(this.splashNameInput);
         this.advancedComponents.add(this.lingeringNameInput);
         this.advancedComponents.add(this.arrowNameInput);
-        //this.advancedComponents.add(this.potionColorInput); TODO implement this
+//        this.advancedComponents.add(this.useUniqueColorInput);
+//        this.advancedComponents.add(this.potionColorInput); //TODO implement this
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void saveObject() {
         String name = this.isNew ? this.addon.id + "-" + this.idInput.getText() : this.addition.id;
@@ -122,15 +132,16 @@ public class GuiEditPotionType extends GuiEdit {
         String baseName = CommonGuiUtils.requireStringField(this.baseNameInput, this, "gui.edit.potionType.problem.title", new TextComponentTranslation("gui.edit.potionType.problem.noBase"));
         if (baseName == null) return;
 
-        String splashName = this.splashNameInput.getText().isEmpty() ? "Splash " + baseName : this.splashNameInput.getText();
-        String lingeringName = this.lingeringNameInput.getText().isEmpty() ? "Lingering " + baseName : this.lingeringNameInput.getText();
+        String base = TextFormatting.getTextWithoutFormattingCodes(baseName), formats=baseName.substring(0, baseName.indexOf(base));
+        String splashName = this.splashNameInput.getText().isEmpty() ? formats + "Splash " + base : this.splashNameInput.getText();
+        String lingeringName = this.lingeringNameInput.getText().isEmpty() ? formats + "Lingering " + base : this.lingeringNameInput.getText();
         String arrowName;
         if (this.arrowNameInput.getText().isEmpty()) {
-            arrowName = baseName.startsWith("Potion of") ? baseName.replace("Potion of", "Arrow of") : "Arrow of " + baseName;
+            arrowName = baseName.startsWith("Potion of") ? baseName.replace("Potion of", "Arrow of") : formats + "Arrow of " + base;
         } else {
             arrowName = this.arrowNameInput.getText();
         }
-        int potionColor = this.potionColorInput.getColorInt();
+        int potionColor = this.useUniqueColorInput.getBoolean() ? this.potionColorInput.getColorInt() : -1;
 
         PotionEffect[] effects = new PotionEffect[this.potionEffectListInput.getComponents().size()];
         List<GuiComponentPotionEffectInput> effectInputs = this.potionEffectListInput.getComponents();
@@ -138,7 +149,7 @@ public class GuiEditPotionType extends GuiEdit {
             effects[i] = effectInputs.get(i).getPotionEffect();
         }
 
-        PotionTypeAdded type = new PotionTypeAdded(name, baseName, splashName, lingeringName, arrowName, effects);
+        PotionTypeAdded type = new PotionTypeAdded(name, baseName, splashName, lingeringName, arrowName, GeneralUtils.removeNulls(effects));
 
         if (!this.isNew) {
             this.addition.effects = type.effects;
@@ -176,4 +187,8 @@ public class GuiEditPotionType extends GuiEdit {
         this.copyFrom = null;
     }
 
+    @Override
+    public void updateScreen() {
+        this.potionColorInput.setHidden(!this.useUniqueColorInput.getBoolean() || !this.getShowAdvanced());
+    }
 }

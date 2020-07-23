@@ -53,7 +53,7 @@ public class AdditionTypePotionType extends AdditionType<PotionTypeAdded> {
                 filePaths = AddonLoader.getAddonFilePaths(addon.addonFolder, FOLDER_NAME);
             } catch (IOException e) {
                 AdditionsMod.logger.error("Error loading potion type files for addon " + addon.id + ". The potion types will not load.", e);
-                ProblemNotifier.addProblemNotification(new TextComponentTranslation("gui.view.addon.potionTypes.title"), new TextComponentString(e.getMessage()));
+                ProblemNotifier.addProblemNotification(new TextComponentTranslation("gui.view.addon.potionTypes.problem"), new TextComponentString(e.getMessage()));
             }
 
             for (String filePath : filePaths) {

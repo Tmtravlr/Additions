@@ -1,20 +1,18 @@
 package com.tmtravlr.additions.gui.view.components.input;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.lwjgl.input.Mouse;
-
 import com.google.common.base.Predicate;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.gui.view.components.IGuiViewComponent;
 import com.tmtravlr.additions.gui.view.edit.GuiEdit;
 import com.tmtravlr.additions.util.client.CommonGuiUtils;
-
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
+import org.lwjgl.input.Mouse;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Extension of the vanilla text field, for an int input.
@@ -25,11 +23,11 @@ import net.minecraft.util.text.ITextComponent;
 public class GuiComponentIntegerInput extends GuiTextField implements IGuiViewComponent {
 
 	public GuiEdit editScreen;
-	public Predicate<String> validator;
+	public java.util.function.Predicate<String> validator;
 	
 	private List<String> info = new ArrayList<>();
-	private String label = "";
-	private boolean allowNegative = true;
+	private final String label;
+	private final boolean allowNegative;
 	private int minimum = -99999999;
 	private int maximum = 999999999;
 	private boolean required = false;
@@ -48,14 +46,7 @@ public class GuiComponentIntegerInput extends GuiTextField implements IGuiViewCo
 			this.minimum = 0;
 		}
 		
-		this.setValidator(new Predicate<String>() {
-
-			@Override
-			public boolean apply(String input) {
-				return input.isEmpty() || input.matches((allowNegative ? "[+-]?" : "") + "[0-9]*");
-			}
-			
-		});
+		this.setValidator(input -> input.isEmpty() || input.matches((allowNegative ? "[+-]?" : "") + "[0-9]*"));
 		
 		this.setInteger(Math.max(0, this.minimum));
 	}
@@ -202,12 +193,23 @@ public class GuiComponentIntegerInput extends GuiTextField implements IGuiViewCo
 			this.checkLimits();
 		}
 	}
-	
+
+	private NumberFormatException lastException;
+
+	/**
+	 * Note from sschr15: this was edited so you no longer get spammed
+	 * when the color field is empty
+	 */
 	public int getInteger() {
 		try {
-			return Integer.parseInt(this.getText());
+			int theInt = Integer.parseInt(this.getText());
+			lastException = null;
+			return theInt;
 		} catch(NumberFormatException e) {
-			AdditionsMod.logger.warn("Tried to parse invalid integer " + this.getText());
+			if (lastException == null) {
+				AdditionsMod.logger.warn("Tried to parse invalid integer " + this.getText());
+				lastException = e;
+			}
 			return Math.max(0, this.minimum);
 		}
 	}

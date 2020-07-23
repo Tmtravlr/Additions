@@ -20,7 +20,7 @@ public class GuiViewPotionType extends GuiViewAdditionType {
 
 
     public GuiViewPotionType(GuiScreen parentScreen, String title, Addon addon) {
-        super(parentScreen, title, addon, I18n.format("gui.edit.potionType.title"), new TextComponentTranslation("gui.view.addon.potionTypes.none.message"));
+        super(parentScreen, title, addon, I18n.format("gui.edit.potionType.title"), new TextComponentTranslation("gui.view.addon.potionTypes.none.message", addon.name));
     }
 
     @Override

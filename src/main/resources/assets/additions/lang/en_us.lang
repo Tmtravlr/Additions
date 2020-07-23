@@ -1073,7 +1073,7 @@ gui.edit.potionType.lingeringName.label=Lingering Potion Name
 gui.edit.potionType.arrowName.label=Tipped Arrow Name
 gui.edit.potionType.arrowName.info=A tipped arrow is automatically created if this potion type has at least one effect.
 gui.edit.potionType.potionColor.label=Potion Color
-##TODO implement that ^
+gui.edit.potionType.potionColor.switch.label=Use Custom Potion Color
 gui.edit.potionType.problem.title=Problem creating potion type
 gui.edit.potionType.problem.noBase=A Potion Type requires a base name!
 gui.edit.potionType.success.title=Updated Potion Type

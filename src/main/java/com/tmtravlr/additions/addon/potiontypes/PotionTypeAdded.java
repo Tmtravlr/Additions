@@ -27,6 +27,7 @@ public class PotionTypeAdded extends PotionType {
     private String lingeringName;
     private String arrowName;
     private ItemStack potionItemStack = ItemStack.EMPTY;
+    private int color;
     //TODO allow for custom color creation
 
     public PotionTypeAdded(String id, String baseName, String splashName, String lingeringName, String arrowName, PotionEffect... effects) {
@@ -36,6 +37,15 @@ public class PotionTypeAdded extends PotionType {
         this.splashName = splashName;
         this.lingeringName = lingeringName;
         this.arrowName = arrowName;
+        this.color = -1;
+    }
+
+    public PotionTypeAdded setColor(int color) {
+        // if color is -1, the color will be removed
+        if (color == -1) this.color = -1;
+        // Max/min the input to force it to be a valid color :)
+        this.color = Math.max(Math.min(16777215, color), 0);
+        return this;
     }
 
     public int getEffectCount() {
@@ -72,11 +82,19 @@ public class PotionTypeAdded extends PotionType {
         return this.potionItemStack;
     }
 
-    public void setNames(String baseName, String splashName, String lingeringName, String arrowName) {
+    public PotionTypeAdded setNames(String baseName, String splashName, String lingeringName, String arrowName) {
         this.baseName = baseName;
         this.splashName = splashName;
         this.lingeringName = lingeringName;
         this.arrowName = arrowName;
+        return this;
+    }
+
+    /**
+     * Does this potion have a custom color?
+     */
+    public boolean hasColor() {
+        return color > -1;
     }
 
     public static class Serializer implements JsonSerializer<PotionTypeAdded>, JsonDeserializer<PotionTypeAdded> {
