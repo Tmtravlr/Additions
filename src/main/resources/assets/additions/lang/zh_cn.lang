@@ -22,7 +22,8 @@ commands.additions.throw.success=%1 $s 成功投掷 %2 $s
 
 commands.additions.move.usage=/additions.move <global | relative | facing | toward>
 commands.additions.move.global.usage=/additions.move global <x 速度> <y 速度> <z 速度>
-commands.additions.move.facing.usage=/additions.move relative <horizontal speed forward/back> [speed y] [horizontal speed right/left]
+commands.additions.move.relative.usage=/additions.move relative <horizontal speed forward/back> [speed y] [horizontal speed right/left]
+commands.additions.move.facing.usage=/additions.move facing <speed forward/back> [speed up/down] [speed right/left]
 commands.additions.move.toward.usage=/additions.move toward <实体> <速度>
 commands.additions.move.noEntity=没有实体!必须由实体执行。
 commands.additions.move.unknownType=未知的移动类型'%s'。 应该是全局的,相对的,面向的或面向的。
@@ -1152,3 +1153,26 @@ gui.edit.texture.block.facing.top.label=顶部/底部材质
 
 gui.edit.texture.block.pane.face.message=为%s的面部选择一个材质.
 gui.edit.texture.block.pane.face.label=面部材质
+
+## NEEDS TRANSLATION
+gui.view.addon.potionTypes.label=View Potion Types Added (%s)
+gui.view.addon.potionTypes.title=Potion Types for %s
+gui.view.addon.potionTypes.none.message=There are no potion types for %s
+gui.edit.potionType.title=Create New Potion Type
+gui.edit.potionType.id.label=Potion Type Id
+gui.edit.potionType.baseName.label=Normal Potion Name
+gui.edit.potionType.effects.label=Potion Effects
+gui.edit.potionType.inputInformation=All of the options below are optional and are automatically generated if not stated.
+gui.edit.potionType.splashName.label=Splash Potion Name
+gui.edit.potionType.lingeringName.label=Lingering Potion Name
+gui.edit.potionType.arrowName.label=Tipped Arrow Name
+gui.edit.potionType.arrowName.info=A tipped arrow is automatically created if this potion type has at least one effect.
+gui.edit.potionType.potionColor.label=Potion Color
+gui.edit.potionType.potionColor.switch.label=Use Custom Potion Color
+gui.edit.potionType.problem.title=Problem creating potion type
+gui.edit.potionType.problem.noBase=A Potion Type requires a base name!
+gui.edit.potionType.success.title=Updated Potion Type
+gui.edit.potionType.success.message=Successfully updated the potion type.
+gui.edit.potionType.restart.message=Potion type successfully created! You must restart the game for it to show up ingame and in some lists. Restart now? (Will close your game)
+gui.edit.potionType.restartToRegister.first=Restart the game to finish
+gui.edit.potionType.restartToRegister.second=adding this potion type.

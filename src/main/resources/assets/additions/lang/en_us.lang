@@ -22,7 +22,8 @@ commands.additions.throw.success=%1$s successfully threw %2$s
 
 commands.additions.move.usage=/additions.move <global | relative | facing | toward>
 commands.additions.move.global.usage=/additions.move global <x speed> <y speed> <z speed>
-commands.additions.move.facing.usage=/additions.move relative <horizontal speed forward/back> [speed y] [horizontal speed right/left]
+commands.additions.move.relative.usage=/additions.move relative <horizontal speed forward/back> [speed y] [horizontal speed right/left]
+commands.additions.move.facing.usage=/additions.move facing <speed forward/back> [speed up/down] [speed right/left]
 commands.additions.move.toward.usage=/additions.move toward <entity> <speed>
 commands.additions.move.noEntity=There was no entity! Must be executed by an entity.
 commands.additions.move.unknownType=Unknown movement type '%s'. Should be global, relative, facing, or toward.
