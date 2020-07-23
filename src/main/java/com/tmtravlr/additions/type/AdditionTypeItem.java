@@ -43,7 +43,7 @@ public class AdditionTypeItem extends AdditionType<IItemAdded> {
 
 	public static final ResourceLocation NAME = new ResourceLocation(AdditionsMod.MOD_ID, "item");
 	public static final String FOLDER_NAME = "data" + File.separator + "items";
-	public static final String FILE_POSTFIX = ".json";
+	public static final String FILE_POSTFIX = JSON_POSTFIX;
 	public static final AdditionTypeItem INSTANCE = new AdditionTypeItem();
 	
 	public static final Gson GSON = new GsonBuilder()

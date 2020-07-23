@@ -1,11 +1,5 @@
 package com.tmtravlr.additions.type;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
-
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.JsonParseException;
@@ -14,7 +8,6 @@ import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.AddonLoader;
 import com.tmtravlr.additions.addon.advancements.AdvancementAdded;
 import com.tmtravlr.additions.util.ProblemNotifier;
-
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementManager;
 import net.minecraft.util.JsonUtils;
@@ -24,6 +17,12 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Added advancements
@@ -35,7 +34,7 @@ public class AdditionTypeAdvancement extends AdditionType<AdvancementAdded> {
 
 	public static final ResourceLocation NAME = new ResourceLocation(AdditionsMod.MOD_ID, "advancement");
 	public static final String FOLDER_NAME = "data" + File.separator + "advancements";
-	public static final String FILE_POSTFIX = ".json";
+	public static final String FILE_POSTFIX = JSON_POSTFIX;
 	public static final AdditionTypeAdvancement INSTANCE = new AdditionTypeAdvancement();
 	
 	private final Multimap<Addon, AdvancementAdded> advancementsLoaded = HashMultimap.create();

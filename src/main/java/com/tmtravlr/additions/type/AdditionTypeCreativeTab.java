@@ -34,7 +34,7 @@ public class AdditionTypeCreativeTab extends AdditionType<CreativeTabAdded> {
 
 	public static final ResourceLocation NAME = new ResourceLocation(AdditionsMod.MOD_ID, "creative_tab");
 	public static final String FOLDER_NAME = "data" + File.separator + "creative_tabs";
-	public static final String FILE_POSTFIX = ".json"; //TODO set this to the JSON Postfix for all the types
+	public static final String FILE_POSTFIX = JSON_POSTFIX;
 	public static final AdditionTypeCreativeTab INSTANCE = new AdditionTypeCreativeTab();
 	
 	private static final Gson GSON = new GsonBuilder()

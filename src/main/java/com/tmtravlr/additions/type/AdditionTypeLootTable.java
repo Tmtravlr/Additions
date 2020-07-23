@@ -46,7 +46,7 @@ public class AdditionTypeLootTable extends AdditionType<LootTableAdded> {
 
 	public static final ResourceLocation NAME = new ResourceLocation(AdditionsMod.MOD_ID, "loot_table");
 	public static final String FOLDER_NAME = "data" + File.separator + "loot_tables";
-	public static final String FILE_POSTFIX = ".json";
+	public static final String FILE_POSTFIX = JSON_POSTFIX;
 	public static final AdditionTypeLootTable INSTANCE = new AdditionTypeLootTable();
 	
 	public static final Gson GSON = new GsonBuilder()
