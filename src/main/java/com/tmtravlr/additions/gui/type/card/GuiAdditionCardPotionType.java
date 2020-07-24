@@ -29,7 +29,6 @@ public class GuiAdditionCardPotionType extends GuiAdditionCardColored {
 
         this.addition = addition;
 
-        //TODO request help
         this.textCount = TextFormatting.GRAY + I18n.format("gui.view.additionType.count", TextFormatting.RESET + String.valueOf(this.addition.getEffectCount()) + TextFormatting.GRAY);
         this.textId = TextFormatting.GRAY + I18n.format("gui.view.additionType.id", TextFormatting.RESET + this.addition.id + TextFormatting.GRAY);
 

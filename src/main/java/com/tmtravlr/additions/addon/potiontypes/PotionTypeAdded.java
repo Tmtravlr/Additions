@@ -28,7 +28,6 @@ public class PotionTypeAdded extends PotionType {
     private String arrowName;
     private ItemStack potionItemStack = ItemStack.EMPTY;
     private int color;
-    //TODO allow for custom color creation
 
     public PotionTypeAdded(String id, String baseName, String splashName, String lingeringName, String arrowName, PotionEffect... effects) {
         super(effects);

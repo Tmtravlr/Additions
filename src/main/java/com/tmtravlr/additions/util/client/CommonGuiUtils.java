@@ -20,8 +20,6 @@ import java.io.File;
 
 public class CommonGuiUtils {
 
-	//TODO color generator (R, G, B -> single RGBA hex)
-
 	public static final ResourceLocation GUI_TEXTURES = new ResourceLocation("additions:textures/gui/additions_gui_textures.png");
 	public static final int ADDITION_BUTTON_COLOR = 0xBB2A2A2A;
 	

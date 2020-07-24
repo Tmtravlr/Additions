@@ -23,7 +23,6 @@ import java.util.List;
 public class GuiEditPotionType extends GuiEdit {
 
     private Addon addon;
-    // TODO add potion color input
 
     private boolean isNew;
     private PotionTypeAdded addition;
@@ -41,7 +40,8 @@ public class GuiEditPotionType extends GuiEdit {
     private GuiComponentStringInput arrowNameInput;
 
     private GuiComponentBooleanInput useUniqueColorInput;
-    private GuiComponentColorInput potionColorInput; //TODO implement this
+    /** Currently unused, must get Mixin first */
+    private GuiComponentColorInput potionColorInput;
 
     public GuiEditPotionType(GuiScreen parentScreen, String title, Addon addon, @Nullable PotionTypeAdded type) {
         super(parentScreen, title);
@@ -116,7 +116,7 @@ public class GuiEditPotionType extends GuiEdit {
         this.advancedComponents.add(this.lingeringNameInput);
         this.advancedComponents.add(this.arrowNameInput);
 //        this.advancedComponents.add(this.useUniqueColorInput);
-//        this.advancedComponents.add(this.potionColorInput); //TODO implement this
+//        this.advancedComponents.add(this.potionColorInput);
     }
 
     @SuppressWarnings("ConstantConditions")

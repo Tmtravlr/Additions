@@ -68,7 +68,7 @@ public class AdditionTypeCreativeTab extends AdditionType<CreativeTabAdded> {
 					}
 					
 					if (tabId.endsWith(FILE_POSTFIX)) {
-						tabId = tabId.substring(0, tabId.length() - 5); //TODO replace 5 with postfix length
+						tabId = tabId.substring(0, tabId.length() - FILE_POSTFIX.length());
 
 						tabAdded.setId(tabId);
 
