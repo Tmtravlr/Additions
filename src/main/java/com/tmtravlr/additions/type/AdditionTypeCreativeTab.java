@@ -3,12 +3,12 @@ package com.tmtravlr.additions.type;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.AddonLoader;
 import com.tmtravlr.additions.addon.creativetabs.CreativeTabAdded;
+import com.tmtravlr.additions.util.GeneralUtils;
 import com.tmtravlr.additions.util.ProblemNotifier;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
@@ -36,11 +36,8 @@ public class AdditionTypeCreativeTab extends AdditionType<CreativeTabAdded> {
 	public static final String FOLDER_NAME = "data" + File.separator + "creative_tabs";
 	public static final String FILE_POSTFIX = JSON_POSTFIX;
 	public static final AdditionTypeCreativeTab INSTANCE = new AdditionTypeCreativeTab();
-	
-	private static final Gson GSON = new GsonBuilder()
-			.registerTypeHierarchyAdapter(CreativeTabAdded.class, new CreativeTabAdded.Serializer())
-			.setPrettyPrinting()
-			.create();
+
+	private static final Gson GSON = GeneralUtils.newGson(CreativeTabAdded.class, new CreativeTabAdded.Serializer());
 	
 	private Multimap<Addon, CreativeTabAdded> loadedCreativeTabs = HashMultimap.create();
 

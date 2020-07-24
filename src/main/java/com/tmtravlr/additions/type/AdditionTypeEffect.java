@@ -3,7 +3,6 @@ package com.tmtravlr.additions.type;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.Addon;
@@ -12,6 +11,7 @@ import com.tmtravlr.additions.addon.effects.Effect;
 import com.tmtravlr.additions.addon.effects.EffectList;
 import com.tmtravlr.additions.addon.effects.EffectManager;
 import com.tmtravlr.additions.addon.effects.cause.*;
+import com.tmtravlr.additions.util.GeneralUtils;
 import com.tmtravlr.additions.util.ProblemNotifier;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
@@ -42,11 +42,10 @@ public class AdditionTypeEffect extends AdditionType<EffectList> {
 	public static final String FILE_POSTFIX = JSON_POSTFIX;
 	public static final AdditionTypeEffect INSTANCE = new AdditionTypeEffect();
 	
-	public static final Gson GSON = new GsonBuilder()
+	public static final Gson GSON = GeneralUtils.newBuilder()
 			.registerTypeHierarchyAdapter(EffectList.class, new EffectList.Serializer())
 			.registerTypeHierarchyAdapter(Effect.class, new EffectManager.Serializer())
 			.registerTypeHierarchyAdapter(EffectCause.class, new EffectCauseManager.Serializer())
-			.setPrettyPrinting()
 			.create();
 	
 	private Multimap<Addon, EffectList> loadedEffects = HashMultimap.create();

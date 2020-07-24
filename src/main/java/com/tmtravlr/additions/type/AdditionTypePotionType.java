@@ -3,12 +3,12 @@ package com.tmtravlr.additions.type;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.AddonLoader;
 import com.tmtravlr.additions.addon.potiontypes.PotionTypeAdded;
+import com.tmtravlr.additions.util.GeneralUtils;
 import com.tmtravlr.additions.util.ProblemNotifier;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
@@ -36,10 +36,7 @@ public class AdditionTypePotionType extends AdditionType<PotionTypeAdded> {
     public static final String FILE_POSTFIX = JSON_POSTFIX;
     public static final AdditionTypePotionType INSTANCE = new AdditionTypePotionType();
 
-    private static final Gson GSON = new GsonBuilder()
-            .registerTypeHierarchyAdapter(PotionTypeAdded.class, new PotionTypeAdded.Serializer())
-            .setPrettyPrinting()
-            .create();
+    private static final Gson GSON = GeneralUtils.newGson(PotionTypeAdded.class,new PotionTypeAdded.Serializer());
 
     private final Multimap<Addon, PotionTypeAdded> loadedPotionTypes = HashMultimap.create();
 

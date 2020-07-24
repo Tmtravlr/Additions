@@ -3,7 +3,6 @@ package com.tmtravlr.additions.type;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.tmtravlr.additions.AdditionsMod;
@@ -14,6 +13,7 @@ import com.tmtravlr.additions.addon.blocks.IBlockAdded;
 import com.tmtravlr.additions.addon.items.IItemAdded;
 import com.tmtravlr.additions.addon.items.ItemAddedManager;
 import com.tmtravlr.additions.addon.items.blocks.IItemAddedBlock;
+import com.tmtravlr.additions.util.GeneralUtils;
 import com.tmtravlr.additions.util.ProblemNotifier;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
@@ -50,11 +50,10 @@ public class AdditionTypeBlock extends AdditionType<IBlockAdded> {
 	public static final String FOLDER_NAME = "data" + File.separator + "blocks";
 	public static final String FILE_POSTFIX = JSON_POSTFIX;
 	public static final AdditionTypeBlock INSTANCE = new AdditionTypeBlock();
-	
-	public static final Gson GSON = new GsonBuilder()
+
+	private static final Gson GSON = GeneralUtils.newBuilder()
 			.registerTypeHierarchyAdapter(IItemAdded.class, new ItemAddedManager.Serializer())
 			.registerTypeHierarchyAdapter(IBlockAdded.class, new BlockAddedManager.Serializer())
-			.setPrettyPrinting()
 			.create();
 	
 	private Multimap<Addon, IBlockAdded> loadedBlocks = HashMultimap.create();

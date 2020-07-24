@@ -3,14 +3,15 @@ package com.tmtravlr.additions.type;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.AddonLoader;
 import com.tmtravlr.additions.addon.items.IItemAdded;
+import com.tmtravlr.additions.addon.items.ItemAddedArmor;
 import com.tmtravlr.additions.addon.items.ItemAddedManager;
+import com.tmtravlr.additions.util.GeneralUtils;
 import com.tmtravlr.additions.util.ProblemNotifier;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
@@ -46,10 +47,7 @@ public class AdditionTypeItem extends AdditionType<IItemAdded> {
 	public static final String FILE_POSTFIX = JSON_POSTFIX;
 	public static final AdditionTypeItem INSTANCE = new AdditionTypeItem();
 	
-	public static final Gson GSON = new GsonBuilder()
-			.registerTypeHierarchyAdapter(IItemAdded.class, new ItemAddedManager.Serializer())
-			.setPrettyPrinting()
-			.create();
+	public static final Gson GSON = GeneralUtils.newGson(IItemAdded.class, new ItemAddedArmor.Serializer());
 	
 	private Multimap<Addon, IItemAdded> loadedItems = HashMultimap.create();
 	

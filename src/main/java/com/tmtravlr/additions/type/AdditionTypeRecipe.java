@@ -3,7 +3,6 @@ package com.tmtravlr.additions.type;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.Addon;
@@ -11,6 +10,7 @@ import com.tmtravlr.additions.addon.AddonLoader;
 import com.tmtravlr.additions.addon.recipes.IRecipeAdded;
 import com.tmtravlr.additions.addon.recipes.RecipeAddedCraftingDyeItem;
 import com.tmtravlr.additions.addon.recipes.RecipeAddedManager;
+import com.tmtravlr.additions.util.GeneralUtils;
 import com.tmtravlr.additions.util.ProblemNotifier;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
@@ -38,10 +38,7 @@ public class AdditionTypeRecipe extends AdditionType<IRecipeAdded> {
 	public static final String FILE_POSTFIX = JSON_POSTFIX;
 	public static final AdditionTypeRecipe INSTANCE = new AdditionTypeRecipe();
 	
-	public static final Gson GSON = new GsonBuilder()
-			.registerTypeHierarchyAdapter(IRecipeAdded.class, new RecipeAddedManager.Serializer())
-			.setPrettyPrinting()
-			.create();
+	public static final Gson GSON = GeneralUtils.newGson(IRecipeAdded.class, new RecipeAddedManager.Serializer());
 	
 	private Multimap<Addon, IRecipeAdded> loadedRecipes = HashMultimap.create();
 	

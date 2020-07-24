@@ -3,7 +3,6 @@ package com.tmtravlr.additions.type;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.tmtravlr.additions.AdditionsMod;
@@ -14,6 +13,7 @@ import com.tmtravlr.additions.addon.items.ItemAddedMultiTool;
 import com.tmtravlr.additions.addon.items.materials.ArmorMaterialAdded;
 import com.tmtravlr.additions.addon.items.materials.ItemMaterialAdded;
 import com.tmtravlr.additions.addon.items.materials.ToolMaterialAdded;
+import com.tmtravlr.additions.util.GeneralUtils;
 import com.tmtravlr.additions.util.ProblemNotifier;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
@@ -45,11 +45,8 @@ public class AdditionTypeItemMaterial extends AdditionType<ItemMaterialAdded> {
 	public static final String FOLDER_NAME = "data" + File.separator + "item_materials";
 	public static final String FILE_POSTFIX = JSON_POSTFIX;
 	public static final AdditionTypeItemMaterial INSTANCE = new AdditionTypeItemMaterial();
-	
-	private static final Gson GSON = new GsonBuilder()
-			.registerTypeHierarchyAdapter(ItemMaterialAdded.class, new ItemMaterialAdded.Serializer())
-			.setPrettyPrinting()
-			.create();
+
+	private static final Gson GSON = GeneralUtils.newGson(ItemMaterialAdded.class, new ItemMaterialAdded.Serializer());
 	
 	private Multimap<Addon, ItemMaterialAdded> loadedItemMaterials = HashMultimap.create();
 	private List<ItemMaterialAdded> vanillaItemMaterials = new ArrayList<>();
