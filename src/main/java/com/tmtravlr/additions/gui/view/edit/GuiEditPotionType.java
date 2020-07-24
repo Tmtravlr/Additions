@@ -100,6 +100,7 @@ public class GuiEditPotionType extends GuiEdit {
         this.arrowNameInput.setInfo(new TextComponentTranslation("gui.edit.potionType.arrowName.info"));
         this.arrowNameInput.setHasColorSelect();
 
+        // These two components aren't added to the screen by default as potion types don't usually have a way to list the color
         this.useUniqueColorInput = new GuiComponentBooleanInput(I18n.format("gui.edit.potionType.potionColor.switch.label"), this);
         // Reason for noinspection: readability. The suggested change was to `!this.isNew && this.addition.hasColor`
         //noinspection SimplifiableConditionalExpression
@@ -115,8 +116,6 @@ public class GuiEditPotionType extends GuiEdit {
         this.advancedComponents.add(this.splashNameInput);
         this.advancedComponents.add(this.lingeringNameInput);
         this.advancedComponents.add(this.arrowNameInput);
-//        this.advancedComponents.add(this.useUniqueColorInput);
-//        this.advancedComponents.add(this.potionColorInput);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -141,6 +140,8 @@ public class GuiEditPotionType extends GuiEdit {
         } else {
             arrowName = this.arrowNameInput.getText();
         }
+        // No potion color for a unique potion type is possible without special modifications, but to
+        // avoid lots of special modifications, this still exists.
         int potionColor = this.useUniqueColorInput.getBoolean() ? this.potionColorInput.getColorInt() : -1;
 
         PotionEffect[] effects = new PotionEffect[this.potionEffectListInput.getComponents().size()];
@@ -149,11 +150,11 @@ public class GuiEditPotionType extends GuiEdit {
             effects[i] = effectInputs.get(i).getPotionEffect();
         }
 
-        PotionTypeAdded type = new PotionTypeAdded(name, baseName, splashName, lingeringName, arrowName, GeneralUtils.removeNulls(effects));
+        PotionTypeAdded type = new PotionTypeAdded(name, baseName, splashName, lingeringName, arrowName, GeneralUtils.removeNulls(effects)).setColor(potionColor);
 
         if (!this.isNew) {
             this.addition.effects = type.effects;
-            this.addition.setNames(baseName, splashName, lingeringName, arrowName);
+            this.addition.setNames(baseName, splashName, lingeringName, arrowName).setColor(potionColor);
             AdditionTypePotionType.INSTANCE.saveAddition(this.addon, this.addition);
             this.mc.displayGuiScreen(new GuiMessageBox(this.parentScreen, I18n.format("gui.edit.potionType.success.title"), new TextComponentTranslation("gui.edit.potionType.success.message"), I18n.format("gui.buttons.continue")));
         } else {
