@@ -38,7 +38,9 @@ public class AdditionTypeRecipe extends AdditionType<IRecipeAdded> {
 	public static final String FILE_POSTFIX = JSON_POSTFIX;
 	public static final AdditionTypeRecipe INSTANCE = new AdditionTypeRecipe();
 	
-	public static final Gson GSON = GeneralUtils.newGson(IRecipeAdded.class, new RecipeAddedManager.Serializer());
+	public static final Gson GSON = GeneralUtils.newBuilder()
+			.registerTypeHierarchyAdapter(IRecipeAdded.class, new RecipeAddedManager.Serializer())
+			.create();
 	
 	private Multimap<Addon, IRecipeAdded> loadedRecipes = HashMultimap.create();
 	

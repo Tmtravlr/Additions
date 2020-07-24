@@ -9,7 +9,6 @@ import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.AddonLoader;
 import com.tmtravlr.additions.addon.items.IItemAdded;
-import com.tmtravlr.additions.addon.items.ItemAddedArmor;
 import com.tmtravlr.additions.addon.items.ItemAddedManager;
 import com.tmtravlr.additions.util.GeneralUtils;
 import com.tmtravlr.additions.util.ProblemNotifier;
@@ -47,7 +46,9 @@ public class AdditionTypeItem extends AdditionType<IItemAdded> {
 	public static final String FILE_POSTFIX = JSON_POSTFIX;
 	public static final AdditionTypeItem INSTANCE = new AdditionTypeItem();
 	
-	public static final Gson GSON = GeneralUtils.newGson(IItemAdded.class, new ItemAddedArmor.Serializer());
+	public static final Gson GSON = GeneralUtils.newBuilder()
+			.registerTypeHierarchyAdapter(IItemAdded.class, new ItemAddedManager.Serializer())
+			.create();
 	
 	private Multimap<Addon, IItemAdded> loadedItems = HashMultimap.create();
 	

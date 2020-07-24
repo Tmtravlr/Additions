@@ -36,8 +36,10 @@ public class AdditionTypeCreativeTab extends AdditionType<CreativeTabAdded> {
 	public static final String FOLDER_NAME = "data" + File.separator + "creative_tabs";
 	public static final String FILE_POSTFIX = JSON_POSTFIX;
 	public static final AdditionTypeCreativeTab INSTANCE = new AdditionTypeCreativeTab();
-
-	private static final Gson GSON = GeneralUtils.newGson(CreativeTabAdded.class, new CreativeTabAdded.Serializer());
+	
+	private static final Gson GSON = GeneralUtils.newBuilder()
+			.registerTypeHierarchyAdapter(CreativeTabAdded.class, new CreativeTabAdded.Serializer())
+			.create();
 	
 	private Multimap<Addon, CreativeTabAdded> loadedCreativeTabs = HashMultimap.create();
 

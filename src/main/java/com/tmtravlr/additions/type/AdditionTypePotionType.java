@@ -36,7 +36,9 @@ public class AdditionTypePotionType extends AdditionType<PotionTypeAdded> {
     public static final String FILE_POSTFIX = JSON_POSTFIX;
     public static final AdditionTypePotionType INSTANCE = new AdditionTypePotionType();
 
-    private static final Gson GSON = GeneralUtils.newGson(PotionTypeAdded.class,new PotionTypeAdded.Serializer());
+    private static final Gson GSON = GeneralUtils.newBuilder()
+            .registerTypeHierarchyAdapter(PotionTypeAdded.class, new PotionTypeAdded.Serializer())
+            .create();
 
     private final Multimap<Addon, PotionTypeAdded> loadedPotionTypes = HashMultimap.create();
 

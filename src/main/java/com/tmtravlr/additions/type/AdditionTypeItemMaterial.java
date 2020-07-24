@@ -45,8 +45,10 @@ public class AdditionTypeItemMaterial extends AdditionType<ItemMaterialAdded> {
 	public static final String FOLDER_NAME = "data" + File.separator + "item_materials";
 	public static final String FILE_POSTFIX = JSON_POSTFIX;
 	public static final AdditionTypeItemMaterial INSTANCE = new AdditionTypeItemMaterial();
-
-	private static final Gson GSON = GeneralUtils.newGson(ItemMaterialAdded.class, new ItemMaterialAdded.Serializer());
+	
+		private static final Gson GSON = GeneralUtils.newBuilder()
+			.registerTypeHierarchyAdapter(ItemMaterialAdded.class, new ItemMaterialAdded.Serializer())
+			.create();
 	
 	private Multimap<Addon, ItemMaterialAdded> loadedItemMaterials = HashMultimap.create();
 	private List<ItemMaterialAdded> vanillaItemMaterials = new ArrayList<>();

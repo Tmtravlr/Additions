@@ -47,7 +47,9 @@ public class AdditionTypeLootTable extends AdditionType<LootTableAdded> {
 	public static final String FILE_POSTFIX = JSON_POSTFIX;
 	public static final AdditionTypeLootTable INSTANCE = new AdditionTypeLootTable();
 	
-	public static final Gson GSON = GeneralUtils.newGson(LootTablePreset.class,new LootTablePresetManager.Serializer());
+	public static final Gson GSON = GeneralUtils.newBuilder()
+			.registerTypeHierarchyAdapter(LootTablePreset.class, new LootTablePresetManager.Serializer())
+			.create();
 	
 	private final Multimap<Addon, LootTableAdded> lootTableLocations = HashMultimap.create();
 
