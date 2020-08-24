@@ -46,7 +46,7 @@ public class AdditionTypeItemMaterial extends AdditionType<ItemMaterialAdded> {
 	public static final String FILE_POSTFIX = JSON_POSTFIX;
 	public static final AdditionTypeItemMaterial INSTANCE = new AdditionTypeItemMaterial();
 	
-		private static final Gson GSON = GeneralUtils.newBuilder()
+	private static final Gson GSON = GeneralUtils.newBuilder()
 			.registerTypeHierarchyAdapter(ItemMaterialAdded.class, new ItemMaterialAdded.Serializer())
 			.create();
 	

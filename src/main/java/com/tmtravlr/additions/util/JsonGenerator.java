@@ -12,9 +12,6 @@ import com.google.gson.JsonPrimitive;
  * @since January 2019
  */
 public class JsonGenerator {
-
-	//TODO add a GsonBuilder to auto-decide pretty printing
-
 	public static JsonObject createJsonObject(JsonElementPair... elements) {
 		JsonObject json = new JsonObject();
 		

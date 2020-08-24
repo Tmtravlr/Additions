@@ -1,7 +1,6 @@
 package com.tmtravlr.additions.gui.view.components.input;
 
 import com.google.common.base.Predicate;
-import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.gui.view.components.IGuiViewComponent;
 import com.tmtravlr.additions.gui.view.edit.GuiEdit;
 import com.tmtravlr.additions.util.client.CommonGuiUtils;
@@ -20,10 +19,11 @@ import java.util.List;
  * @author Tmtravlr (Rebeca Rey)
  * @since August 2017
  */
+@SuppressWarnings("Guava") // I can't use the Java Predicate because Minecraft doesn't use it either :)
 public class GuiComponentIntegerInput extends GuiTextField implements IGuiViewComponent {
 
 	public GuiEdit editScreen;
-	public java.util.function.Predicate<String> validator;
+	public Predicate<String> validator;
 	
 	private List<String> info = new ArrayList<>();
 	private final String label;
@@ -194,24 +194,8 @@ public class GuiComponentIntegerInput extends GuiTextField implements IGuiViewCo
 		}
 	}
 
-	private NumberFormatException lastException;
-
-	/**
-	 * Note from sschr15: this was edited so you no longer get spammed
-	 * when the color field is empty
-	 */
 	public int getInteger() {
-		try {
-			int theInt = Integer.parseInt(this.getText());
-			lastException = null;
-			return theInt;
-		} catch(NumberFormatException e) {
-			if (lastException == null) {
-				AdditionsMod.logger.warn("Tried to parse invalid integer " + this.getText());
-				lastException = e;
-			}
-			return Math.max(0, this.minimum);
-		}
+		return this.getText().isEmpty() ? Math.max(0, this.minimum) : Integer.parseInt(this.getText());
 	}
 	
 	public void setDefaultInteger(int integer) {

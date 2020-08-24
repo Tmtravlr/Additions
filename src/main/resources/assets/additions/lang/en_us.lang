@@ -472,6 +472,7 @@ gui.view.additionType.commands=Commands: %s
 gui.view.additionType.sounds=Sounds: %s
 gui.view.additionType.preset=Preset: %s
 gui.view.additionType.cause=When %s
+gui.view.additionType.potionCount=Potion effects: %s
 gui.view.additionType.effects.singular=Then run %s effect
 gui.view.additionType.effects.plural=Then run %s effects
 

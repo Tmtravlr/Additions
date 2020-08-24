@@ -23,25 +23,21 @@ public class GuiAdditionCardPotionType extends GuiAdditionCardColored {
     private final String textId;
     private final String filterId;
     private final String filterName;
+    private final ItemStack displayItem;
 
     public GuiAdditionCardPotionType(GuiView viewScreen, Addon addon, PotionTypeAdded addition) {
         super(viewScreen, addon);
 
         this.addition = addition;
 
-        this.textCount = TextFormatting.GRAY + I18n.format("gui.view.additionType.count", TextFormatting.RESET + String.valueOf(this.addition.getEffectCount()) + TextFormatting.GRAY);
+        this.textCount = TextFormatting.GRAY + I18n.format("gui.view.additionType.potionCount", TextFormatting.RESET + String.valueOf(this.addition.getEffectCount()) + TextFormatting.GRAY);
         this.textId = TextFormatting.GRAY + I18n.format("gui.view.additionType.id", TextFormatting.RESET + this.addition.id + TextFormatting.GRAY);
 
         this.filterId = this.addition.id;
         this.filterName = this.addition.getBaseName();
 
         this.setColors(GuiAdditionTypeButtonPotionType.BUTTON_COLOR_DARK, GuiAdditionTypeButtonPotionType.BUTTON_COLOR_HOVER);
-    }
 
-    @Override
-    protected void drawCardInfo(int mouseX, int mouseY) {
-        int itemDisplayTop = this.y + this.height / 2 - 10;
-        int columnWidth = this.getColumnWidth();
         ItemStack itemStack;
         //noinspection ConstantConditions
         if (PotionType.REGISTRY.getNameForObject(this.addition) == null) {
@@ -57,6 +53,13 @@ public class GuiAdditionCardPotionType extends GuiAdditionCardColored {
             itemStack.setTagCompound(stackTag);
         }
         else itemStack = this.addition.getPotionItemStack();
+        this.displayItem = itemStack;
+    }
+
+    @Override
+    protected void drawCardInfo(int mouseX, int mouseY) {
+        int itemDisplayTop = this.y + this.height / 2 - 10;
+        int columnWidth = this.getColumnWidth();
 
         Gui.drawRect(this.x + 9, itemDisplayTop - 1, this.x + 31, itemDisplayTop + 21, 0xFFA0A0A0);
         Gui.drawRect(this.x + 10, itemDisplayTop, this.x + 30, itemDisplayTop + 20, 0xFF000000);
@@ -69,7 +72,7 @@ public class GuiAdditionCardPotionType extends GuiAdditionCardColored {
             CommonGuiUtils.drawStringWithDots(this.viewScreen.getFontRenderer(), this.textCount, columnWidth - 5, this.x + 45, this.y + 25, 0xFFFFFF);
         }
 
-        this.viewScreen.renderItemStack(itemStack, this.x + 12, itemDisplayTop + 2, mouseX, mouseY, true);
+        this.viewScreen.renderItemStack(this.displayItem, this.x + 12, itemDisplayTop + 2, mouseX, mouseY, true);
     }
 
     @Override

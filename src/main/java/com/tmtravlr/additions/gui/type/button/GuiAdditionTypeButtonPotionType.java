@@ -14,9 +14,9 @@ import net.minecraft.client.resources.I18n;
  */
 public class GuiAdditionTypeButtonPotionType extends GuiAdditionTypeButtonColored {
     // please ignore my inconsistencies with Tmtravlr's code: I like capital hex numbers
-    public static final int BUTTON_COLOR_HOVER = 0xFF3C84E2;
-    public static final int BUTTON_COLOR_LIGHT = 0xFF6FB7FF;
-    public static final int BUTTON_COLOR_DARK  = 0xFF0951AF;
+    public static final int BUTTON_COLOR_HOVER = 0xFF1855A5;
+    public static final int BUTTON_COLOR_LIGHT = 0xFF0066CC;
+    public static final int BUTTON_COLOR_DARK  = 0xFF063879;
 
     public GuiAdditionTypeButtonPotionType(GuiView view, Addon addon) {
         super(view, addon);

@@ -40,7 +40,7 @@ public class ConfigLoader {
 		
 		skipReloadingResources = config.get("editor", "Skip Reloading Resources", false, "If true, skips any resource reloading. Good if you want to add/edit a bunch of things quickly,\nwithout interruption. You can still reload the resources by restarting the game or by hitting F3+T ingame.");
 		renderItemsInLists = config.get("editor", "Render Items in Item Selectors?", true, "If false, won't render items in item/block/ore dictionary selectors. Set to false if you are\ngetting crashes when looking at those selectors.");
-		prettyPrintGeneratedFiles = config.get("editor", "Pretty-Print Generated Json Files", true, "If false, will create minimized Json files rather than easily readable files.");
+		prettyPrintGeneratedFiles = config.get("editor", "Pretty-Print Generated Json Files", false, "If true, will generate JSON files that are easier to understand.");
 		
 		showProblemNotificationsMainMenu = config.get("problems", "Show Problem Notifications in Main Menu", true, "Set this to false to hide the problem notifications in the main menu and the additions main menu.");
 		showProblemNotificationsIngame = config.get("problems", "Show Problem Notifications Ingame", true, "Set this to false to hide the problem notifications in chat.");

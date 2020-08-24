@@ -150,7 +150,6 @@ public class AdditionTypeItem extends AdditionType<IItemAdded> {
 		}
 		
 		File itemFolder = new File(addon.addonFolder, FOLDER_NAME);
-		 //TODO become consistent
 		if (!itemFolder.isDirectory()) {
 			itemFolder.mkdir();
 		}

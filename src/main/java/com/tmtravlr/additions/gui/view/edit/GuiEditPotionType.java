@@ -8,7 +8,6 @@ import com.tmtravlr.additions.gui.message.GuiMessageBoxNeedsRestart;
 import com.tmtravlr.additions.gui.view.components.GuiComponentDisplayText;
 import com.tmtravlr.additions.gui.view.components.input.*;
 import com.tmtravlr.additions.type.AdditionTypePotionType;
-import com.tmtravlr.additions.util.GeneralUtils;
 import com.tmtravlr.additions.util.client.CommonGuiUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -17,8 +16,13 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
-import java.util.List;
+import java.util.Objects;
 
+/**
+ * Potion type edit screen
+ * @since Summer 2020
+ * @author sschr15
+ */
 @SuppressWarnings("FieldMayBeFinal")
 public class GuiEditPotionType extends GuiEdit {
 
@@ -102,9 +106,7 @@ public class GuiEditPotionType extends GuiEdit {
 
         // These two components aren't added to the screen by default as potion types don't usually have a way to list the color
         this.useUniqueColorInput = new GuiComponentBooleanInput(I18n.format("gui.edit.potionType.potionColor.switch.label"), this);
-        // Reason for noinspection: readability. The suggested change was to `!this.isNew && this.addition.hasColor`
-        //noinspection SimplifiableConditionalExpression
-        this.useUniqueColorInput.setDefaultBoolean(this.isNew ? false : this.addition.hasColor());
+        this.useUniqueColorInput.setDefaultBoolean(!this.isNew && this.addition.hasColor());
         this.potionColorInput = new GuiComponentColorInput(I18n.format("gui.edit.potionType.potionColor.label"), this);
 
         // Add all components to the screen
@@ -131,7 +133,8 @@ public class GuiEditPotionType extends GuiEdit {
         String baseName = CommonGuiUtils.requireStringField(this.baseNameInput, this, "gui.edit.potionType.problem.title", new TextComponentTranslation("gui.edit.potionType.problem.noBase"));
         if (baseName == null) return;
 
-        String base = TextFormatting.getTextWithoutFormattingCodes(baseName), formats=baseName.substring(0, baseName.indexOf(base));
+        String base = TextFormatting.getTextWithoutFormattingCodes(baseName);
+        String formats = baseName.substring(0, baseName.indexOf(base));
         String splashName = this.splashNameInput.getText().isEmpty() ? formats + "Splash " + base : this.splashNameInput.getText();
         String lingeringName = this.lingeringNameInput.getText().isEmpty() ? formats + "Lingering " + base : this.lingeringNameInput.getText();
         String arrowName;
@@ -144,13 +147,12 @@ public class GuiEditPotionType extends GuiEdit {
         // avoid lots of special modifications, this still exists.
         int potionColor = this.useUniqueColorInput.getBoolean() ? this.potionColorInput.getColorInt() : -1;
 
-        PotionEffect[] effects = new PotionEffect[this.potionEffectListInput.getComponents().size()];
-        List<GuiComponentPotionEffectInput> effectInputs = this.potionEffectListInput.getComponents();
-        for (int i = 0; i < effectInputs.size(); i++) {
-            effects[i] = effectInputs.get(i).getPotionEffect();
-        }
+        PotionEffect[] effects = this.potionEffectListInput.getComponents().stream()
+                .map(GuiComponentPotionEffectInput::getPotionEffect)
+                .filter(Objects::nonNull) // remove nulls
+                .toArray(PotionEffect[]::new);
 
-        PotionTypeAdded type = new PotionTypeAdded(name, baseName, splashName, lingeringName, arrowName, GeneralUtils.removeNulls(effects)).setColor(potionColor);
+        PotionTypeAdded type = new PotionTypeAdded(name, baseName, splashName, lingeringName, arrowName, effects).setColor(potionColor);
 
         if (!this.isNew) {
             this.addition.effects = type.effects;
