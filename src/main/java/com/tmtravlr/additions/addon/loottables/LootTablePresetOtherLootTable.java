@@ -21,7 +21,7 @@ import net.minecraft.util.ResourceLocation;
  * A loot table preset that drops another loot table.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since Febuary 2019 
+ * @date Febuary 2019
  */
 public class LootTablePresetOtherLootTable extends LootTablePreset {
 	

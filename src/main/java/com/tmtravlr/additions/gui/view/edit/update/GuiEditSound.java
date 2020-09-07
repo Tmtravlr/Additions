@@ -21,7 +21,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
  * Page for updating a sound for the sound component.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since October 2018
+ * @date October 2018
  */
 public class GuiEditSound extends GuiEditUpdate {
 

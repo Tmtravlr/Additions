@@ -38,7 +38,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
  * Lets you edit a shaped crafting recipe
  * 
  * @author Rebeca Rey (Tmtravlr)
- * @since April 2019
+ * @date April 2019
  */
 public class GuiComponentCraftingShapedInput extends GuiComponentCraftingRecipeInput {
 	

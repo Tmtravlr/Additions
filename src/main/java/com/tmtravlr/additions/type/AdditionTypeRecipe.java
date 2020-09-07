@@ -29,7 +29,7 @@ import java.util.List;
  * Added blocks
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since December 2018 
+ * @date December 2018
  */
 public class AdditionTypeRecipe extends AdditionType<IRecipeAdded> {
 

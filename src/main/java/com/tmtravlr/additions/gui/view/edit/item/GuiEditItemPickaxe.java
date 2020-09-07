@@ -9,7 +9,7 @@ import net.minecraft.client.gui.GuiScreen;
  * Page for adding a new pickaxe or editing an existing one.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since November 2017
+ * @date November 2017
  */
 public class GuiEditItemPickaxe extends GuiEditItemTool<ItemAddedPickaxe> {
     

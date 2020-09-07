@@ -28,7 +28,7 @@ import net.minecraft.util.ResourceLocation;
  * Manages added items.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since July 2017
+ * @date July 2017
  */
 public class ItemAddedManager {
 	private static final Map<ResourceLocation, IItemAdded.Serializer<?>> NAME_TO_SERIALIZER_MAP = new HashMap<>();

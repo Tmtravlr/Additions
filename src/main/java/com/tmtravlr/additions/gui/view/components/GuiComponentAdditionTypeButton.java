@@ -16,7 +16,7 @@ import net.minecraft.util.ResourceLocation;
  * Displays a list of every type of addition in an addon (like items, creative tabs, etc.)
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since September 2017 
+ * @date September 2017
  */
 public class GuiComponentAdditionTypeButton implements IGuiViewComponent {
 	

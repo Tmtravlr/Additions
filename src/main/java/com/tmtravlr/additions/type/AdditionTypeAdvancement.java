@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
  * Added advancements
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2018 
+ * @date August 2018 
  */
 public class AdditionTypeAdvancement extends AdditionType<AdvancementAdded> {
 

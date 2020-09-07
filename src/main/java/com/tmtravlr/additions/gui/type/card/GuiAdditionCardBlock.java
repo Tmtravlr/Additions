@@ -24,7 +24,7 @@ import net.minecraft.util.text.TextFormatting;
  * Displays info about an added block.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since December 2018 
+ * @date December 2018 
  */
 public class GuiAdditionCardBlock extends GuiAdditionCardColored {
 

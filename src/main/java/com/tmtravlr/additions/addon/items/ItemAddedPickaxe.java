@@ -29,7 +29,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Pickaxe Item
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since November 2017 
+ * @date November 2017 
  */
 public class ItemAddedPickaxe extends ItemPickaxe implements IItemAdded, IItemAddedTool {
 	

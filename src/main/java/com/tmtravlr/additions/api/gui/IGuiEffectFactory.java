@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
  * Creates the edit screen for the effect.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since May 2019
+ * @date May 2019
  */
 public interface IGuiEffectFactory<T extends Effect> {
 	

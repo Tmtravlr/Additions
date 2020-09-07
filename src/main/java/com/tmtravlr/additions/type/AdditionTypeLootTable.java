@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
  * Added structures
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2018 
+ * @date August 2018
  */
 public class AdditionTypeLootTable extends AdditionType<LootTableAdded> {
 

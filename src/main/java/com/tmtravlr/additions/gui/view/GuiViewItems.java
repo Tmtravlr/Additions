@@ -18,7 +18,7 @@ import net.minecraft.util.text.TextComponentTranslation;
  * Shows a list of cards with info about the items added
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since September 2017 
+ * @date September 2017
  */
 public class GuiViewItems extends GuiViewAdditionType {
 

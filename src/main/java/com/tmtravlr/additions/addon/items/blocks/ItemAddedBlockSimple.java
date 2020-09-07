@@ -1,10 +1,5 @@
 package com.tmtravlr.additions.addon.items.blocks;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.JsonDeserializationContext;
@@ -12,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.blocks.IBlockAdded;
 import com.tmtravlr.additions.addon.items.IItemAdded;
+import mcp.MethodsReturnNonnullByDefault;
 
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -26,12 +22,19 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Simple ItemBlock.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since December 2018
+ * @date December 2018
  */
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class ItemAddedBlockSimple extends ItemBlock implements IItemAddedBlock {
 	public static final ResourceLocation TYPE = new ResourceLocation(AdditionsMod.MOD_ID, "block_simple");
 	
@@ -125,7 +128,7 @@ public class ItemAddedBlockSimple extends ItemBlock implements IItemAddedBlock {
 	@Override
 	@SideOnly(Side.CLIENT)
     public boolean hasEffect(ItemStack stack) {
-        return shines ? true : super.hasEffect(stack);
+        return shines || super.hasEffect(stack);
     }
 	
 	@Override
@@ -164,7 +167,6 @@ public class ItemAddedBlockSimple extends ItemBlock implements IItemAddedBlock {
 		
 		if(this.attributeModifiers.containsKey(slot)) {
 			for(AttributeModifier modifier : this.attributeModifiers.get(slot)) {
-				boolean isWeaponModifier = modifier.getID() == ATTACK_DAMAGE_MODIFIER;
 				modifiersForSlot.put(modifier.getName(), modifier);
 			}
 		}

@@ -29,7 +29,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Shears Item
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since November 2018 
+ * @date November 2018
  */
 public class ItemAddedShears extends ItemShears implements IItemAdded {
 	

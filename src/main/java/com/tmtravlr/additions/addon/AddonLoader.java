@@ -57,7 +57,7 @@ import net.minecraftforge.fml.common.versioning.VersionParser;
  * Also calls the addition type manager to load each type of addition.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since July 2017 
+ * @date July 2017 
  */
 public class AddonLoader {
 	

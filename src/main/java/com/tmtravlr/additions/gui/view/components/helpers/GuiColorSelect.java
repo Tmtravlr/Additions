@@ -13,7 +13,7 @@ import net.minecraft.util.text.TextFormatting;
  * Simple color selector for a text input field
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2017 
+ * @date August 2017 
  */
 public class GuiColorSelect extends Gui {
 	

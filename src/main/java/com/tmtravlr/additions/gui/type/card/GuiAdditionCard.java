@@ -7,7 +7,7 @@ import com.tmtravlr.additions.gui.view.GuiView;
  * Card with info about an addition (like an item, or a creative tab)
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since September 2017 
+ * @date September 2017
  */
 public abstract class GuiAdditionCard {
 

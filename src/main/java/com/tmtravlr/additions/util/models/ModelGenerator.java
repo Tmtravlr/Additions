@@ -9,7 +9,7 @@ import com.tmtravlr.additions.util.JsonGenerator;
  * Generates json for models
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2018
+ * @date August 2018
  */
 public class ModelGenerator {	
 	public static final Gson GSON = new GsonBuilder()

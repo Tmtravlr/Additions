@@ -1,10 +1,5 @@
 package com.tmtravlr.additions.util;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.StringJoiner;
-
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.gson.JsonElement;
@@ -22,18 +17,23 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.StringJoiner;
+
 /**
  * Holds info about a block and that state it should be in.
  * @author Rebeca Rey (Tmtravlr)
- * @since July 2019
+ * @date July 2019
  */
 public class BlockStateInfo {
 	
 	private IBlockState blockState;
 	private Predicate<IBlockState> predicate;
 	
-	private Block block;
-	private Map<String, String> stateMap;
+	private final Block block;
+	private final Map<String, String> stateMap;
 	
 	public BlockStateInfo(Block block) {
 		this(block, Collections.EMPTY_MAP);
@@ -52,14 +52,14 @@ public class BlockStateInfo {
 			String stateString = stateStringJoiner.toString();
 				
 			try {
-				this.predicate = CommandBase.convertArgToBlockStatePredicate(block, stateString.toString());
+				this.predicate = CommandBase.convertArgToBlockStatePredicate(block, stateString);
 			} catch (InvalidBlockStateException e) {
 				AdditionsMod.logger.error("Unable to parse block state predicate. Setting to never. Message is: '" + I18n.translateToLocalFormatted(e.getMessage(), e.getErrorObjects()) + "', and state is: '" + stateString + "'");
 				this.predicate = Predicates.alwaysFalse();
 			}
 			
 			try {
-				this.blockState = CommandBase.convertArgToBlockState(block, stateString.toString());
+				this.blockState = CommandBase.convertArgToBlockState(block, stateString);
 			} catch (InvalidBlockStateException | NumberInvalidException e) {
 				AdditionsMod.logger.error("Unable to parse block state. Setting to default. Message is: '" + I18n.translateToLocalFormatted(e.getMessage(), e.getErrorObjects()) + "', and state is: '" + stateString + "'");
 				this.blockState = block.getDefaultState();
@@ -117,11 +117,8 @@ public class BlockStateInfo {
 		} else if (!predicate.equals(other.predicate))
 			return false;
 		if (stateMap == null) {
-			if (other.stateMap != null)
-				return false;
-		} else if (!stateMap.equals(other.stateMap))
-			return false;
-		return true;
+			return other.stateMap == null;
+		} else return stateMap.equals(other.stateMap);
 	}
 	
 	public static class Serializer {
@@ -132,12 +129,12 @@ public class BlockStateInfo {
 			if (info.block == null) {
 				throw new IllegalArgumentException("Can't serialize block state info without a block!");
 			}
-			
-			json.addProperty("block", info.block.getRegistryName().toString());
+
+			if (info.block.getRegistryName() != null) json.addProperty("block", info.block.getRegistryName().toString());
 			
 			if (!info.stateMap.isEmpty()) {
 				JsonObject jsonState = new JsonObject();
-				info.stateMap.forEach((key, value) -> jsonState.addProperty(key, value));
+				info.stateMap.forEach(jsonState::addProperty);
 				json.add("state", jsonState);
 			}
 			

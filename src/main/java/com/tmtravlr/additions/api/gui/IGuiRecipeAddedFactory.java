@@ -11,7 +11,7 @@ import net.minecraft.client.gui.GuiScreen;
  * Creates the edit screen for the recipe type.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since March 2019
+ * @date March 2019
  */
 public interface IGuiRecipeAddedFactory<T extends IRecipeAdded> {
 	

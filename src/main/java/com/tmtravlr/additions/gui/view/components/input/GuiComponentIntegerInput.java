@@ -17,7 +17,7 @@ import java.util.List;
  * Extension of the vanilla text field, for an int input.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2017
+ * @date August 2017
  */
 @SuppressWarnings("Guava") // I can't use the Java Predicate because Minecraft doesn't use it either :)
 public class GuiComponentIntegerInput extends GuiTextField implements IGuiViewComponent {

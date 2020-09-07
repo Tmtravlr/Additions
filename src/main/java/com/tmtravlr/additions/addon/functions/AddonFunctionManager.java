@@ -1,19 +1,18 @@
 package com.tmtravlr.additions.addon.functions;
 
-import java.io.File;
-
-import javax.annotation.Nonnull;
-
 import net.minecraft.advancements.FunctionManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
+import javax.annotation.Nonnull;
+import java.io.File;
+
 /**
  * Loads and manages addon functions
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since July 2018 
+ * @date July 2018 
  */
 public class AddonFunctionManager {
 	

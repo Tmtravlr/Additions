@@ -1,7 +1,5 @@
 package com.tmtravlr.additions.addon.effects.cause;
 
-import java.util.Map.Entry;
-
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.JsonArray;
@@ -19,6 +17,8 @@ import net.minecraft.util.JsonUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.OreDictionary;
+
+import java.util.Map.Entry;
 
 /**
  * Cause for equipping an item or set.
@@ -51,10 +51,7 @@ public class EffectCauseItemEquipped extends EffectCause {
 	}
 	
 	private boolean itemMatches(ItemStack equippedStack, ItemStack stackToCheck) {
-		if (OreDictionary.itemMatches(equippedStack, stackToCheck, false) && NBTUtil.areNBTEquals(equippedStack.getTagCompound(), stackToCheck.getTagCompound(), true)) {
-			return true;
-		}
-		return false;
+		return OreDictionary.itemMatches(equippedStack, stackToCheck, false) && NBTUtil.areNBTEquals(equippedStack.getTagCompound(), stackToCheck.getTagCompound(), true);
 	}
 
 	public static class Serializer extends EffectCause.Serializer<EffectCauseItemEquipped> {

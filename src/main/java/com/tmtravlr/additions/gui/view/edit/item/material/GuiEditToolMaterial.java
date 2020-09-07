@@ -30,7 +30,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
  * Page for adding or editing a tool material.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since November 2017
+ * @date November 2017
  */
 public class GuiEditToolMaterial extends GuiEditItemMaterial<ToolMaterialAdded> {
 	

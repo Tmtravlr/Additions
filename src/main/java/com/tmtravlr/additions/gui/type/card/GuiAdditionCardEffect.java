@@ -22,7 +22,7 @@ import net.minecraft.util.text.TextFormatting;
  * Displays info about an added effect.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since May 2019 
+ * @date May 2019 
  */
 public class GuiAdditionCardEffect extends GuiAdditionCardColored {
 

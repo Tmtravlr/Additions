@@ -15,7 +15,7 @@ import net.minecraft.util.text.TextComponentTranslation;
  * Page for adding or editing a tool/armor material, mimicking how the vanilla tool/armor materials works.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since November 2017
+ * @date November 2017
  */
 public abstract class GuiEditItemMaterial<T extends ItemMaterialAdded> extends GuiEdit {
 	

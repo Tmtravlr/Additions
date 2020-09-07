@@ -10,7 +10,7 @@ import com.tmtravlr.additions.gui.view.edit.GuiEdit;
  * Handles creating the components and saving the effect.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since May 2019
+ * @date May 2019
  */
 public interface IGuiEffectEditHandler {
 

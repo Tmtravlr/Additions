@@ -20,7 +20,7 @@ import java.util.Objects;
 
 /**
  * Potion type edit screen
- * @since Summer 2020
+ * @date Summer 2020
  * @author sschr15
  */
 @SuppressWarnings("FieldMayBeFinal")

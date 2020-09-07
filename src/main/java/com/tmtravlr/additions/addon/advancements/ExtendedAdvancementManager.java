@@ -1,34 +1,14 @@
 package com.tmtravlr.additions.addon.advancements;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import javax.annotation.Nullable;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.logging.log4j.Logger;
-
 import com.google.gson.JsonParseException;
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.AddonLoader;
 import com.tmtravlr.additions.type.AdditionTypeAdvancement;
 import com.tmtravlr.additions.util.ProblemNotifier;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.Logger;
 
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementList;
@@ -40,12 +20,26 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
+import javax.annotation.Nullable;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 /**
  * Replaces the vanilla advancement manager, so it can load
  * and reload addon advancements with the vanilla ones
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2018 
+ * @date August 2018 
  */
 public class ExtendedAdvancementManager extends AdvancementManager {
 	
@@ -195,10 +189,9 @@ public class ExtendedAdvancementManager extends AdvancementManager {
 
             LOGGER.error("Couldn't find .mcassetsroot");
             this.hasErrored = true;
-        } catch (IOException | URISyntaxException urisyntaxexception) {
-            LOGGER.error("Couldn't get a list of all built-in advancement files", urisyntaxexception);
+        } catch (IOException | URISyntaxException e) {
+            LOGGER.error("Couldn't get a list of all built-in advancement files", e);
             this.hasErrored = true;
-            return;
         } finally {
             IOUtils.closeQuietly(filesystem);
         }

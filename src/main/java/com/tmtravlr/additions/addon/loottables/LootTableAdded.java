@@ -8,7 +8,7 @@ import net.minecraft.util.ResourceLocation;
  * Holds info about a loot table's location as well as its preset, if it has one.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since Febuary 2019 
+ * @date Febuary 2019 
  */
 public class LootTableAdded {
 

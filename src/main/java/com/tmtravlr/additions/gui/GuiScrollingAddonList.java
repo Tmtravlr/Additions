@@ -21,7 +21,7 @@ import com.tmtravlr.additions.util.client.CommonGuiUtils;
  * Main list of addons.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since July 2017 
+ * @date July 2017
  */
 public class GuiScrollingAddonList extends GuiScrollingList {
 

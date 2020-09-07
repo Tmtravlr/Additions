@@ -18,7 +18,7 @@ import net.minecraft.util.text.TextComponentTranslation;
  * Page for adding a new simple item or editing an existing one.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since November 2017
+ * @date November 2017
  */
 public class GuiEditItemFood extends GuiEditItem<ItemAddedFood> {
 	

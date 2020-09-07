@@ -20,7 +20,7 @@ import net.minecraft.util.text.TextFormatting;
  * Displays info about an added creative tab.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since September 2017 
+ * @date September 2017
  */
 public class GuiAdditionCardCreativeTab extends GuiAdditionCardColored {
 

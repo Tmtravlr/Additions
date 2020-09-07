@@ -28,7 +28,7 @@ import java.util.List;
  * Added creative tabs
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since September 2017 
+ * @date September 2017
  */
 public class AdditionTypeCreativeTab extends AdditionType<CreativeTabAdded> {
 

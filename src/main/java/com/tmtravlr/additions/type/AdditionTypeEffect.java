@@ -13,13 +13,14 @@ import com.tmtravlr.additions.addon.effects.EffectManager;
 import com.tmtravlr.additions.addon.effects.cause.*;
 import com.tmtravlr.additions.util.GeneralUtils;
 import com.tmtravlr.additions.util.ProblemNotifier;
+import org.apache.commons.io.FileUtils;
+
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +34,7 @@ import java.util.Map;
  * Added effects
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since May 2019 
+ * @date May 2019 
  */
 public class AdditionTypeEffect extends AdditionType<EffectList> {
 

@@ -26,7 +26,7 @@ import net.minecraftforge.fml.client.GuiScrollingList;
  * Input field with a dropdown list displaying suggestions.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since November 2017
+ * @date November 2017
  */
 public class GuiComponentSuggestionInput extends GuiTextField implements IGuiViewComponent {
 
@@ -185,7 +185,7 @@ public class GuiComponentSuggestionInput extends GuiTextField implements IGuiVie
 	 * Screen for the suggestions. Has the input field and a scrolling list of suggestions.
 	 * 
 	 * @author Tmtravlr (Rebeca Rey)
-	 * @since November 2017 
+	 * @date November 2017
 	 */
 	protected class GuiScreenSuggestion extends GuiScreenOverlay {
 		
@@ -278,7 +278,7 @@ public class GuiComponentSuggestionInput extends GuiTextField implements IGuiVie
 	 * Shows a scrolling list, displaying suggestions for the given type of object.
 	 * 
 	 * @author Tmtravlr (Rebeca Rey)
-	 * @since November 2017 
+	 * @date November 2017
 	 */
 	protected class GuiScrollingSuggestion extends GuiScrollingList {
 	

@@ -1,24 +1,19 @@
 package com.tmtravlr.additions.addon.blocks;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.blocks.materials.BlockMaterialManager;
 import com.tmtravlr.additions.addon.items.blocks.IItemAddedBlock;
+import mcp.MethodsReturnNonnullByDefault;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockFence;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.BlockWall;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -26,7 +21,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -38,6 +32,13 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
+import java.util.List;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class BlockAddedWall extends BlockWall implements IBlockAdded {
 	
 	public static final ResourceLocation TYPE = new ResourceLocation(AdditionsMod.MOD_ID, "wall");
@@ -64,9 +65,9 @@ public class BlockAddedWall extends BlockWall implements IBlockAdded {
 
 	public BlockAddedWall() {
 		super(Blocks.STONE);
-		BlockStateContainer stateContainer =  new BlockStateContainer(this, new IProperty[] {BlockLiquid.LEVEL, UP, NORTH, EAST, WEST, SOUTH});
+		BlockStateContainer stateContainer =  new BlockStateContainer(this, BlockLiquid.LEVEL, UP, NORTH, EAST, WEST, SOUTH);
 		ObfuscationReflectionHelper.setPrivateValue(Block.class, this, stateContainer, "field_176227_L", "blockState");
-		this.setDefaultState(this.blockState.getBaseState().withProperty(UP, Boolean.valueOf(false)).withProperty(NORTH, Boolean.valueOf(false)).withProperty(EAST, Boolean.valueOf(false)).withProperty(SOUTH, Boolean.valueOf(false)).withProperty(WEST, Boolean.valueOf(false)).withProperty(BlockLiquid.LEVEL, 0));
+		this.setDefaultState(this.blockState.getBaseState().withProperty(UP, Boolean.FALSE).withProperty(NORTH, Boolean.FALSE).withProperty(EAST, Boolean.FALSE).withProperty(SOUTH, Boolean.FALSE).withProperty(WEST, Boolean.FALSE).withProperty(BlockLiquid.LEVEL, 0));
 		this.setLightOpacity(0);
         this.setHardness(0);
         this.setResistance(0);
@@ -75,7 +76,7 @@ public class BlockAddedWall extends BlockWall implements IBlockAdded {
 	}
 	
 	@Override
-	public void setItemBlock(IItemAddedBlock itemBlock) {
+	public void setItemBlock(@Nullable IItemAddedBlock itemBlock) {
 		this.itemBlock = itemBlock;
 	}
 	
@@ -140,7 +141,7 @@ public class BlockAddedWall extends BlockWall implements IBlockAdded {
 	}
 	
 	@Override
-	public void setBlockMapColor(MapColor mapColor) {
+	public void setBlockMapColor(@Nullable MapColor mapColor) {
 		ObfuscationReflectionHelper.setPrivateValue(Block.class, this, mapColor, "field_181083_K", "blockMapColor");
 	}
 
@@ -165,7 +166,7 @@ public class BlockAddedWall extends BlockWall implements IBlockAdded {
 	}
 
 	@Override
-	public void setBeaconColorMultiplier(float[] beaconColorMultiplier) {
+	public void setBeaconColorMultiplier(@Nullable float[] beaconColorMultiplier) {
 		this.beaconColorMultiplier = beaconColorMultiplier;
 	}
 
@@ -459,7 +460,7 @@ public class BlockAddedWall extends BlockWall implements IBlockAdded {
 	
     @Override
 	protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[] {BlockLiquid.LEVEL, UP, NORTH, EAST, WEST, SOUTH, VARIANT});
+        return new BlockStateContainer(this, BlockLiquid.LEVEL, UP, NORTH, EAST, WEST, SOUTH, VARIANT);
     }
 
     @Override

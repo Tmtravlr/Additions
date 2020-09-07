@@ -18,7 +18,7 @@ import net.minecraftforge.oredict.OreDictionary;
  * Dropdown list specifically for items, which renders the items in the list.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2017
+ * @date August 2017
  */
 public class GuiComponentSuggestionInputOreDict extends GuiComponentSuggestionInput {
 

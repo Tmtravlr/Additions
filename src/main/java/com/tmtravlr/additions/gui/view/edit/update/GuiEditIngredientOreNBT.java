@@ -18,7 +18,7 @@ import net.minecraft.util.text.TextComponentTranslation;
  * Moved out of the item stack group component.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since October 2018 
+ * @date October 2018
  */
 public abstract class GuiEditIngredientOreNBT extends GuiEditUpdate {
 	protected GuiComponentDisplayText oreOrGroupMessage;

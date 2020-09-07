@@ -15,13 +15,14 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.lang.reflect.Type;
 
 /**
  * Represents an added creative tab
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since July 2017 
+ * @date July 2017
  */
 public class CreativeTabAdded extends CreativeTabs {
 	
@@ -62,12 +63,14 @@ public class CreativeTabAdded extends CreativeTabs {
 
     @SideOnly(Side.CLIENT)
     @Override
+	@Nonnull
     public String getTranslatedTabLabel() {
         return this.getTabLabel();
     }
 
     @SideOnly(Side.CLIENT)
     @Override
+	@Nonnull
     public ItemStack getTabIconItem() {
     	if (!this.customTabItemStack.isEmpty()) {
     		return this.customTabItemStack;
@@ -79,7 +82,7 @@ public class CreativeTabAdded extends CreativeTabs {
     }
 
     @SideOnly(Side.CLIENT)
-    public void displayAllRelevantItems(NonNullList<ItemStack> itemsToDisplay) {
+    public void displayAllRelevantItems(@Nonnull NonNullList<ItemStack> itemsToDisplay) {
     	for (ItemStack displayItem : this.displayItems) {
     		if (displayItem.getItem() instanceof IItemAddedProjectile && ((IItemAddedProjectile)displayItem.getItem()).hasPotionEffects() && !displayItem.hasTagCompound()) {
     			this.addPotions(displayItem, itemsToDisplay);

@@ -16,7 +16,7 @@ import net.minecraft.util.text.TextComponentTranslation;
  * Page for adding a new block that can face different directions or editing an existing one.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since March 2020
+ * @date March 2020
  */
 public class GuiEditBlockLadder extends GuiEditBlockModifiableBoundingBox<BlockAddedLadder> {
 

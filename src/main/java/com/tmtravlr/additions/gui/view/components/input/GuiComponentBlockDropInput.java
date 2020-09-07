@@ -36,7 +36,7 @@ import net.minecraft.util.ResourceLocation;
  * Allows you to edit block drops
  * 
  * @author Rebeca Rey (Tmtravlr)
- * @since April 2019
+ * @date April 2019
  */
 public class GuiComponentBlockDropInput implements IGuiViewComponent {
 

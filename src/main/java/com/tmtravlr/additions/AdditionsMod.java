@@ -23,6 +23,8 @@ import com.tmtravlr.additions.network.SToCMessage;
 import com.tmtravlr.additions.type.AdditionTypeManager;
 import com.tmtravlr.additions.type.attribute.AttributeTypeManager;
 import com.tmtravlr.additions.util.ProblemNotifier;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IIngredientFactory;
@@ -35,7 +37,6 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
-import org.apache.logging.log4j.Logger;
 
 /**
  * Additions allows non-coders to add items, blocks, and many other things to the game through GUIs.
@@ -43,7 +44,7 @@ import org.apache.logging.log4j.Logger;
  * Main mod class.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since July 2017 
+ * @date July 2017
  */
 @Mod(modid = AdditionsMod.MOD_ID, 
      name = AdditionsMod.MOD_NAME, 

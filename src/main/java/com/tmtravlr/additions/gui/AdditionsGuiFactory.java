@@ -12,7 +12,7 @@ import net.minecraftforge.fml.client.IModGuiFactory;
  * Gui Factory for additions (displays the Additions main menu when you click Config for it in the mods list)
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since July 2017 
+ * @date July 2017 
  */
 public class AdditionsGuiFactory implements IModGuiFactory {
 

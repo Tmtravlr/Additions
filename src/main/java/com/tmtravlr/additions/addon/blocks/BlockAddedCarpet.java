@@ -9,7 +9,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -28,7 +27,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Basic Block
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since May 2019 
+ * @date May 2019
  */
 public class BlockAddedCarpet extends BlockAddedSimple {
 

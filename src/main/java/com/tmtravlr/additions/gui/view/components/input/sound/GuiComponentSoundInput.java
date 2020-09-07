@@ -53,7 +53,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
  * Lets you define a sound (either another sound event or a sound file).
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since October 2018 
+ * @date October 2018
  */
 public class GuiComponentSoundInput implements IGuiViewComponent {
 

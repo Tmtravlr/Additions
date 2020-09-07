@@ -29,7 +29,7 @@ import net.minecraft.util.ResourceLocation;
  * Additions Main Menu
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since July 2017 
+ * @date July 2017
  */
 public class GuiAdditionsMainMenu extends GuiScreen {
 	

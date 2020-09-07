@@ -1,19 +1,14 @@
 package com.tmtravlr.additions.addon.blocks;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.blocks.materials.BlockMaterialManager;
 import com.tmtravlr.additions.addon.items.blocks.IItemAddedBlock;
-import com.tmtravlr.lootoverhaul.loot.LootContextExtendedBuilder;
+import mcp.MethodsReturnNonnullByDefault;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.BlockLadder;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.SoundType;
@@ -25,39 +20,32 @@ import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Enchantments;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.JsonUtils;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-import net.minecraft.world.storage.loot.LootTable;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Basic Block
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since December 2018 
+ * @date December 2018
  */
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class BlockAddedLadder extends BlockLadder implements IBlockAdded, IBlockAddedModifiableBoundingBox {
 	
 	public static final ResourceLocation TYPE = new ResourceLocation(AdditionsMod.MOD_ID, "ladder");
@@ -93,13 +81,13 @@ public class BlockAddedLadder extends BlockLadder implements IBlockAdded, IBlock
 
 	public BlockAddedLadder() {
 		super();
-		this.setDefaultState(this.blockState.getBaseState().withProperty(BlockLiquid.LEVEL, Integer.valueOf(0)));
+		this.setDefaultState(this.blockState.getBaseState().withProperty(BlockLiquid.LEVEL, 0));
 		this.setBlockMapColor(null);
 		this.lightOpacity = 15;
 	}
 	
 	@Override
-	public void setItemBlock(IItemAddedBlock itemBlock) {
+	public void setItemBlock(@Nullable IItemAddedBlock itemBlock) {
 		this.itemBlock = itemBlock;
 	}
 	
@@ -164,7 +152,7 @@ public class BlockAddedLadder extends BlockLadder implements IBlockAdded, IBlock
 	}
 	
 	@Override
-	public void setBlockMapColor(MapColor mapColor) {
+	public void setBlockMapColor(@Nullable MapColor mapColor) {
 		ObfuscationReflectionHelper.setPrivateValue(Block.class, this, mapColor, "field_181083_K", "blockMapColor");
 	}
 
@@ -189,7 +177,7 @@ public class BlockAddedLadder extends BlockLadder implements IBlockAdded, IBlock
 	}
 
 	@Override
-	public void setBeaconColorMultiplier(float[] beaconColorMultiplier) {
+	public void setBeaconColorMultiplier(@Nullable float[] beaconColorMultiplier) {
 		this.beaconColorMultiplier = beaconColorMultiplier;
 	}
 
@@ -593,7 +581,7 @@ public class BlockAddedLadder extends BlockLadder implements IBlockAdded, IBlock
 	
     @Override
 	protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[] {BlockLadder.FACING, BlockLiquid.LEVEL});
+        return new BlockStateContainer(this, BlockLadder.FACING, BlockLiquid.LEVEL);
     }
 
     @Override

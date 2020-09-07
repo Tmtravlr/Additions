@@ -1,12 +1,6 @@
 package com.tmtravlr.additions.addon.items.materials;
 
-import javax.annotation.Nonnull;
-
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.*;
 import com.tmtravlr.additions.AdditionsMod;
 
 import net.minecraft.item.Item;
@@ -15,11 +9,13 @@ import net.minecraft.util.JsonUtils;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
+import javax.annotation.Nonnull;
+
 /**
  * Represents an added item material, for tools and armor
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since November 2017 
+ * @date November 2017
  */
 public class ToolMaterialAdded extends ItemMaterialAdded {
 	

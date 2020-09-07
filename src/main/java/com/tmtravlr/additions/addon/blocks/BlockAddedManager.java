@@ -1,37 +1,25 @@
 package com.tmtravlr.additions.addon.blocks;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.*;
 import com.tmtravlr.additions.api.gui.IGuiBlockAddedFactory;
 
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
 
+import java.lang.reflect.Type;
+import java.util.*;
+
 /**
  * Manages added blocks.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since December 2018
+ * @date December 2018
  */
 public class BlockAddedManager {
 	private static final Map<ResourceLocation, IBlockAdded.Serializer<?>> NAME_TO_SERIALIZER_MAP = new HashMap<>();
 	private static final Map<Class<? extends IBlockAdded>, IBlockAdded.Serializer<?>> CLASS_TO_SERIALIZER_MAP = new HashMap<>();
 	private static final Map<Class<? extends IBlockAdded>, ResourceLocation> CLASS_TO_NAME_MAP = new HashMap<>();
-	private static final LinkedHashMap<ResourceLocation, IGuiBlockAddedFactory> NAME_TO_GUI_MAP = new LinkedHashMap<>();
+	private static final LinkedHashMap<ResourceLocation, IGuiBlockAddedFactory<?>> NAME_TO_GUI_MAP = new LinkedHashMap<>();
 	
 	public static void registerDefaultBlocks() {
 		registerBlockType(new BlockAddedSimple.Serializer());
@@ -62,7 +50,7 @@ public class BlockAddedManager {
 	    }
 	}
 	
-	public static void registerGuiFactory(ResourceLocation type, IGuiBlockAddedFactory factory) {
+	public static void registerGuiFactory(ResourceLocation type, IGuiBlockAddedFactory<?> factory) {
 		NAME_TO_GUI_MAP.put(type, factory);
 	}
 	
@@ -76,7 +64,8 @@ public class BlockAddedManager {
 	    }
 	}
 	
-	public static <T extends IBlockAdded> IBlockAdded.Serializer getSerializerFor(T blockAdded) {
+	public static <T extends IBlockAdded> IBlockAdded.Serializer<T> getSerializerFor(T blockAdded) {
+		//noinspection unchecked
 		IBlockAdded.Serializer<T> serializer = (IBlockAdded.Serializer<T>) CLASS_TO_SERIALIZER_MAP.get(blockAdded.getClass());
 	
 	    if (serializer == null) {
@@ -90,21 +79,21 @@ public class BlockAddedManager {
 		return getTypeFor(blockAdded.getClass());
 	}
 	
-	public static <T extends IBlockAdded> ResourceLocation getTypeFor(Class blockClass) {
+	public static <T extends IBlockAdded> ResourceLocation getTypeFor(Class<T> blockClass) {
 		return CLASS_TO_NAME_MAP.get(blockClass);
 	}
 	
 	public static Collection<ResourceLocation> getAllTypes() {
-		List<ResourceLocation> blockTypes = new ArrayList(NAME_TO_SERIALIZER_MAP.keySet());
+		List<ResourceLocation> blockTypes = new ArrayList<>(NAME_TO_SERIALIZER_MAP.keySet());
 		blockTypes.sort(null);
 		return blockTypes;
 	}
 	
-	public static LinkedHashMap<ResourceLocation, IGuiBlockAddedFactory> getAllGuiFactories() {
+	public static LinkedHashMap<ResourceLocation, IGuiBlockAddedFactory<?>> getAllGuiFactories() {
 		return NAME_TO_GUI_MAP;
 	}
 	
-	public static IGuiBlockAddedFactory getGuiFactoryFor(ResourceLocation type) {
+	public static IGuiBlockAddedFactory<?> getGuiFactoryFor(ResourceLocation type) {
 		return NAME_TO_GUI_MAP.get(type);
 	}
 	
@@ -126,7 +115,7 @@ public class BlockAddedManager {
 
         @Override
 		public JsonElement serialize(IBlockAdded blockAdded, Type type, JsonSerializationContext context) {
-        	IBlockAdded.Serializer<IBlockAdded> serializer = BlockAddedManager.<IBlockAdded>getSerializerFor(blockAdded);
+        	IBlockAdded.Serializer<IBlockAdded> serializer = BlockAddedManager.getSerializerFor(blockAdded);
             JsonObject json = serializer.serialize(blockAdded, context);
             json.addProperty("type", serializer.getBlockAddedType().toString());
             return json;

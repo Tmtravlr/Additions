@@ -13,7 +13,7 @@ import net.minecraft.util.text.TextComponentTranslation;
  * Version of the View screen meant for editing objects. Has a save button by default.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since July 2017 
+ * @date July 2017
  */
 public abstract class GuiEdit extends GuiView {
 	

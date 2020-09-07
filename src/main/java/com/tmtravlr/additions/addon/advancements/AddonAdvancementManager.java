@@ -1,19 +1,18 @@
 package com.tmtravlr.additions.addon.advancements;
 
-import java.io.File;
-
-import javax.annotation.Nonnull;
-
 import net.minecraft.advancements.AdvancementManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
+import javax.annotation.Nonnull;
+import java.io.File;
+
 /**
  * Loads and manages addon advancements
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2018 
+ * @date August 2018
  */
 public class AddonAdvancementManager {
 	

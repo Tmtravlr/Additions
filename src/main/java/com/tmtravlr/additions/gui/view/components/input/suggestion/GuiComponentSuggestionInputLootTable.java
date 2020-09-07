@@ -14,7 +14,7 @@ import net.minecraft.world.storage.loot.LootTableList;
  * Dropdown list specifically for tool types.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since December 2018
+ * @date December 2018
  */
 public class GuiComponentSuggestionInputLootTable extends GuiComponentSuggestionInput {
 

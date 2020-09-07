@@ -1,14 +1,12 @@
 package com.tmtravlr.additions.addon.blocks;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.blocks.materials.BlockMaterialManager;
 import com.tmtravlr.additions.addon.items.blocks.IItemAddedBlock;
+import mcp.MethodsReturnNonnullByDefault;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
@@ -16,18 +14,13 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
@@ -37,12 +30,20 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.ParametersAreNullableByDefault;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Basic Block
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since December 2018 
+ * @date December 2018
  */
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class BlockAddedSimple extends Block implements IBlockAdded, IBlockAddedModifiableBoundingBox {
 	
 	public static final ResourceLocation TYPE = new ResourceLocation(AdditionsMod.MOD_ID, "simple");
@@ -73,19 +74,18 @@ public class BlockAddedSimple extends Block implements IBlockAdded, IBlockAddedM
 
 	public BlockAddedSimple() {
 		super(Material.ROCK);
-		this.setDefaultState(this.blockState.getBaseState().withProperty(BlockLiquid.LEVEL, Integer.valueOf(0)));
+		this.setDefaultState(this.blockState.getBaseState().withProperty(BlockLiquid.LEVEL, 0));
 		this.setBlockMapColor(null);
 		this.lightOpacity = 15;
 	}
 	
 	@Override
 	public Block setLightOpacity(int lightOpacity) {
-		Block returnBlock = super.setLightOpacity(lightOpacity);
-		return returnBlock;
+		return super.setLightOpacity(lightOpacity);
 	}
 	
 	@Override
-	public void setItemBlock(IItemAddedBlock itemBlock) {
+	public void setItemBlock(@Nullable IItemAddedBlock itemBlock) {
 		this.itemBlock = itemBlock;
 	}
 	
@@ -150,7 +150,7 @@ public class BlockAddedSimple extends Block implements IBlockAdded, IBlockAddedM
 	}
 	
 	@Override
-	public void setBlockMapColor(MapColor mapColor) {
+	public void setBlockMapColor(@Nullable MapColor mapColor) {
 		ObfuscationReflectionHelper.setPrivateValue(Block.class, this, mapColor, "field_181083_K", "blockMapColor");
 	}
 
@@ -175,7 +175,7 @@ public class BlockAddedSimple extends Block implements IBlockAdded, IBlockAddedM
 	}
 
 	@Override
-	public void setBeaconColorMultiplier(float[] beaconColorMultiplier) {
+	public void setBeaconColorMultiplier(@Nullable float[] beaconColorMultiplier) {
 		this.beaconColorMultiplier = beaconColorMultiplier;
 	}
 
@@ -418,6 +418,7 @@ public class BlockAddedSimple extends Block implements IBlockAdded, IBlockAddedM
 	
 	@Override
     @SideOnly(Side.CLIENT)
+	@ParametersAreNullableByDefault
     public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 		if (!this.isOpaqueCube(state)) {
 	        return CommonBlockMethods.shouldSideBeRendered(this, state, world, pos, side);
@@ -555,11 +556,11 @@ public class BlockAddedSimple extends Block implements IBlockAdded, IBlockAddedM
 	
     @Override
 	protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[] {BlockLiquid.LEVEL});
+        return new BlockStateContainer(this, BlockLiquid.LEVEL);
     }
     
     @Override
-	public int getMetaFromState(IBlockState state) {
+	public int getMetaFromState(@Nullable IBlockState state) {
     	return 0;
     }
     

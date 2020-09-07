@@ -27,7 +27,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
  * Page for adding a brewing recipe.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since April 2019
+ * @date April 2019
  */
 public class GuiEditRecipeBrewingComplete extends GuiEdit {
 	

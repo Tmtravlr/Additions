@@ -20,7 +20,7 @@ import net.minecraft.util.math.Vec3d;
  * Moves an entity, with several different modes.
  * 
  * @author Rebeca (Tmtravlr)
- * @Date June 2020
+ * @date June 2020
  */
 public class CommandAdditionsMove extends CommandBase {
 	private static final Random RAND = new Random();

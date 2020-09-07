@@ -22,7 +22,7 @@ import net.minecraft.util.text.TextComponentTranslation;
  * Lets you select textures for a pane block.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since April 2020 
+ * @date April 2020
  */
 public class GuiEditBlockPaneTexture extends GuiEditBlockTexture {
 

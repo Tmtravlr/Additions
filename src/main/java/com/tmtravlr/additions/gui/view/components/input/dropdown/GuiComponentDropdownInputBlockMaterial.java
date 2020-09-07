@@ -15,7 +15,7 @@ import net.minecraft.util.ResourceLocation;
  * Dropdown list specifically for block materials.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since December 2018
+ * @date December 2018
  */
 public class GuiComponentDropdownInputBlockMaterial extends GuiComponentDropdownInput<MaterialSelection> {
 

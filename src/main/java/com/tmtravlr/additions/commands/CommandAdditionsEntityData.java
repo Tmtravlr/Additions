@@ -19,7 +19,7 @@ import net.minecraft.util.math.BlockPos;
 /**
  * Identical to the entity data command, but works with players.
  * @author Rebeca (Tmtravlr)
- * @since May 2020
+ * @date May 2020
  */
 public class CommandAdditionsEntityData extends CommandBase {
 

@@ -9,7 +9,7 @@ import net.minecraft.client.resources.I18n;
 
 /**
  * Button to see the added potion types
- * @since June 2020
+ * @date June 2020
  * @author sschr15
  */
 public class GuiAdditionTypeButtonPotionType extends GuiAdditionTypeButtonColored {

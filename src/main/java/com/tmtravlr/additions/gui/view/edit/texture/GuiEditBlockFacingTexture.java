@@ -22,7 +22,7 @@ import net.minecraft.util.text.TextComponentTranslation;
  * Lets you select a texture for a simple block.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since December 2018 
+ * @date December 2018
  */
 public class GuiEditBlockFacingTexture extends GuiEditBlockTexture {
 

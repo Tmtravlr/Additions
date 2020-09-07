@@ -12,7 +12,7 @@ import net.minecraft.client.resources.I18n;
  * Button to see the list of sound events.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since October 2018
+ * @date October 2018
  */
 public class GuiAdditionTypeButtonSoundEvent extends GuiAdditionTypeButtonColored {
 	

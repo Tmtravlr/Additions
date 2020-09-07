@@ -1,28 +1,15 @@
 package com.tmtravlr.additions.util.client;
 
-import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.Validate;
-
-import com.google.common.collect.Lists;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
+import com.google.gson.*;
 import com.tmtravlr.additions.addon.sounds.SoundEventAdded;
 
 import net.minecraft.client.audio.Sound;
-import net.minecraft.util.JsonUtils;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.List;
 
 
 /**
@@ -30,7 +17,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * TODO: keep up to date with {@link net.minecraft.client.audio.SoundListSerializer}
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since October 2018
+ * @date October 2018
  */
 @SideOnly(Side.CLIENT)
 public class SoundsJsonSerializer implements JsonSerializer<Collection<SoundEventAdded>> {
@@ -55,7 +42,7 @@ public class SoundsJsonSerializer implements JsonSerializer<Collection<SoundEven
 				jsonSoundList.addProperty("subtitle", soundEvent.getSoundList().getSubtitle());
 			}
 			
-			json.add(soundEvent.getRegistryName().getResourcePath(), jsonSoundList);
+			if (soundEvent.getRegistryName() != null) json.add(soundEvent.getRegistryName().getResourcePath(), jsonSoundList);
 		}
 		
 		return json;

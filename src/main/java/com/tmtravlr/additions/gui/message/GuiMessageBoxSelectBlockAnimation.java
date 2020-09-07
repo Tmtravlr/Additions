@@ -22,7 +22,7 @@ import net.minecraft.util.text.TextComponentTranslation;
  * Shows a popup message to select an animation for an animated texture.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since December 2018 
+ * @date December 2018
  */
 public class GuiMessageBoxSelectBlockAnimation extends GuiMessageBoxTwoButton {
 

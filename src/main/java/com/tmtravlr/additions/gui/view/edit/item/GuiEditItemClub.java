@@ -9,7 +9,7 @@ import net.minecraft.client.gui.GuiScreen;
  * Page for adding a new club or editing an existing one.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since December 2017
+ * @date December 2017
  */
 public class GuiEditItemClub extends GuiEditItemTool<ItemAddedClub> {
     

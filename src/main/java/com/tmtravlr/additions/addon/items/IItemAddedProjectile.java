@@ -1,7 +1,5 @@
 package com.tmtravlr.additions.addon.items;
 
-import java.util.List;
-
 import com.tmtravlr.additions.addon.effects.Effect;
 import com.tmtravlr.additions.addon.entities.IEntityAddedProjectile;
 
@@ -12,60 +10,62 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
+import java.util.List;
+
 public interface IItemAddedProjectile {
 	
-	public float getBaseDamage();
+	float getBaseDamage();
 	
-	public void setBaseDamage(float baseDamage);
+	void setBaseDamage(float baseDamage);
 	
-	public float getBasePunch();
+	float getBasePunch();
 	
-	public void setBasePunch(float basePunch);
+	void setBasePunch(float basePunch);
 	
-	public float getGravity();
+	float getGravity();
 	
-	public void setGravity(float gravity);
+	void setGravity(float gravity);
 	
-	public boolean worksInWater();
+	boolean worksInWater();
 	
-	public void setWorksInWater(boolean worksInWater);
+	void setWorksInWater(boolean worksInWater);
 	
-	public boolean sticksInGround();
+	boolean sticksInGround();
 	
-	public void setSticksInGround(boolean sticksInGround);
+	void setSticksInGround(boolean sticksInGround);
 	
-	public boolean hasPotionEffects();
+	boolean hasPotionEffects();
 	
-	public void setHasPotionEffects(boolean hasPotionEffects);
+	void setHasPotionEffects(boolean hasPotionEffects);
 	
-	public boolean worksWithInfinity();
+	boolean worksWithInfinity();
 	
-	public void setWorksWithInfinity(boolean worksWithInfinity);
+	void setWorksWithInfinity(boolean worksWithInfinity);
 	
-	public boolean renders3D();
+	boolean renders3D();
 	
-	public void setRenders3D(boolean renders3D);
+	void setRenders3D(boolean renders3D);
 	
-	public boolean piercesEntities();
+	boolean piercesEntities();
 	
-	public void setPiercesEntities(boolean piercesEntities);
+	void setPiercesEntities(boolean piercesEntities);
 	
-	public boolean damageIgnoresSpeed();
+	boolean damageIgnoresSpeed();
 	
-	public void setDamageIgnoresSpeed(boolean damageIgnoresSpeed);
+	void setDamageIgnoresSpeed(boolean damageIgnoresSpeed);
 	
-	public SoundEvent getHitSound();
+	SoundEvent getHitSound();
 	
-	public void setHitSound(SoundEvent hitSound);
+	void setHitSound(SoundEvent hitSound);
 	
-	public List<Effect> getHitEffects();
+	List<Effect> getHitEffects();
 	
-	public void setHitEffects(List<Effect> hitEffects);
+	void setHitEffects(List<Effect> hitEffects);
 
-	public boolean isInfinite(ItemStack projectile, ItemStack bow);
+	boolean isInfinite(ItemStack projectile, ItemStack bow);
 	
-	public IEntityAddedProjectile createProjectile(World world, ItemStack projectile, ItemStack bow, EntityLivingBase shooter);
+	IEntityAddedProjectile createProjectile(World world, ItemStack projectile, ItemStack bow, EntityLivingBase shooter);
 	
-	public DamageSource getDamageSource(IEntityAddedProjectile projectileEntity, Entity shooter, ItemStack damageItem);
+	DamageSource getDamageSource(IEntityAddedProjectile projectileEntity, Entity shooter, ItemStack damageItem);
 	
 }

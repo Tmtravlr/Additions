@@ -19,7 +19,7 @@ import net.minecraft.util.text.TextFormatting;
  * Displays info about an added advancement.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2018 
+ * @date August 2018
  */
 public class GuiAdditionCardAdvancement extends GuiAdditionCardColored {
 

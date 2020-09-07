@@ -20,7 +20,7 @@ import net.minecraft.util.text.TextComponentTranslation;
  * Shows a list of cards with info about the creative tabs added
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since September 2017 
+ * @date September 2017 
  */
 public class GuiViewCreativeTabs extends GuiViewAdditionType {
 

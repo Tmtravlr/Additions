@@ -43,7 +43,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Added sound events
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since October 2018 
+ * @date October 2018 
  */
 public class AdditionTypeSoundEvent extends AdditionType<SoundEventAdded> {
 

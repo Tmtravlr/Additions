@@ -10,12 +10,13 @@ import com.tmtravlr.additions.addon.AddonLoader;
 import com.tmtravlr.additions.addon.potiontypes.PotionTypeAdded;
 import com.tmtravlr.additions.util.GeneralUtils;
 import com.tmtravlr.additions.util.ProblemNotifier;
+import org.apache.commons.io.FileUtils;
+
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +27,7 @@ import java.util.Objects;
 
 /**
  * Added potion types
- * @since July 2020
+ * @date July 2020
  * @author sschr15
  */
 public class AdditionTypePotionType extends AdditionType<PotionTypeAdded> {

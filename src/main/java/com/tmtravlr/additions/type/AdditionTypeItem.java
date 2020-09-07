@@ -37,7 +37,7 @@ import java.util.Map.Entry;
  * Added items
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since September 2017 
+ * @date September 2017
  */
 public class AdditionTypeItem extends AdditionType<IItemAdded> {
 

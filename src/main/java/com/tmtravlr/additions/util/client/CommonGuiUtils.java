@@ -82,7 +82,7 @@ public class CommonGuiUtils {
 	 * @param titleI18n the unlocalized title
 	 * @param reason the TextComponent message
 	 * @return the text, or {@code null} if the text was empty
-	 * @since July 2020
+	 * @date July 2020
 	 * @author sschr15
 	 */
 	public static String requireStringField(GuiComponentStringInput input, GuiScreen parentScreen, String titleI18n, TextComponentBase reason) {

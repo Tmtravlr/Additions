@@ -12,7 +12,7 @@ import net.minecraft.client.resources.I18n;
  * Button to see the list of blocks.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since September 2017 
+ * @date September 2017
  */
 public class GuiAdditionTypeButtonBlock extends GuiAdditionTypeButtonColored {
 	

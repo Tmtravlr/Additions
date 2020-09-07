@@ -1,5 +1,18 @@
 package com.tmtravlr.additions.util;
 
+import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.Multimap;
+import com.tmtravlr.additions.AdditionsMod;
+import com.tmtravlr.additions.ConfigLoader;
+
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.*;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -7,29 +20,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import com.google.common.collect.LinkedListMultimap;
-import com.google.common.collect.Multimap;
-import com.tmtravlr.additions.AdditionsMod;
-import com.tmtravlr.additions.ConfigLoader;
-
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.event.ClickEvent;
-import net.minecraft.util.text.event.HoverEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import java.util.Objects;
 
 /**
  * Notifies the user of problems during loading/reloading
  * 
  * @author Rebeca Rey (Tmtravlr)
- * @since July 2019
+ * @date July 2019
  */
 public class ProblemNotifier {
 	
@@ -187,25 +184,18 @@ public class ProblemNotifier {
 		public int hashCode() {
 			final int prime = 31;
 			int result = 1;
-			result = prime * result + ((text == null || text.getUnformattedComponentText() == null) ? 0 : text.getUnformattedComponentText().hashCode());
+			result = prime * result + (text == null ? 0 : text.getUnformattedComponentText().hashCode());
 			return result;
 		}
 
 		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			TextComponentWrapper other = (TextComponentWrapper) obj;
-			if (text == null) {
-				if (other.text != null)
-					return false;
-			} else if (!text.equals(other.text))
-				return false;
-			return true;
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+
+			TextComponentWrapper that = (TextComponentWrapper) o;
+
+			return Objects.equals(text, that.text);
 		}
 	}
 

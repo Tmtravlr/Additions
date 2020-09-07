@@ -15,10 +15,7 @@ public abstract class EffectCauseItem extends EffectCause {
 	public ItemStack itemStack;
 	
 	protected boolean itemMatches(ItemStack stackToCheck) {
-		if (OreDictionary.itemMatches(this.itemStack, stackToCheck, false) && NBTUtil.areNBTEquals(this.itemStack.getTagCompound(), stackToCheck.getTagCompound(), true)) {
-			return true;
-		}
-		return false;
+		return OreDictionary.itemMatches(this.itemStack, stackToCheck, false) && NBTUtil.areNBTEquals(this.itemStack.getTagCompound(), stackToCheck.getTagCompound(), true);
 	}
 
 }

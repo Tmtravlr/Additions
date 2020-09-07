@@ -29,7 +29,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
  * Page for adding a crafting recipe to dye an item.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since April 2019
+ * @date April 2019
  */
 public class GuiEditRecipeCraftingDyeItem extends GuiEdit {
 	

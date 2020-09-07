@@ -9,7 +9,7 @@ import net.minecraft.client.gui.GuiScreen;
  * Lets you build an ingredient that has a modifier amount.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since April 2019 
+ * @date April 2019 
  */
 public class GuiComponentIngredientModifierInput extends GuiComponentIngredientOreNBTInput {
 	

@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
  * Added item materials, for tools and armor
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since November 2017 
+ * @date November 2017
  */
 public class AdditionTypeItemMaterial extends AdditionType<ItemMaterialAdded> {
 

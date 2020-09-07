@@ -8,7 +8,7 @@ import com.tmtravlr.additions.gui.view.GuiView;
  * Info for rendering an AdditionType. Used by the GUI to add a button in the addon's screen and to add/edit the additions.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2017
+ * @date August 2017
  */
 public interface IAdditionTypeGuiFactory {
 	

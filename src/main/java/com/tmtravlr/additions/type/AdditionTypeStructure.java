@@ -30,7 +30,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Added structures
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2018 
+ * @date August 2018 
  */
 public class AdditionTypeStructure extends AdditionType<ResourceLocation> {
 

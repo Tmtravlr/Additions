@@ -18,7 +18,7 @@ import net.minecraft.client.renderer.Tessellator;
  * Useful for item lore and lists like that.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2017 
+ * @date August 2017 
  */
 public class GuiScrollingComponentList<T extends IGuiViewComponent> extends GuiScrollingListAnyHeight {
 	private static final int MODIFY_COMPONENT_WIDTH = 20;

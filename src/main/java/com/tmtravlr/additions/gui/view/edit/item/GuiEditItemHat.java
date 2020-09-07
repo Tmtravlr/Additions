@@ -21,7 +21,7 @@ import net.minecraft.util.text.TextComponentTranslation;
  * Page for adding a new hat or editing an existing one.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since December 2017
+ * @date December 2017
  */
 public class GuiEditItemHat extends GuiEditItem<ItemAddedHat> {
 	

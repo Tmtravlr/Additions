@@ -25,7 +25,7 @@ import net.minecraft.util.ResourceLocation;
  * Contains convenient methods for registering things
  * 
  * @author Rebeca Rey (Tmtravlr)
- * @since March 2019
+ * @date March 2019
  */
 public class AdditionsModRegistry {
 	

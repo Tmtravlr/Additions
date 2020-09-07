@@ -20,7 +20,7 @@ import org.lwjgl.opengl.GL11;
  * Also, it doesn't scroll if you click and drag except on the scroll bar.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2017
+ * @date August 2017
  */
 public abstract class GuiScrollingListAnyHeight {
 

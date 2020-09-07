@@ -11,7 +11,7 @@ import net.minecraft.client.resources.I18n;
  * and doesn't check if there are unsaved changes when going back.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since October 2018
+ * @date October 2018
  */
 public abstract class GuiEditUpdate extends GuiEdit {
 	

@@ -35,7 +35,7 @@ import net.minecraft.util.text.TextFormatting;
  * Displays info about an added item.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since November 2017 
+ * @date November 2017
  */
 public class GuiAdditionCardItemMaterial extends GuiAdditionCardColored {
 

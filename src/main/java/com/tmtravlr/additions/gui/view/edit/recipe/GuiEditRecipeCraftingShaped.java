@@ -30,7 +30,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
  * Page for adding a shapeless crafting recipe.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since March 2019
+ * @date March 2019
  */
 public class GuiEditRecipeCraftingShaped extends GuiEdit {
 	

@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
  * Holds info necessary to add/edit an advancement
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2018 
+ * @date August 2018
  */
 public class AdvancementAdded {
 

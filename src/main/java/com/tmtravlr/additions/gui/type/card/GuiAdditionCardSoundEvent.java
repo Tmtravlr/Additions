@@ -15,7 +15,7 @@ import net.minecraft.util.text.TextFormatting;
  * Displays info about an added sound event.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since October 2018 
+ * @date October 2018
  */
 public class GuiAdditionCardSoundEvent extends GuiAdditionCardColored {
 

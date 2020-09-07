@@ -6,16 +6,12 @@ import com.tmtravlr.additions.addon.items.ItemAddedBow;
 import com.tmtravlr.additions.addon.items.ItemAddedGun;
 import com.tmtravlr.additions.addon.items.ItemAddedThrowable;
 
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -61,7 +57,7 @@ public class EntityAIAddedRangedAttack<T extends EntityLiving & IRangedAttackMob
     @Override
     public void startExecuting() {
         super.startExecuting();
-        ((IRangedAttackMob)this.entity).setSwingingArms(true);
+        this.entity.setSwingingArms(true);
     }
 
     @Override

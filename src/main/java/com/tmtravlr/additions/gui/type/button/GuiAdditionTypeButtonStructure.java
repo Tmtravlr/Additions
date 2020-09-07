@@ -14,7 +14,7 @@ import net.minecraft.init.SoundEvents;
  * Button to see the list of structures.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2018
+ * @date August 2018
  */
 public class GuiAdditionTypeButtonStructure extends GuiAdditionTypeButtonColored {
 	

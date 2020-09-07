@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * the Additions cards for potion types
- * @since July 2020
+ * @date July 2020
  * @author sschr15
  */
 public class GuiViewPotionType extends GuiViewAdditionType {

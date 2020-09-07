@@ -17,7 +17,7 @@ import java.lang.reflect.Type;
  * A potion type is simply a list of potion effects as well as
  * a unique potion group in-game (ex. Minecraft's potion of leaping
  * contains a single effect: jump boost)
- * @since July 2020
+ * @date July 2020
  * @author sschr15
  */
 public class PotionTypeAdded extends PotionType {

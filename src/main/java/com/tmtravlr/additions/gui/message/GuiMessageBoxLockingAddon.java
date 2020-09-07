@@ -17,7 +17,7 @@ import net.minecraft.util.text.TextComponentTranslation;
  * Shows a message saying the resources are reloading, since otherwise the game just freezes and people might get confused.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since September 2017 
+ * @date September 2017 
  */
 public class GuiMessageBoxLockingAddon extends GuiMessageBox {
 	

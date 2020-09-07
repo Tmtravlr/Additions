@@ -9,7 +9,7 @@ import net.minecraft.client.gui.GuiScreen;
  * Page for adding a new simple item or editing an existing one.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since July 2017
+ * @date July 2017
  */
 public class GuiEditItemSimple extends GuiEditItem<ItemAddedSimple> {
     

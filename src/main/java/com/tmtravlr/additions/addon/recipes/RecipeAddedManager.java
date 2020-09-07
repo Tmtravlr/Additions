@@ -28,7 +28,7 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
  * Manages added recipes.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since February 2019
+ * @date February 2019
  */
 public class RecipeAddedManager {
 	private static final Map<ResourceLocation, IRecipeAdded.Serializer<?>> NAME_TO_SERIALIZER_MAP = new HashMap<>();

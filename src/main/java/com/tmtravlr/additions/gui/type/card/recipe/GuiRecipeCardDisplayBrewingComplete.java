@@ -24,7 +24,7 @@ import net.minecraft.potion.PotionUtils;
  * Renders a brewing recipe
  * 
  * @author Rebeca Rey (Tmtravlr)
- * @since April 2019
+ * @date April 2019
  */
 public class GuiRecipeCardDisplayBrewingComplete implements IGuiRecipeCardDisplay {
 

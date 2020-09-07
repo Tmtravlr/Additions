@@ -5,7 +5,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.translation.I18n;
+
+import javax.annotation.Nonnull;
 
 public class EntityDamageSourceBash extends EntityDamageSource {
 
@@ -14,7 +15,8 @@ public class EntityDamageSourceBash extends EntityDamageSource {
 	}
 	
 	@Override
-    public ITextComponent getDeathMessage(EntityLivingBase killed) {
+    @Nonnull
+    public ITextComponent getDeathMessage(@Nonnull EntityLivingBase killed) {
         EntityLivingBase attacker = this.getTrueSource() instanceof EntityLivingBase ? (EntityLivingBase) this.getTrueSource() : killed.getAttackingEntity();
         String deathMessage = "death.attack." + this.damageType;
         String deathMessagePlayer = deathMessage + ".player";

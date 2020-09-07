@@ -40,7 +40,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Item that starts fires
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since November 2018 
+ * @date November 2018
  */
 public class ItemAddedFirestarter extends ItemFlintAndSteel implements IItemAdded {
 	

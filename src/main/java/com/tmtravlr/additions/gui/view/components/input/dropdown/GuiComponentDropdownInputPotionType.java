@@ -19,7 +19,7 @@ import net.minecraft.potion.PotionUtils;
  * Dropdown list specifically for potion types, which renders the items in the list.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since May 2019
+ * @date May 2019
  */
 public class GuiComponentDropdownInputPotionType extends GuiComponentDropdownInput<PotionType> {
 	

@@ -1,22 +1,21 @@
 package com.tmtravlr.additions.gui.view.components.input.dropdown;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.items.materials.ArmorMaterialAdded;
-import com.tmtravlr.additions.addon.items.materials.ItemMaterialAdded;
 import com.tmtravlr.additions.gui.view.edit.GuiEdit;
 import com.tmtravlr.additions.gui.view.edit.item.material.GuiEditArmorMaterial;
 import com.tmtravlr.additions.type.AdditionTypeItemMaterial;
 
 import net.minecraft.client.resources.I18n;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Dropdown list specifically for item materials, which lets you create a new item material on the fly.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since November 2017
+ * @date November 2017
  */
 public class GuiComponentDropdownInputArmorMaterial extends GuiComponentDropdownInput<ArmorMaterialAdded> {
 	

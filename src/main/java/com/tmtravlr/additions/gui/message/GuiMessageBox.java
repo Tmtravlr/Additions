@@ -19,7 +19,7 @@ import net.minecraft.util.text.ITextComponent;
  * Shows a simple notification-type popup message.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since July 2017 
+ * @date July 2017 
  */
 public class GuiMessageBox extends GuiScreenOverlay {
 	

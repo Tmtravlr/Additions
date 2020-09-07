@@ -18,7 +18,7 @@ import net.minecraft.client.renderer.GlStateManager;
  * Lets you build an item stack.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since November 2017 
+ * @date November 2017
  */
 public class GuiComponentIngredientOreNBTInput implements IGuiViewComponent {
 

@@ -1,8 +1,5 @@
 package com.tmtravlr.additions.gui.view.edit.update.effect.cause;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.tmtravlr.additions.addon.effects.cause.EffectCause;
 import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemInInventory;
 import com.tmtravlr.additions.api.gui.IGuiEffectCauseEditHandler;
@@ -14,6 +11,9 @@ import com.tmtravlr.additions.gui.view.edit.GuiEdit;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextComponentTranslation;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Creates components and handles saving the in hand effect cause.

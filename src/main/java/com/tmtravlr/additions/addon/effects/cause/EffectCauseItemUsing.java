@@ -27,9 +27,7 @@ public class EffectCauseItemUsing extends EffectCauseItemInHand {
 		if (entity.getItemInUseMaxCount()  >= timeRequired) {
 			if (entity.getActiveHand() == EnumHand.MAIN_HAND && (this.handType == HandType.BOTH || this.handType == HandType.MAINHAND) && itemMatches(entity.getHeldItemMainhand())) {
 				return true;
-			} else if (entity.getActiveHand() == EnumHand.OFF_HAND && (this.handType == HandType.BOTH || this.handType == HandType.OFFHAND) && itemMatches(entity.getHeldItemOffhand())) {
-				return true;
-			}
+			} else return entity.getActiveHand() == EnumHand.OFF_HAND && (this.handType == HandType.BOTH || this.handType == HandType.OFFHAND) && itemMatches(entity.getHeldItemOffhand());
 		}
 		return false;
 	}

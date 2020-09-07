@@ -22,7 +22,7 @@ import net.minecraft.util.text.TextFormatting;
  * Displays info about an added function.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2018 
+ * @date August 2018
  */
 public class GuiAdditionCardFunction extends GuiAdditionCardColored {
 

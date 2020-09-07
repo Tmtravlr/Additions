@@ -27,7 +27,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Basic Item
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since July 2017 
+ * @date July 2017
  */
 public class ItemAddedSimple extends Item implements IItemAdded {
 	

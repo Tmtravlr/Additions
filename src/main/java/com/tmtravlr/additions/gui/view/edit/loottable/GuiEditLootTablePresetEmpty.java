@@ -11,7 +11,7 @@ import net.minecraft.client.gui.GuiScreen;
  * Page for adding an empty loot table or editing an existing one (though there's nothing to edit =P).
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since Febuary 2019
+ * @date Febuary 2019
  */
 public class GuiEditLootTablePresetEmpty extends GuiEditLootTableWithPreset<LootTablePresetEmpty> {
     

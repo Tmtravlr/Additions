@@ -53,7 +53,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Multitool Item
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since November 2017 
+ * @date November 2017
  */
 public class ItemAddedShield extends ItemShield implements IItemAdded {
 	

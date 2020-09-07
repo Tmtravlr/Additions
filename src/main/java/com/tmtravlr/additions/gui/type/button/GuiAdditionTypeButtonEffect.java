@@ -12,7 +12,7 @@ import net.minecraft.client.resources.I18n;
  * Button to see the list of effects.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since May 2019 
+ * @date May 2019
  */
 public class GuiAdditionTypeButtonEffect extends GuiAdditionTypeButtonColored {
 

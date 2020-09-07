@@ -14,7 +14,7 @@ import com.tmtravlr.additions.gui.view.edit.GuiEdit;
  * Displays a list of other components. Useful for lists of things like item lore.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2017 
+ * @date August 2017
  */
 public abstract class GuiComponentListInput<T extends IGuiViewComponent> implements IGuiViewComponent {
 	

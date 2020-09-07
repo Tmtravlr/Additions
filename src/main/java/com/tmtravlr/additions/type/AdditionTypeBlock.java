@@ -15,6 +15,8 @@ import com.tmtravlr.additions.addon.items.ItemAddedManager;
 import com.tmtravlr.additions.addon.items.blocks.IItemAddedBlock;
 import com.tmtravlr.additions.util.GeneralUtils;
 import com.tmtravlr.additions.util.ProblemNotifier;
+import org.apache.commons.io.FileUtils;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.item.ItemBlock;
@@ -27,7 +29,6 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
-import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +43,7 @@ import java.util.Map.Entry;
  * Added blocks
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since December 2018 
+ * @date December 2018
  */
 public class AdditionTypeBlock extends AdditionType<IBlockAdded> {
 

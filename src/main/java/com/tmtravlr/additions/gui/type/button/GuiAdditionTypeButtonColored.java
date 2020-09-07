@@ -11,7 +11,7 @@ import net.minecraft.util.math.MathHelper;
  * Implementation of the GuiAdditionTypeButton with simple colors.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since September 2017 
+ * @date September 2017
  */
 public abstract class GuiAdditionTypeButtonColored extends GuiAdditionTypeButton {
 	

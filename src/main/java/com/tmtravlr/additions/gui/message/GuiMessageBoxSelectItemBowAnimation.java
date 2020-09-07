@@ -25,7 +25,7 @@ import net.minecraft.util.text.TextComponentTranslation;
  * Shows a popup message to select an animation for an animated texture.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since September 2017 
+ * @date September 2017 
  */
 public class GuiMessageBoxSelectItemBowAnimation extends GuiMessageBoxSelectItemAnimation {
 

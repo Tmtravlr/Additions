@@ -31,7 +31,7 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
  * and reload addon structures with the vanilla ones
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2018 
+ * @date August 2018 
  */
 public class ExtendedStructureManager extends TemplateManager {
 	

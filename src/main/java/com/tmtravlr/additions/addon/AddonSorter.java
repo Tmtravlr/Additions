@@ -19,7 +19,7 @@ import com.google.common.collect.Maps;
  * Sorts the addons based on dependencies. Most of the code adapted from ModSorter.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since July 2017
+ * @date July 2017
  */
 public class AddonSorter {
     private DirectedGraph<Addon> addonGraph;

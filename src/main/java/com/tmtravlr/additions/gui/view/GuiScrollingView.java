@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.Tessellator;
  * Scrolling list for all the View screens.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2017 
+ * @date August 2017
  */
 public class GuiScrollingView extends GuiScrollingListAnyHeight {
 	

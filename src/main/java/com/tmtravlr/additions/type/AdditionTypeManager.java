@@ -16,7 +16,7 @@ import java.util.*;
  * These represent addition 'types' (like items or creative tabs).
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2017
+ * @date August 2017
  */
 public class AdditionTypeManager {
 

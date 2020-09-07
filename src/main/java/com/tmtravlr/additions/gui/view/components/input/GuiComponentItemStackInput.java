@@ -18,7 +18,7 @@ import net.minecraft.item.ItemStack;
  * Lets you build an item stack.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since September 2017 
+ * @date September 2017
  */
 public class GuiComponentItemStackInput implements IGuiViewComponent {
 

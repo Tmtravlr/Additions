@@ -17,7 +17,7 @@ import net.minecraft.util.text.TextComponentTranslation;
  * Shows a list of cards with info about the blocks added
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since December 2018 
+ * @date December 2018
  */
 public class GuiViewBlocks extends GuiViewAdditionType {
 

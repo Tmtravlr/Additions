@@ -13,7 +13,7 @@ import net.minecraft.client.gui.GuiScreen;
  * Page for selecting a loot table preset type to add.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since December 2018
+ * @date December 2018
  */
 public class GuiEditSelectTypeLootTablePreset extends GuiEditSelectType<IGuiLootTablePresetFactory> {
 	

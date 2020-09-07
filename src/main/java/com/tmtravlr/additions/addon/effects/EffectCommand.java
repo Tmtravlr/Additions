@@ -1,7 +1,5 @@
 package com.tmtravlr.additions.addon.effects;
 
-import javax.annotation.Nullable;
-
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
@@ -14,8 +12,10 @@ import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Info about a command to run.
@@ -37,7 +37,7 @@ public class EffectCommand extends Effect {
 			entity.world.getMinecraftServer().commandManager.executeCommand(new CommandSenderWrapper(entity, entity.getPositionVector(), entity.getPosition(), 2, entity, !this.hideFeedback) {
 				
 				@Override
-				public boolean canUseCommand(int permLevel, String commandName) {
+				public boolean canUseCommand(int permLevel, @Nonnull String commandName) {
 					return true;
 				}
 				

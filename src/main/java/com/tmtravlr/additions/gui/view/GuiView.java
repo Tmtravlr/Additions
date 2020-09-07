@@ -29,7 +29,7 @@ import net.minecraftforge.fml.client.config.GuiUtils;
  * Screen with an embedded list of components to display, meant for viewing objects.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since July 2017 
+ * @date July 2017
  */
 public abstract class GuiView extends GuiScreen {
 	

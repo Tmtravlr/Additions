@@ -1,15 +1,11 @@
 package com.tmtravlr.additions.addon.functions;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import com.google.common.base.Functions;
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.AddonLoader;
 import com.tmtravlr.additions.type.AdditionTypeFunction;
 import com.tmtravlr.additions.util.ProblemNotifier;
+import mcp.MethodsReturnNonnullByDefault;
 
 import net.minecraft.advancements.FunctionManager;
 import net.minecraft.command.FunctionObject;
@@ -18,12 +14,18 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 /**
  * Replaces the vanilla function manager, so it can load
  * and reload addon functions with the vanilla ones
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since July 2018 
+ * @date July 2018
  */
 public class ExtendedFunctionManager extends FunctionManager {
 
@@ -82,6 +84,7 @@ public class ExtendedFunctionManager extends FunctionManager {
 				FunctionObject function = this.getFunction(addon.loopFunction);
 				
 				if (function != null) {
+					@MethodsReturnNonnullByDefault
 					ICommandSender sender = new ICommandSender() {
 				        
 				        @Override
@@ -90,7 +93,7 @@ public class ExtendedFunctionManager extends FunctionManager {
 				        }
 				        
 				        @Override
-						public boolean canUseCommand(int permLevel, String commandName) {
+						public boolean canUseCommand(int permLevel, @Nonnull String commandName) {
 				            return permLevel <= 2;
 				        }
 				        

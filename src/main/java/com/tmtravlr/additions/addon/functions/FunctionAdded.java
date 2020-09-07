@@ -1,14 +1,14 @@
 package com.tmtravlr.additions.addon.functions;
 
-import java.util.List;
-
 import net.minecraft.util.ResourceLocation;
+
+import java.util.List;
 
 /**
  * Holds info necessary to add/edit a function
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2018 
+ * @date August 2018
  */
 public class FunctionAdded {
 	public ResourceLocation id;

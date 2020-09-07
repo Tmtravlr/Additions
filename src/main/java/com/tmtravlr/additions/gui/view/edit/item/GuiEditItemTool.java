@@ -18,7 +18,7 @@ import net.minecraft.util.text.TextComponentTranslation;
  * Page for adding a tool.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since November 2017
+ * @date November 2017
  */
 public abstract class GuiEditItemTool<T extends IItemAdded & IItemAddedTool> extends GuiEditItem<T> {
 	

@@ -36,7 +36,7 @@ import net.minecraft.util.text.TextFormatting;
  * Kind of a mess... I simplified it as much as I could
  * 
  * @author Rebeca Rey (Tmtravlr)
- * @since April 2019
+ * @date April 2019
  */
 public abstract class GuiComponentCraftingRecipeInput implements IGuiViewComponent {
 	protected static final int OUTLINE_OFFSET_X = 0;
