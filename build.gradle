@@ -39,6 +39,13 @@ repositories {
         name = "ModMaven"
         url = "https://modmaven.k-4u.nl"
     }
+    maven {
+        // CurseMaven is a tool for getting CurseForge files, but using
+        // the file ID instead of the Jar name. See https://www.cursemaven.com/
+        // for more information.
+        name 'CurseMaven'
+        url 'https://www.cursemaven.com'
+    }
 }
 
 dependencies {
@@ -48,6 +55,11 @@ dependencies {
     // at runtime, use the full JEI jar
     runtime "mezz.jei:jei_${jei_mc_version}:${jei_version}"
 
+    // Get LootOverhaul without requiring manual download
+    // curse.maven means it uses the CurseMaven "repository"
+    // LootOverhaul-1.2 is just a friendly name.
+    // 2711741 is the LootOverhaul File ID
+    provided group: 'curse.maven', name: 'LootOverhaul-1.2', version: '2711741'
 }
 
 processResources {
