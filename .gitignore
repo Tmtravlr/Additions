@@ -15,12 +15,11 @@ out
 
 # gradle
 build
-gradle
-gradlew
 .gradle
 
 # other
 *.bat
+!gradlew.bat
 *changelog.txt
 *-fml.txt
 eclipse
