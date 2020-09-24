@@ -17,7 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
  * Input field specifically for nbt, that tells you if the nbt is not valid.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2017
+ * @date August 2017
  */
 public class GuiComponentNBTInput extends Gui implements IGuiViewComponent {	
 	private GuiEdit editScreen;

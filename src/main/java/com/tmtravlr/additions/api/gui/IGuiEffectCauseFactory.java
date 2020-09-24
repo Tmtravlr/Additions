@@ -11,7 +11,7 @@ import net.minecraft.util.NonNullList;
  * Creates the edit screen for the effect cause.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since May 2019
+ * @date May 2019
  */
 public interface IGuiEffectCauseFactory<T extends EffectCause> {
 	

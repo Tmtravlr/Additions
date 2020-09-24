@@ -14,7 +14,7 @@ import net.minecraft.init.SoundEvents;
  * Button to see the list of creative tabs.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since September 2017 
+ * @date September 2017
  */
 public class GuiAdditionTypeButtonItemMaterial extends GuiAdditionTypeButtonColored {
 	

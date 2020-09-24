@@ -1,24 +1,18 @@
 package com.tmtravlr.additions.addon.entities.renderers;
 
-import java.util.Random;
-
 import com.tmtravlr.additions.addon.entities.EntityAddedProjectile;
 
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderSnowball;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
+
+import javax.annotation.Nonnull;
+import java.util.Random;
 
 public class RenderAddedProjectile extends RenderSnowball<EntityAddedProjectile> {
 	
@@ -77,7 +71,8 @@ public class RenderAddedProjectile extends RenderSnowball<EntityAddedProjectile>
     }
 	
 	@Override
-	public ItemStack getStackToRender(EntityAddedProjectile entity) {
+    @Nonnull
+	public ItemStack getStackToRender(@Nonnull EntityAddedProjectile entity) {
         return entity.getArrowStack();
     }
 

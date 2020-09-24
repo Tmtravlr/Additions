@@ -6,6 +6,7 @@ import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.blocks.BlockAddedSlab;
 import com.tmtravlr.additions.addon.blocks.BlockAddedSlab.EnumAddedSlabHalf;
 import com.tmtravlr.additions.addon.items.IItemAdded;
+import mcp.MethodsReturnNonnullByDefault;
 
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.Block;
@@ -25,12 +26,16 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * ItemBlock for a slab block.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since May 2019
+ * @date May 2019
  */
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class ItemAddedBlockSlab extends ItemAddedBlockSimple {
 	public static final ResourceLocation TYPE = new ResourceLocation(AdditionsMod.MOD_ID, "block_slab");
 	
@@ -71,7 +76,7 @@ public class ItemAddedBlockSlab extends ItemAddedBlockSimple {
 
         pos = pos.offset(side);
         IBlockState offsetState = world.getBlockState(pos);
-        return offsetState.getBlock() == this.block && offsetState.getValue(BlockAddedSlab.HALF) != EnumAddedSlabHalf.FULL ? true : super.canPlaceBlockOnSide(world, pos, side, player, stack);
+        return offsetState.getBlock() == this.block && offsetState.getValue(BlockAddedSlab.HALF) != EnumAddedSlabHalf.FULL || super.canPlaceBlockOnSide(world, pos, side, player, stack);
     }
 
     private boolean tryPlace(EntityPlayer player, ItemStack stack, World world, BlockPos pos) {
@@ -89,7 +94,7 @@ public class ItemAddedBlockSlab extends ItemAddedBlockSimple {
     	IBlockState fullState = block.getDefaultState().withProperty(BlockAddedSlab.HALF, EnumAddedSlabHalf.FULL);
         AxisAlignedBB boundingBox = fullState.getCollisionBoundingBox(world, pos);
 
-        if (boundingBox != Block.NULL_AABB && world.checkNoEntityCollision(boundingBox.offset(pos)) && world.setBlockState(pos, fullState, 11)) {
+        if (boundingBox != Block.NULL_AABB && boundingBox != null && world.checkNoEntityCollision(boundingBox.offset(pos)) && world.setBlockState(pos, fullState, 11)) {
             SoundType soundtype = block.getSoundType(fullState, world, pos, player);
             world.playSound(player, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
             stack.shrink(1);

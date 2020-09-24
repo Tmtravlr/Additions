@@ -1,13 +1,5 @@
 package com.tmtravlr.additions.gui.view.edit.texture;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-
-import javax.imageio.ImageIO;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.ClientConfigLoader;
 import com.tmtravlr.additions.addon.Addon;
@@ -25,11 +17,17 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextComponentTranslation;
 
+import javax.imageio.ImageIO;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
 /**
  * Lets you select a texture for a simple item.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since September 2017 
+ * @date September 2017
  */
 public class GuiEditItemArmorTexture extends GuiEditItemTexture {
 	

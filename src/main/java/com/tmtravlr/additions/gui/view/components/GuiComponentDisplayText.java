@@ -13,7 +13,7 @@ import net.minecraft.util.text.ITextComponent;
  * Displays text in a view screen
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2017 
+ * @date August 2017 
  */
 public class GuiComponentDisplayText implements IGuiViewComponent {
 	

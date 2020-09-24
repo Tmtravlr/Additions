@@ -20,7 +20,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
  * Page for adding a loot table that drops a block or editing an existing one.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since Febuary 2019
+ * @date Febuary 2019
  */
 public class GuiEditLootTablePresetBlockItself extends GuiEditLootTableWithPreset<LootTablePresetBlockItself> {
 	

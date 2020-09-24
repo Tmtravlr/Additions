@@ -10,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
  * Represents an added recipe
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since February 2019 
+ * @date February 2019 
  */
 public interface IRecipeAdded {
 	

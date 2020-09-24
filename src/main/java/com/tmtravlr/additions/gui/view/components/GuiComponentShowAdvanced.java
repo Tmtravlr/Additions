@@ -13,7 +13,7 @@ import net.minecraft.util.ResourceLocation;
  * Displays a Show Advanced boolean selector, which if clicked, will show the 'advanced' components, normally hidden for simplicity's sake.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since September 2017 
+ * @date September 2017
  */
 public class GuiComponentShowAdvanced implements IGuiViewComponent {
 	

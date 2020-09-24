@@ -25,7 +25,7 @@ import net.minecraft.util.text.TextComponentTranslation;
  * Lets you edit an entity equipment entry, for armor sets
  * 
  * @author Rebeca Rey (Tmtravlr)
- * @since June 2019
+ * @date June 2019
  */
 public class GuiComponentEquipmentItemInput implements IGuiViewComponent {
 

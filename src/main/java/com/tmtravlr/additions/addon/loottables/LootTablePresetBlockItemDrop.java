@@ -23,7 +23,7 @@ import net.minecraft.util.ResourceLocation;
  * A loot table preset for a block that drops an item other than itself.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since January 2019 
+ * @date January 2019
  */
 public class LootTablePresetBlockItemDrop extends LootTablePreset {
 	

@@ -33,7 +33,7 @@ import net.minecraft.world.chunk.storage.AnvilChunkLoader;
  * Basically the same as the summon command, but adds motion to
  * the summoned mob as if thrown by whoever ran the command.
  * @author Rebeca (Tmtravlr)
- * @Date May 2020
+ * @date May 2020
  */
 public class CommandAdditionsThrow extends CommandBase {
 	private static final Random RAND = new Random();

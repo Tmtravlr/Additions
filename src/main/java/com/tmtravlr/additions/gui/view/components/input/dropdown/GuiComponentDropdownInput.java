@@ -27,7 +27,7 @@ import net.minecraftforge.fml.client.GuiScrollingList;
  * Dropdown list with a text field displaying the selection.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2017
+ * @date August 2017
  */
 public class GuiComponentDropdownInput<T> extends Gui implements IGuiViewComponent {
 
@@ -198,7 +198,7 @@ public class GuiComponentDropdownInput<T> extends Gui implements IGuiViewCompone
 	 * Screen for the dropdown list input. Has a search bar, and a scrolling list of whatever the dropdown displays.
 	 * 
 	 * @author Tmtravlr (Rebeca Rey)
-	 * @since August 2017 
+	 * @date August 2017 
 	 */
 	class GuiScreenDropdown extends GuiScreenOverlay {
 		
@@ -296,7 +296,7 @@ public class GuiComponentDropdownInput<T> extends Gui implements IGuiViewCompone
 	 * Shows a scrolling list, displaying the given type of object.
 	 * 
 	 * @author Tmtravlr (Rebeca Rey)
-	 * @since August 2017 
+	 * @date August 2017 
 	 */
 	class GuiScrollingDropdown extends GuiScrollingList {
 	

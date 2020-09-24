@@ -27,7 +27,7 @@ import net.minecraftforge.oredict.OreIngredient;
 /**
  * Ingredient that combines ore dictionary with a list of nbt-sensitive ingredients
  * @author Rebeca Rey (Tmtravlr)
- * @since February 2019
+ * @date February 2019
  */
 public class IngredientOreNBT extends Ingredient {
 	

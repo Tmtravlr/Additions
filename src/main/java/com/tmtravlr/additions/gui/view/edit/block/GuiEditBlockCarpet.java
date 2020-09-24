@@ -15,7 +15,7 @@ import net.minecraft.util.text.TextComponentTranslation;
  * Page for adding a new carpet/tile block or editing an existing one.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since May 2019
+ * @date May 2019
  */
 public class GuiEditBlockCarpet extends GuiEditBlockModifiableBoundingBox<BlockAddedCarpet> {
 

@@ -14,7 +14,7 @@ import net.minecraft.item.ItemStack;
  * Dropdown list specifically for items, which renders the items in the list.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2017
+ * @date August 2017
  */
 public class GuiComponentDropdownInputItem extends GuiComponentDropdownInput<Item> {
 

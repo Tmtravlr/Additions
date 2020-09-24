@@ -25,7 +25,7 @@ import net.minecraft.util.text.TextComponentTranslation;
  * Edit screen for block drops
  * 
  * @author Rebeca Rey (Tmtravlr)
- * @since May 2019
+ * @date May 2019
  */
 public abstract class GuiEditBlockDrop extends GuiEditUpdate {
 	

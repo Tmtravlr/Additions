@@ -12,7 +12,7 @@ import net.minecraft.client.gui.GuiScreen;
  * Page for adding a new stairs block or editing an existing one.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since May 2019
+ * @date May 2019
  */
 public class GuiEditBlockStairs extends GuiEditBlock<BlockAddedStairs> {
     

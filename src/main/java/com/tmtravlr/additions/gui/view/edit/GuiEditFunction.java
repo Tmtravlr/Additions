@@ -26,7 +26,7 @@ import net.minecraft.util.text.TextComponentTranslation;
  * Page for adding a function or editing an existing one.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2018
+ * @date August 2018
  */
 public class GuiEditFunction extends GuiEdit {
 	

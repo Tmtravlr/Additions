@@ -1,8 +1,5 @@
 package com.tmtravlr.additions.gui.view.edit;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.effects.Effect;
@@ -21,11 +18,14 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Page for adding an effect list or editing an existing one.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since May 2019
+ * @date May 2019
  */
 public class GuiEditEffectList extends GuiEdit {
 	

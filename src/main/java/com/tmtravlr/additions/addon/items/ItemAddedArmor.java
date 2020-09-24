@@ -32,7 +32,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Armor Item
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since November 2017 
+ * @date November 2017
  */
 public class ItemAddedArmor extends ItemArmor implements IItemAdded {
 	

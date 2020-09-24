@@ -1,24 +1,9 @@
 package com.tmtravlr.additions;
 
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.UUID;
-
 import com.tmtravlr.additions.addon.blocks.IBlockAdded;
 import com.tmtravlr.additions.addon.effects.Effect;
 import com.tmtravlr.additions.addon.effects.EffectCancelNormal;
-import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemAttack;
-import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemBreakBlock;
-import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemDiggingBlock;
-import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemEquipped;
-import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemInHand;
-import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemInInventory;
-import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemKill;
-import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemLeftClick;
-import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemRightClick;
-import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemRightClickBlock;
-import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemRightClickEntity;
-import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemUsing;
+import com.tmtravlr.additions.addon.effects.cause.*;
 import com.tmtravlr.additions.addon.entities.ai.RangedAttackReplacer;
 import com.tmtravlr.additions.addon.structures.AddonStructureManager;
 import com.tmtravlr.additions.network.CToSMessage;
@@ -26,12 +11,10 @@ import com.tmtravlr.additions.network.PacketHandlerServer;
 import com.tmtravlr.additions.type.AdditionTypeEffect;
 import com.tmtravlr.additions.type.AdditionTypeLootTable;
 import com.tmtravlr.additions.type.AdditionTypeRecipe;
-import com.tmtravlr.additions.util.BlockStateInfo;
 import com.tmtravlr.additions.util.ProblemNotifier;
 import com.tmtravlr.lootoverhaul.loot.ExtraLootManager.LoadLootTableExtrasEvent;
-
 import io.netty.buffer.Unpooled;
-import net.minecraft.block.Block;
+
 import net.minecraft.block.BlockCauldron;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -43,7 +26,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
@@ -53,17 +35,19 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
+
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.UUID;
 
 @EventBusSubscriber(modid = AdditionsMod.MOD_ID)
 public class CommonEventHandler {
@@ -395,7 +379,7 @@ public class CommonEventHandler {
 		IBlockState state = event.getWorld().getBlockState(event.getPos());
 		ItemStack stack = event.getItemStack();
 
-		if (!event.getWorld().isRemote && state.getBlock() == Blocks.CAULDRON && state.getValue(BlockCauldron.LEVEL).intValue() > 0 && !stack.isEmpty() && stack.hasTagCompound()) {
+		if (!event.getWorld().isRemote && state.getBlock() == Blocks.CAULDRON && state.getValue(BlockCauldron.LEVEL) > 0 && !stack.isEmpty() && stack.hasTagCompound()) {
 			AdditionTypeRecipe.cauldronWashingRecipes.stream().filter(recipe -> stack.getItem() == recipe.itemToDye).findFirst().ifPresent(washRecipe -> {
 				if (washRecipe.hasColor(stack)) {
 					
@@ -405,7 +389,7 @@ public class CommonEventHandler {
 		
 		            if (!event.getEntityPlayer().capabilities.isCreativeMode) {
 		                stack.shrink(1);
-		                Blocks.CAULDRON.setWaterLevel(event.getWorld(), event.getPos(), state, state.getValue(BlockCauldron.LEVEL).intValue() - 1);
+		                Blocks.CAULDRON.setWaterLevel(event.getWorld(), event.getPos(), state, state.getValue(BlockCauldron.LEVEL) - 1);
 		            }
 		
 		            if (stack.isEmpty()) {

@@ -9,10 +9,9 @@ import com.google.gson.JsonPrimitive;
  * Some handy tools for generating json
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since January 2019
+ * @date January 2019
  */
 public class JsonGenerator {
-
 	public static JsonObject createJsonObject(JsonElementPair... elements) {
 		JsonObject json = new JsonObject();
 		

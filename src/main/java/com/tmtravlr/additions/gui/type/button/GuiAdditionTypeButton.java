@@ -9,7 +9,7 @@ import com.tmtravlr.additions.util.client.CommonGuiUtils;
  * Button for an addition type which displays in the addon's view screen.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since September 2017 
+ * @date September 2017
  */
 public abstract class GuiAdditionTypeButton {
 	

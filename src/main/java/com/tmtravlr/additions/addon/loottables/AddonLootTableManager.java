@@ -18,7 +18,7 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
  * Loads and manages addon loot tables
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2018 
+ * @date August 2018
  */
 public class AddonLootTableManager {
 	private static ExtendedLootTableManager extendedLootTableManager;

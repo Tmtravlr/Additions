@@ -10,7 +10,7 @@ import com.tmtravlr.additions.gui.view.edit.GuiEdit;
  * Edit screen for block drops, used from the block drop input
  * 
  * @author Rebeca Rey (Tmtravlr)
- * @since May 2019
+ * @date May 2019
  */
 public class GuiEditBlockDropInput extends GuiEditBlockDrop {
 	

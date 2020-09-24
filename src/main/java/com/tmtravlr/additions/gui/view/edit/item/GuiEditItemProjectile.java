@@ -9,7 +9,7 @@ import net.minecraft.client.gui.GuiScreen;
  * Page for adding a new arrow or editing an existing one.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since November 2018
+ * @date November 2018
  */
 public class GuiEditItemProjectile extends GuiEditItemBaseProjectile<ItemAddedProjectile> {
     

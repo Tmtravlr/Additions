@@ -48,7 +48,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Sword Item
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since November 2018 
+ * @date November 2018
  */
 public class ItemAddedProjectile extends ItemAddedSimple implements IItemAddedProjectile {
 	

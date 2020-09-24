@@ -1,19 +1,8 @@
 package com.tmtravlr.additions.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.StringJoiner;
-import java.util.UUID;
-
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.*;
 import com.tmtravlr.additions.addon.blocks.mapcolors.BlockMapColorManager;
 import com.tmtravlr.additions.addon.blocks.materials.BlockMaterialManager;
 import com.tmtravlr.additions.type.attribute.AttributeTypeManager;
@@ -39,6 +28,8 @@ import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.oredict.OreDictionary;
 
+import java.util.*;
+
 public class OtherSerializers {
     
 	public static class PotionEffectSerializer {
@@ -46,7 +37,7 @@ public class OtherSerializers {
 		public static JsonElement serialize(PotionEffect effect) {
         	JsonObject json = new JsonObject();
 			
-        	String name = Potion.REGISTRY.getNameForObject(effect.getPotion()).toString();
+        	String name = Objects.requireNonNull(Potion.REGISTRY.getNameForObject(effect.getPotion())).toString();
         	json.addProperty("name", name);
         	json.addProperty("duration", effect.getDuration());
         	json.addProperty("amplifier", effect.getAmplifier());
@@ -109,9 +100,11 @@ public class OtherSerializers {
 				float amount = JsonUtils.getFloat(json, "amount");
 				int operation = JsonUtils.getInt(json, "operation", 0);
 				String slotName = JsonUtils.getString(json, "slot");
-				EntityEquipmentSlot slot = EntityEquipmentSlot.fromString(slotName);
-				
-				if (slot == null) {
+				EntityEquipmentSlot slot;
+
+				try {
+					slot = EntityEquipmentSlot.fromString(slotName);
+				} catch (IllegalArgumentException e) {
 					throw new JsonSyntaxException("Unknown equipment slot '" + slotName + "'");
 				}
 				
@@ -391,9 +384,7 @@ public class OtherSerializers {
 			if (!state.getProperties().isEmpty()) {
 				JsonObject stateJson = new JsonObject();
 				
-				state.getProperties().forEach((property, comparable) -> {
-					stateJson.addProperty(String.valueOf(property), String.valueOf(comparable));
-				});
+				state.getProperties().forEach((property, comparable) -> stateJson.addProperty(String.valueOf(property), String.valueOf(comparable)));
 				
 				json.add("state", stateJson);
 			}
@@ -423,7 +414,7 @@ public class OtherSerializers {
 					
 					stateJson.entrySet().forEach((entry) -> {
 						if (!entry.getValue().isJsonPrimitive() || !entry.getValue().getAsJsonPrimitive().isString()) {
-							throw new JsonSyntaxException("Expected " + entry.getKey() + " to be a string, was " + String.valueOf(entry.getValue()));
+							throw new JsonSyntaxException("Expected " + entry.getKey() + " to be a string, was " + entry.getValue());
 						}
 						stateJoiner.add(entry.getKey() + "=" + entry.getValue().getAsJsonPrimitive().getAsString());
 					});

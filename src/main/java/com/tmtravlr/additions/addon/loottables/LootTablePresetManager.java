@@ -25,7 +25,7 @@ import net.minecraft.util.ResourceLocation;
  * Manages added loot table presets.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since January 2019 
+ * @date January 2019
  */
 public class LootTablePresetManager {
 	private static final Map<ResourceLocation, LootTablePreset.Serializer<?>> NAME_TO_SERIALIZER_MAP = new HashMap<>();

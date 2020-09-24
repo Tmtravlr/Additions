@@ -29,7 +29,7 @@ import net.minecraftforge.oredict.OreDictionary;
  * Sword Item
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since November 2017 
+ * @date November 2017 
  */
 public class ItemAddedClub extends ItemAddedSimple implements IItemAddedTool {
 	

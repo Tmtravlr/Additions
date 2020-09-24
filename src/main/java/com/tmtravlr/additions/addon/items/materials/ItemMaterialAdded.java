@@ -1,27 +1,20 @@
 package com.tmtravlr.additions.addon.items.materials;
 
-import java.lang.reflect.Type;
-
-import javax.annotation.Nullable;
-
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
+import com.google.gson.*;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.JsonUtils;
 
+import javax.annotation.Nullable;
+import java.lang.reflect.Type;
+
 /**
  * Represents an added item material, for tools and armor
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since November 2017 
+ * @date November 2017
  */
 public abstract class ItemMaterialAdded {
 	
@@ -42,7 +35,7 @@ public abstract class ItemMaterialAdded {
 	@Nullable
 	public Item.ToolMaterial getToolMaterial() {
 		if (isToolMaterial()) {
-			return ((ToolMaterialAdded)this).getToolMaterial();
+			return this.getToolMaterial();
 		}
 		return null;
 	}
@@ -50,7 +43,7 @@ public abstract class ItemMaterialAdded {
 	@Nullable
 	public ItemArmor.ArmorMaterial getArmorMaterial() {
 		if (isArmorMaterial()) {
-			return ((ArmorMaterialAdded)this).getArmorMaterial();
+			return this.getArmorMaterial();
 		}
 		return null;
 	}

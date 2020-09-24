@@ -17,7 +17,7 @@ import net.minecraft.util.text.TextComponentTranslation;
  * Edit screen for block drops, used when first creating the block
  * 
  * @author Rebeca Rey (Tmtravlr)
- * @since May 2019
+ * @date May 2019
  */
 public class GuiEditBlockDropInitial extends GuiEditBlockDrop {
 	

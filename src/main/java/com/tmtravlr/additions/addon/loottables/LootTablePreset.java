@@ -14,7 +14,7 @@ import net.minecraft.util.ResourceLocation;
  * Represents a preset for a loot table, which auto-generates the loot table from values passed in.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since January 2019 
+ * @date January 2019
  */
 public abstract class LootTablePreset {
 	

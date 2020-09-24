@@ -27,7 +27,7 @@ import net.minecraft.util.ResourceLocation;
  * Allows you to select a file.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since November 2018 
+ * @date November 2018 
  */
 public abstract class GuiComponentFileInput implements IGuiViewComponent {
 

@@ -1,9 +1,5 @@
 package com.tmtravlr.additions.addon.blocks;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
@@ -23,125 +19,128 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
 
+import javax.annotation.Nullable;
+import java.util.List;
+
 /**
  * Represents an added block.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since December 2018 
+ * @date December 2018
  */
 public interface IBlockAdded {
 	
-	public void setItemBlock(@Nullable IItemAddedBlock itemBlock);
+	void setItemBlock(@Nullable IItemAddedBlock itemBlock);
+
+	void setDisplayName(String displayName);
 	
-	public void setDisplayName(String displayName);
+	void setBlockMaterial(Material blockMaterial);
 	
-	public void setBlockMaterial(Material blockMaterial);
+	void setPlaceSound(SoundEvent sound);
 	
-	public void setPlaceSound(SoundEvent sound);
+	void setBreakSound(SoundEvent sound);
 	
-	public void setBreakSound(SoundEvent sound);
+	void setHitSound(SoundEvent sound);
 	
-	public void setHitSound(SoundEvent sound);
+	void setStepSound(SoundEvent sound);
 	
-	public void setStepSound(SoundEvent sound);
+	void setFallSound(SoundEvent sound);
 	
-	public void setFallSound(SoundEvent sound);
+	void setBlockMapColor(@Nullable MapColor mapColor);
 	
-	public void setBlockMapColor(@Nullable MapColor mapColor);
+	void setHarvestLevel(int harvestLevel);
 	
-	public void setHarvestLevel(int harvestLevel);
+	void setHarvestTool(String harvestTool);
 	
-	public void setHarvestTool(String harvestTool);
+	void setEffectiveTools(List<String> effectiveTools);
 	
-	public void setEffectiveTools(List<String> effectiveTools);
+	void setBookshelfStrength(int bookshelfStrength);
 	
-	public void setBookshelfStrength(int bookshelfStrength);
+	void setBeaconColorMultiplier(@Nullable float[] beaconColorMultiplier);
 	
-	public void setBeaconColorMultiplier(@Nullable float[] beaconColorMultiplier);
+	void setSlipperiness(float slipperiness);
 	
-	public void setSlipperiness(float slipperiness);
+	void setIsSlime(boolean isSlime);
 	
-	public void setIsSlime(boolean isSlime);
+	void setIsBeaconBase(boolean isBeaconBase);
 	
-	public void setIsBeaconBase(boolean isBeaconBase);
+	void setCanPistonsPush(boolean canPistonsPush);
 	
-	public void setCanPistonsPush(boolean canPistonsPush);
+	void setSemiTransparent(boolean semiTransparent);
 	
-	public void setSemiTransparent(boolean semiTransparent);
+	void setXpDroppedMin(int xpMin);
 	
-	public void setXpDroppedMin(int xpMin);
+	void setXpDroppedMax(int xpMax);
 	
-	public void setXpDroppedMax(int xpMax);
-	
-	public void setDroppedFromExplosions(Boolean droppedFromExplosions);
-	
-	@Nullable
-	public IItemAddedBlock getItemBlock();
-	
-	public String getDisplayName();
-	
-	public Material getBlockMaterial();
-	
-	public SoundEvent getPlaceSound();
-	
-	public SoundEvent getBreakSound();
-	
-	public SoundEvent getHitSound();
-	
-	public SoundEvent getStepSound();
-	
-	public SoundEvent getFallSound();
+	void setDroppedFromExplosions(Boolean droppedFromExplosions);
 	
 	@Nullable
-	public MapColor getBlockMapColor();
+	IItemAddedBlock getItemBlock();
 	
-	public int getHarvestLevel();
+	String getDisplayName();
 	
-	public String getHarvestTool();
+	Material getBlockMaterial();
 	
-	public List<String> getEffectiveTools();
+	SoundEvent getPlaceSound();
 	
-	public int getBookshelfStrength();
+	SoundEvent getBreakSound();
+	
+	SoundEvent getHitSound();
+	
+	SoundEvent getStepSound();
+	
+	SoundEvent getFallSound();
 	
 	@Nullable
-	public float[] getBeaconColorMultiplier();
+	MapColor getBlockMapColor();
 	
-	public float getSlipperiness();
+	int getHarvestLevel();
 	
-	public boolean isSlime();
+	String getHarvestTool();
 	
-	public boolean isBeaconBase();
+	List<String> getEffectiveTools();
 	
-	public boolean canPistonsPush();
+	int getBookshelfStrength();
 	
-	public float getHardness();
+	@Nullable
+	float[] getBeaconColorMultiplier();
 	
-	public float getResistance();
+	float getSlipperiness();
 	
-	public int getOpacity();
+	boolean isSlime();
 	
-	public boolean isSemiTransparent();
+	boolean isBeaconBase();
 	
-	public int getLightLevel();
+	boolean canPistonsPush();
 	
-	public int getXpDroppedMin();
+	float getHardness();
 	
-	public int getXpDroppedMax();
+	float getResistance();
 	
-	public Boolean getDroppedFromExplosions();
+	int getOpacity();
 	
-	public default void registerModels() {
+	boolean isSemiTransparent();
+	
+	int getLightLevel();
+	
+	int getXpDroppedMin();
+	
+	int getXpDroppedMax();
+	
+	Boolean getDroppedFromExplosions();
+	
+	default void registerModels() {
 		AdditionsMod.proxy.registerBlockRender(this.getAsBlock());
 	}
 	
-	public default Block getAsBlock() {
+	default Block getAsBlock() {
 		if (!(this instanceof Block)) {
 			throw new IllegalArgumentException("An IBlockAdded must be an instance of Block.");
 		}
 		return (Block) this;
 	}
 	
-    public default String getId() {
+    default String getId() {
     	ResourceLocation registryName = this.getAsBlock().getRegistryName();
     	
     	if (registryName != null) {
@@ -157,7 +156,7 @@ public interface IBlockAdded {
         return unlocalizedName;
     }
 
-    public abstract static class Serializer<T extends IBlockAdded> {
+    abstract class Serializer<T extends IBlockAdded> {
 		
 		private final ResourceLocation blockAddedType;
         private final Class<T> blockAddedClass;
@@ -360,7 +359,8 @@ public interface IBlockAdded {
 			if (blockAddedObj.getClass() != this.blockAddedClass) {
 				throw new IllegalArgumentException("Tried to call post serialize for an object of the wrong type! Expected: " + this.blockAddedClass + ", Actual: " + blockAddedObj.getClass());
 			}
-			
+
+			//noinspection unchecked
 			postDeserialize(json, (T) blockAddedObj);
 		}
 		

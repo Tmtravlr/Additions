@@ -24,7 +24,7 @@ import net.minecraft.util.text.TextComponentTranslation;
  * Page for adding a new projectile or editing an existing one.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since November 2018
+ * @date November 2018
  */
 public abstract class GuiEditItemBaseProjectile<T extends IItemAdded & IItemAddedProjectile> extends GuiEditItem<T> {
 	

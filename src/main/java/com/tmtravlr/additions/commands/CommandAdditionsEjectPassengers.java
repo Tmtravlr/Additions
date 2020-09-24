@@ -15,7 +15,7 @@ import net.minecraft.util.math.BlockPos;
 /**
  * Ejects all the passengers that are riding something.
  * @author Rebeca (Tmtravlr)
- * @Date May 2020
+ * @date May 2020
  */
 public class CommandAdditionsEjectPassengers extends CommandBase {
 

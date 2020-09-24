@@ -11,7 +11,7 @@ import net.minecraft.util.ResourceLocation;
  * A loot table preset for an empty loot table.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since January 2019 
+ * @date January 2019 
  */
 public class LootTablePresetEmpty extends LootTablePreset {
 	

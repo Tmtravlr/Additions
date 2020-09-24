@@ -36,7 +36,7 @@ import net.minecraft.util.text.TextComponentTranslation;
  * Lets you select a texture for a simple item.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since September 2017 
+ * @date September 2017 
  */
 public class GuiEditItemTexture extends GuiEdit {
 	

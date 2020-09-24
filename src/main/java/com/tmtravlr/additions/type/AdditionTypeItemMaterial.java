@@ -1,22 +1,8 @@
 package com.tmtravlr.additions.type;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
-
-import org.apache.commons.io.FileUtils;
-
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.tmtravlr.additions.AdditionsMod;
@@ -27,8 +13,8 @@ import com.tmtravlr.additions.addon.items.ItemAddedMultiTool;
 import com.tmtravlr.additions.addon.items.materials.ArmorMaterialAdded;
 import com.tmtravlr.additions.addon.items.materials.ItemMaterialAdded;
 import com.tmtravlr.additions.addon.items.materials.ToolMaterialAdded;
+import com.tmtravlr.additions.util.GeneralUtils;
 import com.tmtravlr.additions.util.ProblemNotifier;
-
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.util.ResourceLocation;
@@ -38,23 +24,30 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 /**
  * Added item materials, for tools and armor
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since November 2017 
+ * @date November 2017
  */
 public class AdditionTypeItemMaterial extends AdditionType<ItemMaterialAdded> {
 
 	public static final ResourceLocation NAME = new ResourceLocation(AdditionsMod.MOD_ID, "item_material");
 	public static final String FOLDER_NAME = "data" + File.separator + "item_materials";
-	public static final String FILE_POSTFIX = ".json";
+	public static final String FILE_POSTFIX = JSON_POSTFIX;
 	public static final AdditionTypeItemMaterial INSTANCE = new AdditionTypeItemMaterial();
 	
-	private static final Gson GSON = new GsonBuilder()
+	private static final Gson GSON = GeneralUtils.newBuilder()
 			.registerTypeHierarchyAdapter(ItemMaterialAdded.class, new ItemMaterialAdded.Serializer())
-			.setPrettyPrinting()
 			.create();
 	
 	private Multimap<Addon, ItemMaterialAdded> loadedItemMaterials = HashMultimap.create();

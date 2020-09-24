@@ -24,7 +24,7 @@ import net.minecraft.util.text.TextComponentTranslation;
  * Page for adding a creative tab or editing an existing one.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since September 2017
+ * @date September 2017
  */
 public class GuiEditCreativeTab extends GuiEdit {
 	

@@ -29,7 +29,7 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
  * Loads and manages addon structures
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2018 
+ * @date August 2018
  */
 public class AddonStructureManager {
 	private static ExtendedStructureManager extendedStructureManager;

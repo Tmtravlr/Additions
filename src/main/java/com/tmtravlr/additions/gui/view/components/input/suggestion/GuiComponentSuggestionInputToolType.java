@@ -22,7 +22,7 @@ import net.minecraftforge.oredict.OreDictionary;
  * Dropdown list specifically for tool types.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since December 2018
+ * @date December 2018
  */
 public class GuiComponentSuggestionInputToolType extends GuiComponentSuggestionInput {
 	

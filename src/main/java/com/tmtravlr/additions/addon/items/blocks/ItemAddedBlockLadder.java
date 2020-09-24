@@ -6,30 +6,31 @@ import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.blocks.BlockAddedLadder;
 import com.tmtravlr.additions.addon.blocks.IBlockAdded;
 import com.tmtravlr.additions.addon.items.IItemAdded;
+import mcp.MethodsReturnNonnullByDefault;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLadder;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * ItemBlock for a slab block.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since May 2019
+ * @date May 2019
  */
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class ItemAddedBlockLadder extends ItemAddedBlockSimple {
 	public static final ResourceLocation TYPE = new ResourceLocation(AdditionsMod.MOD_ID, "block_ladder");
 	
@@ -63,7 +64,7 @@ public class ItemAddedBlockLadder extends ItemAddedBlockSimple {
 
         ItemStack itemstack = player.getHeldItem(hand);
 
-        if (!itemstack.isEmpty() && player.canPlayerEdit(pos, facing, itemstack) && world.mayPlace(this.block, pos, false, facing, (Entity)null)) {
+        if (!itemstack.isEmpty() && player.canPlayerEdit(pos, facing, itemstack) && world.mayPlace(this.block, pos, false, facing, null)) {
             int i = this.getMetadata(itemstack.getMetadata());
             
             if (placementState == null) {
@@ -92,7 +93,8 @@ public class ItemAddedBlockLadder extends ItemAddedBlockSimple {
     	
     	return super.canPlaceBlockOnSide(world, pos, side, player, stack);
     }
-    
+
+    @Nullable
     private BlockPos offsetIfPlaceDownward(World world, BlockPos pos) {
     	if (!(this.block instanceof BlockAddedLadder)) {
     		throw new IllegalArgumentException("A slab item's block must be a slab block");
@@ -104,7 +106,8 @@ public class ItemAddedBlockLadder extends ItemAddedBlockSimple {
     	
     	return null;
     }
-    
+
+    @Nullable
     private BlockPos findPosBelow(World world, BlockPos pos) {
     	EnumFacing facing = world.getBlockState(pos).getValue(BlockLadder.FACING);
     	pos = pos.down();

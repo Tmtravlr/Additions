@@ -11,7 +11,7 @@ import net.minecraft.client.gui.GuiScreen;
  * Creates the edit screen for the loot table preset type.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since February 2019
+ * @date February 2019
  */
 public interface IGuiLootTablePresetFactory<T> {
 	

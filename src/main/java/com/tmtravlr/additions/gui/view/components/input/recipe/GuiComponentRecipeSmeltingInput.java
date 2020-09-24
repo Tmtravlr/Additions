@@ -28,7 +28,7 @@ import net.minecraft.util.text.TextFormatting;
  * Lets you edit a smelting recipe
  * 
  * @author Rebeca Rey (Tmtravlr)
- * @since April 2019
+ * @date April 2019
  */
 public class GuiComponentRecipeSmeltingInput implements IGuiViewComponent {
 	protected static final int OUTLINE_OFFSET_X = 0;

@@ -15,7 +15,7 @@ import net.minecraft.util.math.BlockPos;
 /**
  * Dismount an entity if it is riding something.
  * @author Rebeca (Tmtravlr)
- * @Date May 2020
+ * @date May 2020
  */
 public class CommandAdditionsDismount extends CommandBase {
 

@@ -1,13 +1,11 @@
 package com.tmtravlr.additions.addon.blocks;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.blocks.materials.BlockMaterialManager;
 import com.tmtravlr.additions.addon.items.blocks.IItemAddedBlock;
+import mcp.MethodsReturnNonnullByDefault;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFence;
@@ -16,7 +14,6 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -34,6 +31,13 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
+import java.util.List;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class BlockAddedFence extends BlockFence implements IBlockAdded {
 	
 	public static final ResourceLocation TYPE = new ResourceLocation(AdditionsMod.MOD_ID, "fence");
@@ -67,7 +71,7 @@ public class BlockAddedFence extends BlockFence implements IBlockAdded {
 	}
 	
 	@Override
-	public void setItemBlock(IItemAddedBlock itemBlock) {
+	public void setItemBlock(@Nullable IItemAddedBlock itemBlock) {
 		this.itemBlock = itemBlock;
 	}
 	
@@ -132,7 +136,7 @@ public class BlockAddedFence extends BlockFence implements IBlockAdded {
 	}
 	
 	@Override
-	public void setBlockMapColor(MapColor mapColor) {
+	public void setBlockMapColor(@Nullable MapColor mapColor) {
 		ObfuscationReflectionHelper.setPrivateValue(Block.class, this, mapColor, "field_181083_K", "blockMapColor");
 	}
 
@@ -157,7 +161,7 @@ public class BlockAddedFence extends BlockFence implements IBlockAdded {
 	}
 
 	@Override
-	public void setBeaconColorMultiplier(float[] beaconColorMultiplier) {
+	public void setBeaconColorMultiplier(@Nullable float[] beaconColorMultiplier) {
 		this.beaconColorMultiplier = beaconColorMultiplier;
 	}
 
@@ -431,7 +435,7 @@ public class BlockAddedFence extends BlockFence implements IBlockAdded {
 	
     @Override
 	protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[] {BlockLiquid.LEVEL, NORTH, EAST, WEST, SOUTH});
+        return new BlockStateContainer(this, BlockLiquid.LEVEL, NORTH, EAST, WEST, SOUTH);
     }
 	
 	public static class Serializer extends IBlockAdded.Serializer<BlockAddedFence> {

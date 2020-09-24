@@ -1,20 +1,22 @@
 package com.tmtravlr.additions.util.client;
 
-import java.awt.Desktop;
-import java.io.File;
-
-import javax.swing.JFileChooser;
-import javax.swing.UIManager;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
 import com.tmtravlr.additions.AdditionsMod;
-
+import com.tmtravlr.additions.gui.message.GuiMessageBox;
+import com.tmtravlr.additions.gui.view.components.input.GuiComponentStringInput;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentBase;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
+import java.io.File;
 
 public class CommonGuiUtils {
 
@@ -72,5 +74,23 @@ public class CommonGuiUtils {
 		Gui.drawRect(x + width - 1, y, x + width, y + height, color);
 		Gui.drawRect(x, y + height - 1, x + width, y + height, color);
     }
+
+	/**
+	 * Require a String input to not be empty.
+	 * @param input the input to test
+	 * @param parentScreen use {@code this} as the parent parentScreen
+	 * @param titleI18n the unlocalized title
+	 * @param reason the TextComponent message
+	 * @return the text, or {@code null} if the text was empty
+	 * @date July 2020
+	 * @author sschr15
+	 */
+	public static String requireStringField(GuiComponentStringInput input, GuiScreen parentScreen, String titleI18n, TextComponentBase reason) {
+		if (input.getText().isEmpty()) {
+			parentScreen.mc.displayGuiScreen(new GuiMessageBox(parentScreen, I18n.format(titleI18n), reason, I18n.format("gui.buttons.back")));
+			return null;
+		}
+		return input.getText();
+	}
 
 }

@@ -22,7 +22,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
  * Page for adding a smelting recipe.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since April 2019
+ * @date April 2019
  */
 public class GuiEditRecipeSmelting extends GuiEdit {
 	

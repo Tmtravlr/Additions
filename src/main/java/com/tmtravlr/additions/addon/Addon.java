@@ -27,7 +27,7 @@ import com.tmtravlr.additions.util.OtherSerializers;
  * Main addon class.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since July 2017 
+ * @date July 2017
  */
 public class Addon {
 	

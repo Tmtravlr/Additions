@@ -1,21 +1,21 @@
 package com.tmtravlr.additions.util.client;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.OreDictionary;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ItemStackDisplay {
 
 	private static final int DISPLAY_REFRESH_DELAY = 40;
 
 	private int displayTimer = 0;
-	private List<String> cachedDisplayText = new ArrayList<>();
-	private NonNullList<ItemStack> cachedDisplayStacks = NonNullList.create();
+	private final List<String> cachedDisplayText = new ArrayList<>();
+	private final NonNullList<ItemStack> cachedDisplayStacks = NonNullList.create();
     
     public void updateDisplay(ItemStack... stackArray) {
     	NonNullList<ItemStack> stacks = NonNullList.create();

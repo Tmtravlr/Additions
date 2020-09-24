@@ -28,7 +28,7 @@ import net.minecraft.util.text.TextComponentTranslation;
  * Page for adding a sound event or editing an existing one.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since October 2018
+ * @date October 2018
  */
 public class GuiEditSoundEvent extends GuiEdit {
 	

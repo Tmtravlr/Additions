@@ -20,7 +20,7 @@ import net.minecraft.item.ItemStack;
  * Lets you build an effect.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since May 2019 
+ * @date May 2019
  */
 public class GuiComponentEffectInput implements IGuiViewComponent {
 

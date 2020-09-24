@@ -21,7 +21,7 @@ import net.minecraft.util.text.TextFormatting;
  * Displays info about an added recipe.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since March 2019 
+ * @date March 2019
  */
 public class GuiAdditionCardRecipe extends GuiAdditionCardColored {
 

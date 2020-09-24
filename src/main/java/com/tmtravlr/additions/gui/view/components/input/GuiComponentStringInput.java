@@ -20,7 +20,7 @@ import net.minecraftforge.fml.client.config.GuiUtils;
  * Extension of the vanilla text field, for edit object guis.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since July 2017
+ * @date July 2017
  */
 public class GuiComponentStringInput extends GuiTextField implements IGuiViewComponent {
 

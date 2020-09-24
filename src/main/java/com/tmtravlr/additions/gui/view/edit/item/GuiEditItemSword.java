@@ -9,7 +9,7 @@ import net.minecraft.client.gui.GuiScreen;
  * Page for adding a new sword or editing an existing one.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since November 2017
+ * @date November 2017
  */
 public class GuiEditItemSword extends GuiEditItemTool<ItemAddedSword> {
     

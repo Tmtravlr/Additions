@@ -6,7 +6,7 @@ import java.io.IOException;
  * Input field of some sort to go in the scrolling list for GuiEditObject
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2017
+ * @date August 2017
  */
 public interface IGuiViewComponent {
 

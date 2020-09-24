@@ -1,10 +1,5 @@
 package com.tmtravlr.additions.addon.effects;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
@@ -18,6 +13,10 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.potion.PotionType;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Info about a potion effect to apply.
@@ -80,7 +79,7 @@ public class EffectPotion extends Effect {
 		public JsonObject serialize(EffectPotion effect, JsonSerializationContext context) {
 			JsonObject json = new JsonObject();
 			
-			if (effect.potionType != null) {
+			if (effect.potionType != null && effect.potionType.getRegistryName() != null) {
 				json.addProperty("potion_type", effect.potionType.getRegistryName().toString());
 			}
 			

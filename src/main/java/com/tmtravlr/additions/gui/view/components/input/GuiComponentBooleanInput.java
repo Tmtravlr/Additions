@@ -17,7 +17,7 @@ import net.minecraft.util.text.ITextComponent;
  * Simple boolean input, with a clickable boolean selector like in the new minecraft launcher.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2017 
+ * @date August 2017 
  */
 public class GuiComponentBooleanInput extends Gui implements IGuiViewComponent {
 

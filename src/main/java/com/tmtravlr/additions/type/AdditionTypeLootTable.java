@@ -1,5 +1,29 @@
 package com.tmtravlr.additions.type;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
+import com.tmtravlr.additions.AdditionsMod;
+import com.tmtravlr.additions.addon.Addon;
+import com.tmtravlr.additions.addon.AddonLoader;
+import com.tmtravlr.additions.addon.loottables.ExtendedLootTableManager;
+import com.tmtravlr.additions.addon.loottables.LootTableAdded;
+import com.tmtravlr.additions.addon.loottables.LootTablePreset;
+import com.tmtravlr.additions.addon.loottables.LootTablePresetManager;
+import com.tmtravlr.additions.util.GeneralUtils;
+import com.tmtravlr.additions.util.ProblemNotifier;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.storage.loot.LootTable;
+import net.minecraft.world.storage.loot.LootTableManager;
+import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -10,48 +34,21 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.apache.commons.io.FileUtils;
-
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParseException;
-import com.tmtravlr.additions.AdditionsMod;
-import com.tmtravlr.additions.addon.Addon;
-import com.tmtravlr.additions.addon.AddonLoader;
-import com.tmtravlr.additions.addon.loottables.ExtendedLootTableManager;
-import com.tmtravlr.additions.addon.loottables.LootTableAdded;
-import com.tmtravlr.additions.addon.loottables.LootTablePreset;
-import com.tmtravlr.additions.addon.loottables.LootTablePresetManager;
-import com.tmtravlr.additions.util.ProblemNotifier;
-
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.world.storage.loot.LootTable;
-import net.minecraft.world.storage.loot.LootTableManager;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 /**
  * Added structures
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2018 
+ * @date August 2018
  */
 public class AdditionTypeLootTable extends AdditionType<LootTableAdded> {
 
 	public static final ResourceLocation NAME = new ResourceLocation(AdditionsMod.MOD_ID, "loot_table");
 	public static final String FOLDER_NAME = "data" + File.separator + "loot_tables";
-	public static final String FILE_POSTFIX = ".json";
+	public static final String FILE_POSTFIX = JSON_POSTFIX;
 	public static final AdditionTypeLootTable INSTANCE = new AdditionTypeLootTable();
 	
-	public static final Gson GSON = new GsonBuilder()
+	public static final Gson GSON = GeneralUtils.newBuilder()
 			.registerTypeHierarchyAdapter(LootTablePreset.class, new LootTablePresetManager.Serializer())
-			.setPrettyPrinting()
 			.create();
 	
 	private final Multimap<Addon, LootTableAdded> lootTableLocations = HashMultimap.create();

@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
  * Some config options.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since July 2017 
+ * @date July 2017
  */
 public class ConfigLoader {
 	
@@ -22,6 +22,7 @@ public class ConfigLoader {
 	
 	public static Property renderItemsInLists;
 	public static Property skipReloadingResources;
+	public static Property prettyPrintGeneratedFiles;
 	
 	public static Property showProblemNotificationsMainMenu;
 	public static Property showProblemNotificationsIngame;
@@ -39,6 +40,7 @@ public class ConfigLoader {
 		
 		skipReloadingResources = config.get("editor", "Skip Reloading Resources", false, "If true, skips any resource reloading. Good if you want to add/edit a bunch of things quickly,\nwithout interruption. You can still reload the resources by restarting the game or by hitting F3+T ingame.");
 		renderItemsInLists = config.get("editor", "Render Items in Item Selectors?", true, "If false, won't render items in item/block/ore dictionary selectors. Set to false if you are\ngetting crashes when looking at those selectors.");
+		prettyPrintGeneratedFiles = config.get("editor", "Pretty-Print Generated Json Files", false, "If true, will generate JSON files that are easier to understand.");
 		
 		showProblemNotificationsMainMenu = config.get("problems", "Show Problem Notifications in Main Menu", true, "Set this to false to hide the problem notifications in the main menu and the additions main menu.");
 		showProblemNotificationsIngame = config.get("problems", "Show Problem Notifications Ingame", true, "Set this to false to hide the problem notifications in chat.");

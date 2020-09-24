@@ -1,23 +1,15 @@
 package com.tmtravlr.additions.addon.effects;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
+import com.google.gson.*;
 import com.tmtravlr.additions.addon.effects.cause.EffectCause;
 
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StringUtils;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * List of effects with a cause.
@@ -37,7 +29,7 @@ public class EffectList {
 	        EffectList effectList = new EffectList();
 	        
         	effectList.cause = context.deserialize(JsonUtils.getJsonObject(json, "cause"), EffectCause.class);
-	        effectList.effects = Arrays.asList((Effect[])context.deserialize(JsonUtils.getJsonArray(json, "effects"), Effect[].class));
+	        effectList.effects = Arrays.asList(context.deserialize(JsonUtils.getJsonArray(json, "effects"), Effect[].class));
 	
 	        return effectList;
 	    }

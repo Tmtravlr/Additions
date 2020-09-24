@@ -1,28 +1,24 @@
 package com.tmtravlr.additions.addon.entities.ai;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map.Entry;
-
 import com.tmtravlr.additions.addon.items.ItemAddedBow;
 import com.tmtravlr.additions.addon.items.ItemAddedGun;
 import com.tmtravlr.additions.addon.items.ItemAddedThrowable;
 
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.IRangedAttackMob;
-import net.minecraft.entity.ai.EntityAIAttackMelee;
-import net.minecraft.entity.ai.EntityAIAttackRanged;
-import net.minecraft.entity.ai.EntityAIAttackRangedBow;
-import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.ai.EntityAITasks;
+import net.minecraft.entity.ai.*;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
+
 public class RangedAttackReplacer {
 	
-	public static HashMap<EntityLiving, EntityAIAddedRangedAttack> replacedAIs = new HashMap<>();
+	public static HashMap<EntityLiving, EntityAIAddedRangedAttack<?>> replacedAIs = new HashMap<>();
 	public static HashMap<EntityLiving, EntityAIBase> originalAIs = new HashMap<>();
 	public static ArrayList<EntityLiving> delayedMobs = new ArrayList<>();
 	
@@ -49,10 +45,10 @@ public class RangedAttackReplacer {
 		delayedMobs.clear();
 	
 		if (FMLCommonHandler.instance().getMinecraftServerInstance().getTickCounter() % 13 == 0 && !replacedAIs.isEmpty()) {
-			Iterator<Entry<EntityLiving, EntityAIAddedRangedAttack>> it = replacedAIs.entrySet().iterator();
+			Iterator<Entry<EntityLiving, EntityAIAddedRangedAttack<?>>> it = replacedAIs.entrySet().iterator();
 			
 			while (it.hasNext()) {
-				Entry<EntityLiving, EntityAIAddedRangedAttack> entry = it.next();
+				Entry<EntityLiving, EntityAIAddedRangedAttack<?>> entry = it.next();
 				if (entry.getKey() == null || entry.getKey().isDead) {
 					it.remove();
 					originalAIs.remove(entry.getKey());
@@ -73,7 +69,7 @@ public class RangedAttackReplacer {
             }
         }
         
-        EntityAIAddedRangedAttack aiRanged = new EntityAIAddedRangedAttack(mob, 1.0D, 20, 15.0F);
+        EntityAIAddedRangedAttack<?> aiRanged = new EntityAIAddedRangedAttack<>(mob, 1.0D, 20, 15.0F);
         
         if (originalTask instanceof EntityAIAttackRanged) {
         	EntityAIAttackRanged rangedTask = (EntityAIAttackRanged) originalTask;
@@ -82,7 +78,7 @@ public class RangedAttackReplacer {
         	aiRanged.attackCooldown = ObfuscationReflectionHelper.getPrivateValue(EntityAIAttackRanged.class, rangedTask, "field_96561_g", "attackIntervalMin");
         	aiRanged.maxAttackDistanceSquared = ObfuscationReflectionHelper.getPrivateValue(EntityAIAttackRanged.class, rangedTask, "field_82642_h", "maxAttackDistance");
         } else if (originalTask instanceof EntityAIAttackRangedBow) {
-        	EntityAIAttackRangedBow rangedBowTask = (EntityAIAttackRangedBow) originalTask;
+        	EntityAIAttackRangedBow<?> rangedBowTask = (EntityAIAttackRangedBow<?>) originalTask;
         	
         	aiRanged.entityMoveSpeed = ObfuscationReflectionHelper.getPrivateValue(EntityAIAttackRangedBow.class, rangedBowTask, "field_188500_b", "moveSpeedAmp");
         	aiRanged.attackCooldown = ObfuscationReflectionHelper.getPrivateValue(EntityAIAttackRangedBow.class, rangedBowTask, "field_188501_c", "attackCooldown");

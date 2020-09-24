@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 /**
  * Causes an explosion with several options at a location or entity's position
  * @author Rebeca (Tmtravlr)
- * @since May 2020
+ * @date May 2020
  */
 public class CommandAdditionsExplode extends CommandBase {
 

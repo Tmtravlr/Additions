@@ -36,7 +36,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
  * Page for adding a new simple item or editing an existing one.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since July 2017
+ * @date July 2017
  */
 public abstract class GuiEditItem<T extends IItemAdded> extends GuiEdit {
 	

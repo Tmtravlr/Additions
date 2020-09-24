@@ -16,7 +16,7 @@ import net.minecraft.util.ResourceLocation;
  * Page for selecting a recipe type to add.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since March 2019
+ * @date March 2019
  */
 public class GuiEditSelectTypeRecipe extends GuiEditSelectType<IGuiRecipeAddedFactory> {
 	

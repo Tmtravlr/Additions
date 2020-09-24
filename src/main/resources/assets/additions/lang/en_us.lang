@@ -11,7 +11,7 @@ commands.additions.damage.success=Applied %1$s hitpoints of %2$s damage to %3$s
 
 commands.additions.damageitem.usage=/additions.damageitem <entity|block>
 commands.additions.damageitem.block.usage=/additions.damageitem entity <entity> <slot> <amount>
-commands.additions.damageitem.entity.usage/additions.damageitem block <block> <x> <y> <z> <slot> <amount>
+commands.additions.damageitem.entity.usage=/additions.damageitem block <block> <x> <y> <z> <slot> <amount>
 commands.additions.damageitem.success=Damaged item in slot '%1$s' by %2$s
 
 commands.additions.throw.usage=/additions.throw <entity thrown> [speed] [inaccuracy] [entity thrown tag]
@@ -22,7 +22,7 @@ commands.additions.throw.success=%1$s successfully threw %2$s
 
 commands.additions.move.usage=/additions.move <global | relative | facing | toward>
 commands.additions.move.global.usage=/additions.move global <x speed> <y speed> <z speed>
-commands.additions.move.facing.usage=/additions.move relative <horizontal speed forward/back> [speed y] [horizontal speed right/left]
+commands.additions.move.relative.usage=/additions.move relative <horizontal speed forward/back> [speed y] [horizontal speed right/left]
 commands.additions.move.facing.usage=/additions.move facing <speed forward/back> [speed up/down] [speed right/left]
 commands.additions.move.toward.usage=/additions.move toward <entity> <speed>
 commands.additions.move.noEntity=There was no entity! Must be executed by an entity.
@@ -472,6 +472,7 @@ gui.view.additionType.commands=Commands: %s
 gui.view.additionType.sounds=Sounds: %s
 gui.view.additionType.preset=Preset: %s
 gui.view.additionType.cause=When %s
+gui.view.additionType.potionCount=Potion effects: %s
 gui.view.additionType.effects.singular=Then run %s effect
 gui.view.additionType.effects.plural=Then run %s effects
 
@@ -508,6 +509,9 @@ gui.view.addon.lootTables.none.message=There are no loot tables for %s
 gui.view.addon.soundEvents.label=View Sound Events Added (%s)
 gui.view.addon.soundEvents.title=Sound Events for %s
 gui.view.addon.soundEvents.none.message=There are no sound events for %s
+gui.view.addon.potionTypes.label=View Potion Types Added (%s)
+gui.view.addon.potionTypes.title=Potion Types for %s
+gui.view.addon.potionTypes.none.message=There are no potion types for %s
 
 gui.view.addon.locked.message=This addon is locked! If you want to make any changes to it, you will have to unlock it first.
 
@@ -1060,6 +1064,25 @@ gui.edit.sound.pitch.label=Sound Pitch
 gui.edit.sound.stream.label=Stream Sound
 gui.edit.sound.weight.label=Weight
 gui.edit.sound.weight.info=How likely this sound is to be chosen. Higher means more likely.
+
+gui.edit.potionType.title=Create New Potion Type
+gui.edit.potionType.id.label=Potion Type Id
+gui.edit.potionType.baseName.label=Normal Potion Name
+gui.edit.potionType.effects.label=Potion Effects
+gui.edit.potionType.inputInformation=All of the options below are optional and are automatically generated if not stated.
+gui.edit.potionType.splashName.label=Splash Potion Name
+gui.edit.potionType.lingeringName.label=Lingering Potion Name
+gui.edit.potionType.arrowName.label=Tipped Arrow Name
+gui.edit.potionType.arrowName.info=A tipped arrow is automatically created if this potion type has at least one effect.
+gui.edit.potionType.potionColor.label=Potion Color
+gui.edit.potionType.potionColor.switch.label=Use Custom Potion Color
+gui.edit.potionType.problem.title=Problem creating potion type
+gui.edit.potionType.problem.noBase=A Potion Type requires a base name!
+gui.edit.potionType.success.title=Updated Potion Type
+gui.edit.potionType.success.message=Successfully updated the potion type.
+gui.edit.potionType.restart.message=Potion type successfully created! You must restart the game for it to show up ingame and in some lists. Restart now? (Will close your game)
+gui.edit.potionType.restartToRegister.first=Restart the game to finish
+gui.edit.potionType.restartToRegister.second=adding this potion type.
 
 gui.edit.itemStackGroup.title=Edit Item Stack Group
 gui.edit.itemStackGroup.message.oreOrGroup=You can use an ore dictionary entry or a list of items. (Or both, if you really want)

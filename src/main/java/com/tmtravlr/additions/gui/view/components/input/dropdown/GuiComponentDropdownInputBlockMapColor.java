@@ -25,7 +25,7 @@ import net.minecraft.util.ResourceLocation;
  * Dropdown list specifically for block map colors, which renders the color in the list.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since December 2018
+ * @date December 2018
  */
 public class GuiComponentDropdownInputBlockMapColor extends GuiComponentDropdownInput<MapColorSelection> {
 

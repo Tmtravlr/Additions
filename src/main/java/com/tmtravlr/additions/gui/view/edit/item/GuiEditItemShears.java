@@ -13,7 +13,7 @@ import net.minecraft.util.text.TextComponentTranslation;
  * Page for adding a new set of shears or editing an existing one.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since November 2018
+ * @date November 2018
  */
 public class GuiEditItemShears extends GuiEditItem<ItemAddedShears> {
 	

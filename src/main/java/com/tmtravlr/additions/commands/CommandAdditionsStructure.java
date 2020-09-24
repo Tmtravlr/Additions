@@ -1,43 +1,28 @@
 package com.tmtravlr.additions.commands;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-
-import javax.annotation.Nullable;
-
-import com.tmtravlr.additions.type.AdditionTypeLootTable;
 import com.tmtravlr.additions.type.AdditionTypeStructure;
-import com.tmtravlr.lootoverhaul.LootOverhaul;
-import com.tmtravlr.lootoverhaul.loot.LootContextExtendedBuilder;
 
-import net.minecraft.block.Block;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.gen.structure.template.PlacementSettings;
 import net.minecraft.world.gen.structure.template.Template;
-import net.minecraft.world.gen.structure.template.TemplateManager;
-import net.minecraft.world.storage.loot.LootTable;
+
+import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Generates a structure
  * @author Rebeca (Tmtravlr)
- * @Date June 2020
+ * @date June 2020
  */
 public class CommandAdditionsStructure extends CommandBase {
 

@@ -14,7 +14,7 @@ import net.minecraft.item.ItemStack;
  * Dropdown list specifically for blocks, which renders the item blocks in the list if they exist.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2017
+ * @date August 2017
  */
 public class GuiComponentDropdownInputBlock extends GuiComponentDropdownInput<Block> {
 

@@ -18,7 +18,7 @@ import net.minecraft.util.ResourceLocation;
  * A loot table preset for a block that drops itself.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since February 2019 
+ * @date February 2019
  */
 public class LootTablePresetBlockItself extends LootTablePreset {
 	

@@ -1,62 +1,48 @@
 package com.tmtravlr.additions.addon.blocks;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.blocks.materials.BlockMaterialManager;
 import com.tmtravlr.additions.addon.items.blocks.IItemAddedBlock;
-import com.tmtravlr.lootoverhaul.loot.LootContextExtendedBuilder;
+import mcp.MethodsReturnNonnullByDefault;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockLiquid;
-import net.minecraft.block.BlockSlab;
-import net.minecraft.block.BlockStairs;
-import net.minecraft.block.SoundType;
+import net.minecraft.block.*;
 import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Enchantments;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-import net.minecraft.world.storage.loot.LootTable;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Basic Block
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since May 2019 
+ * @date May 2019
  */
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class BlockAddedStairs extends BlockStairs implements IBlockAdded {
 	
 	public static final ResourceLocation TYPE = new ResourceLocation(AdditionsMod.MOD_ID, "stairs");
@@ -83,7 +69,7 @@ public class BlockAddedStairs extends BlockStairs implements IBlockAdded {
 
 	public BlockAddedStairs() {
 		super(Blocks.AIR.getDefaultState());
-		this.setDefaultState(this.blockState.getBaseState().withProperty(BlockLiquid.LEVEL, Integer.valueOf(0)));
+		this.setDefaultState(this.blockState.getBaseState().withProperty(BlockLiquid.LEVEL, 0));
 		this.setBlockMapColor(null);
 		this.lightOpacity = 15;
 		this.translucent = true;
@@ -91,7 +77,7 @@ public class BlockAddedStairs extends BlockStairs implements IBlockAdded {
 	}
 	
 	@Override
-	public void setItemBlock(IItemAddedBlock itemBlock) {
+	public void setItemBlock(@Nullable IItemAddedBlock itemBlock) {
 		this.itemBlock = itemBlock;
 	}
 	
@@ -156,7 +142,7 @@ public class BlockAddedStairs extends BlockStairs implements IBlockAdded {
 	}
 	
 	@Override
-	public void setBlockMapColor(MapColor mapColor) {
+	public void setBlockMapColor(@Nullable MapColor mapColor) {
 		ObfuscationReflectionHelper.setPrivateValue(Block.class, this, mapColor, "field_181083_K", "blockMapColor");
 	}
 
@@ -181,7 +167,7 @@ public class BlockAddedStairs extends BlockStairs implements IBlockAdded {
 	}
 
 	@Override
-	public void setBeaconColorMultiplier(float[] beaconColorMultiplier) {
+	public void setBeaconColorMultiplier(@Nullable float[] beaconColorMultiplier) {
 		this.beaconColorMultiplier = beaconColorMultiplier;
 	}
 
@@ -456,7 +442,7 @@ public class BlockAddedStairs extends BlockStairs implements IBlockAdded {
 	
     @Override
 	protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[] {BlockLiquid.LEVEL, FACING, HALF, SHAPE});
+        return new BlockStateContainer(this, BlockLiquid.LEVEL, FACING, HALF, SHAPE);
     }
 	
 	@Override

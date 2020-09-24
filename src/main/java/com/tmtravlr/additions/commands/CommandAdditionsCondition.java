@@ -18,7 +18,7 @@ import net.minecraft.world.WorldServer;
 /**
  * Runs a command, and conditionally runs another command if it passes (or fails)
  * @author Rebeca (Tmtravlr)
- * @since May 2020
+ * @date May 2020
  */
 public class CommandAdditionsCondition extends CommandBase {
 

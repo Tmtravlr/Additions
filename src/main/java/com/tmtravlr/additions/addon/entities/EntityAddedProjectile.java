@@ -42,7 +42,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 /**
  * An entity for the throwable item
  * @author Rebeca Rey (Tmtravlr)
- * @since November 2018
+ * @date November 2018
  */
 public class EntityAddedProjectile extends EntityArrow implements IEntityAddedProjectile {
 

@@ -20,7 +20,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
  * Page for adding a new record or editing an existing one.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since November 2017
+ * @date November 2017
  */
 public class GuiEditItemRecord extends GuiEditItem<ItemAddedRecord> {
 

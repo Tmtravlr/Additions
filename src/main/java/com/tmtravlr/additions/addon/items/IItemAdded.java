@@ -1,7 +1,5 @@
 package com.tmtravlr.additions.addon.items;
 
-import java.util.List;
-
 import com.google.common.collect.Multimap;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
@@ -16,43 +14,45 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
 
+import java.util.List;
+
 /**
  * Represents an added item
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since July 2017 
+ * @date July 2017
  */
 public interface IItemAdded {
-	
-	public void setTooltip(List<String> infoToAdd);
-	
-	public void setOreDict(List<String> oreDict);
-	
-	public void setDisplayName(String name);
-	
-	public void setAlwaysShines(boolean alwaysShines);
-	
-	public void setBurnTime(int burnTime);
-	
-	public void setIsBeaconPayment(boolean isBeaconPayment);
-	
-	public void setAttributeModifiers(Multimap<EntityEquipmentSlot, AttributeModifier> attributeModifierList);
-	
-	public List<String> getTooltip();
-	
-	public List<String> getOreDict();
-	
-	public String getDisplayName();
-	
-	public boolean getAlwaysShines();
-	
-	public int getBurnTime();
-	
-	public boolean getIsBeaconPayment();
-	
-	public Multimap<EntityEquipmentSlot, AttributeModifier> getAttributeModifiers();
 
-	public default int getColor(ItemStack stack) {
+	void setTooltip(List<String> infoToAdd);
+
+	void setOreDict(List<String> oreDict);
+
+	void setDisplayName(String name);
+
+	void setAlwaysShines(boolean alwaysShines);
+
+	void setBurnTime(int burnTime);
+
+	void setIsBeaconPayment(boolean isBeaconPayment);
+
+	void setAttributeModifiers(Multimap<EntityEquipmentSlot, AttributeModifier> attributeModifierList);
+
+	List<String> getTooltip();
+
+	List<String> getOreDict();
+
+	String getDisplayName();
+
+	boolean getAlwaysShines();
+
+	int getBurnTime();
+
+	boolean getIsBeaconPayment();
+
+	Multimap<EntityEquipmentSlot, AttributeModifier> getAttributeModifiers();
+
+	default int getColor(ItemStack stack) {
 		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("display", 10) && stack.getTagCompound().getCompoundTag("display").hasKey("color")) {
 			return stack.getTagCompound().getCompoundTag("display").getInteger("color");
 		}
@@ -60,18 +60,18 @@ public interface IItemAdded {
 		return 16777215;
 	}
 	
-	public default void registerModels() {
+	default void registerModels() {
 		AdditionsMod.proxy.registerItemRender(this.getAsItem());
 	}
 	
-	public default Item getAsItem() {
+	default Item getAsItem() {
 		if (!(this instanceof Item)) {
 			throw new IllegalArgumentException("An IItemAdded must be an instance of Item.");
 		}
 		return (Item) this;
 	}
 	
-    public default String getId() {
+    default String getId() {
     	ResourceLocation registryName = this.getAsItem().getRegistryName();
     	
     	if (registryName != null) {
@@ -87,7 +87,7 @@ public interface IItemAdded {
         return unlocalizedName;
     }
 
-	public abstract static class Serializer<T extends IItemAdded> {
+	abstract class Serializer<T extends IItemAdded> {
 		
 		private final ResourceLocation itemAddedType;
         private final Class<T> itemAddedClass;

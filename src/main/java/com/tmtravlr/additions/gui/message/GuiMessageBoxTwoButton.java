@@ -10,7 +10,7 @@ import net.minecraft.util.text.ITextComponent;
  * Adds a second button to the popup message.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since July 2017 
+ * @date July 2017 
  */
 public class GuiMessageBoxTwoButton extends GuiMessageBox {
 	

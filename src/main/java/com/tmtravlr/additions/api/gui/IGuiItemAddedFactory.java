@@ -11,7 +11,7 @@ import net.minecraft.client.gui.GuiScreen;
  * Creates the edit screen for the item type.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since September 2017
+ * @date September 2017
  */
 public interface IGuiItemAddedFactory<T extends IItemAdded> {
 	

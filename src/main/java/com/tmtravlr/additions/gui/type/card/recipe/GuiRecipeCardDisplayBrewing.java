@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.GlStateManager;
  * Renders a brewing recipe
  * 
  * @author Rebeca Rey (Tmtravlr)
- * @since April 2019
+ * @date April 2019
  */
 public class GuiRecipeCardDisplayBrewing implements IGuiRecipeCardDisplay {
 

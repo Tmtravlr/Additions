@@ -27,7 +27,7 @@ import net.minecraft.world.storage.loot.LootTable;
 /**
  * Generates and drops a loot table
  * @author Rebeca (Tmtravlr)
- * @Date May 2020
+ * @date May 2020
  */
 public class CommandAdditionsLoot extends CommandBase {
 

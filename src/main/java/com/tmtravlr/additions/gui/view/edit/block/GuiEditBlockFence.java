@@ -12,7 +12,7 @@ import net.minecraft.client.gui.GuiScreen;
  * Page for adding a new fence block or editing an existing one.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since April 2020
+ * @date April 2020
  */
 public class GuiEditBlockFence extends GuiEditBlock<BlockAddedFence> {
     

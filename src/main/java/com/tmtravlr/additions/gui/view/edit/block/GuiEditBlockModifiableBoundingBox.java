@@ -15,7 +15,7 @@ import net.minecraft.util.text.TextComponentTranslation;
  * Page for adding a block with a modifiable bounding box or editing an existing one.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since May 2019
+ * @date May 2019
  */
 public abstract class GuiEditBlockModifiableBoundingBox<T extends IBlockAdded & IBlockAddedModifiableBoundingBox> extends GuiEditBlock<T> {
 

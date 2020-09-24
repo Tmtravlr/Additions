@@ -17,7 +17,7 @@ import net.minecraft.init.SoundEvents;
  * Page for adding a new throwable or editing an existing one.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since November 2018
+ * @date November 2018
  */
 public class GuiEditItemThrowable extends GuiEditItemBaseProjectile<ItemAddedThrowable> {
 	

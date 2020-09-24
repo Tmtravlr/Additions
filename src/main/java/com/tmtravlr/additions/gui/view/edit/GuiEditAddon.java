@@ -38,7 +38,7 @@ import net.minecraftforge.fml.common.ModContainer;
  * Page for adding a new addon or editing an existing one.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since July 2017
+ * @date July 2017
  */
 public class GuiEditAddon extends GuiEdit {
 	

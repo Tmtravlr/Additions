@@ -10,7 +10,7 @@ import net.minecraft.util.text.ITextComponent;
  * Shows a popup message with three buttons.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since November 2017 
+ * @date November 2017
  */
 public class GuiMessageBoxThreeButton extends GuiMessageBoxTwoButton {
 

@@ -13,7 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Added sound event, with extra details on the client-side
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since October 2018 
+ * @date October 2018 
  */
 public class SoundEventAdded extends SoundEvent {
 	

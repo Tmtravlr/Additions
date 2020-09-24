@@ -18,7 +18,7 @@ import net.minecraft.util.text.TextComponentTranslation;
  * Shows a list of cards with info about the functions added
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since October 2018 
+ * @date October 2018
  */
 public class GuiViewSoundEvents extends GuiViewAdditionType {
 

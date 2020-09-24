@@ -31,7 +31,7 @@ import net.minecraft.util.text.TextComponentString;
  * Lets you choose a color.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since December 2018 
+ * @date December 2018 
  */
 public class GuiComponentColorInput implements IGuiViewComponent {
 

@@ -33,7 +33,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Record you can play in the jukebox
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since December 2017 
+ * @date December 2017 
  */
 public class ItemAddedRecord extends ItemRecord implements IItemAdded {
 

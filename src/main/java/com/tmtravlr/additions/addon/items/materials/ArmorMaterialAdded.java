@@ -1,12 +1,6 @@
 package com.tmtravlr.additions.addon.items.materials;
 
-import javax.annotation.Nonnull;
-
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.*;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.util.OtherSerializers;
 
@@ -20,11 +14,13 @@ import net.minecraft.util.SoundEvent;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
+import javax.annotation.Nonnull;
+
 /**
  * Represents an added item material, for tools and armor
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since November 2017 
+ * @date November 2017 
  */
 public class ArmorMaterialAdded extends ItemMaterialAdded {
 	
@@ -149,7 +145,7 @@ public class ArmorMaterialAdded extends ItemMaterialAdded {
         }
         
         public static ArmorMaterialAdded deserialize(JsonObject json, String materialId, JsonDeserializationContext context) throws JsonParseException {
-            SoundEvent equipSound = SoundEvents.ITEM_ARMOR_EQUIP_GENERIC;
+            SoundEvent equipSound;
             
             int enchantability = JsonUtils.getInt(json, "enchantability");
             int baseArmorDurability = JsonUtils.getInt(json, "base_armor_durability");
@@ -172,10 +168,8 @@ public class ArmorMaterialAdded extends ItemMaterialAdded {
 		    String name = (AdditionsMod.MOD_ID + "-" + materialId);
 		    
 		    ItemArmor.ArmorMaterial armorMaterial = EnumHelper.addArmorMaterial(name.toUpperCase(), "", baseArmorDurability, new int[]{bootsArmor, leggingsArmor, chestplateArmor, helmetArmor}, enchantability, equipSound, toughness);
-		    
-		    ArmorMaterialAdded newMaterial = new ArmorMaterialAdded(armorMaterial);
 
-            return newMaterial;
+			return new ArmorMaterialAdded(armorMaterial);
         }
         
         public static void postDeserialize(JsonObject json, ArmorMaterialAdded material) {

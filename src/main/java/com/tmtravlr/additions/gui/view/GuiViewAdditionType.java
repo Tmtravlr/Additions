@@ -18,7 +18,7 @@ import net.minecraft.util.text.ITextComponent;
  * Shows you info about an addition type (like items, or creative tabs).
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since September 2017 
+ * @date September 2017
  */
 public abstract class GuiViewAdditionType extends GuiView {
     private static final int ADD_ADDITION_HEIGHT = 40;

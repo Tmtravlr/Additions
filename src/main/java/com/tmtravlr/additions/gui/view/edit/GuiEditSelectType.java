@@ -19,7 +19,7 @@ import net.minecraft.util.text.TextFormatting;
  * Shows a list of types you can select.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since September 2017 
+ * @date September 2017 
  */
 public abstract class GuiEditSelectType<T> extends GuiEdit {
 	

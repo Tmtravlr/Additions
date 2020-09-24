@@ -20,7 +20,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
  * Page for adding a new loot table preset or editing an existing one.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since January 2019
+ * @date January 2019
  */
 public abstract class GuiEditLootTableWithPreset<T extends LootTablePreset> extends GuiEdit {
 	

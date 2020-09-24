@@ -12,7 +12,7 @@ import net.minecraft.util.ResourceLocation;
  * Generates item/block/etc. models
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2018
+ * @date August 2018
  */
 public class ItemModelGenerator {
 	

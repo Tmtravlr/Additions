@@ -1,19 +1,8 @@
 package com.tmtravlr.additions.type;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.io.FileUtils;
-
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.Addon;
@@ -21,21 +10,10 @@ import com.tmtravlr.additions.addon.AddonLoader;
 import com.tmtravlr.additions.addon.effects.Effect;
 import com.tmtravlr.additions.addon.effects.EffectList;
 import com.tmtravlr.additions.addon.effects.EffectManager;
-import com.tmtravlr.additions.addon.effects.cause.EffectCause;
-import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemAttack;
-import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemBreakBlock;
-import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemDiggingBlock;
-import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemEquipped;
-import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemInHand;
-import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemInInventory;
-import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemKill;
-import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemLeftClick;
-import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemRightClick;
-import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemRightClickBlock;
-import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemRightClickEntity;
-import com.tmtravlr.additions.addon.effects.cause.EffectCauseItemUsing;
-import com.tmtravlr.additions.addon.effects.cause.EffectCauseManager;
+import com.tmtravlr.additions.addon.effects.cause.*;
+import com.tmtravlr.additions.util.GeneralUtils;
 import com.tmtravlr.additions.util.ProblemNotifier;
+import org.apache.commons.io.FileUtils;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
@@ -44,24 +22,31 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Added effects
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since May 2019 
+ * @date May 2019 
  */
 public class AdditionTypeEffect extends AdditionType<EffectList> {
 
 	public static final ResourceLocation NAME = new ResourceLocation(AdditionsMod.MOD_ID, "effect");
 	public static final String FOLDER_NAME = "data" + File.separator + "effects";
-	public static final String FILE_POSTFIX = ".json";
+	public static final String FILE_POSTFIX = JSON_POSTFIX;
 	public static final AdditionTypeEffect INSTANCE = new AdditionTypeEffect();
 	
-	public static final Gson GSON = new GsonBuilder()
+	public static final Gson GSON = GeneralUtils.newBuilder()
 			.registerTypeHierarchyAdapter(EffectList.class, new EffectList.Serializer())
 			.registerTypeHierarchyAdapter(Effect.class, new EffectManager.Serializer())
 			.registerTypeHierarchyAdapter(EffectCause.class, new EffectCauseManager.Serializer())
-			.setPrettyPrinting()
 			.create();
 	
 	private Multimap<Addon, EffectList> loadedEffects = HashMultimap.create();
@@ -104,9 +89,8 @@ public class AdditionTypeEffect extends AdditionType<EffectList> {
 					
 					if (effectListName.endsWith(FILE_POSTFIX)) {
 						effectListName = effectListName.substring(0, effectListName.length() - FILE_POSTFIX.length());
-					
-						ResourceLocation effectListId = new ResourceLocation(AdditionsMod.MOD_ID, effectListName);
-						effectList.id = effectListId;
+
+						effectList.id = new ResourceLocation(AdditionsMod.MOD_ID, effectListName);
 						
 						this.loadedEffects.put(addon, effectList);
 					}

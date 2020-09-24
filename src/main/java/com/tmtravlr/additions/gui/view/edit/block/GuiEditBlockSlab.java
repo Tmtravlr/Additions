@@ -15,7 +15,7 @@ import net.minecraft.util.text.TextComponentTranslation;
  * Page for adding a new slab block or editing an existing one.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since May 2019
+ * @date May 2019
  */
 public class GuiEditBlockSlab extends GuiEditBlock<BlockAddedSlab> {
 

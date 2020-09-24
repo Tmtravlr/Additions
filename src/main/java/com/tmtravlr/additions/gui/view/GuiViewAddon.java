@@ -28,7 +28,7 @@ import net.minecraft.util.text.TextFormatting;
  * Shows info about an addon, like what is loaded.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2017 
+ * @date August 2017 
  */
 public class GuiViewAddon extends GuiView {
 	

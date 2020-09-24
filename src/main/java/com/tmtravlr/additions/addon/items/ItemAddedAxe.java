@@ -30,7 +30,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Axe Item
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since November 2017 
+ * @date November 2017 
  */
 public class ItemAddedAxe extends ItemAxe implements IItemAdded, IItemAddedTool {
 	

@@ -12,7 +12,7 @@ import net.minecraft.potion.Potion;
  * Dropdown list specifically for items, which renders the items in the list.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since May 2019
+ * @date May 2019
  */
 public class GuiComponentDropdownInputPotion extends GuiComponentDropdownInput<Potion> {
 

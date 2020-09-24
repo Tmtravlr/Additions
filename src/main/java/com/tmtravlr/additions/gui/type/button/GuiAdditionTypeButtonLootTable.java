@@ -12,7 +12,7 @@ import net.minecraft.client.resources.I18n;
  * Button to see the list of loot tables.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2018
+ * @date August 2018
  */
 public class GuiAdditionTypeButtonLootTable extends GuiAdditionTypeButtonColored {
 	

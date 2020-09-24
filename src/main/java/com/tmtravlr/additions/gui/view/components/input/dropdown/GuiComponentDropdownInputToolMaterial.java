@@ -15,7 +15,7 @@ import net.minecraft.client.resources.I18n;
  * Dropdown list specifically for item materials, which lets you create a new item material on the fly.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since November 2017
+ * @date November 2017
  */
 public class GuiComponentDropdownInputToolMaterial extends GuiComponentDropdownInput<ToolMaterialAdded> {
 	

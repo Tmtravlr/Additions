@@ -4,12 +4,10 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.tmtravlr.additions.AdditionsMod;
+import mcp.MethodsReturnNonnullByDefault;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
-import net.minecraft.block.BlockLadder;
 import net.minecraft.block.BlockLiquid;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -23,12 +21,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Block that can face different directions
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since May 2019
+ * @date May 2019
  */
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class BlockAddedFacing extends BlockAddedSimple {
 	
 	public static final ResourceLocation TYPE = new ResourceLocation(AdditionsMod.MOD_ID, "facing");
@@ -37,7 +39,7 @@ public class BlockAddedFacing extends BlockAddedSimple {
 	
 	public BlockAddedFacing() {
 		super();
-		this.setDefaultState(this.blockState.getBaseState().withProperty(BlockLiquid.LEVEL, Integer.valueOf(0)).withProperty(BlockDirectional.FACING, EnumFacing.NORTH));
+		this.setDefaultState(this.blockState.getBaseState().withProperty(BlockLiquid.LEVEL, 0).withProperty(BlockDirectional.FACING, EnumFacing.NORTH));
 	}
 	
 	@Override
@@ -70,7 +72,7 @@ public class BlockAddedFacing extends BlockAddedSimple {
 	
     @Override
 	protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[] {BlockLiquid.LEVEL, BlockDirectional.FACING});
+        return new BlockStateContainer(this, BlockLiquid.LEVEL, BlockDirectional.FACING);
     }
     
     @Override

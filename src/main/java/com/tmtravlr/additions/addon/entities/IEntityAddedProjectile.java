@@ -6,21 +6,21 @@ import net.minecraft.entity.projectile.EntityArrow;
 
 public interface IEntityAddedProjectile extends IProjectile {
 	
-	public void shootProjectile(Entity shooter, float pitch, float yaw, float rotationOffset, float velocity, float inaccuracy);
+	void shootProjectile(Entity shooter, float pitch, float yaw, float rotationOffset, float velocity, float inaccuracy);
 	
-	public void setIsProjectileCritical(boolean critical);
+	void setIsProjectileCritical(boolean critical);
 	
-	public double getProjectileDamage();
+	double getProjectileDamage();
 	
-	public void setProjectileDamage(double damage);
+	void setProjectileDamage(double damage);
 	
-	public void setProjectileKnockback(int knockbackStrength);
+	void setProjectileKnockback(int knockbackStrength);
 	
-	public void setProjectileFire(int seconds);
+	void setProjectileFire(int seconds);
 	
-	public void setProjectilePickupStatus(EntityArrow.PickupStatus status);
+	void setProjectilePickupStatus(EntityArrow.PickupStatus status);
 
-	public default Entity getAsEntity() {
+	default Entity getAsEntity() {
 		if (this instanceof Entity) {
 			return (Entity) this;
 		}

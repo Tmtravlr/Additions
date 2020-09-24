@@ -41,7 +41,7 @@ import net.minecraftforge.oredict.OreDictionary;
  * Lets you build a potion effect.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since May 2019
+ * @date May 2019
  */
 public class GuiComponentPotionEffectInput implements IGuiViewComponent {
 

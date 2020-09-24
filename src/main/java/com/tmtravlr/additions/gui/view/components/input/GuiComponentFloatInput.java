@@ -20,7 +20,7 @@ import net.minecraft.util.text.ITextComponent;
  * Extension of the vanilla text field, for a float input.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2017
+ * @date August 2017
  */
 public class GuiComponentFloatInput extends GuiTextField implements IGuiViewComponent {
 

@@ -23,7 +23,7 @@ import net.minecraft.util.text.TextComponentTranslation;
  * Shows a list of cards with info about the advancements added
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2018 
+ * @date August 2018
  */
 public class GuiViewAdvancements extends GuiViewAdditionType {
 

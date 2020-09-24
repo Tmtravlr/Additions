@@ -8,11 +8,11 @@ import net.minecraft.item.ItemBlock;
 
 public interface IItemAddedBlock extends IItemAdded {
 
-	public void setBlock(IBlockAdded block);
+	void setBlock(IBlockAdded block);
 	
-	public Block getBlock();
+	Block getBlock();
 	
-	public default ItemBlock getAsItemBlock() {
+	default ItemBlock getAsItemBlock() {
 		if (!(this instanceof ItemBlock)) {
 			throw new IllegalArgumentException("An IItemAddedBlock must be an instance of ItemBlock.");
 		}

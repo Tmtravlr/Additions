@@ -1,37 +1,25 @@
 package com.tmtravlr.additions.addon.effects;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.*;
 import com.tmtravlr.additions.api.gui.IGuiEffectFactory;
 
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
 
+import java.lang.reflect.Type;
+import java.util.*;
+
 /**
  * Manages added effects.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since May 2019
+ * @date May 2019
  */
 public class EffectManager {
 	private static final Map<ResourceLocation, Effect.Serializer<?>> NAME_TO_SERIALIZER_MAP = new HashMap<>();
 	private static final Map<Class<? extends Effect>, Effect.Serializer<?>> CLASS_TO_SERIALIZER_MAP = new HashMap<>();
 	private static final Map<Class<? extends Effect>, ResourceLocation> CLASS_TO_NAME_MAP = new HashMap<>();
-	private static final LinkedHashMap<ResourceLocation, IGuiEffectFactory> NAME_TO_GUI_MAP = new LinkedHashMap<>();
+	private static final LinkedHashMap<ResourceLocation, IGuiEffectFactory<?>> NAME_TO_GUI_MAP = new LinkedHashMap<>();
 	
 	public static void registerDefaultEffects() {
 	    registerEffectType(new EffectPotion.Serializer());
@@ -58,7 +46,7 @@ public class EffectManager {
 	    }
 	}
 	
-	public static void registerGuiFactory(ResourceLocation type, IGuiEffectFactory factory) {
+	public static void registerGuiFactory(ResourceLocation type, IGuiEffectFactory<?> factory) {
 		NAME_TO_GUI_MAP.put(type, factory);
 	}
 	
@@ -72,7 +60,8 @@ public class EffectManager {
 	    }
 	}
 	
-	public static <T extends Effect> Effect.Serializer getSerializerFor(T effect) {
+	public static <T extends Effect> Effect.Serializer<T> getSerializerFor(T effect) {
+		//noinspection unchecked
 		Effect.Serializer<T> serializer = (Effect.Serializer<T>) CLASS_TO_SERIALIZER_MAP.get(effect.getClass());
 	
 	    if (serializer == null) {
@@ -86,21 +75,21 @@ public class EffectManager {
 		return getTypeFor(effect.getClass());
 	}
 	
-	public static <T extends Effect> ResourceLocation getTypeFor(Class effectClass) {
+	public static <T extends Effect> ResourceLocation getTypeFor(Class<T> effectClass) {
 		return CLASS_TO_NAME_MAP.get(effectClass);
 	}
 	
 	public static Collection<ResourceLocation> getAllTypes() {
-		List<ResourceLocation> effectTypes = new ArrayList(NAME_TO_SERIALIZER_MAP.keySet());
+		List<ResourceLocation> effectTypes = new ArrayList<>(NAME_TO_SERIALIZER_MAP.keySet());
 		effectTypes.sort(null);
 		return effectTypes;
 	}
 	
-	public static LinkedHashMap<ResourceLocation, IGuiEffectFactory> getAllGuiFactories() {
+	public static LinkedHashMap<ResourceLocation, IGuiEffectFactory<?>> getAllGuiFactories() {
 		return NAME_TO_GUI_MAP;
 	}
 	
-	public static IGuiEffectFactory getGuiFactoryFor(ResourceLocation type) {
+	public static IGuiEffectFactory<?> getGuiFactoryFor(ResourceLocation type) {
 		return NAME_TO_GUI_MAP.get(type);
 	}
 	
@@ -122,7 +111,7 @@ public class EffectManager {
 	
 	    @Override
 		public JsonElement serialize(Effect effect, Type type, JsonSerializationContext context) {
-	    	Effect.Serializer<Effect> serializer = EffectManager.<Effect>getSerializerFor(effect);
+	    	Effect.Serializer<Effect> serializer = EffectManager.getSerializerFor(effect);
 	        JsonObject json = serializer.serialize(effect, context);
 	        json.addProperty("type", serializer.getEffectType().toString());
 	        return json;

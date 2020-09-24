@@ -7,7 +7,7 @@ import com.tmtravlr.additions.gui.view.GuiView;
  * Displays a visual of a recipe in the recipe view card
  * 
  * @author Rebeca Rey (Tmtravlr)
- * @since March 2019
+ * @date March 2019
  */
 public interface IGuiRecipeCardDisplay {
 

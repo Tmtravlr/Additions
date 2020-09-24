@@ -9,35 +9,35 @@ import net.minecraft.util.math.AxisAlignedBB;
 
 public interface IBlockAddedModifiableBoundingBox extends IBlockAdded {
 	
-	public void setHasCollisionBox(boolean hasCollisionBox);
+	void setHasCollisionBox(boolean hasCollisionBox);
 	
-	public void setHasSameCollisionBoundingBox(boolean sameCollisionBoundingBox);
+	void setHasSameCollisionBoundingBox(boolean sameCollisionBoundingBox);
 	
-	public void setBoundingBox(AxisAlignedBB boundingBox);
+	void setBoundingBox(AxisAlignedBB boundingBox);
 	
-	public void setCollisionBox(AxisAlignedBB collisionBox);
+	void setCollisionBox(AxisAlignedBB collisionBox);
 	
-	public boolean hasCollisionBox();
+	boolean hasCollisionBox();
 	
-	public boolean hasSameCollisionBoundingBox();
+	boolean hasSameCollisionBoundingBox();
 	
-	public AxisAlignedBB getBoundingBox();
+	AxisAlignedBB getBoundingBox();
 	
-	public AxisAlignedBB getCollisionBox();
+	AxisAlignedBB getCollisionBox();
 	
-	public default AxisAlignedBB getDefaultBoundingBox() {
+	default AxisAlignedBB getDefaultBoundingBox() {
 		return Block.FULL_BLOCK_AABB;
 	}
 	
-	public default AxisAlignedBB getDefaultCollisionBox() {
+	default AxisAlignedBB getDefaultCollisionBox() {
 		return getDefaultBoundingBox();
 	}
 	
-	public default AxisAlignedBB modifyBoundingBoxForState(AxisAlignedBB box, IBlockState state) {
+	default AxisAlignedBB modifyBoundingBoxForState(AxisAlignedBB box, IBlockState state) {
 		return box;
 	}
 	
-	public static class Serializer {
+	class Serializer {
 		
 		public static void serialize(JsonObject json, IBlockAddedModifiableBoundingBox blockAdded) {
 			if (!blockAdded.hasCollisionBox()) {

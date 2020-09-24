@@ -1,14 +1,7 @@
 package com.tmtravlr.additions.type;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.api.gui.IAdditionTypeGuiFactory;
-
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -17,11 +10,13 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.*;
+
 /**
  * These represent addition 'types' (like items or creative tabs).
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since August 2017
+ * @date August 2017
  */
 public class AdditionTypeManager {
 
@@ -41,6 +36,7 @@ public class AdditionTypeManager {
 		registerAdditionType(AdditionTypeFunction.NAME, AdditionTypeFunction.INSTANCE);
 		registerAdditionType(AdditionTypeAdvancement.NAME, AdditionTypeAdvancement.INSTANCE);
 		registerAdditionType(AdditionTypeEffect.NAME, AdditionTypeEffect.INSTANCE);
+		registerAdditionType(AdditionTypePotionType.NAME, AdditionTypePotionType.INSTANCE);
 	}
 	
 	public static void registerAdditionType(ResourceLocation name, AdditionType toRegister) {

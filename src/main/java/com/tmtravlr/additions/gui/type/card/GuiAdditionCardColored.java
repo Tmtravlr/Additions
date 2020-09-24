@@ -20,7 +20,7 @@ import net.minecraftforge.fml.client.config.GuiUtils;
  * Implementation of GuiAdditionCard with simple colors.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since September 2017 
+ * @date September 2017 
  */
 public abstract class GuiAdditionCardColored extends GuiAdditionCard {
 	

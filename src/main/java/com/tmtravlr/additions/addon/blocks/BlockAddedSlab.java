@@ -1,16 +1,12 @@
 package com.tmtravlr.additions.addon.blocks;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.blocks.materials.BlockMaterialManager;
 import com.tmtravlr.additions.addon.items.blocks.IItemAddedBlock;
-import com.tmtravlr.lootoverhaul.loot.LootContextExtendedBuilder;
+import mcp.MethodsReturnNonnullByDefault;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
@@ -25,46 +21,38 @@ import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Enchantments;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.JsonUtils;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-import net.minecraft.world.storage.loot.LootTable;
 import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Basic Block
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since May 2019 
+ * @date May 2019
  */
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class BlockAddedSlab extends BlockSlab implements IBlockAdded {
 
 	public static final ResourceLocation TYPE = new ResourceLocation(AdditionsMod.MOD_ID, "slab");
 	
-    public static final PropertyEnum<EnumAddedSlabHalf> HALF = PropertyEnum.<EnumAddedSlabHalf>create("half", EnumAddedSlabHalf.class);
+    public static final PropertyEnum<EnumAddedSlabHalf> HALF = PropertyEnum.create("half", EnumAddedSlabHalf.class);
     
     protected static final AxisAlignedBB AABB_NORTH = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 0.5D);
     protected static final AxisAlignedBB AABB_SOUTH = new AxisAlignedBB(0.0D, 0.0D, 0.5D, 1.0D, 1.0D, 1.0D);
@@ -95,13 +83,13 @@ public class BlockAddedSlab extends BlockSlab implements IBlockAdded {
 
 	public BlockAddedSlab() {
 		super(Material.ROCK);
-		this.setDefaultState(this.blockState.getBaseState().withProperty(BlockLiquid.LEVEL, Integer.valueOf(0)).withProperty(HALF, EnumAddedSlabHalf.BOTTOM));
+		this.setDefaultState(this.blockState.getBaseState().withProperty(BlockLiquid.LEVEL, 0).withProperty(HALF, EnumAddedSlabHalf.BOTTOM));
 		this.setBlockMapColor(null);
 		this.lightOpacity = 15;
 	}
 	
 	@Override
-	public void setItemBlock(IItemAddedBlock itemBlock) {
+	public void setItemBlock(@Nullable IItemAddedBlock itemBlock) {
 		this.itemBlock = itemBlock;
 	}
 	
@@ -167,7 +155,7 @@ public class BlockAddedSlab extends BlockSlab implements IBlockAdded {
 	}
 	
 	@Override
-	public void setBlockMapColor(MapColor mapColor) {
+	public void setBlockMapColor(@Nullable MapColor mapColor) {
 		ObfuscationReflectionHelper.setPrivateValue(Block.class, this, mapColor, "field_181083_K", "blockMapColor");
 	}
 
@@ -192,7 +180,7 @@ public class BlockAddedSlab extends BlockSlab implements IBlockAdded {
 	}
 
 	@Override
-	public void setBeaconColorMultiplier(float[] beaconColorMultiplier) {
+	public void setBeaconColorMultiplier(@Nullable float[] beaconColorMultiplier) {
 		this.beaconColorMultiplier = beaconColorMultiplier;
 	}
 
@@ -476,7 +464,7 @@ public class BlockAddedSlab extends BlockSlab implements IBlockAdded {
 	
     @Override
 	protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[] {BlockLiquid.LEVEL, HALF});
+        return new BlockStateContainer(this, BlockLiquid.LEVEL, HALF);
     }
 
 	@Override
@@ -489,11 +477,13 @@ public class BlockAddedSlab extends BlockSlab implements IBlockAdded {
 		return false;
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	@Override
 	public IProperty<?> getVariantProperty() {
 		return null;
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	@Override
 	public Comparable<?> getTypeForItem(ItemStack stack) {
 		return null;
@@ -613,7 +603,7 @@ public class BlockAddedSlab extends BlockSlab implements IBlockAdded {
     			if (half == EnumAddedSlabHalf.TOP) {
     				newHalf = EnumAddedSlabHalf.NORTH;
     			} else if (half == EnumAddedSlabHalf.NORTH || half == EnumAddedSlabHalf.EAST || half == EnumAddedSlabHalf.SOUTH) {
-    				newHalf = EnumAddedSlabHalf.getFromFacing(half.getFullSide().rotateY());
+    				if (half.getFullSide() != null) newHalf = EnumAddedSlabHalf.getFromFacing(half.getFullSide().rotateY());
     			}
     		}
 
@@ -631,6 +621,8 @@ public class BlockAddedSlab extends BlockSlab implements IBlockAdded {
     	if (half == EnumAddedSlabHalf.FULL || half == EnumAddedSlabHalf.BOTTOM || half == EnumAddedSlabHalf.TOP) {
     		return state;
     	}
+
+		if (half.getFullSide() == null) return state;
     	
         switch (rot) {
             case COUNTERCLOCKWISE_90:
@@ -642,28 +634,26 @@ public class BlockAddedSlab extends BlockSlab implements IBlockAdded {
         }
     }
 
-	public static enum EnumAddedSlabHalf implements IStringSerializable {
-        BOTTOM("bottom", EnumFacing.DOWN, 0),
-        TOP("top", EnumFacing.UP, 1),
-        NORTH("north", EnumFacing.NORTH, 2),
-        EAST("east", EnumFacing.EAST, 3),
-        SOUTH("south", EnumFacing.SOUTH, 4),
-        WEST("west", EnumFacing.WEST, 5),
-        FULL("full", 6);
+	public enum EnumAddedSlabHalf implements IStringSerializable {
+        BOTTOM("bottom", EnumFacing.DOWN),
+        TOP("top", EnumFacing.UP),
+        NORTH("north", EnumFacing.NORTH),
+        EAST("east", EnumFacing.EAST),
+        SOUTH("south", EnumFacing.SOUTH),
+        WEST("west", EnumFacing.WEST),
+        FULL("full");
 
         private final String name;
         private final EnumFacing fullSide;
-        private final int meta;
 
-        private EnumAddedSlabHalf(String name, int meta) {
-            this(name, null, meta);
+		EnumAddedSlabHalf(String name) {
+            this(name, null);
         }
         
-        private EnumAddedSlabHalf(String name, EnumFacing fullSide, int meta) {
+        EnumAddedSlabHalf(String name, @Nullable EnumFacing fullSide) {
         	this.name = name;
         	this.fullSide = fullSide;
-        	this.meta = meta;
-        }
+		}
 
         @Override
 		public String toString() {
@@ -674,32 +664,19 @@ public class BlockAddedSlab extends BlockSlab implements IBlockAdded {
 		public String getName() {
             return this.name;
         }
-        
-        public EnumFacing getFullSide() {
+
+		@Nullable
+		public EnumFacing getFullSide() {
         	return this.fullSide;
         }
         
         public int getMeta() {
-        	return this.meta;
+        	return this.ordinal();
         }
         
         public static EnumAddedSlabHalf getFromMeta(int meta) {
-        	switch(meta) {
-        	case 0:
-        		return BOTTOM;
-        	case 1:
-        		return TOP;
-        	case 2:
-        		return NORTH;
-        	case 3:
-        		return EAST;
-        	case 4:
-        		return SOUTH;
-        	case 5:
-        		return WEST;
-    		default:
-        		return FULL;	
-        	}
+        	if (meta < values().length) return values()[meta];
+        	return FULL;
         }
         
         public static EnumAddedSlabHalf getFromFacing(EnumFacing facing) {

@@ -37,7 +37,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Edible Item
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since July 2017 
+ * @date July 2017
  */
 public class ItemAddedFood extends ItemFood implements IItemAdded {
 	

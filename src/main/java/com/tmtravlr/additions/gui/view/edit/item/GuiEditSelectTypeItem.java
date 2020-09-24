@@ -19,26 +19,26 @@ import net.minecraft.util.text.TextComponentTranslation;
  * Shows a list of items you can create.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since September 2017 
+ * @date September 2017 
  */
-public class GuiEditSelectTypeItem extends GuiEditSelectType<IGuiItemAddedFactory> {
+public class GuiEditSelectTypeItem extends GuiEditSelectType<IGuiItemAddedFactory<?>> {
 	
 	public GuiEditSelectTypeItem(GuiScreen parentScreen, String title, Addon addon) {
 		super(parentScreen, title, addon);
 	}
 
 	@Override
-	public Collection<IGuiItemAddedFactory> getTypes() {
+	public Collection<IGuiItemAddedFactory<?>> getTypes() {
 		return ItemAddedManager.getAllGuiFactories().values();
 	}
 
 	@Override
-	public String getDescription(IGuiItemAddedFactory editFactory) {
+	public String getDescription(IGuiItemAddedFactory<?> editFactory) {
 		return editFactory.getDescription();
 	}
 	
 	@Override
-	public String getTitle(IGuiItemAddedFactory editFactory) {
+	public String getTitle(IGuiItemAddedFactory<?> editFactory) {
 		return editFactory.getTitle();
 	}
 

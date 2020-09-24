@@ -16,7 +16,7 @@ import net.minecraft.init.SoundEvents;
  * Button to see the list of items.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since September 2017 
+ * @date September 2017 
  */
 public class GuiAdditionTypeButtonItem extends GuiAdditionTypeButtonColored {
 	

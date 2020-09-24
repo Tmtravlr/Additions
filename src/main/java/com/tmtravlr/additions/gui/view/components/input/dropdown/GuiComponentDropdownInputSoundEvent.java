@@ -17,7 +17,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
  * Dropdown list specifically for sound events, which lets you create a new sound event on the fly.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since November 2018
+ * @date November 2018
  */
 public class GuiComponentDropdownInputSoundEvent extends GuiComponentDropdownInput<SoundEvent> {
 	

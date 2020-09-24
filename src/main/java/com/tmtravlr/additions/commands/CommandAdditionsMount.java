@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 /**
  * Mount or stack an entity onto another.
  * @author Rebeca (Tmtravlr)
- * @Date June 2015
+ * @date June 2015
  */
 public class CommandAdditionsMount extends CommandBase {
 

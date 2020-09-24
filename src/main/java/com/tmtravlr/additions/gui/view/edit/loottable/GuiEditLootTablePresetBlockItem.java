@@ -18,7 +18,7 @@ import net.minecraft.util.text.TextComponentTranslation;
  * Page for adding a loot table that drops a block or editing an existing one.
  * 
  * @author Tmtravlr (Rebeca Rey)
- * @since Febuary 2019
+ * @date Febuary 2019
  */
 public class GuiEditLootTablePresetBlockItem extends GuiEditLootTableWithPreset<LootTablePresetBlockItemDrop> {
 	
