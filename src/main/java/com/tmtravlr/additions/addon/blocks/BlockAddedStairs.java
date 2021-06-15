@@ -447,6 +447,16 @@ public class BlockAddedStairs extends BlockStairs implements IBlockAdded {
 	public boolean canDropFromExplosion(Explosion explosion) {
         return CommonBlockMethods.canDropFromExplosion(this);
     }
+    
+    @Override
+    public boolean getTickRandomly() {
+    	return CommonBlockMethods.getTickRandomly(this);
+    }
+    
+    @Override
+    public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
+    	CommonBlockMethods.updateTick(this, world, pos, state, rand);
+    }
 
     
     @Override
@@ -531,9 +541,6 @@ public class BlockAddedStairs extends BlockStairs implements IBlockAdded {
             world.removeTileEntity(pos);
         }
     }
-
-    @Override
-	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {}
 
     @Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {

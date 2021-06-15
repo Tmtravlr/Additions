@@ -35,7 +35,7 @@ public class GuiEditHandlerEffectCauseItemRightClick implements IGuiEffectCauseE
 		this.editScreen = editScreen;
 		EffectCauseItemRightClick specificCause = (cause instanceof EffectCauseItemRightClick) ? (EffectCauseItemRightClick) cause : null;
 		
-		this.description = new GuiComponentDisplayText(editScreen, new TextComponentTranslation("type.effectCause.itemRightClick.description"));
+		this.description = new GuiComponentDisplayText(editScreen, new TextComponentTranslation("type.effectCause.itemRightClicked.description"));
 		
 		this.stackInput = new GuiComponentItemStackInput(I18n.format("gui.edit.effectCause.item.item.label"), editScreen);
 		this.stackInput.setRequired();

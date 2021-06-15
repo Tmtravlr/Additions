@@ -17,13 +17,21 @@ import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.AddonLoader;
 import com.tmtravlr.additions.addon.recipes.IRecipeAdded;
+import com.tmtravlr.additions.addon.recipes.IngredientOreNBT;
 import com.tmtravlr.additions.addon.recipes.RecipeAddedCraftingDyeItem;
 import com.tmtravlr.additions.addon.recipes.RecipeAddedManager;
 import com.tmtravlr.additions.util.ProblemNotifier;
 
+import net.minecraft.block.Block;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.common.crafting.IIngredientFactory;
+import net.minecraftforge.event.RegistryEvent.Register;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -33,6 +41,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author Tmtravlr (Rebeca Rey)
  * @since December 2018 
  */
+@EventBusSubscriber(modid = AdditionsMod.MOD_ID)
 public class AdditionTypeRecipe extends AdditionType<IRecipeAdded> {
 
 	public static final ResourceLocation NAME = new ResourceLocation(AdditionsMod.MOD_ID, "recipe");
@@ -49,11 +58,17 @@ public class AdditionTypeRecipe extends AdditionType<IRecipeAdded> {
 	
 	public static List<RecipeAddedCraftingDyeItem> cauldronWashingRecipes = new ArrayList<>();
 	
-	@Override
-	public void loadInit(List<Addon> addons, FMLInitializationEvent event) {
+	@SubscribeEvent
+	public static void onRegisterRecipes(Register<IRecipe> event) {
+		INSTANCE.registerRecipes(event);
+	}
+	
+	public void registerRecipes(Register<IRecipe> event) {
+        CraftingHelper.register(IngredientOreNBT.TYPE, (IIngredientFactory) (context, json) -> IngredientOreNBT.Serializer.deserialize(json));
+        
 		AdditionsMod.logger.info("Loading addon recipes.");
 		
-		for (Addon addon : addons) {
+		for (Addon addon : AddonLoader.addonsLoaded) {
 			List<String> filePaths = new ArrayList<>();
 			
 			try {
@@ -78,7 +93,7 @@ public class AdditionTypeRecipe extends AdditionType<IRecipeAdded> {
 						recipeAdded.setId(recipeId);
 						
 						this.loadedRecipes.put(addon, recipeAdded);
-						recipeAdded.registerRecipe();
+						recipeAdded.registerRecipe(event.getRegistry());
 					}
 				} catch (IOException | JsonParseException e) {
 					AdditionsMod.logger.error("Error loading recipe " + filePath + " for addon " + addon.id + ". The recipe will not load.", e);

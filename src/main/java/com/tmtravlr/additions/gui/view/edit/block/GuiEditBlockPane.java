@@ -62,6 +62,7 @@ public class GuiEditBlockPane extends GuiEditBlock<BlockAddedPane> {
 		this.advancedComponents.add(this.blockIsSlimeInput);
 		this.advancedComponents.add(this.blockIsBeaconBaseInput);
 		this.advancedComponents.add(this.blockCanPistonsPushInput);
+		this.advancedComponents.add(this.blockCanEndermenCarryInput);
 		this.advancedComponents.add(this.blockMapColorInput);
 		this.advancedComponents.add(this.blockBeaconColorMultiplierInput);
 		this.advancedComponents.add(this.blockPlaceSoundInput);

@@ -45,7 +45,18 @@ public class EffectCauseManager {
 	    registerEffectCause(new EffectCauseItemDiggingBlock.Serializer());
 	    registerEffectCause(new EffectCauseItemBreakBlock.Serializer());
 	    registerEffectCause(new EffectCauseItemAttack.Serializer());
-		registerEffectCause(new EffectCauseItemKill.Serializer());
+	    registerEffectCause(new EffectCauseItemKill.Serializer());
+	    registerEffectCause(new EffectCauseBlockPlaced.Serializer());
+	    registerEffectCause(new EffectCauseBlockDigging.Serializer());
+	    registerEffectCause(new EffectCauseBlockBroken.Serializer());
+	    registerEffectCause(new EffectCauseBlockRightClicked.Serializer());
+	    registerEffectCause(new EffectCauseBlockRandom.Serializer());
+	    registerEffectCause(new EffectCauseBlockContact.Serializer());
+	    registerEffectCause(new EffectCauseEntitySpawned.Serializer());
+	    registerEffectCause(new EffectCauseEntityUpdate.Serializer());
+	    registerEffectCause(new EffectCauseEntityRightClicked.Serializer());
+	    registerEffectCause(new EffectCauseEntityAttacked.Serializer());
+		registerEffectCause(new EffectCauseEntityDeath.Serializer());
 	}
 	
 	public static void registerEffectCause(EffectCause.Serializer <? extends EffectCause> effectCauseSerializer) {

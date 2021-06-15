@@ -5,6 +5,7 @@ import com.tmtravlr.additions.addon.blocks.BlockAddedCarpet;
 import com.tmtravlr.additions.addon.blocks.BlockAddedFacing;
 import com.tmtravlr.additions.addon.blocks.BlockAddedFalling;
 import com.tmtravlr.additions.addon.blocks.BlockAddedFence;
+import com.tmtravlr.additions.addon.blocks.BlockAddedGrass;
 import com.tmtravlr.additions.addon.blocks.BlockAddedLadder;
 import com.tmtravlr.additions.addon.blocks.BlockAddedManager;
 import com.tmtravlr.additions.addon.blocks.BlockAddedPane;
@@ -19,6 +20,7 @@ import com.tmtravlr.additions.gui.view.edit.block.GuiEditBlockCarpet;
 import com.tmtravlr.additions.gui.view.edit.block.GuiEditBlockFacing;
 import com.tmtravlr.additions.gui.view.edit.block.GuiEditBlockFalling;
 import com.tmtravlr.additions.gui.view.edit.block.GuiEditBlockFence;
+import com.tmtravlr.additions.gui.view.edit.block.GuiEditBlockGrass;
 import com.tmtravlr.additions.gui.view.edit.block.GuiEditBlockLadder;
 import com.tmtravlr.additions.gui.view.edit.block.GuiEditBlockPane;
 import com.tmtravlr.additions.gui.view.edit.block.GuiEditBlockPillar;
@@ -292,6 +294,30 @@ public class GuiFactoryRegistrationBlockAdded {
 			@Override
 			public GuiEdit getDuplicateScreen(GuiScreen parent, Addon addon, BlockAddedWall block) {
 				GuiEditBlockWall editScreen = new GuiEditBlockWall(parent, I18n.format("gui.edit.block.wall.title"), addon, null);
+				editScreen.copyFrom(block);
+				return editScreen;
+			}
+		});
+		
+		BlockAddedManager.registerGuiFactory(BlockAddedGrass.TYPE, new IGuiBlockAddedFactory<BlockAddedGrass>() {
+			@Override
+			public String getTitle() {
+				return I18n.format("type.block.grass.title");
+			}
+			
+			@Override
+			public String getDescription() {
+				return I18n.format("type.block.grass.description");
+			}
+			
+			@Override
+			public GuiEdit getEditScreen(GuiScreen parent, Addon addon, BlockAddedGrass block) {
+				return new GuiEditBlockGrass(parent, block == null ? I18n.format("gui.edit.block.grass.title") : I18n.format("gui.edit.editing", block.getDisplayName()), addon, block);
+			}
+			
+			@Override
+			public GuiEdit getDuplicateScreen(GuiScreen parent, Addon addon, BlockAddedGrass block) {
+				GuiEditBlockGrass editScreen = new GuiEditBlockGrass(parent, I18n.format("gui.edit.block.grass.title"), addon, null);
 				editScreen.copyFrom(block);
 				return editScreen;
 			}

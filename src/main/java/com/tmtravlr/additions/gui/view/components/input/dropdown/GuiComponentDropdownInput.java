@@ -7,6 +7,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
+
 import org.lwjgl.input.Mouse;
 
 import com.tmtravlr.additions.AdditionsMod;
@@ -74,7 +76,7 @@ public class GuiComponentDropdownInput<T> extends Gui implements IGuiViewCompone
 		this.allowDelete = false;
 	}
 	
-	public void setDefaultSelected(T selected) {
+	public void setDefaultSelected(@Nullable T selected) {
 		this.selected = selected;
 		if (this.selected == null) {
 			this.selectedText.setText("");
@@ -365,7 +367,7 @@ public class GuiComponentDropdownInput<T> extends Gui implements IGuiViewCompone
 			
 			try {
 				super.drawScreen(mouseX, mouseY, partialTicks);
-			} catch (IllegalArgumentException e) {
+			} catch (IllegalArgumentException | IllegalStateException e) {
 				AdditionsMod.logger.error("Failed to draw scrolling list", e);
 			}
 		}

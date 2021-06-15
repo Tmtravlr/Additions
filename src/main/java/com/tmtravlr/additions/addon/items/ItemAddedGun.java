@@ -53,6 +53,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * Gun Item
+ * 
+ * @author Tmtravlr (Rebeca Rey)
+ * @since November 2017 
+ */
 public class ItemAddedGun extends ItemBow implements IItemAdded {
 	
 	private static final Random RAND = new Random();
@@ -312,7 +318,7 @@ public class ItemAddedGun extends ItemBow implements IItemAdded {
 		return super.canApplyAtEnchantingTable(stack, enchantment);
 	}
 
-    private ItemStack findAmmo(EntityPlayer player) {
+    protected ItemStack findAmmo(EntityPlayer player) {
         if (this.isAmmo(player.getHeldItem(EnumHand.OFF_HAND))) {
             return player.getHeldItem(EnumHand.OFF_HAND);
             

@@ -1,6 +1,5 @@
 package com.tmtravlr.additions.addon.recipes;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,14 +20,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagByte;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 /**
@@ -181,8 +179,8 @@ public class RecipeAddedCraftingModifyNBT extends IForgeRegistryEntry.Impl<IReci
     }
 	
 	@Override
-	public void registerRecipe() {
-		ForgeRegistries.RECIPES.register(this);
+	public void registerRecipe(IForgeRegistry<IRecipe> registry) {
+		registry.register(this);
 	}
 	
 	private void modifyStackNBT(ItemStack stack, int modifier) {

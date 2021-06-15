@@ -4,18 +4,11 @@ import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.functions.FunctionAdded;
 import com.tmtravlr.additions.gui.type.button.GuiAdditionTypeButtonFunction;
 import com.tmtravlr.additions.gui.view.GuiView;
-import com.tmtravlr.additions.gui.view.edit.GuiEditCreativeTab;
 import com.tmtravlr.additions.gui.view.edit.GuiEditFunction;
-import com.tmtravlr.additions.type.AdditionTypeCreativeTab;
 import com.tmtravlr.additions.type.AdditionTypeFunction;
 import com.tmtravlr.additions.util.client.CommonGuiUtils;
 
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 
 /**

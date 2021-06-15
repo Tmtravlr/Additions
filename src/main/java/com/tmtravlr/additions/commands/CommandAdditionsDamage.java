@@ -28,7 +28,7 @@ import net.minecraft.util.text.translation.I18n;
 public class CommandAdditionsDamage extends CommandBase {
 	
 	private static final String[] DAMAGE_TYPES = new String[]{"anvil", "bash", "cactus", "cramming", "dragon_breath", "drown", "explosion", "fall", "falling_block", "fireworks", "fly_into_wall", "generic", "hot_floor", "in_fire", "in_wall", "lava", "lightning_bolt", "magic", "mob", "on_fire", "out_of_world", "player", "starve", "thorns", "wither", "custom"};
-	private static final List<String> CUSTOM_OPTIONS = Arrays.asList(new String[]{"projectile", "magic", "fire", "explosion", "difficulty_scaled", "absolute", "unblockable", "hurts_creative", "knockback"});
+	private static final List<String> CUSTOM_OPTIONS = Arrays.asList(new String[]{"projectile", "magic", "fire", "explosion", "difficulty_scaled", "absolute", "unblockable", "hurts_creative", "thorns"});
 
 	@Override
 	public String getName() {
@@ -176,7 +176,7 @@ public class CommandAdditionsDamage extends CommandBase {
 				String deathMessage = args.length > deathMessageStart ? String.join(" ", Arrays.copyOfRange(args, deathMessageStart, args.length)) : "death.attack.generic";
 				Entity source = sender.getCommandSenderEntity();
 				
-				DamageSource customDamage = new EntityDamageSource("additions.custom", source) {
+				EntityDamageSource customDamage = new EntityDamageSource("additions.custom", source) {
 					
 					@Override
 					public ITextComponent getDeathMessage(EntityLivingBase entityDying) {
@@ -242,6 +242,9 @@ public class CommandAdditionsDamage extends CommandBase {
 					} 
 					else if (option.equals("hurts_creative")) {
 						customDamage.setDamageAllowedInCreativeMode();
+					} 
+					else if (options.equals("thorns")) {
+						customDamage.setIsThornsDamage();
 					}
 				}
 				

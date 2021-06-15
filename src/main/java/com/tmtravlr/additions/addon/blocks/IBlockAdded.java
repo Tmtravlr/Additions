@@ -17,6 +17,7 @@ import com.tmtravlr.additions.util.OtherSerializers;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
@@ -75,6 +76,12 @@ public interface IBlockAdded {
 	
 	public void setDroppedFromExplosions(Boolean droppedFromExplosions);
 	
+	public default void setCanEndermenCarry(boolean canEndermenCarry) {
+		if (EntityEnderman.getCarriable(this.getAsBlock()) != canEndermenCarry) {
+			EntityEnderman.setCarriable(this.getAsBlock(), canEndermenCarry);
+		}
+	}
+	
 	@Nullable
 	public IItemAddedBlock getItemBlock();
 	
@@ -129,6 +136,10 @@ public interface IBlockAdded {
 	public int getXpDroppedMax();
 	
 	public Boolean getDroppedFromExplosions();
+	
+	public default boolean canEndermenCarry() {
+		return EntityEnderman.getCarriable(this.getAsBlock());
+	}
 	
 	public default void registerModels() {
 		AdditionsMod.proxy.registerBlockRender(this.getAsBlock());
@@ -292,6 +303,10 @@ public interface IBlockAdded {
 				json.addProperty("dropped_from_explosions", blockAddedObj.getDroppedFromExplosions());
 			}
 			
+			if (blockAddedObj.canEndermenCarry()) {
+				json.addProperty("can_endermen_carry", true);
+			}
+			
 			return json;
         }
 
@@ -348,6 +363,7 @@ public interface IBlockAdded {
 			blockAdded.setSemiTransparent(JsonUtils.getBoolean(json, "semi_transparent", false));
 			blockAdded.setXpDroppedMin(JsonUtils.getInt(json, "xp_dropped_min", 0));
 			blockAdded.setXpDroppedMax(JsonUtils.getInt(json, "xp_dropped_max", 0));
+			blockAdded.setCanEndermenCarry(JsonUtils.getBoolean(json, "can_endermen_carry", false));
 			
 			if (json.has("dropped_by_explosions")) {
 				blockAdded.setDroppedFromExplosions(JsonUtils.getBoolean(json, "dropped_by_explosions"));

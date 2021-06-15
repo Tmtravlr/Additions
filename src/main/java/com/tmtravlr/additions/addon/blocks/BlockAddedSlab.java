@@ -460,6 +460,16 @@ public class BlockAddedSlab extends BlockSlab implements IBlockAdded {
     }
     
     @Override
+    public boolean getTickRandomly() {
+    	return CommonBlockMethods.getTickRandomly(this);
+    }
+    
+    @Override
+    public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
+    	CommonBlockMethods.updateTick(this, world, pos, state, rand);
+    }
+    
+    @Override
     public CreativeTabs getCreativeTabToDisplayOn() {
     	return CreativeTabs.BUILDING_BLOCKS;
     }
@@ -577,7 +587,7 @@ public class BlockAddedSlab extends BlockSlab implements IBlockAdded {
         	return false;
         }
 
-        return state.getValue(HALF).getFullSide() == face;
+        return this.lightOpacity >= 15 && state.getValue(HALF).getFullSide() == face;
     }
 
     @Override
@@ -640,6 +650,18 @@ public class BlockAddedSlab extends BlockSlab implements IBlockAdded {
             default:
             	return state.withProperty(HALF, EnumAddedSlabHalf.getFromFacing(half.getFullSide().getOpposite()));
         }
+    }
+    
+    @Override
+    public boolean isSideSolid(IBlockState baseState, IBlockAccess world, BlockPos pos, EnumFacing side) {
+    	if (baseState.isFullBlock()) {
+    		return true;
+    	}
+    	
+    	IBlockState state = this.getActualState(baseState, world, pos);
+    	EnumAddedSlabHalf half = state.getValue(HALF);
+    	
+    	return half.getFullSide() == side;
     }
 
 	public static enum EnumAddedSlabHalf implements IStringSerializable {

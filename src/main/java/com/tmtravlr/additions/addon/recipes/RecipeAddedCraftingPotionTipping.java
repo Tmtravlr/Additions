@@ -1,31 +1,20 @@
 package com.tmtravlr.additions.addon.recipes;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.tmtravlr.additions.AdditionsMod;
-import com.tmtravlr.additions.util.OtherSerializers;
 
 import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.JsonUtils;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.common.crafting.JsonContext;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 /**
@@ -109,8 +98,8 @@ public class RecipeAddedCraftingPotionTipping extends IForgeRegistryEntry.Impl<I
     }
 	
 	@Override
-	public void registerRecipe() {
-		ForgeRegistries.RECIPES.register(this);
+	public void registerRecipe(IForgeRegistry<IRecipe> registry) {
+		registry.register(this);
 	}
 	
 	public static class Serializer extends IRecipeAdded.Serializer<RecipeAddedCraftingPotionTipping> {

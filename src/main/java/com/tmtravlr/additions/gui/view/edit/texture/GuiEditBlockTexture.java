@@ -243,7 +243,7 @@ public class GuiEditBlockTexture extends GuiEdit {
 	 * Checks for partial or full alpha in the image and creates a warning screen
 	 * that can automatically set the opacity/semi-transparency
 	 */
-	private GuiScreen warnAboutAlpha(BufferedImage image) {
+	protected GuiScreen warnAboutAlpha(BufferedImage image) {
 		GuiScreen warningScreen = null;
 		
 		if (!this.isBlockSemiTransparent()) {
@@ -301,7 +301,7 @@ public class GuiEditBlockTexture extends GuiEdit {
 		return warningScreen;
 	}
 	
-	private boolean isBlockSemiTransparent() {
+	protected boolean isBlockSemiTransparent() {
 		boolean semiTransparent = true;
 		
 		if (this.isNew) {
@@ -313,7 +313,7 @@ public class GuiEditBlockTexture extends GuiEdit {
 		return semiTransparent;
 	}
 	
-	private boolean isBlockTransparent() {
+	protected boolean isBlockTransparent() {
 		boolean transparent = true;
 		
 		if (this.isNew) {
@@ -325,7 +325,7 @@ public class GuiEditBlockTexture extends GuiEdit {
 		return transparent;
 	}
 	
-	private void setBlockSemiTransparent() {
+	protected void setBlockSemiTransparent() {
 		if (this.isNew) {
 			this.block.setSemiTransparent(true);
 			
@@ -339,7 +339,7 @@ public class GuiEditBlockTexture extends GuiEdit {
 		}
 	}
 	
-	private void setBlockTransparent() {
+	protected void setBlockTransparent() {
 		if (this.isNew) {
 			this.block.getAsBlock().setLightOpacity(0);
 			

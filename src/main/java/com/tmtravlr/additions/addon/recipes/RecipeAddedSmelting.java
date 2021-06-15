@@ -8,9 +8,11 @@ import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.util.OtherSerializers;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.registries.IForgeRegistry;
 
 /**
  * An added smelting recipe
@@ -38,7 +40,7 @@ public class RecipeAddedSmelting implements IRecipeAdded {
 	}
 	
 	@Override
-	public void registerRecipe() {
+	public void registerRecipe(IForgeRegistry<IRecipe> registry) {
 		GameRegistry.addSmelting(this.input, this.output, this.xp);
 	}
 	

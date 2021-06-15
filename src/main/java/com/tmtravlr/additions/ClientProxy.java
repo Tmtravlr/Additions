@@ -6,6 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import javax.annotation.Nullable;
+
+import com.tmtravlr.additions.addon.blocks.BlockAddedGrass;
 import com.tmtravlr.additions.addon.blocks.IBlockAdded;
 import com.tmtravlr.additions.addon.entities.EntityAddedProjectile;
 import com.tmtravlr.additions.addon.entities.renderers.RenderAddedProjectile;
@@ -20,22 +23,30 @@ import io.netty.buffer.Unpooled;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMap;
+import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.resources.AbstractResourcePack;
 import net.minecraft.client.resources.FileResourcePack;
 import net.minecraft.client.resources.FolderResourcePack;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.ColorizerGrass;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.biome.BiomeColorHelper;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -59,7 +70,7 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void registerBlockRenderWithDamage(Block block, int damage, String name) {
 		Item item = Item.getItemFromBlock(block);
-		if(item != null) {
+		if (item != Items.AIR) {
 			registerItemRenderWithDamage(item, damage, name);
 		}
 	}
@@ -72,7 +83,7 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void registerBlockRender(Block block) {
 		Item item = Item.getItemFromBlock(block);
-		if(item != null) {
+		if (item != Items.AIR) {
 			registerItemRender(Item.getItemFromBlock(block));
 		}
 	}
@@ -101,15 +112,37 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void registerItemColors(Item[] items) {
 		MC.getItemColors().registerItemColorHandler(new IItemColor() {
-            @Override
+			@Override
 			public int colorMultiplier(ItemStack stack, int tintIndex) {
-            	if (stack.getItem() instanceof IItemAdded && tintIndex == 1) {
-	                return ((IItemAdded)stack.getItem()).getColor(stack);
-            	}
-            	
-            	return -1;
+				if (stack.getItem() instanceof IItemAdded && tintIndex == 1) {
+					return ((IItemAdded)stack.getItem()).getColor(stack);
+				}
+				
+				return -1;
+			}
+		}, items);
+	}
+	
+	@Override
+	public void registerBlockColors(List<Block> blocks) {
+		List<Block> grassBlocks = new ArrayList<>();
+		
+		blocks.forEach(block -> {
+			if (block instanceof BlockAddedGrass) {
+				grassBlocks.add(block);
+			}
+		});
+		
+		MC.getBlockColors().registerBlockColorHandler(new IBlockColor() {
+			@Override
+            public int colorMultiplier(IBlockState state, @Nullable IBlockAccess world, @Nullable BlockPos pos, int tintIndex) {
+				if (state.getBlock() instanceof BlockAddedGrass && ((BlockAddedGrass)state.getBlock()).useBiomeColor) {
+					return world != null && pos != null ? BiomeColorHelper.getGrassColorAtPos(world, pos) : ColorizerGrass.getGrassColor(0.5D, 1.0D);
+				}
+				
+                return -1;
             }
-        }, items);
+        }, blocks.toArray(new Block[0]));
 	}
 	
 	@Override
@@ -189,6 +222,26 @@ public class ClientProxy extends CommonProxy {
 			
 			AdditionsMod.networkWrapper.sendToServer(new CToSMessage(buff));
 		}
+	}
+	
+	@Override
+	public void syncPlayerInventory(PacketBuffer buff) {
+		Minecraft.getMinecraft().addScheduledTask(() -> {
+			int inventorySize = buff.readInt();
+			EntityPlayer player = Minecraft.getMinecraft().player;
+			
+			try {
+				for (int i = 0; i < inventorySize; i++) {
+					ItemStack newStack = buff.readItemStack();
+					ItemStack existingStack = player.inventory.getStackInSlot(i);
+					if (newStack.getItem() != existingStack.getItem() || newStack.getMetadata() != existingStack.getMetadata() || newStack.getCount() != existingStack.getCount() || !ItemStack.areItemStackTagsEqual(newStack, existingStack)) {
+						player.inventory.setInventorySlotContents(i, newStack);
+					}
+				}
+			} catch (Exception e) {
+				AdditionsMod.logger.error("Error while attempting to sync player inventory.", e);
+			}
+		});
 	}
 	
 	@Override

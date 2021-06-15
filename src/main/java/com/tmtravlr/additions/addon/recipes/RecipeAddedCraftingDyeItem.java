@@ -10,21 +10,16 @@ import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.type.AdditionTypeRecipe;
 import com.tmtravlr.additions.util.OtherSerializers;
 
-import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.JsonUtils;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.oredict.DyeUtils;
+import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 /**
@@ -52,8 +47,8 @@ public class RecipeAddedCraftingDyeItem extends IForgeRegistryEntry.Impl<IRecipe
 	}
 	
 	@Override
-	public void registerRecipe() {
-		ForgeRegistries.RECIPES.register(this);
+	public void registerRecipe(IForgeRegistry<IRecipe> registry) {
+		registry.register(this);
 		
 		if (this.washInCauldron) {
 			AdditionTypeRecipe.INSTANCE.cauldronWashingRecipes.add(this);

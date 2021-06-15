@@ -325,7 +325,38 @@ public class BlockModelGenerator {
 		json.addProperty("parent", "block/wall_inventory");
 		json.add("textures", JsonGenerator.createJsonObject(
 				new JsonGenerator.JsonElementPair("wall", textureName)
-		));
+				));
+		
+		return ModelGenerator.GSON.toJson(json);
+	}
+	
+	public static String getBlockModelGrass(String blockId) {
+		JsonObject json = new JsonObject();
+		String textureName = AdditionsMod.MOD_ID + ":blocks/" + blockId;
+		
+		json.addProperty("parent", "block/grass");
+		json.add("textures", JsonGenerator.createJsonObject(
+				new JsonGenerator.JsonElementPair("particle", textureName + BlockModelManager.TEXTURE_BOTTOM_ENDING),
+				new JsonGenerator.JsonElementPair("bottom", textureName + BlockModelManager.TEXTURE_BOTTOM_ENDING),
+				new JsonGenerator.JsonElementPair("top", textureName),
+				new JsonGenerator.JsonElementPair("side", textureName + BlockModelManager.TEXTURE_SIDE_ENDING),
+				new JsonGenerator.JsonElementPair("overlay", textureName + BlockModelManager.TEXTURE_SIDE_OVERLAY_ENDING)
+				));
+		
+		return ModelGenerator.GSON.toJson(json);
+	}
+	
+	public static String getBlockModelGrassSnowy(String blockId) {
+		JsonObject json = new JsonObject();
+		String textureName = AdditionsMod.MOD_ID + ":blocks/" + blockId;
+		
+		json.addProperty("parent", "block/cube_bottom_top");
+		json.add("textures", JsonGenerator.createJsonObject(
+				new JsonGenerator.JsonElementPair("particle", textureName + BlockModelManager.TEXTURE_BOTTOM_ENDING),
+				new JsonGenerator.JsonElementPair("bottom", textureName + BlockModelManager.TEXTURE_BOTTOM_ENDING),
+				new JsonGenerator.JsonElementPair("top", textureName),
+				new JsonGenerator.JsonElementPair("side", textureName + BlockModelManager.TEXTURE_SIDE_SNOWY_ENDING)
+				));
 		
 		return ModelGenerator.GSON.toJson(json);
 	}

@@ -1,7 +1,5 @@
 package com.tmtravlr.additions.addon.recipes;
 
-import javax.annotation.Nonnull;
-
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -10,11 +8,13 @@ import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.util.OtherSerializers;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.brewing.AbstractBrewingRecipe;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.registries.IForgeRegistry;
 
 /**
  * An added brewing recipe
@@ -46,7 +46,7 @@ public class RecipeAddedBrewing extends AbstractBrewingRecipe<IngredientOreNBT> 
 	}
 	
 	@Override
-	public void registerRecipe() {
+	public void registerRecipe(IForgeRegistry<IRecipe> registry) {
 		//BrewingRecipeRegistry.addRecipe(this);
 		
 		// Registering in a very cheeky way here instead of BrewingRecipeRegistry.addRecipe(this); because otherwise the vanilla recipe breaks any recipes that use glowstone or redstone dust
@@ -64,9 +64,18 @@ public class RecipeAddedBrewing extends AbstractBrewingRecipe<IngredientOreNBT> 
 	}
 
     @Override
-    public ItemStack getOutput()
-    {
+    public ItemStack getInput() {
+        return this.input;
+    }
+
+    @Override
+    public ItemStack getOutput() {
         return this.output;
+    }
+
+    @Override
+    public IngredientOreNBT getIngredient() {
+        return this.ingredient;
     }
 	
 	public static class Serializer extends IRecipeAdded.Serializer<RecipeAddedBrewing> {
@@ -124,5 +133,4 @@ public class RecipeAddedBrewing extends AbstractBrewingRecipe<IngredientOreNBT> 
 			return recipeAdded;
 		}
     }
-
 }

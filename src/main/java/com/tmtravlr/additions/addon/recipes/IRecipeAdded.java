@@ -4,7 +4,9 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.registries.IForgeRegistry;
 
 /**
  * Represents an added recipe
@@ -18,7 +20,7 @@ public interface IRecipeAdded {
 	
 	public ResourceLocation getId();
 	
-	public void registerRecipe();
+	public void registerRecipe(IForgeRegistry<IRecipe> registry);
 
 	public abstract static class Serializer<T extends IRecipeAdded> {
 		

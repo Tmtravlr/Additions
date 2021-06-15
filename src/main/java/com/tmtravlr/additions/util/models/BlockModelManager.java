@@ -31,9 +31,13 @@ public class BlockModelManager {
 	public static final String MODEL_NO_SIDE_ENDING = "_noside";
 	public static final String MODEL_NO_SIDE_ALT_ENDING = "_noside_alt";
 	public static final String MODEL_INVENTORY_ENDING = "_inventory";
+	public static final String MODEL_SNOWED_ENDING = "_snowed";
 	
 	public static final String TEXTURE_SIDE_ENDING = "_side";
+	public static final String TEXTURE_SIDE_OVERLAY_ENDING = "_side_overlay";
+	public static final String TEXTURE_SIDE_SNOWY_ENDING = "_side_snowy";
 	public static final String TEXTURE_TOP_ENDING = "_top";
+	public static final String TEXTURE_BOTTOM_ENDING = "_bottom";
 	
 	public static void saveBlockTexture(Addon addon, IBlockAdded block, File texture, BlockModelType type) throws IOException {
 		File blockStateFolder = getBlockStateFolder(addon);
@@ -92,6 +96,11 @@ public class BlockModelManager {
 			modelFileContents.put(block.getId() + MODEL_POST_ENDING, BlockModelGenerator.getBlockModelWallPost(block.getId()));
 			modelFileContents.put(block.getId() + MODEL_SIDE_ENDING, BlockModelGenerator.getBlockModelWallSide(block.getId()));
 			modelFileContents.put(block.getId() + MODEL_INVENTORY_ENDING, BlockModelGenerator.getBlockModelWallInventory(block.getId()));
+			break;
+		case GRASS:
+			blockStateFileContents = BlockStateGenerator.getBlockStateGrass(block.getId());
+			modelFileContents.put(block.getId(), BlockModelGenerator.getBlockModelGrass(block.getId()));
+			modelFileContents.put(block.getId() + MODEL_SNOWED_ENDING, BlockModelGenerator.getBlockModelGrassSnowy(block.getId()));
 			break;
 		default:
 			blockStateFileContents = BlockStateGenerator.getBlockStateSimple(block.getId());
@@ -204,6 +213,7 @@ public class BlockModelManager {
 		LADDER(ItemBlockModelType.SIMPLE),
 		VINE(ItemBlockModelType.SIMPLE),
 		PLANT(ItemBlockModelType.SIMPLE),
+		GRASS,
 		CAKE,
 		FURNACE,
 		WORKBENCH;

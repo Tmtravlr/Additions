@@ -84,6 +84,7 @@ public abstract class GuiEditBlock<T extends IBlockAdded> extends GuiEdit {
 	protected GuiComponentBooleanInput blockIsSlimeInput;
 	protected GuiComponentBooleanInput blockIsBeaconBaseInput;
 	protected GuiComponentBooleanInput blockCanPistonsPushInput;
+	protected GuiComponentBooleanInput blockCanEndermenCarryInput;
 	protected GuiComponentDropdownInputSoundEvent blockPlaceSoundInput;
 	protected GuiComponentDropdownInputSoundEvent blockBreakSoundInput;
 	protected GuiComponentDropdownInputSoundEvent blockHitSoundInput;
@@ -240,6 +241,9 @@ public abstract class GuiEditBlock<T extends IBlockAdded> extends GuiEdit {
 		this.blockCanPistonsPushInput = new GuiComponentBooleanInput(I18n.format("gui.edit.block.canPistonsPush.label"), this);
 		this.blockCanPistonsPushInput.setDefaultBoolean(this.block.canPistonsPush());
 		
+		this.blockCanEndermenCarryInput = new GuiComponentBooleanInput(I18n.format("gui.edit.block.canEndermenCarry.label"), this);
+		this.blockCanEndermenCarryInput.setDefaultBoolean(this.block.canEndermenCarry());
+		
 		this.blockPlaceSoundInput = new GuiComponentDropdownInputSoundEvent(I18n.format("gui.edit.block.placeSound.label"), this.addon, this);
 		this.blockPlaceSoundInput.setDefaultSelected(this.block.getPlaceSound());
 		
@@ -380,6 +384,7 @@ public abstract class GuiEditBlock<T extends IBlockAdded> extends GuiEdit {
 		this.block.setIsSlime(this.blockIsSlimeInput.getBoolean());
 		this.block.setIsBeaconBase(this.blockIsBeaconBaseInput.getBoolean());
 		this.block.setCanPistonsPush(this.blockCanPistonsPushInput.getBoolean());
+		this.block.setCanEndermenCarry(this.blockCanEndermenCarryInput.getBoolean());
 		this.block.setPlaceSound(this.blockPlaceSoundInput.getSelected());
 		this.block.setBreakSound(this.blockBreakSoundInput.getSelected());
 		this.block.setHitSound(this.blockHitSoundInput.getSelected());
@@ -509,6 +514,7 @@ public abstract class GuiEditBlock<T extends IBlockAdded> extends GuiEdit {
 	    this.blockIsSlimeInput.setDefaultBoolean(this.copyFrom.isSlime());
 	    this.blockIsBeaconBaseInput.setDefaultBoolean(this.copyFrom.isBeaconBase());
 	    this.blockCanPistonsPushInput.setDefaultBoolean(this.copyFrom.canPistonsPush());
+	    this.blockCanEndermenCarryInput.setDefaultBoolean(this.copyFrom.canEndermenCarry());
 	    this.blockPlaceSoundInput.setDefaultSelected(this.copyFrom.getPlaceSound());
 	    this.blockBreakSoundInput.setDefaultSelected(this.copyFrom.getBreakSound());
 	    this.blockHitSoundInput.setDefaultSelected(this.copyFrom.getHitSound());

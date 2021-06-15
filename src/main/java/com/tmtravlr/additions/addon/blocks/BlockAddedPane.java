@@ -443,6 +443,16 @@ public class BlockAddedPane extends BlockPane implements IBlockAdded {
     }
     
     @Override
+    public boolean getTickRandomly() {
+    	return CommonBlockMethods.getTickRandomly(this);
+    }
+    
+    @Override
+    public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
+    	CommonBlockMethods.updateTick(this, world, pos, state, rand);
+    }
+    
+    @Override
     public CreativeTabs getCreativeTabToDisplayOn() {
     	return CreativeTabs.DECORATIONS;
     }

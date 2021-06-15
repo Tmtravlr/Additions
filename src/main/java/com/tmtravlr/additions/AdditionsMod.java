@@ -123,8 +123,6 @@ public class AdditionsMod {
     public void init(FMLInitializationEvent event) {
     	EntityRegistry.registerModEntity(new ResourceLocation(MOD_ID, "projectile"), EntityAddedProjectile.class, MOD_ID + "_projectile", 0, this, 80, 5, true);
     	proxy.registerEntityRenderers();
-        
-        CraftingHelper.register(IngredientOreNBT.TYPE, (IIngredientFactory) (context, json) -> IngredientOreNBT.Serializer.deserialize(json));
     	
     	AddonLoader.loadAdditionsInit(event);
     }
@@ -162,7 +160,7 @@ public class AdditionsMod {
     
     @EventHandler
     public void serverStopped(FMLServerStoppedEvent event) {
-    	if (ConfigLoader.replaceManagers.getBoolean(true)) {
+    	if (ConfigLoader.replaceManagers != null && ConfigLoader.replaceManagers.getBoolean(true)) {
     		AddonFunctionManager.deleteFunctionManager();
     		AddonAdvancementManager.deleteAdvancementManager();
     		AddonStructureManager.deleteStructureManager();

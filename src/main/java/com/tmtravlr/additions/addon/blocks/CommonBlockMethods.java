@@ -1,9 +1,16 @@
 package com.tmtravlr.additions.addon.blocks;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.Map.Entry;
 
 import com.tmtravlr.additions.AdditionsMod;
+import com.tmtravlr.additions.addon.effects.Effect;
+import com.tmtravlr.additions.addon.effects.EffectCancelNormal;
+import com.tmtravlr.additions.addon.effects.cause.EffectCauseBlockRandom;
+import com.tmtravlr.additions.type.AdditionTypeEffect;
 import com.tmtravlr.lootoverhaul.loot.LootContextExtendedBuilder;
 
 import net.minecraft.block.Block;
@@ -15,8 +22,10 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Enchantments;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
@@ -29,6 +38,8 @@ import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraft.world.storage.loot.LootTable;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.ReflectionHelper.UnableToAccessFieldException;
@@ -237,6 +248,32 @@ public class CommonBlockMethods {
 	
     public static boolean canDropFromExplosion(IBlockAdded block) {
         return block.getDroppedFromExplosions() == null || block.getDroppedFromExplosions();
+    }
+    
+    public static boolean getTickRandomly(IBlockAdded block) {
+        return AdditionTypeEffect.INSTANCE.getBlockAddedRandomEffects().containsKey(block);
+    }
+    
+    public static void updateTick(IBlockAdded block, World world, BlockPos pos, IBlockState state, Random rand) {
+    	if (world instanceof WorldServer && AdditionTypeEffect.INSTANCE.getBlockAddedRandomEffects().containsKey(block)) {
+	    	int tickSpeed = world.getGameRules().getInt("randomTickSpeed");
+	    	Map<EffectCauseBlockRandom, List<Effect>> blockEffects = AdditionTypeEffect.INSTANCE.getBlockAddedRandomEffects().get(block);
+			
+			if (tickSpeed > 0) {
+            	TileEntity te = world.getTileEntity(pos);
+				NBTTagCompound blockTag = te == null ? null : te.writeToNBT(new NBTTagCompound());
+            	
+            	for (Entry<EffectCauseBlockRandom, List<Effect>> entry : blockEffects.entrySet()) {
+            		if (entry.getKey().applies(state, blockTag)) {
+						for (Effect effect : entry.getValue()) {
+							if (!(effect instanceof EffectCancelNormal)) {
+								effect.affectBlock(null, world, pos);
+							}
+						}
+					}
+				}
+			}
+    	}
     }
     
     // Methods for blocks with a modifiable bounding box

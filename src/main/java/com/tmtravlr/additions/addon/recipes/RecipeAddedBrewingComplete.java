@@ -15,6 +15,7 @@ import com.tmtravlr.additions.AdditionsMod;
 import net.minecraft.init.Items;
 import net.minecraft.init.PotionTypes;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTException;
 import net.minecraft.nbt.NBTTagCompound;
@@ -25,6 +26,7 @@ import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.brewing.AbstractBrewingRecipe;
+import net.minecraftforge.registries.IForgeRegistry;
 
 /**
  * An added complete set of brewing recipes
@@ -71,7 +73,7 @@ public class RecipeAddedBrewingComplete extends AbstractBrewingRecipe<Ingredient
 	}
 	
 	@Override
-	public void registerRecipe() {
+	public void registerRecipe(IForgeRegistry<IRecipe> registry) {
 		//BrewingRecipeRegistry.addRecipe(this);
 		
 		// Registering in a very cheeky way here instead of BrewingRecipeRegistry.addRecipe(this); because otherwise the vanilla recipe breaks any recipes that use glowstone or redstone dust

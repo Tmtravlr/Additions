@@ -2,6 +2,7 @@ package com.tmtravlr.additions.gui.view;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.lwjgl.input.Mouse;
@@ -23,6 +24,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.config.GuiUtils;
 
 /**
@@ -249,7 +251,12 @@ public abstract class GuiView extends GuiScreen {
     
     public void renderInfoTooltip(List<String> info, int x, int y) {
     	this.addPostRender(() -> {
-	    	GuiUtils.drawHoveringText(info, x, y, this.width, this.height, -1, this.fontRenderer);
+    		try {
+    			GuiUtils.drawHoveringText(info, x, y, this.width, this.height, -1, this.fontRenderer);
+    		} catch (Throwable e) {
+    			AdditionsMod.logger.warn("Unable to render item tooltip.", e);
+    			GuiUtils.drawHoveringText(Collections.singletonList(TextFormatting.RED + I18n.format("gui.tooltip.unableToRender")), x, y, this.width, this.height, -1, this.fontRenderer);
+    		}
 	        RenderHelper.disableStandardItemLighting();
     	});
     }

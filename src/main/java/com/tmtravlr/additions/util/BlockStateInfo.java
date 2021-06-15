@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
@@ -17,6 +18,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.InvalidBlockStateException;
 import net.minecraft.command.NumberInvalidException;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
@@ -24,6 +26,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 /**
  * Holds info about a block and that state it should be in.
+ * 
  * @author Rebeca Rey (Tmtravlr)
  * @since July 2019
  */
@@ -42,28 +45,55 @@ public class BlockStateInfo {
 	public BlockStateInfo(Block block, Map<String, String> stateMap) {
 		this.block = block;
 		this.stateMap = stateMap;
+		String stateString = "";
 		
-		if (this.stateMap.isEmpty()) {
-			this.predicate = Predicates.alwaysTrue();
-			this.blockState = block.getDefaultState();
-		} else {
+		if (!this.stateMap.isEmpty()) {
 			StringJoiner stateStringJoiner = new StringJoiner(",");
 			this.stateMap.forEach((key, value) -> stateStringJoiner.add(key + "=" + value));
-			String stateString = stateStringJoiner.toString();
+			stateString = stateStringJoiner.toString();
+		}
 				
-			try {
-				this.predicate = CommandBase.convertArgToBlockStatePredicate(block, stateString.toString());
-			} catch (InvalidBlockStateException e) {
-				AdditionsMod.logger.error("Unable to parse block state predicate. Setting to never. Message is: '" + I18n.translateToLocalFormatted(e.getMessage(), e.getErrorObjects()) + "', and state is: '" + stateString + "'");
-				this.predicate = Predicates.alwaysFalse();
+		try {
+			if (stateString.isEmpty()) {
+				this.predicate = state -> state.getBlock() == this.block;
+			} else {
+				this.predicate = CommandBase.convertArgToBlockStatePredicate(block, stateString);
 			}
+		} catch (InvalidBlockStateException e) {
+			AdditionsMod.logger.error("Unable to parse block state predicate. Setting to never. Message is: '" + I18n.translateToLocalFormatted(e.getMessage(), e.getErrorObjects()) + "', and state is: '" + stateString + "'");
+			this.predicate = Predicates.alwaysFalse();
+		}
+		
+		try {
+			this.blockState = CommandBase.convertArgToBlockState(block, stateString.isEmpty() ? "default" : stateString);
+		} catch (InvalidBlockStateException | NumberInvalidException e) {
+			AdditionsMod.logger.error("Unable to parse block state. Setting to default. Message is: '" + I18n.translateToLocalFormatted(e.getMessage(), e.getErrorObjects()) + "', and state is: '" + stateString + "'");
+			this.blockState = block.getDefaultState();
+		}
+	}
+	
+	public BlockStateInfo(IBlockState blockState) {
+		this.block = blockState.getBlock();
+		this.blockState = blockState;
+		String stateString = "";
+		
+		if (!blockState.getProperties().isEmpty()) {
+			this.stateMap = this.blockState.getProperties().entrySet().stream().collect(Collectors.toMap(Object::toString, Object::toString));
 			
-			try {
-				this.blockState = CommandBase.convertArgToBlockState(block, stateString.toString());
-			} catch (InvalidBlockStateException | NumberInvalidException e) {
-				AdditionsMod.logger.error("Unable to parse block state. Setting to default. Message is: '" + I18n.translateToLocalFormatted(e.getMessage(), e.getErrorObjects()) + "', and state is: '" + stateString + "'");
-				this.blockState = block.getDefaultState();
+			StringJoiner stateStringJoiner = new StringJoiner(",");
+			this.stateMap.forEach((key, value) -> stateStringJoiner.add(key + "=" + value));
+			stateString = stateStringJoiner.toString();
+		}
+			
+		try {
+			if (stateString.isEmpty()) {
+				this.predicate = state -> state.getBlock() == this.block;
+			} else {
+				this.predicate = CommandBase.convertArgToBlockStatePredicate(block, stateString);
 			}
+		} catch (InvalidBlockStateException e) {
+			AdditionsMod.logger.error("Unable to parse block state predicate. Setting to never. Message is: '" + I18n.translateToLocalFormatted(e.getMessage(), e.getErrorObjects()) + "', and state is: '" + stateString + "'");
+			this.predicate = Predicates.alwaysFalse();
 		}
 	}
 	
@@ -73,6 +103,14 @@ public class BlockStateInfo {
 	
 	public IBlockState getBlockState() {
 		return this.blockState;
+	}
+	
+	public Block getBlock() {
+		return this.block;
+	}
+	
+	public Map<String, String> getStateMap() {
+		return this.stateMap;
 	}
 	
 	public static void testPropertyMap(Block block, Map<String, String> propertyMap) throws InvalidBlockStateException {
@@ -122,6 +160,20 @@ public class BlockStateInfo {
 		} else if (!stateMap.equals(other.stateMap))
 			return false;
 		return true;
+	}
+	
+	public ItemStack getDisplayStack() {
+		ItemStack displayStack = ItemStack.EMPTY;
+		
+		if (this.block != null) {
+			try {
+				displayStack = this.block.getPickBlock(this.blockState, null, null, null, null);
+			} catch (Throwable e) {
+				//Do nothing, just leave the item stack empty
+			}
+		}
+		
+		return displayStack;
 	}
 	
 	public static class Serializer {

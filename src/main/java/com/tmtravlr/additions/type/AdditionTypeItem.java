@@ -20,6 +20,7 @@ import com.google.gson.JsonParseException;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.AddonLoader;
+import com.tmtravlr.additions.addon.blocks.IBlockAdded;
 import com.tmtravlr.additions.addon.items.IItemAdded;
 import com.tmtravlr.additions.addon.items.ItemAddedManager;
 import com.tmtravlr.additions.util.ProblemNotifier;
@@ -28,8 +29,11 @@ import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.event.RegistryEvent.Register;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -41,6 +45,7 @@ import net.minecraftforge.oredict.OreDictionary;
  * @author Tmtravlr (Rebeca Rey)
  * @since September 2017 
  */
+@EventBusSubscriber(modid = AdditionsMod.MOD_ID)
 public class AdditionTypeItem extends AdditionType<IItemAdded> {
 
 	public static final ResourceLocation NAME = new ResourceLocation(AdditionsMod.MOD_ID, "item");
@@ -57,12 +62,16 @@ public class AdditionTypeItem extends AdditionType<IItemAdded> {
 	
 	// Can't load things like lists of ammo right away, since the items they need may not have loaded yet
 	private Map<IItemAdded, JsonObject> itemsToPostDeserialize = new HashMap<>();
+	
+	@SubscribeEvent
+	public static void onRegisterItems(Register<Item> event) {
+		INSTANCE.registerItems(event);
+	}
 
-	@Override
-	public void loadPreInit(List<Addon> addons, FMLPreInitializationEvent event) {
+	public void registerItems(Register<Item> event) {
 		AdditionsMod.logger.info("Loading addon items.");
 		
-		for (Addon addon : addons) {
+		for (Addon addon : AddonLoader.addonsLoaded) {
 			List<String> filePaths = new ArrayList<>();
 			
 			try {
@@ -92,7 +101,7 @@ public class AdditionTypeItem extends AdditionType<IItemAdded> {
 						ResourceLocation itemRegistryName = new ResourceLocation(AdditionsMod.MOD_ID, itemName);
 						
 						this.loadedItems.put(addon, itemAdded);
-						ForgeRegistries.ITEMS.register(item.setUnlocalizedName(itemName).setRegistryName(itemRegistryName));
+						event.getRegistry().register(item.setUnlocalizedName(itemName).setRegistryName(itemRegistryName));
 						
 						for (String oreName : itemAdded.getOreDict()) {
 							OreDictionary.registerOre(oreName, item);
@@ -132,7 +141,6 @@ public class AdditionTypeItem extends AdditionType<IItemAdded> {
 		
 		if(!colorItemsToRegister.isEmpty()) {
 			AdditionsMod.proxy.registerItemColors(colorItemsToRegister.toArray(new Item[0]));
-			colorItemsToRegister.clear();
 		}
 	}
 	

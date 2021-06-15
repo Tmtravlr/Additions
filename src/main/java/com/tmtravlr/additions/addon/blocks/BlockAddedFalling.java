@@ -518,6 +518,16 @@ public class BlockAddedFalling extends BlockFalling implements IBlockAdded, IBlo
 	public boolean canDropFromExplosion(Explosion explosion) {
         return CommonBlockMethods.canDropFromExplosion(this);
     }
+    
+    @Override
+    public boolean getTickRandomly() {
+    	return CommonBlockMethods.getTickRandomly(this);
+    }
+    
+    @Override
+    public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
+    	CommonBlockMethods.updateTick(this, world, pos, state, rand);
+    }
 
     @Override
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {

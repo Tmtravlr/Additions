@@ -2,6 +2,7 @@ package com.tmtravlr.additions.addon.blocks;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
@@ -430,6 +431,16 @@ public class BlockAddedWall extends BlockWall implements IBlockAdded {
 	@Override
 	public boolean canDropFromExplosion(Explosion explosion) {
         return CommonBlockMethods.canDropFromExplosion(this);
+    }
+    
+    @Override
+    public boolean getTickRandomly() {
+    	return CommonBlockMethods.getTickRandomly(this);
+    }
+    
+    @Override
+    public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
+    	CommonBlockMethods.updateTick(this, world, pos, state, rand);
     }
     
     @Override

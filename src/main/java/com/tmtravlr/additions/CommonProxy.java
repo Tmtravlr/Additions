@@ -1,11 +1,15 @@
 package com.tmtravlr.additions;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.tmtravlr.additions.addon.blocks.IBlockAdded;
 
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 
 public class CommonProxy {
@@ -46,6 +50,10 @@ public class CommonProxy {
 		//Do nothing on the server!
 	}
 	
+	public void registerBlockColors(List<Block> colorBlocksToRegister) {
+		//Do nothing on the server!
+	}
+	
 	public void ignoreLiquidLevel(IBlockAdded block) {
 		//Do nothing on the server!
 	}
@@ -63,6 +71,10 @@ public class CommonProxy {
 	}
 	
 	public void checkForShieldBash() {
+		//Do nothing on the server!
+	}
+	
+	public void syncPlayerInventory(PacketBuffer buff) {
 		//Do nothing on the server!
 	}
 	

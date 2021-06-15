@@ -20,6 +20,7 @@ import com.google.gson.JsonParseException;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.addon.Addon;
 import com.tmtravlr.additions.addon.AddonLoader;
+import com.tmtravlr.additions.addon.blocks.BlockAddedGrass;
 import com.tmtravlr.additions.addon.blocks.BlockAddedManager;
 import com.tmtravlr.additions.addon.blocks.IBlockAdded;
 import com.tmtravlr.additions.addon.items.IItemAdded;
@@ -29,12 +30,16 @@ import com.tmtravlr.additions.util.ProblemNotifier;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.event.RegistryEvent.Register;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -46,6 +51,7 @@ import net.minecraftforge.oredict.OreDictionary;
  * @author Tmtravlr (Rebeca Rey)
  * @since December 2018 
  */
+@EventBusSubscriber(modid = AdditionsMod.MOD_ID)
 public class AdditionTypeBlock extends AdditionType<IBlockAdded> {
 
 	public static final ResourceLocation NAME = new ResourceLocation(AdditionsMod.MOD_ID, "block");
@@ -60,15 +66,27 @@ public class AdditionTypeBlock extends AdditionType<IBlockAdded> {
 			.create();
 	
 	private Multimap<Addon, IBlockAdded> loadedBlocks = HashMultimap.create();
+
+	// Need to register the item blocks in the item registry event
+	private List<IItemAddedBlock> itemsToRegister = new ArrayList<>();
 	
 	// Can't load things like lists of ammo right away, since the items they need may not have loaded yet
 	private Map<IBlockAdded, JsonObject> blocksToPostDeserialize = new HashMap<>();
+	
+	@SubscribeEvent
+	public static void onRegisterBlocks(Register<Block> event) {
+		INSTANCE.registerBlocks(event);
+	}
+	
+	@SubscribeEvent
+	public static void onRegisterItems(Register<Item> event) {
+		INSTANCE.registerItems(event);
+	}
 
-	@Override
-	public void loadPreInit(List<Addon> addons, FMLPreInitializationEvent event) {
+	public void registerBlocks(Register<Block> event) {
 		AdditionsMod.logger.info("Loading addon blocks.");
 		
-		for (Addon addon : addons) {
+		for (Addon addon : AddonLoader.addonsLoaded) {
 			List<String> filePaths = new ArrayList<>();
 			
 			try {
@@ -83,7 +101,7 @@ public class AdditionTypeBlock extends AdditionType<IBlockAdded> {
 					String fileString = AddonLoader.readAddonFile(addon.addonFolder, filePath);
 					JsonObject blockJson = GSON.fromJson(fileString, JsonObject.class);
 					IBlockAdded blockAdded = GSON.fromJson(blockJson, IBlockAdded.class);
-					blocksToPostDeserialize.put(blockAdded, blockJson);
+					this.blocksToPostDeserialize.put(blockAdded, blockJson);
 					
 					Block block = blockAdded.getAsBlock();
 					
@@ -98,7 +116,7 @@ public class AdditionTypeBlock extends AdditionType<IBlockAdded> {
 						ResourceLocation blockRegistryName = new ResourceLocation(AdditionsMod.MOD_ID, blockName);
 						
 						this.loadedBlocks.put(addon, blockAdded);
-						ForgeRegistries.BLOCKS.register(block.setUnlocalizedName(blockName).setRegistryName(blockRegistryName));
+						event.getRegistry().register(block.setUnlocalizedName(blockName).setRegistryName(blockRegistryName));
 						
 						if (!(blockAdded instanceof BlockLiquid)) {
 							AdditionsMod.proxy.ignoreLiquidLevel(blockAdded);
@@ -110,11 +128,9 @@ public class AdditionTypeBlock extends AdditionType<IBlockAdded> {
 							
 							blockName = blockName.substring(0, blockName.length() - FILE_POSTFIX.length());
 							
-							ForgeRegistries.ITEMS.register(item.setUnlocalizedName(blockName).setRegistryName(blockRegistryName));
+							item.setUnlocalizedName(blockName).setRegistryName(blockRegistryName);
 							
-							for (String oreName : itemAdded.getOreDict()) {
-								OreDictionary.registerOre(oreName, item);
-							}
+							this.itemsToRegister.add(itemAdded);
 						}
 					}
 				} catch (IOException | JsonParseException e) {
@@ -124,9 +140,24 @@ public class AdditionTypeBlock extends AdditionType<IBlockAdded> {
 			}
 		}
 	}
+	
+	public void registerItems(Register<Item> event) {
+		AdditionsMod.logger.info("Loading addon item blocks.");
+		
+		for (IItemAddedBlock itemAdded : this.itemsToRegister) {
+			event.getRegistry().register(itemAdded.getAsItemBlock());
+			
+			for (String oreName : itemAdded.getOreDict()) {
+				OreDictionary.registerOre(oreName, itemAdded.getAsItemBlock());
+			}
+		}
+	}
 
 	@Override
 	public void loadInit(List<Addon> addons, FMLInitializationEvent event) {
+		AdditionsMod.logger.info("Registering block models");
+		List<Block> colorBlocksToRegister = new ArrayList<>();
+		
 		AdditionsMod.logger.info("Initializing addon blocks.");		
 		for (Entry<IBlockAdded, JsonObject> blockEntry : this.blocksToPostDeserialize.entrySet()) {
 			try {
@@ -143,11 +174,19 @@ public class AdditionTypeBlock extends AdditionType<IBlockAdded> {
 			for (IBlockAdded block : this.loadedBlocks.get(addon)) {
 				block.registerModels();
 				
+				if (block instanceof BlockAddedGrass) {
+					colorBlocksToRegister.add(block.getAsBlock());
+				}
+				
 				IItemAddedBlock itemBlock = block.getItemBlock();
 				if (itemBlock != null) {
 					itemBlock.registerModels();
 				}
 			}
+		}
+		
+		if (!colorBlocksToRegister.isEmpty()) {
+			AdditionsMod.proxy.registerBlockColors(colorBlocksToRegister);
 		}
 	}
 	

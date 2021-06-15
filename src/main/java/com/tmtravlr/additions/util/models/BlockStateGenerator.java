@@ -354,7 +354,7 @@ public class BlockStateGenerator {
 		
 		return ModelGenerator.GSON.toJson(json);
 	}
-
+	
 	public static String getBlockStateWall(String blockId) {
 		JsonObject json = new JsonObject();
 		
@@ -396,6 +396,35 @@ public class BlockStateGenerator {
 								new JsonGenerator.JsonElementPair("uvlock", true)
 						))
 				)
+		));
+		
+		return ModelGenerator.GSON.toJson(json);
+	}
+
+	public static String getBlockStateGrass(String blockId) {
+		JsonObject json = new JsonObject();
+		
+		json.add("variants", JsonGenerator.createJsonObject(
+				new JsonGenerator.JsonElementPair("snowy=false", JsonGenerator.createJsonObjectArray(
+						JsonGenerator.createJsonObject(
+								new JsonGenerator.JsonElementPair("model", AdditionsMod.MOD_ID + ":" + blockId)
+						),
+				
+						JsonGenerator.createJsonObject(
+								new JsonGenerator.JsonElementPair("model", AdditionsMod.MOD_ID + ":" + blockId),
+								new JsonGenerator.JsonElementPair("y", 90)								
+						),
+				
+						JsonGenerator.createJsonObject(
+								new JsonGenerator.JsonElementPair("model", AdditionsMod.MOD_ID + ":" + blockId),
+								new JsonGenerator.JsonElementPair("y", 180)
+						)
+
+				)),
+				new JsonGenerator.JsonElementPair("snowy=true", JsonGenerator.createJsonObject(
+						new JsonGenerator.JsonElementPair("model", AdditionsMod.MOD_ID + ":" + blockId + BlockModelManager.MODEL_SNOWED_ENDING)
+
+				))
 		));
 		
 		return ModelGenerator.GSON.toJson(json);

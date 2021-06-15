@@ -54,6 +54,12 @@ import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * Bow Item
+ * 
+ * @author Tmtravlr (Rebeca Rey)
+ * @since November 2017 
+ */
 public class ItemAddedBow extends ItemBow implements IItemAdded {
 	
 	private static final Random RAND = new Random();
@@ -366,7 +372,7 @@ public class ItemAddedBow extends ItemBow implements IItemAdded {
     	return player.capabilities.isCreativeMode || EnchantmentHelper.getEnchantmentLevel(Enchantments.INFINITY, bowStack) > 0 || this.alwaysInfinite;
     }
 
-    private ItemStack findAmmo(EntityPlayer player) {
+    protected ItemStack findAmmo(EntityPlayer player) {
         if (this.isAmmo(player.getHeldItem(EnumHand.OFF_HAND))) {
             return player.getHeldItem(EnumHand.OFF_HAND);
             

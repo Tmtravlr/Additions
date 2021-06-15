@@ -14,19 +14,17 @@ import com.google.gson.JsonSerializationContext;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.util.OtherSerializers;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.stats.StatList;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 /**
@@ -181,8 +179,8 @@ public class RecipeAddedCraftingModifyDamage extends IForgeRegistryEntry.Impl<IR
     }
 	
 	@Override
-	public void registerRecipe() {
-		ForgeRegistries.RECIPES.register(this);
+	public void registerRecipe(IForgeRegistry<IRecipe> registry) {
+		registry.register(this);
 	}
 	
 	private void modifyStack(ItemStack stack, int modifier) {

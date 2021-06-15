@@ -1,8 +1,5 @@
 package com.tmtravlr.additions.addon.recipes;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
@@ -10,15 +7,14 @@ import com.google.gson.JsonSerializationContext;
 import com.tmtravlr.additions.AdditionsMod;
 import com.tmtravlr.additions.util.OtherSerializers;
 
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.crafting.JsonContext;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+import net.minecraftforge.registries.IForgeRegistry;
 
 /**
  * An added shapeless crafting recipe
@@ -44,8 +40,8 @@ public class RecipeAddedCraftingShapeless implements IRecipeAdded {
 	}
 	
 	@Override
-	public void registerRecipe() {
-		ForgeRegistries.RECIPES.register(this.recipe.setRegistryName(this.id));
+	public void registerRecipe(IForgeRegistry<IRecipe> registry) {
+		registry.register(this.recipe.setRegistryName(this.id));
 	}
 	
 	public String getRecipeGroup() {

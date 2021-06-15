@@ -45,6 +45,7 @@ public class BlockAddedManager {
 	    registerBlockType(new BlockAddedPane.Serializer());
 	    registerBlockType(new BlockAddedFence.Serializer());
 	    registerBlockType(new BlockAddedWall.Serializer());
+	    registerBlockType(new BlockAddedGrass.Serializer());
 	}
 	
 	public static void registerBlockType(IBlockAdded.Serializer <? extends IBlockAdded > blockSerializer) {

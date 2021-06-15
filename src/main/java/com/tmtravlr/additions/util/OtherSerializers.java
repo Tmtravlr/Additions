@@ -12,6 +12,7 @@ import com.google.common.collect.Multimap;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSyntaxException;
 import com.tmtravlr.additions.addon.blocks.mapcolors.BlockMapColorManager;
@@ -257,7 +258,7 @@ public class OtherSerializers {
 				try {
 					itemStack.setTagCompound(JsonToNBT.getTagFromJson(JsonUtils.getString(json, "tag")));
                 } catch (NBTException nbtexception) {
-                    throw new JsonSyntaxException(nbtexception);
+                    throw new JsonParseException(nbtexception);
                 }
 			}
 			
@@ -392,7 +393,7 @@ public class OtherSerializers {
 				JsonObject stateJson = new JsonObject();
 				
 				state.getProperties().forEach((property, comparable) -> {
-					stateJson.addProperty(String.valueOf(property), String.valueOf(comparable));
+					stateJson.addProperty(property.getName(), String.valueOf(comparable));
 				});
 				
 				json.add("state", stateJson);

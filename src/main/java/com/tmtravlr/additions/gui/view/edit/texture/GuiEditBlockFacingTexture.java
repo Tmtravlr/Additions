@@ -70,9 +70,9 @@ public class GuiEditBlockFacingTexture extends GuiEditBlockTexture {
 			this.baseTextureFileInput.setRequired();
 		}
 
-		this.topTextureMessage = new GuiComponentDisplayText(this, new TextComponentTranslation("gui.edit.texture.block.facing.top.message", this.block.getDisplayName()));
+		this.topTextureMessage = new GuiComponentDisplayText(this, new TextComponentTranslation("gui.edit.texture.block.facing.topBottom.message", this.block.getDisplayName()));
 		
-		this.topTextureFileInput = new GuiComponentFileInput(this, I18n.format("gui.edit.texture.block.facing.top.label"), this.addon, new FileNameExtensionFilter("PNG File", "png")) {
+		this.topTextureFileInput = new GuiComponentFileInput(this, I18n.format("gui.edit.texture.block.facing.topBottom.label"), this.addon, new FileNameExtensionFilter("PNG File", "png")) {
 			
 			@Override
 			protected void setFileDialogueFolder(File folder) {
@@ -138,7 +138,7 @@ public class GuiEditBlockFacingTexture extends GuiEditBlockTexture {
 		}
 		
 		if (this.topTextureFileInput.getFile() == null) {
-			this.mc.displayGuiScreen(new GuiMessageBox(this, I18n.format("gui.edit.texture.problem.title"), new TextComponentTranslation("gui.edit.texture.problem.noTexture.specific.message", I18n.format("gui.edit.texture.block.facing.top.label")), I18n.format("gui.buttons.back")));
+			this.mc.displayGuiScreen(new GuiMessageBox(this, I18n.format("gui.edit.texture.problem.title"), new TextComponentTranslation("gui.edit.texture.problem.noTexture.specific.message", I18n.format("gui.edit.texture.block.facing.topBottom.label")), I18n.format("gui.buttons.back")));
 			return false;
 		}
 
